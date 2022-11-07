@@ -5,12 +5,12 @@
 
 # config
 
-* run `./setup.sh`
+* run `./scripts/setup.sh`
 
 # deploy
 
 * Configure GCP CLI auth
-* run `./deploy.sh`
+* run `./scripts/deploy.sh`
 
 # notes
 
