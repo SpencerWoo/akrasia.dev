@@ -5,9 +5,12 @@
 
 # config
 
+* run `./setup.sh`
+
 # deploy
 
-`gsutil rsync -R src gs://akrasia.dev`
+* Configure GCP CLI auth
+* run `./deploy.sh`
 
 # notes
 
