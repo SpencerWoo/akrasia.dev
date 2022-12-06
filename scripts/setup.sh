@@ -51,10 +51,12 @@ gcloud compute forwarding-rules create http-lb-forwarding-rule \
 # 5)
 # delete existing rxecord
 (cd scripts/cf/ && ./run-delete.sh $DOMAIN $DOMAIN)
+(cd scripts/cf/ && ./run-delete.sh $DOMAIN 'talon')
 
 # add new A record
 DNS_TYPE='A'
 IP_ADDR=$(gcloud compute forwarding-rules list --format 'value(IPAddress)')
 
 (cd scripts/cf && ./run-add.sh $DOMAIN $IP_ADDR $DOMAIN $DNS_TYPE)
+(cd scripts/cf && ./run-add.sh $DOMAIN $IP_ADDR 'talon' $DNS_TYPE)
 
