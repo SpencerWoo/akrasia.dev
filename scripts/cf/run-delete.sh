@@ -1,7 +1,5 @@
 #!/bin/bash
 
-echo "$@"
-
 source .env
 
 # nvm install 10.13.0
