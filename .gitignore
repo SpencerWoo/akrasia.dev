@@ -4,3 +4,8 @@ include
 
 .DS_Store
 *.cfg
+
+node_modules
+.env
+.private
+.ssh
