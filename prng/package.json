@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "description": "My First Gatsby Site",
-  "author": "Megan Sullivan",
+  "author": "Spencer Woo",
   "keywords": [
     "gatsby"
   ],
   "scripts": {
+    "dev": "npm run develop",
     "develop": "gatsby develop",
     "start": "gatsby develop",
     "build": "gatsby build",
