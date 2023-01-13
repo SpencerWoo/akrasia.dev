@@ -4,8 +4,8 @@ import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import Layout from '../../components/layout'
 import Seo from '../../components/seo'
 
-const BlogPost = ({ data, children }) => {
-  console.log(data);
+const ProgramsPost = (props) => {
+  console.log(props);
   // const image = getImage(data.mdx.frontmatter.hero_image)
 
   return (
@@ -48,4 +48,4 @@ const BlogPost = ({ data, children }) => {
 
 export const Head = ({ data }) => <Seo title='TODO' />
 
-export default BlogPost
+export default ProgramsPost
