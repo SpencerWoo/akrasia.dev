@@ -3,15 +3,15 @@ import { Link, graphql } from 'gatsby'
 import Layout from '../../components/layout'
 import Seo from '../../components/seo'
 
-const ProgramsPage = ({ data }) => {
+const LanguagesPage = ({ data }) => {
   return (
-    <Layout pageTitle="Programs">
+    <Layout pageTitle="Languages">
       {
         data.allDirectory.nodes.map((node) => (
           <article key={node.id}>
 
             <h2>
-              <Link to={`/programs/${node.name}`}>
+              <Link to={`/languages/${node.name}`}>
                 {node.name}
               </Link>
             </h2>
@@ -66,6 +66,6 @@ export const query = graphql`
   }
 `
 
-export const Head = () => <Seo title="My Blog Posts" />
+export const Head = () => <Seo title="Languages" />
 
-export default ProgramsPage
+export default LanguagesPage

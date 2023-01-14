@@ -1,36 +1,41 @@
 import * as React from 'react'
-import { graphql } from 'gatsby'
+import { useStaticQuery, graphql } from 'gatsby'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import Layout from '../../components/layout'
 import Seo from '../../components/seo'
 
-const ProgramsPost = (props) => {
+const LanguagesPost = (props) => {
   // path: "/programs/go"
   // params: { name: "go" }
 
-  const {params, path} = props
+  const {params, path, data} = props
   const language = params['name']
-  console.log(props);
+  // console.log(props);
   // const image = getImage(data.mdx.frontmatter.hero_image)
 
-  const regLang = `/(languages/${language})/`
+  // const regLang = `/(languages/${language})/`
 
-  const query = graphql`
-  query ($regLang: String){
-    allFile(filter: {relativePath: {regex: $regLang}}) {
-      nodes {
-        name
-        relativePath
-      }
-    }
-  }
-  `
+  // console.log(regLang);
 
-  console.log(query);
+  // const query = useStaticQuery(graphql`
+  // query ($regLang: String){
+  //   allFile(filter: {relativePath: {regex: $regLang}}) {
+  //     nodes {
+  //       name
+  //       relativePath
+  //     }
+  //   }
+  // }
+  // `)
+
+  // console.log("=====")
+  // console.log(query);
+  // console.log(data);
 
   return (
     <Layout pageTitle={language}>
       <p> test </p>
+
     </Layout>
     // <Layout pageTitle={data.mdx.frontmatter.title}>
     //   <p>{data.mdx.frontmatter.date}</p>
@@ -48,6 +53,27 @@ const ProgramsPost = (props) => {
     // </Layout>
   )
 }
+
+// export const query = graphql`
+//   query ($id: String) {
+//     directory(id: {eq: $id}) {
+//       id
+//       name
+//       relativePath
+//     }
+//   }
+// `
+
+// const query = graphql`
+//   query ($regLang: String){
+//     allFile(filter: {relativePath: {regex: $regLang}}) {
+//       nodes {
+//         name
+//         relativePath
+//       }
+//     }
+//   }
+//   `
 
 // export const query = graphql`
 //   query($id: String) {
@@ -70,4 +96,4 @@ const ProgramsPost = (props) => {
 
 export const Head = ({ data }) => <Seo title='TODO' />
 
-export default ProgramsPost
+export default LanguagesPost
