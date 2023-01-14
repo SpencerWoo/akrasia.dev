@@ -5,11 +5,33 @@ import Layout from '../../components/layout'
 import Seo from '../../components/seo'
 
 const ProgramsPost = (props) => {
+  // path: "/programs/go"
+  // params: { name: "go" }
+
+  const {params, path} = props
+  const language = params['name']
   console.log(props);
   // const image = getImage(data.mdx.frontmatter.hero_image)
 
+  const regLang = `/(languages/${language})/`
+
+  const query = graphql`
+  query ($regLang: String){
+    allFile(filter: {relativePath: {regex: $regLang}}) {
+      nodes {
+        name
+        relativePath
+      }
+    }
+  }
+  `
+
+  console.log(query);
+
   return (
-    <p> test </p>
+    <Layout pageTitle={language}>
+      <p> test </p>
+    </Layout>
     // <Layout pageTitle={data.mdx.frontmatter.title}>
     //   <p>{data.mdx.frontmatter.date}</p>
     //   <GatsbyImage

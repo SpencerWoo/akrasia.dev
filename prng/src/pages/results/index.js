@@ -5,7 +5,7 @@ import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import Layout from '../../components/layout'
 
 const ResultsPage = ({data, children}) => {
-  console.log(data)
+  console.log(data, children)
   return (
     <Layout pageTitle="Results">
       {
