@@ -26,12 +26,15 @@ const LanguagesPost = (props) => {
 
   // node.name -- source_
   // node.name -- trial
+  
+  const sourceNode = nodes.filter(node => node.name === language)[0] // required
+
   const imageNodes = nodes.filter(node => node.extension === 'jpg')
-  const sourceNode = nodes.filter(node => node.name === language)[0]
   const resultNodes = nodes.filter(node => node.extension === '' || node.extension === 'txt')
 
-  console.log(imageNodes)
   console.log(sourceNode)
+  
+  console.log(imageNodes)
   console.log(resultNodes)
 
   const images = imageNodes.map(node => getImage(node.childImageSharp))

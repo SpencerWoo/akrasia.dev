@@ -3,9 +3,9 @@ import Layout from '../components/layout'
 import { StaticImage } from 'gatsby-plugin-image'
 import Seo from '../components/seo'
 
-const IndexPage = () => {
+const IntroductionPage = () => {
   return (
-    <Layout pageTitle="Home Page">
+    <Layout pageTitle="Introduction">
       <p>Something something about entropy.</p>
       <StaticImage
         alt="Clifford, a reddish-brown pitbull, dozing in a bean bag chair"
@@ -15,6 +15,6 @@ const IndexPage = () => {
   )
 }
 
-export const Head = () => <Seo title="Home Page" />
+export const Head = () => <Seo title="Introduction" />
 
-export default IndexPage
+export default IntroductionPage

@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { Link, graphql } from 'gatsby'
-import { MDXRenderer } from 'gatsby-plugin-mdx'
+import { graphql } from 'gatsby'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import Layout from '../../components/layout'
 
@@ -9,7 +8,6 @@ const ResultsPage = ({data, children}) => {
   return (
     <Layout pageTitle="Results">
       {
-        // <p> yo </p>
         data.allMdx.nodes.map((node) => (
           <article key={node.id}> 
             {node.frontmatter.title} 

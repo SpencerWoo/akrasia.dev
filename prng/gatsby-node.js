@@ -34,7 +34,7 @@ exports.onCreatePage = ({page, actions}) => {
 exports.createPages = ({ graphql, actions }) => {
   const { createPage } = actions
   // const layoutTemplate = path.resolve(`src/components/layout.js`)
-  const layoutTemplate = path.resolve(`src/pages/languages/directory.name.js`)
+  const layoutTemplate = path.resolve(`src/pages/languages/language.js`)
   // Query for markdown nodes to use in creating pages.
   // You can query for whatever data you want to create pages for e.g.
   // products, portfolio items, landing pages, etc.
