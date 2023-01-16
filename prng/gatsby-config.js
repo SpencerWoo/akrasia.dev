@@ -1,8 +1,8 @@
 // https://www.gatsbyjs.com/docs/reference/config-files/gatsby-config/
 module.exports = {
   siteMetadata: {
-    siteUrl: "https://www.yourdomain.tld",
-    title: "My First Gatsby Site",
+    siteUrl: "https://www.akrasia.dev",
+    title: "randomness in programming languages",
   },
   plugins: [
     "gatsby-plugin-image",

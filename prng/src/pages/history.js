@@ -8,6 +8,10 @@ const HistoryPage = () => {
       <p>This project was done in 2011 for my High School project fair.</p>
 
       <br>
+
+      <p>When I put a version of that project online via my college website hosting.</p>
+
+      Handlebars
       
       </br>
     </Layout>

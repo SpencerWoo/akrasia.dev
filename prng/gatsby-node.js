@@ -17,7 +17,7 @@ exports.onCreatePage = ({page, actions}) => {
   if (page.path.includes('/languages/')) {
     // replace page with new context
     const language = page.path.split("/")
-    console.log(language)
+    // console.log(language)
     // deletePage(page);
 
     // newPage.context = {
@@ -57,7 +57,6 @@ exports.createPages = ({ graphql, actions }) => {
     // console.log(resul.data.allDirectory.nodes);
     // Create blog post pages.
     result.data.allDirectory.nodes.forEach(node => {
-      console.log(node);
       createPage({
         // Path for this page — required
         path: `${node.relativePath}`,

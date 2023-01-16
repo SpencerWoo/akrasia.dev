@@ -2,10 +2,15 @@
   "name": "my-first-gatsby-site",
   "version": "1.0.0",
   "private": true,
-  "description": "My First Gatsby Site",
+  "description": "PRNG Analysis",
   "author": "Spencer Woo",
   "keywords": [
-    "gatsby"
+    "PRNG Analysis",
+    "Analysis",
+    "Spencer",
+    "spencers.dev",
+    "randomness",
+    "statistics"
   ],
   "scripts": {
     "dev": "npm run develop",
