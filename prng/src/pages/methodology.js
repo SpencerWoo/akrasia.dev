@@ -25,25 +25,25 @@ const MethodologyPage = () => {
         <br></br><br></br>
 
         <table>
-          <tr><td align="right">Randomization :</td><td> Randomize numbers using the language's random number generator</td></tr>
-          <tr><td align="right">Frequency :</td><td> Count the number of occurances each number </td></tr>
-          <tr><td align="right">Probability :</td><td> Divide the Frequency by the number of Trials </td></tr>
-          <tr><td align="right">Output :</td><td> Write the each number's probability to a textfile </td></tr>
-          <tr><td align="right">Statistics :</td><td> Import the textfile into Excel and calculate useful statistics, like the Q value </td></tr>
-          <tr><td align="right">Graph :</td><td> Graph the results and difference from expected for visualization of data. </td></tr>
+          <tr><td align="left">Randomization</td><td> : Generate random numbers via the language</td></tr>
+          <tr><td align="left">Frequency</td><td> : Count the number of occurances for each number </td></tr>
+          <tr><td align="left">Percentage</td><td> : Divide the Frequency by the number of Trials </td></tr>
+          <tr><td align="left">Output</td><td> : Write each number's occurance precentage </td></tr>
+          <tr><td align="left">Statistics</td><td> : Import the textfile into Excel and calculate useful statistics, like the Q value </td></tr>
+          <tr><td align="left">Graph</td><td> : Plot the actual and expected results for visualization </td></tr>
         </table>
 
         <br></br><br></br>
 
-        <a href = "#">Statistical significance</a> is calculated by subtracting the actual probability from the expected probability.
+        <a href = "https://en.wikipedia.org">Statistical significance</a> is calculated by subtracting the actual probability from the expected probability.
         <br></br><br></br>
-        <a href = "#">Variance</a> is the summation of all the squared differences divded by n-1, where n is the degrees of freedom*.
+        <a href = "https://en.wikipedia.org">Variance</a> is the summation of all the squared differences divded by n-1, where n is the degrees of freedom*.
         <br></br><br></br>
-        <a href = "#">Standard deviation</a> is the square root of the variance.
+        <a href = "https://en.wikipedia.org">Standard deviation</a> is the square root of the variance.
                   
         <br></br><br></br>
         
-        The <a href = "#">Z-score</a> is 
+        The <a href = "https://en.wikipedia.org">Z-score</a> is 
         
         <br></br><br></br>
         We then average the Z scores of the particular language and compare across languages.

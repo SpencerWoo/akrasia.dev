@@ -6,7 +6,14 @@ import Seo from '../components/seo'
 const IntroductionPage = () => {
   return (
     <Layout pageTitle="Introduction">
-      <small>February 19, 2016</small>
+
+      This project is a statistical analysis of the pseudo-random number generators within various popular programming languages.
+      
+      <br></br><br></br>
+      <hr></hr>
+      <br></br>
+
+      <small>February 19, 2015</small>
       <p>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In my computer science career I've typically been tasked with solving the problem of <i>reducing entropy</i>.  
         
@@ -41,12 +48,13 @@ const IntroductionPage = () => {
         <br></br><br></br>
 
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;What value is a lock that opens with any combination or key?
-      
-        <br></br><br></br>
 
+        <br></br><br></br>
+        
         <h3>TLDR;</h3>
-      
-        This project is a statistical analysis of the pseudo-random number generators within various popular programming languages.
+                This project is a statistical analysis of the pseudo-random number generators within various popular programming languages.
+        
+        
       </p>
     </Layout>
   )
