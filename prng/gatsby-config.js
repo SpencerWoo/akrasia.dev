@@ -2,7 +2,7 @@
 module.exports = {
   siteMetadata: {
     siteUrl: "https://www.akrasia.dev",
-    title: "randomness in programming languages",
+    title: "PRNG Analysis",
   },
   plugins: [
     "gatsby-plugin-image",
