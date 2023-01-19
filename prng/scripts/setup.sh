@@ -15,24 +15,25 @@ gcloud config set project $PROJECT_ID
 
 # 1)
 # create storage bucket
-BUCKET='akrasia.dev'
+BUCKET='prng-subdomain-test'
 DOMAIN=$BUCKET
 gcloud storage buckets create gs://$BUCKET
 
-# 2)
-# pull from repo and place into dir
-# add SOURCE note into README - or even better add to version
+# # 2)
+# # pull from repo and place into dir
+# # add SOURCE note into README - or even better add to version
 git fetch origin
 git pull origin
 
 # 3)
 # run ./deploy.sh
 # upload to bucket and set policy
-(cd scripts/cf && ./deploy.sh)
+# (cd scripts && ./deploy.sh)
+(./deploy.sh)
 
 # 4)
 # create L7 LB
-BUCKET_BACKEND='akrasia'
+BUCKET_BACKEND='prng'
 gcloud compute backend-buckets create $BUCKET_BACKEND \
     --gcs-bucket-name=$BUCKET
 
@@ -52,13 +53,14 @@ gcloud compute forwarding-rules create $BUCKET-lb-forwarding-rule \
 # add CF records
 # 5)
 # delete existing rxecord
-(cd scripts/cf/ && ./run-delete.sh $DOMAIN $DOMAIN)
-(cd scripts/cf/ && ./run-delete.sh $DOMAIN 'talon')
+# (cd scripts/cf/ && ./run-delete.sh $DOMAIN $DOMAIN)
+# (cd scripts/cf/ && ./run-delete.sh $DOMAIN 'bucket')
 
-# add new A record
-DNS_TYPE='A'
-IP_ADDR=$(gcloud compute forwarding-rules list --format 'value(IPAddress)')
+# # add new A record
+# DNS_TYPE='A'
+# gcloud compute forwarding-rules list
+# IP_ADDR=$(gcloud compute forwarding-rules list --format 'value(IPAddress)')
 
-(cd scripts/cf && ./run-add.sh $DOMAIN $IP_ADDR $DOMAIN $DNS_TYPE)
-(cd scripts/cf && ./run-add.sh $DOMAIN $IP_ADDR 'talon' $DNS_TYPE)
+# (cd scripts/cf && ./run-add.sh $DOMAIN $IP_ADDR $DOMAIN $DNS_TYPE)
+# (cd scripts/cf && ./run-add.sh $DOMAIN $IP_ADDR 'talon' $DNS_TYPE)
 

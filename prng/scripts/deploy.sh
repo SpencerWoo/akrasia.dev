@@ -1,7 +1,9 @@
 #!/bin/bash
 
-BUCKET='akrasia.dev'
-gsutil rsync -R src gs://$BUCKET
+# npm run build
+
+BUCKET='prng-subdomain-test'
+gsutil -m rsync -R ../public gs://$BUCKET
 
 gsutil iam ch allUsers:objectViewer gs://$BUCKET
 

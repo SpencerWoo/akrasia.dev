@@ -5,10 +5,18 @@ import Layout from '../../components/layout'
 import Seo from '../../components/seo'
 
 const LanguagesPost = (props) => {
-  console.log(props)
+  // console.log(props)
   const {pageContext, data} = props
   const language = pageContext['name']
-  // console.log(data);
+
+  if(!language){
+    return
+  }
+  // if(!pageContext['name']){
+  //   console.log(props);
+  //   console.log(data.allFile.nodes);
+  // }
+  // console.log(language);
 
   const nodes = data.allFile.nodes;
 
@@ -28,14 +36,16 @@ const LanguagesPost = (props) => {
   // node.name -- trial
   
   const sourceNode = nodes.filter(node => node.name === language)[0] // required
+  // console.log(sourceNode, language)
+  // console.log(language);
 
   const imageNodes = nodes.filter(node => node.extension === 'jpg')
   const resultNodes = nodes.filter(node => node.extension === '' || node.extension === 'txt')
 
-  console.log(sourceNode)
+  // console.log(sourceNode)
   
-  console.log(imageNodes)
-  console.log(resultNodes)
+  // console.log(imageNodes)
+  // console.log(resultNodes)
 
   const images = imageNodes.map(node => getImage(node.childImageSharp))
 
@@ -63,6 +73,7 @@ const LanguagesPost = (props) => {
 
       <pre>
         <code>
+          
           {sourceNode.fields.contents}
         </code>
       </pre>
