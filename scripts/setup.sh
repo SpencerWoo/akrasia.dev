@@ -15,8 +15,9 @@ gcloud config set project $PROJECT_ID
 
 # 1)
 # create storage bucket
-DOMAIN='akrasia.dev'
-gcloud storage buckets create gs://$DOMAIN
+BUCKET='akrasia.dev'
+DOMAIN=$BUCKET
+gcloud storage buckets create gs://$BUCKET
 
 # 2)
 # pull from repo and place into dir
@@ -31,20 +32,21 @@ git pull origin
 
 # 4)
 # create L7 LB
-gcloud compute backend-buckets create akrasia \
-    --gcs-bucket-name=$DOMAIN
+BUCKET_BACKEND='akrasia'
+gcloud compute backend-buckets create $BUCKET_BACKEND \
+    --gcs-bucket-name=$BUCKET
 
-gcloud compute url-maps create http-lb \
-    --default-backend-bucket=akrasia
+gcloud compute url-maps create $BUCKET-lb \
+    --default-backend-bucket=$BUCKET_BACKEND
 
-gcloud compute target-http-proxies create http-lb-proxy \
-    --url-map=http-lb
+gcloud compute target-http-proxies create $BUCKET-lb-proxy \
+    --url-map=$BUCKET-lb
 
-gcloud compute forwarding-rules create http-lb-forwarding-rule \
+gcloud compute forwarding-rules create $BUCKET-lb-forwarding-rule \
     --load-balancing-scheme=EXTERNAL \
     --network-tier=PREMIUM \
     --global \
-    --target-http-proxy=http-lb-proxy \
+    --target-http-proxy=$BUCKET-lb-proxy \
     --ports=80
 
 # add CF records
