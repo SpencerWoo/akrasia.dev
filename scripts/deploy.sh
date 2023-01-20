@@ -1,8 +1,21 @@
 #!/bin/bash
 
-DOMAIN='akrasia.dev'
-gsutil rsync -R src gs://$DOMAIN
+# ./deploy.sh akrasia.dev
 
-gsutil iam ch allUsers:objectViewer gs://$DOMAIN
+if [ -z "$1" ]
+  then
+    echo "No bucket supplied"
+    exit 1
+elif [ -z "$2" ]
+  then
+    echo "No localsrc supplied"
+    exit 1
+fi
 
-gsutil web set -m index.html gs://$DOMAIN
+BUCKET=$1
+LOCALSRC=$2
+gsutil rsync -R $LOCALSRC gs://$BUCKET
+
+gsutil iam ch allUsers:objectViewer gs://$BUCKET
+
+gsutil web set -m index.html gs://$BUCKET
