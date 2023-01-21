@@ -1,0 +1,839 @@
+<!doctype html><html lang=ko class=no-js><head><meta name=robots content="noindex, nofollow"><link rel=alternate hreflang=en href=https://kubernetes.io/docs/tasks/debug/debug-cluster/><link rel=alternate hreflang=zh-cn href=https://kubernetes.io/zh-cn/docs/tasks/debug/debug-cluster/><link rel=alternate hreflang=ja href=https://kubernetes.io/ja/docs/tasks/debug/debug-cluster/><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.110.0"><link rel=canonical type=text/html href=https://kubernetes.io/ko/docs/tasks/debug/debug-cluster/><link rel="shortcut icon" type=image/png href=/images/favicon.png><link rel=apple-touch-icon href=/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=manifest href=/manifest.webmanifest><link rel=apple-touch-icon href=/images/kubernetes-192x192.png><title>클러스터 트러블슈팅 | Kubernetes</title><meta property="og:title" content="클러스터 트러블슈팅"><meta property="og:description" content="일반적인 클러스터 이슈를 디버깅한다."><meta property="og:type" content="website"><meta property="og:url" content="https://kubernetes.io/ko/docs/tasks/debug/debug-cluster/"><meta property="og:site_name" content="Kubernetes"><meta itemprop=name content="클러스터 트러블슈팅"><meta itemprop=description content="일반적인 클러스터 이슈를 디버깅한다."><meta name=twitter:card content="summary"><meta name=twitter:title content="클러스터 트러블슈팅"><meta name=twitter:description content="일반적인 클러스터 이슈를 디버깅한다."><link href=/scss/main.css rel=stylesheet><script type=application/ld+json>{"@context":"https://schema.org","@type":"Organization","url":"https://kubernetes.io","logo":"https://kubernetes.io/images/favicon.png","potentialAction":{"@type":"SearchAction","target":"https://kubernetes.io/search/?q={search_term_string}","query-input":"required name=search_term_string"}}</script><meta name=theme-color content="#326ce5"><link rel=stylesheet href=/css/feature-states.css><meta name=description content="일반적인 클러스터 이슈를 디버깅한다."><meta property="og:description" content="일반적인 클러스터 이슈를 디버깅한다."><meta name=twitter:description content="일반적인 클러스터 이슈를 디버깅한다."><meta property="og:url" content="https://kubernetes.io/ko/docs/tasks/debug/debug-cluster/"><meta property="og:title" content="클러스터 트러블슈팅"><meta name=twitter:title content="클러스터 트러블슈팅"><meta name=twitter:image content="https://kubernetes.io/images/favicon.png"><meta name=twitter:image:alt content="Kubernetes"><meta property="og:image" content="/images/kubernetes-horizontal-color.png"><meta property="og:type" content="article"><script src=/js/jquery-3.6.0.min.js intregrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script></head><body class=td-section><header><nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar" data-auto-burger=primary><a class=navbar-brand href=/ko/></a><div class="td-navbar-nav-scroll ml-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0"><li class="nav-item mr-2 mb-lg-0"><a class="nav-link active" href=/ko/docs/>문서</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ko/blog/>쿠버네티스 블로그</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ko/training/>교육</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ko/partners/>파트너</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ko/community/>Community</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ko/case-studies/>사례 연구</a></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>버전</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/ko/releases>Release Information</a>
+<a class=dropdown-item href=https://kubernetes.io/ko/docs/tasks/debug/debug-cluster/>v1.25</a>
+<a class=dropdown-item href=https://v1-24.docs.kubernetes.io/ko/docs/tasks/debug/debug-cluster/>v1.24</a>
+<a class=dropdown-item href=https://v1-23.docs.kubernetes.io/ko/docs/tasks/debug/debug-cluster/>v1.23</a>
+<a class=dropdown-item href=https://v1-22.docs.kubernetes.io/ko/docs/tasks/debug/debug-cluster/>v1.22</a>
+<a class=dropdown-item href=https://v1-21.docs.kubernetes.io/ko/docs/tasks/debug/debug-cluster/>v1.21</a></div></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdownMenuLink role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>한국어 (Korean)</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/docs/tasks/debug/debug-cluster/>English</a>
+<a class=dropdown-item href=/zh-cn/docs/tasks/debug/debug-cluster/>中文 (Chinese)</a>
+<a class=dropdown-item href=/ja/docs/tasks/debug/debug-cluster/>日本語 (Japanese)</a></div></li></ul></div><button id=hamburger onclick=kub.toggleMenu() data-auto-burger-exclude><div></div></button></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><div class=td-content><div class="pageinfo pageinfo-primary d-print-none"><p>이 섹션의 다중 페이지 출력 화면임.
+<a href=# onclick="return print(),!1">여기를 클릭하여 프린트</a>.</p><p><a href=/ko/docs/tasks/debug/debug-cluster/>이 페이지의 일반 화면으로 돌아가기</a>.</p></div><h1 class=title>클러스터 트러블슈팅</h1><div class=lead>일반적인 클러스터 이슈를 디버깅한다.</div><ul><li>1: <a href=#pg-5ff0cdcf7701f887e45d629f5cfe0424>리소스 메트릭 파이프라인</a></li><li>2: <a href=#pg-cb9e28c208c6cfbabdb15ba2e42e9ef0>리소스 모니터링 도구</a></li><li>3: <a href=#pg-20165c8269bed123bfb94fb6e7f85643>노드 헬스 모니터링하기</a></li><li>4: <a href=#pg-6ca4f22ef4d1713577ada4815f0a3b5a>crictl로 쿠버네티스 노드 디버깅하기</a></li><li>5: <a href=#pg-38387ad04dd284933cb502944ea3515b>감사(auditing)</a></li><li>6: <a href=#pg-60dca0ec8d41f0045e7d73e1d6bd7bce>로컬에서 텔레프레즌스를 이용한 서비스 개발 및 디버깅</a></li><li>7: <a href=#pg-34f51c9306a166418b33355c09e672be>윈도우 디버깅 팁</a></li></ul><div class=content><p>이 문서는 클러스터 트러블슈팅에 대해 설명한다. 사용자가 겪고 있는 문제의 근본 원인으로서 사용자의 애플리케이션을
+이미 배제했다고 가정한다.
+애플리케이션 디버깅에 대한 팁은 <a href=/ko/docs/tasks/debug/debug-application/>애플리케이션 트러블슈팅 가이드</a>를 참조한다.
+자세한 내용은 <a href=/ko/docs/tasks/debug/>트러블슈팅 문서</a>를 참조한다.</p><h2 id=클러스터-나열하기>클러스터 나열하기</h2><p>클러스터에서 가장 먼저 디버그해야 할 것은 노드가 모두 올바르게 등록되었는지 여부이다.</p><p>다음을 실행한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get nodes
+</span></span></code></pre></div><p>그리고 보일 것으로 예상되는 모든 노드가 존재하고 모두 <code>Ready</code> 상태인지 확인한다.</p><p>클러스터의 전반적인 상태에 대한 자세한 정보를 얻으려면 다음을 실행할 수 있다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl cluster-info dump
+</span></span></code></pre></div><h3 id=예제-다운-down-상태이거나-통신이-닿지-않는-unreachable-노드-디버깅하기>예제: 다운(down) 상태이거나 통신이 닿지 않는(unreachable) 노드 디버깅하기</h3><p>때때로 디버깅할 때 노드의 상태를 확인하는 것이 유용할 수 있다(예를 들어, 어떤 노드에서 실행되는 파드가 이상하게 행동하는 것을 발견했거나, 특정 노드에 파드가 스케줄링되지 않는 이유를 알아보기 위해). 파드의 경우와 마찬가지로, <code>kubectl describe node</code> 및 <code>kubectl get node -o yaml</code> 명령을 사용하여 노드에 대한 상세 정보를 볼 수 있다. 예를 들어, 노드가 다운 상태(네트워크 연결이 끊어졌거나, kubelet이 종료된 후 재시작되지 못했거나 등)라면 아래와 같은 출력이 나올 것이다. 노드가 NotReady 상태라는 것을 나타내는 이벤트(event)와, 더 이상 실행 중이 아닌 파드(NotReady 상태 이후 5분 뒤에 축출되었음)에 주목한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get nodes
+</span></span></code></pre></div><pre tabindex=0><code class=language-none data-lang=none>NAME                     STATUS       ROLES     AGE     VERSION
+kube-worker-1            NotReady     &lt;none&gt;    1h      v1.23.3
+kubernetes-node-bols     Ready        &lt;none&gt;    1h      v1.23.3
+kubernetes-node-st6x     Ready        &lt;none&gt;    1h      v1.23.3
+kubernetes-node-unaj     Ready        &lt;none&gt;    1h      v1.23.3
+</code></pre><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl describe node kube-worker-1
+</span></span></code></pre></div><pre tabindex=0><code class=language-none data-lang=none>Name:               kube-worker-1
+Roles:              &lt;none&gt;
+Labels:             beta.kubernetes.io/arch=amd64
+                    beta.kubernetes.io/os=linux
+                    kubernetes.io/arch=amd64
+                    kubernetes.io/hostname=kube-worker-1
+                    kubernetes.io/os=linux
+Annotations:        kubeadm.alpha.kubernetes.io/cri-socket: /run/containerd/containerd.sock
+                    node.alpha.kubernetes.io/ttl: 0
+                    volumes.kubernetes.io/controller-managed-attach-detach: true
+CreationTimestamp:  Thu, 17 Feb 2022 16:46:30 -0500
+Taints:             node.kubernetes.io/unreachable:NoExecute
+                    node.kubernetes.io/unreachable:NoSchedule
+Unschedulable:      false
+Lease:
+  HolderIdentity:  kube-worker-1
+  AcquireTime:     &lt;unset&gt;
+  RenewTime:       Thu, 17 Feb 2022 17:13:09 -0500
+Conditions:
+  Type                 Status    LastHeartbeatTime                 LastTransitionTime                Reason              Message
+  ----                 ------    -----------------                 ------------------                ------              -------
+  NetworkUnavailable   False     Thu, 17 Feb 2022 17:09:13 -0500   Thu, 17 Feb 2022 17:09:13 -0500   WeaveIsUp           Weave pod has set this
+  MemoryPressure       Unknown   Thu, 17 Feb 2022 17:12:40 -0500   Thu, 17 Feb 2022 17:13:52 -0500   NodeStatusUnknown   Kubelet stopped posting node status.
+  DiskPressure         Unknown   Thu, 17 Feb 2022 17:12:40 -0500   Thu, 17 Feb 2022 17:13:52 -0500   NodeStatusUnknown   Kubelet stopped posting node status.
+  PIDPressure          Unknown   Thu, 17 Feb 2022 17:12:40 -0500   Thu, 17 Feb 2022 17:13:52 -0500   NodeStatusUnknown   Kubelet stopped posting node status.
+  Ready                Unknown   Thu, 17 Feb 2022 17:12:40 -0500   Thu, 17 Feb 2022 17:13:52 -0500   NodeStatusUnknown   Kubelet stopped posting node status.
+Addresses:
+  InternalIP:  192.168.0.113
+  Hostname:    kube-worker-1
+Capacity:
+  cpu:                2
+  ephemeral-storage:  15372232Ki
+  hugepages-2Mi:      0
+  memory:             2025188Ki
+  pods:               110
+Allocatable:
+  cpu:                2
+  ephemeral-storage:  14167048988
+  hugepages-2Mi:      0
+  memory:             1922788Ki
+  pods:               110
+System Info:
+  Machine ID:                 9384e2927f544209b5d7b67474bbf92b
+  System UUID:                aa829ca9-73d7-064d-9019-df07404ad448
+  Boot ID:                    5a295a03-aaca-4340-af20-1327fa5dab5c
+  Kernel Version:             5.13.0-28-generic
+  OS Image:                   Ubuntu 21.10
+  Operating System:           linux
+  Architecture:               amd64
+  Container Runtime Version:  containerd://1.5.9
+  Kubelet Version:            v1.23.3
+  Kube-Proxy Version:         v1.23.3
+Non-terminated Pods:          (4 in total)
+  Namespace                   Name                                 CPU Requests  CPU Limits  Memory Requests  Memory Limits  Age
+  ---------                   ----                                 ------------  ----------  ---------------  -------------  ---
+  default                     nginx-deployment-67d4bdd6f5-cx2nz    500m (25%)    500m (25%)  128Mi (6%)       128Mi (6%)     23m
+  default                     nginx-deployment-67d4bdd6f5-w6kd7    500m (25%)    500m (25%)  128Mi (6%)       128Mi (6%)     23m
+  kube-system                 kube-proxy-dnxbz                     0 (0%)        0 (0%)      0 (0%)           0 (0%)         28m
+  kube-system                 weave-net-gjxxp                      100m (5%)     0 (0%)      200Mi (10%)      0 (0%)         28m
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests     Limits
+  --------           --------     ------
+  cpu                1100m (55%)  1 (50%)
+  memory             456Mi (24%)  256Mi (13%)
+  ephemeral-storage  0 (0%)       0 (0%)
+  hugepages-2Mi      0 (0%)       0 (0%)
+Events:
+...
+</code></pre><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get node kube-worker-1 -o yaml
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Node<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>annotations</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>kubeadm.alpha.kubernetes.io/cri-socket</span>:<span style=color:#bbb> </span>/run/containerd/containerd.sock<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>node.alpha.kubernetes.io/ttl</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;0&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>volumes.kubernetes.io/controller-managed-attach-detach</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;true&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>creationTimestamp</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;2022-02-17T21:46:30Z&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>beta.kubernetes.io/arch</span>:<span style=color:#bbb> </span>amd64<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>beta.kubernetes.io/os</span>:<span style=color:#bbb> </span>linux<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>kubernetes.io/arch</span>:<span style=color:#bbb> </span>amd64<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>kubernetes.io/hostname</span>:<span style=color:#bbb> </span>kube-worker-1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>kubernetes.io/os</span>:<span style=color:#bbb> </span>linux<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>kube-worker-1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>resourceVersion</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;4026&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>uid</span>:<span style=color:#bbb> </span>98efe7cb-2978-4a0b-842a-1a7bf12c05f8<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb> </span>{}<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>status</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>addresses</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>address</span>:<span style=color:#bbb> </span><span style=color:#666>192.168.0.113</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>type</span>:<span style=color:#bbb> </span>InternalIP<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>address</span>:<span style=color:#bbb> </span>kube-worker-1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>type</span>:<span style=color:#bbb> </span>Hostname<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>allocatable</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>cpu</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;2&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>ephemeral-storage</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;14167048988&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>hugepages-2Mi</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;0&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>memory</span>:<span style=color:#bbb> </span>1922788Ki<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>pods</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;110&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>capacity</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>cpu</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;2&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>ephemeral-storage</span>:<span style=color:#bbb> </span>15372232Ki<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>hugepages-2Mi</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;0&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>memory</span>:<span style=color:#bbb> </span>2025188Ki<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>pods</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;110&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>conditions</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>lastHeartbeatTime</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;2022-02-17T22:20:32Z&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>lastTransitionTime</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;2022-02-17T22:20:32Z&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>message</span>:<span style=color:#bbb> </span>Weave pod has set this<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>reason</span>:<span style=color:#bbb> </span>WeaveIsUp<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>status</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;False&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>type</span>:<span style=color:#bbb> </span>NetworkUnavailable<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>lastHeartbeatTime</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;2022-02-17T22:20:15Z&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>lastTransitionTime</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;2022-02-17T22:13:25Z&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>message</span>:<span style=color:#bbb> </span>kubelet has sufficient memory available<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>reason</span>:<span style=color:#bbb> </span>KubeletHasSufficientMemory<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>status</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;False&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>type</span>:<span style=color:#bbb> </span>MemoryPressure<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>lastHeartbeatTime</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;2022-02-17T22:20:15Z&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>lastTransitionTime</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;2022-02-17T22:13:25Z&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>message</span>:<span style=color:#bbb> </span>kubelet has no disk pressure<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>reason</span>:<span style=color:#bbb> </span>KubeletHasNoDiskPressure<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>status</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;False&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>type</span>:<span style=color:#bbb> </span>DiskPressure<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>lastHeartbeatTime</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;2022-02-17T22:20:15Z&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>lastTransitionTime</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;2022-02-17T22:13:25Z&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>message</span>:<span style=color:#bbb> </span>kubelet has sufficient PID available<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>reason</span>:<span style=color:#bbb> </span>KubeletHasSufficientPID<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>status</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;False&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>type</span>:<span style=color:#bbb> </span>PIDPressure<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>lastHeartbeatTime</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;2022-02-17T22:20:15Z&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>lastTransitionTime</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;2022-02-17T22:15:15Z&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>message</span>:<span style=color:#bbb> </span>kubelet is posting ready status. AppArmor enabled<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>reason</span>:<span style=color:#bbb> </span>KubeletReady<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>status</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;True&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>type</span>:<span style=color:#bbb> </span>Ready<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>daemonEndpoints</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>kubeletEndpoint</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>Port</span>:<span style=color:#bbb> </span><span style=color:#666>10250</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>nodeInfo</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>architecture</span>:<span style=color:#bbb> </span>amd64<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>bootID</span>:<span style=color:#bbb> </span><span style=color:#666>22333234</span>-7a6b-44d4-9ce1-67e31dc7e369<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>containerRuntimeVersion</span>:<span style=color:#bbb> </span>containerd://1.5.9<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>kernelVersion</span>:<span style=color:#bbb> </span><span style=color:#666>5.13.0-28</span>-generic<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>kubeProxyVersion</span>:<span style=color:#bbb> </span>v1.23.3<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>kubeletVersion</span>:<span style=color:#bbb> </span>v1.23.3<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>machineID</span>:<span style=color:#bbb> </span>9384e2927f544209b5d7b67474bbf92b<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>operatingSystem</span>:<span style=color:#bbb> </span>linux<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>osImage</span>:<span style=color:#bbb> </span>Ubuntu 21.10<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>systemUUID</span>:<span style=color:#bbb> </span>aa829ca9-73d7-064d-9019-df07404ad448<span style=color:#bbb>
+</span></span></span></code></pre></div><h2 id=로그-보기>로그 보기</h2><p>현재로서는 클러스터를 더 깊이 파고들려면 관련 머신에서 로그 확인이 필요하다. 관련 로그 파일
+위치는 다음과 같다. (systemd 기반 시스템에서는 <code>journalctl</code>을 대신 사용해야 할 수도 있다.)</p><h3 id=컨트롤-플레인-노드>컨트롤 플레인 노드</h3><ul><li><code>/var/log/kube-apiserver.log</code> - API 서버, API 제공을 담당</li><li><code>/var/log/kube-scheduler.log</code> - 스케줄러, 스케줄 결정을 담당</li><li><code>/var/log/kube-controller-manager.log</code> - 레플리케이션 컨트롤러를 담당하는 컨트롤러</li></ul><h3 id=워커-노드>워커 노드</h3><ul><li><code>/var/log/kubelet.log</code> - Kubelet, 노드에서 컨테이너 실행을 담당</li><li><code>/var/log/kube-proxy.log</code> - Kube Proxy, 서비스 로드밸런싱을 담당</li></ul><h2 id=클러스터-장애-모드>클러스터 장애 모드</h2><p>아래에 일부 오류 상황 예시 및 문제를 완화하기 위해 클러스터 설정을 조정하는 방법을 나열한다.</p><h3 id=근본-원인>근본 원인</h3><ul><li>VM(들) 종료</li><li>클러스터 내 또는 클러스터와 사용자 간의 네트워크 분할</li><li>쿠버네티스 소프트웨어의 충돌</li><li>데이터 손실 또는 퍼시스턴트 스토리지 사용 불가 (e.g. GCE PD 또는 AWS EBS 볼륨)</li><li>운영자 오류, 예를 들면 잘못 구성된 쿠버네티스 소프트웨어 또는 애플리케이션 소프트웨어</li></ul><h3 id=특정-시나리오>특정 시나리오</h3><ul><li>API 서버 VM 종료 또는 API 서버 충돌<ul><li>다음의 현상을 유발함<ul><li>새로운 파드, 서비스, 레플리케이션 컨트롤러를 중지, 업데이트 또는 시작할 수 없다.</li><li>쿠버네티스 API에 의존하지 않는 기존 파드 및 서비스는 계속 정상적으로 작동할 것이다.</li></ul></li></ul></li><li>API 서버 백업 스토리지 손실<ul><li>다음의 현상을 유발함<ul><li>API 서버가 구동되지 않을 것이다.</li><li>kubelet에 도달할 수 없게 되지만, kubelet이 여전히 동일한 파드를 계속 실행하고 동일한 서비스 프록시를 제공할 것이다.</li><li>API 서버를 재시작하기 전에, 수동으로 복구하거나 API서버 상태를 재생성해야 한다.</li></ul></li></ul></li><li>지원 서비스 (노드 컨트롤러, 레플리케이션 컨트롤러 매니저, 스케쥴러 등) VM 종료 또는 충돌<ul><li>현재 그것들은 API 서버와 같은 위치에 있기 때문에 API 서버와 비슷한 상황을 겪을 것이다.</li><li>미래에는 이들도 복제본을 가질 것이며 API서버와 별도로 배치될 수도 있다.</li><li>지원 서비스들은 상태(persistent state)를 자체적으로 유지하지는 않는다.</li></ul></li><li>개별 노드 (VM 또는 물리적 머신) 종료<ul><li>다음의 현상을 유발함<ul><li>해당 노드의 파드가 실행을 중지</li></ul></li></ul></li><li>네트워크 분할<ul><li>다음의 현상을 유발함<ul><li>파티션 A는 파티션 B의 노드가 다운되었다고 생각한다. 파티션 B는 API 서버가 다운되었다고 생각한다. (마스터 VM이 파티션 A에 있다고 가정)</li></ul></li></ul></li><li>Kubelet 소프트웨어 오류<ul><li>다음의 현상을 유발함<ul><li>충돌한 kubelet은 노드에서 새 파드를 시작할 수 없다.</li><li>kubelet이 파드를 삭제할 수도 있고 삭제하지 않을 수도 있다.</li><li>노드는 비정상으로 표시된다.</li><li>레플리케이션 컨트롤러는 다른 곳에서 새 파드를 시작한다.</li></ul></li></ul></li><li>클러스터 운영자 오류<ul><li>다음의 현상을 유발함<ul><li>파드, 서비스 등의 손실</li><li>API 서버 백업 저장소 분실</li><li>API를 읽을 수 없는 사용자</li><li>기타</li></ul></li></ul></li></ul><h3 id=완화>완화</h3><ul><li><p>조치: IaaS VM을 위한 IaaS 공급자의 자동 VM 다시 시작 기능을 사용한다.</p><ul><li>다음을 완화할 수 있음: API 서버 VM 종료 또는 API 서버 충돌</li><li>다음을 완화할 수 있음: 지원 서비스 VM 종료 또는 충돌</li></ul></li><li><p>조치: API 서버+etcd가 있는 VM에 IaaS 제공자의 안정적인 스토리지(예: GCE PD 또는 AWS EBS 볼륨)를 사용한다.</p><ul><li>다음을 완화할 수 있음: API 서버 백업 스토리지 손실</li></ul></li><li><p>조치: <a href=/docs/setup/production-environment/tools/kubeadm/high-availability/>고가용성</a> 구성을 사용한다.</p><ul><li>다음을 완화할 수 있음: 컨트롤 플레인 노드 종료 또는 컨트롤 플레인 구성 요소(스케줄러, API 서버, 컨트롤러 매니저) 충돌<ul><li>동시에 발생하는 하나 이상의 노드 또는 구성 요소 오류를 허용한다.</li></ul></li><li>다음을 완화할 수 있음: API 서버 백업 스토리지(i.e., etcd의 데이터 디렉터리) 손실<ul><li>고가용성 etcd 구성을 사용하고 있다고 가정</li></ul></li></ul></li><li><p>조치: API 서버 PD/EBS 볼륨의 주기적인 스냅샷</p><ul><li>다음을 완화할 수 있음: API 서버 백업 스토리지 손실</li><li>다음을 완화할 수 있음: 일부 운영자 오류 사례</li><li>다음을 완화할 수 있음: 일부 쿠버네티스 소프트웨어 오류 사례</li></ul></li><li><p>조치: 파드 앞에 레플리케이션 컨트롤러와 서비스 사용</p><ul><li>다음을 완화할 수 있음: 노드 종료</li><li>다음을 완화할 수 있음: Kubelet 소프트웨어 오류</li></ul></li><li><p>조치: 예기치 않은 재시작을 허용하도록 설계된 애플리케이션(컨테이너)</p><ul><li>다음을 완화할 수 있음: 노드 종료</li><li>다음을 완화할 수 있음: Kubelet 소프트웨어 오류</li></ul></li></ul><h2 id=다음-내용>다음 내용</h2><ul><li><a href=/ko/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/>리소스 메트릭 파이프라인</a>에서 사용할 수 있는 메트릭에 대해 알아 본다.</li><li><a href=/ko/docs/tasks/debug/debug-cluster/resource-usage-monitoring/>리소스 사용량 모니터링</a>을 위한 추가 도구에 대해 알아 본다.</li><li>Node Problem Detector를 사용하여 <a href=/ko/docs/tasks/debug/debug-cluster/monitor-node-health/>노드 헬스(health)를 모니터링</a>한다.</li><li><code>crictl</code>을 사용하여 <a href=/ko/docs/tasks/debug/debug-cluster/crictl/>쿠버네티스 노드를 디버깅</a>한다.</li><li><a href=/ko/docs/tasks/debug/debug-cluster/audit/>쿠버네티스 감사(auditing)</a>에 대한 더 자세한 정보를 본다.</li><li><code>telepresence</code>를 사용하여 <a href=/ko/docs/tasks/debug/debug-cluster/local-debugging/>서비스를 로컬에서 개발 및 디버깅</a>한다.</li></ul></div></div><div class=td-content style=page-break-before:always><h1 id=pg-5ff0cdcf7701f887e45d629f5cfe0424>1 - 리소스 메트릭 파이프라인</h1><p>쿠버네티스에서, <em>메트릭 API(Metrics API)</em> 는 자동 스케일링 및 비슷한 사용 사례를 지원하기 위한 기본적인 메트릭 집합을 제공한다.
+이 API는 노드와 파드의 리소스 사용량 정보를 제공하며,
+여기에는 CPU 및 메모리 메트릭이 포함된다.
+메트릭 API를 클러스터에 배포하면, 쿠버네티스 API의 클라이언트는 이 정보에 대해 질의할 수 있으며,
+질의 권한을 관리하기 위해 쿠버네티스의 접근 제어 메커니즘을 이용할 수 있다.</p><p><a href=/ko/docs/tasks/run-application/horizontal-pod-autoscale/>HorizontalPodAutoscaler</a>(HPA) 및
+<a href=https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler#readme>VerticalPodAutoscaler</a>(VPA)는
+사용자의 요구 사항을 만족할 수 있도록 워크로드 레플리카와 리소스를 조정하는 데에 메트릭 API의 데이터를 이용한다.</p><p><a href=/docs/reference/generated/kubectl/kubectl-commands#top><code>kubectl top</code></a>
+명령을 이용하여
+리소스 메트릭을 볼 수도 있다.</p><div class="alert alert-info note callout" role=alert><strong>참고:</strong> 메트릭 API 및 이것이 제공하는 메트릭 파이프라인은
+HPA / VPA 에 의한 자동 스케일링이 동작하는 데 필요한
+최소한의 CPU 및 메모리 메트릭만을 제공한다.
+더 많은 메트릭 집합을 제공하려면, <em>커스텀 메트릭 API</em> 를 사용하는
+추가 <a href=/ko/docs/tasks/debug/debug-cluster/resource-usage-monitoring/#full-metrics-pipeline>메트릭 파이프라인</a>을 배포하여
+기본 메트릭 API를 보충할 수 있다.</div><p>그림 1은 리소스 메트릭 파이프라인의 아키텍처를 나타낸다.</p><figure><div class=mermaid>flowchart RL
+subgraph cluster[클러스터]
+direction RL
+S[<br><br>]
+A[Metrics-<br>Server]
+subgraph B[노드]
+direction TB
+D[cAdvisor] --> C[kubelet]
+E[컨테이너<br>런타임] --> D
+E1[컨테이너<br>런타임] --> D
+P[파드 데이터] -.- C
+end
+L[API<br>서버]
+W[HPA]
+C ---->|요약<br>API| A -->|메트릭<br>API| L --> W
+end
+L ---> K[kubectl<br>top]
+classDef box fill:#fff,stroke:#000,stroke-width:1px,color:#000;
+class W,B,P,K,cluster,D,E,E1 box
+classDef spacewhite fill:#ffffff,stroke:#fff,stroke-width:0px,color:#000
+class S spacewhite
+classDef k8s fill:#326ce5,stroke:#fff,stroke-width:1px,color:#fff;
+class A,L,C k8s</div></figure><noscript><div class="alert alert-secondary callout" role=alert><em class=javascript-required>이 컨텐츠를 보려면 자바스크립트가 <a href=https://www.enable-javascript.com/>활성화</a>되어 있어야 합니다.</em></div></noscript><p>그림 1. 리소스 메트릭 파이프라인</p><p>그림의 오른쪽에서 왼쪽 순으로, 아키텍처 구성 요소는 다음과 같다.</p><ul><li><p><a href=https://github.com/google/cadvisor>cAdvisor</a>: kubelet에 포함된 컨테이너 메트릭을
+수집, 집계, 노출하는 데몬</p></li><li><p><a href=/ko/docs/concepts/overview/components/#kubelet>kubelet</a>: 컨테이너 리소스 관리를 위한 노드 에이전트.
+리소스 메트릭은 kubelet API 엔드포인트 <code>/metrics/resource</code> 및
+<code>/stats</code> 를 사용하여 접근 가능하다.</p></li><li><p><a href=#summary-api-source>요약 API</a>: <code>/stats</code> 엔드포인트를 통해 사용할 수 있는
+노드 별 요약된 정보를 탐색 및 수집할 수 있도록 kubelet이 제공하는 API</p></li><li><p><a href=#metrics-server>metrics-server</a>: 각 kubelet으로부터 수집한 리소스 메트릭을 수집 및 집계하는 클러스터 애드온 구성 요소.
+API 서버는 HPA, VPA 및 <code>kubectl top</code> 명령어가 사용할 수 있도록 메트릭 API를 제공한다.
+metrics-server는 메트릭 API에 대한 기준 구현(reference implementation) 중 하나이다.</p></li><li><p><a href=#metrics-api>메트릭 API</a>: 워크로드 오토스케일링에 사용되는 CPU 및 메모리 정보로의 접근을 지원하는 쿠버네티스 API.
+이를 클러스터에서 사용하려면,
+메트릭 API를 제공하는 API 확장(extension) 서버가 필요하다.</p><div class="alert alert-info note callout" role=alert><strong>참고:</strong> cAdvisor는 cgroups으로부터 메트릭을 가져오는 것을 지원하며, 리눅스의 일반적인 컨테이너 런타임은 이를 지원한다.
+만약 다른 리소스 격리 메커니즘(예: 가상화)을 사용하는 컨테이너 런타임을 사용한다면,
+kubelet이 메트릭을 사용할 수 있기 위해서는
+해당 컨테이너 런타임이
+<a href=https://github.com/kubernetes/community/blob/master/contributors/devel/sig-node/cri-container-stats.md>CRI 컨테이너 메트릭</a>을 지원해야 한다.</div></li></ul><h2 id=metrics-api>메트릭 API</h2><div style=margin-top:10px;margin-bottom:10px><b>기능 상태:</b> <code>Kubernetes 1.8 [beta]</code></div><p>metrics-server는 메트릭 API에 대한 구현이다.
+이 API는 클러스터 내 노드와 파드의 CPU 및 메모리 사용 정보에 접근할 수 있게 해 준다.
+이것의 주 역할은 리소스 사용 메트릭을 쿠버네티스 오토스케일러 구성 요소에 제공하는 것이다.</p><p>다음은 <code>minikube</code> 노드에 대한 메트릭 API 요청 예시이며
+가독성 향상을 위해 <code>jq</code>를 활용한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get --raw <span style=color:#b44>&#34;/apis/metrics.k8s.io/v1beta1/nodes/minikube&#34;</span> | jq <span style=color:#b44>&#39;.&#39;</span>
+</span></span></code></pre></div><p>다음은 <code>curl</code>을 이용하여 동일한 API 호출을 하는 명령어다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>curl http://localhost:8080/apis/metrics.k8s.io/v1beta1/nodes/minikube
+</span></span></code></pre></div><p>응답 예시는 다음과 같다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;kind&#34;</span>: <span style=color:#b44>&#34;NodeMetrics&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;apiVersion&#34;</span>: <span style=color:#b44>&#34;metrics.k8s.io/v1beta1&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;metadata&#34;</span>: {
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;name&#34;</span>: <span style=color:#b44>&#34;minikube&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;selfLink&#34;</span>: <span style=color:#b44>&#34;/apis/metrics.k8s.io/v1beta1/nodes/minikube&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;creationTimestamp&#34;</span>: <span style=color:#b44>&#34;2022-01-27T18:48:43Z&#34;</span>
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;timestamp&#34;</span>: <span style=color:#b44>&#34;2022-01-27T18:48:33Z&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;window&#34;</span>: <span style=color:#b44>&#34;30s&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;usage&#34;</span>: {
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;cpu&#34;</span>: <span style=color:#b44>&#34;487558164n&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;memory&#34;</span>: <span style=color:#b44>&#34;732212Ki&#34;</span>
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>다음은 <code>kube-system</code> 네임스페이스 내의 <code>kube-scheduler-minikube</code> 파드에 대한
+메트릭 API 요청 예시이며 가독성 향상을 위해 <code>jq</code>를 활용한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get --raw <span style=color:#b44>&#34;/apis/metrics.k8s.io/v1beta1/namespaces/kube-system/pods/kube-scheduler-minikube&#34;</span> | jq <span style=color:#b44>&#39;.&#39;</span>
+</span></span></code></pre></div><p>다음은 <code>curl</code>을 이용하여 동일한 API 호출을 하는 명령어다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>curl http://localhost:8080/apis/metrics.k8s.io/v1beta1/namespaces/kube-system/pods/kube-scheduler-minikube
+</span></span></code></pre></div><p>응답 예시는 다음과 같다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;kind&#34;</span>: <span style=color:#b44>&#34;PodMetrics&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;apiVersion&#34;</span>: <span style=color:#b44>&#34;metrics.k8s.io/v1beta1&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;metadata&#34;</span>: {
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;name&#34;</span>: <span style=color:#b44>&#34;kube-scheduler-minikube&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;namespace&#34;</span>: <span style=color:#b44>&#34;kube-system&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;selfLink&#34;</span>: <span style=color:#b44>&#34;/apis/metrics.k8s.io/v1beta1/namespaces/kube-system/pods/kube-scheduler-minikube&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;creationTimestamp&#34;</span>: <span style=color:#b44>&#34;2022-01-27T19:25:00Z&#34;</span>
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;timestamp&#34;</span>: <span style=color:#b44>&#34;2022-01-27T19:24:31Z&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;window&#34;</span>: <span style=color:#b44>&#34;30s&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;containers&#34;</span>: [
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;name&#34;</span>: <span style=color:#b44>&#34;kube-scheduler&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;usage&#34;</span>: {
+</span></span><span style=display:flex><span>        <span style=color:green;font-weight:700>&#34;cpu&#34;</span>: <span style=color:#b44>&#34;9559630n&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:green;font-weight:700>&#34;memory&#34;</span>: <span style=color:#b44>&#34;22244Ki&#34;</span>
+</span></span><span style=display:flex><span>      }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>  ]
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>메트릭 API는 <a href=https://github.com/kubernetes/metrics>k8s.io/metrics</a> 저장소에 정의되어 있다.
+<code>metrics.k8s.io</code> API를 사용하기 위해서는
+<a href=/docs/tasks/extend-kubernetes/configure-aggregation-layer/>API 집계(aggregation) 계층</a>을 활성화하고
+<a href=/docs/reference/kubernetes-api/cluster-resources/api-service-v1/>APIService</a>를 등록해야 한다.</p><p>메트릭 API에 대해 더 알아보려면, <a href=https://git.k8s.io/design-proposals-archive/instrumentation/resource-metrics-api.md>리소스 메트릭 API 디자인</a>,
+<a href=https://github.com/kubernetes-sigs/metrics-server>metrics-server 저장소</a> 및
+<a href=https://github.com/kubernetes/metrics#resource-metrics-api>리소스 메트릭 API</a>를 참고한다.</p><div class="alert alert-info note callout" role=alert><strong>참고:</strong> 메트릭 API에 접근하려면 먼저 메트릭 API를 제공하는
+metrics-server 또는 대체 어댑터를 배포해야 한다.</div><h2 id=measuring-resource-usage>리소스 사용량 측정</h2><h3 id=cpu>CPU</h3><p>CPU는 <code>cpu</code> 단위로 측정된 평균 코어 사용량 형태로 보고된다. 쿠버네티스에서 1 cpu는
+클라우드 제공자의 경우 1 vCPU/코어에 해당하고, 베어메탈 인텔 프로세서의 경우 1 하이퍼-스레드에 해당한다.</p><p>이 값은 커널(Linux 및 Windows 커널 모두)에서 제공하는 누적 CPU 카운터에 대한
+비율을 취하여 얻어진다.
+CPU 값 계산에 사용된 타임 윈도우는 메트릭 API의 <code>window</code> 필드에 표시된다.</p><p>쿠버네티스가 어떻게 CPU 리소스를 할당하고 측정하는지 더 알아보려면,
+<a href=/ko/docs/concepts/configuration/manage-resources-containers/#meaning-of-cpu>CPU의 의미</a>를 참고한다.</p><h3 id=메모리>메모리</h3><p>메모리는 메트릭을 수집하는 순간에 바이트 단위로 측정된 워킹 셋(working set) 형태로 보고된다.</p><p>이상적인 환경에서, "워킹 셋"은 메모리가 부족한 상태더라도 해제할 수 없는 사용 중인 메모리의 양이다.
+그러나 워킹 셋의 계산 방법은 호스트 OS에 따라 다르며
+일반적으로 추정치를 추출하기 위해 휴리스틱을 많이 사용한다.</p><p>컨테이너의 워킹 셋에 대한 쿠버네티스 모델은 컨테이너 런타임이 해당 컨테이너와 연결된 익명(anonymous) 메모리를 계산할 것으로 예상한다.
+호스트 OS가 항상 페이지를 회수할 수는 없기 때문에,
+워킹 셋 메트릭에는 일반적으로 일부 캐시된 (파일 기반) 메모리도 포함된다.</p><p>쿠버네티스가 어떻게 메모리 리소스를 할당하고 측정하는지 더 알아보려면,
+<a href=/ko/docs/concepts/configuration/manage-resources-containers/#meaning-of-memory>메모리의 의미</a>를 참고한다.</p><h2 id=metrics-server>metrics-server</h2><p>metrics-server는 kubelet으로부터 리소스 메트릭을 수집하고,
+이를 HPA(Horizontal Pod Autoscaler) 및 VPA(Vertical Pod Autoscaler)가 활용할 수 있도록 쿠버네티스 API 서버 내에서 메트릭 API(Metrics API)를 통해 노출한다.
+<code>kubectl top</code> 명령을 사용하여 이 메트릭을 확인해볼 수도 있다.</p><p>metrics-server는 쿠버네티스 API를 사용하여 클러스터의 노드와 파드를 추적한다.
+metrics-server는 각 노드에 HTTP를 통해 질의하여 메트릭을 수집한다.
+metrics-server는 또한 파드 메타데이터의 내부적 뷰를 작성하고, 파드 헬스(health)에 대한 캐시를 유지한다.
+이렇게 캐시된 파드 헬스 정보는 metrics-server가 제공하는 확장 API(extension API)를 통해 이용할 수 있다.</p><p>HPA 질의에 대한 예시에서, 예를 들어 HPA 질의에 대한 경우,
+metrics-server는 디플로이먼트의 어떤 파드가 레이블 셀렉터 조건을 만족하는지 판별해야 한다.</p><p>metrics-server는 각 노드로부터 메트릭을 수집하기 위해 <a href=/docs/reference/command-line-tools-reference/kubelet/>kubelet</a> API를 호출한다.
+사용 중인 metrics-server 버전에 따라, 다음의 엔드포인트를 사용한다.</p><ul><li>v0.6.0 이상: 메트릭 리소스 엔드포인트 <code>/metrics/resource</code></li><li>이전 버전: 요약 API 엔드포인트 <code>/stats/summary</code></li></ul><p>metrics-server에 대한 더 많은 정보는
+<a href=https://github.com/kubernetes-sigs/metrics-server>metrics-server 저장소</a>를 확인한다.</p><p>또한 다음을 참고할 수도 있다.</p><ul><li><a href=https://git.k8s.io/design-proposals-archive/instrumentation/metrics-server.md>metrics-server 디자인</a></li><li><a href=https://github.com/kubernetes-sigs/metrics-server/blob/master/FAQ.md>metrics-server 자주 묻는 질문</a></li><li><a href=https://github.com/kubernetes-sigs/metrics-server/blob/master/KNOWN_ISSUES.md>metrics-server 알려진 이슈</a></li><li><a href=https://github.com/kubernetes-sigs/metrics-server/releases>metrics-server 릴리스</a></li><li><a href=/ko/docs/tasks/run-application/horizontal-pod-autoscale/>Horizontal Pod Autoscaling</a></li></ul><h3 id=summary-api-source>요약 API(Summary API) 소스</h3><p><a href=/docs/reference/command-line-tools-reference/kubelet/>Kubelet</a>은
+노드, 볼륨, 파드, 컨테이너 수준의 통계를 수집하며,
+소비자(consumer)가 읽을 수 있도록 이 통계를
+<a href=https://github.com/kubernetes/kubernetes/blob/7d309e0104fedb57280b261e5677d919cb2a0e2d/staging/src/k8s.io/kubelet/pkg/apis/stats/v1alpha1/types.go>요약 API</a>에 기록한다.</p><p>다음은 <code>minikube</code> 노드에 대한 요약 API 요청 예시이다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get --raw <span style=color:#b44>&#34;/api/v1/nodes/minikube/proxy/stats/summary&#34;</span>
+</span></span></code></pre></div><p>다음은 <code>curl</code>을 이용하여 동일한 API 호출을 하는 명령어다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>curl http://localhost:8080/api/v1/nodes/minikube/proxy/stats/summary
+</span></span></code></pre></div><div class="alert alert-info note callout" role=alert><strong>참고:</strong> metrics-server 0.6.x 버전부터,
+요약 API <code>/stats/summary</code> 엔드포인트가 <code>/metrics/resource</code> 엔드포인트로 대체될 것이다.</div></div><div class=td-content style=page-break-before:always><h1 id=pg-cb9e28c208c6cfbabdb15ba2e42e9ef0>2 - 리소스 모니터링 도구</h1><p>애플리케이션을 스케일하여 신뢰할 수 있는 서비스를 제공하려면,
+애플리케이션이 배포되었을 때 애플리케이션이 어떻게 동작하는지를 이해해야 한다.
+컨테이너, <a href=/ko/docs/concepts/workloads/pods/>파드</a>,
+<a href=/ko/docs/concepts/services-networking/service>서비스</a>,
+그리고 전체 클러스터의 특성을 검사하여
+쿠버네티스 클러스터 내의 애플리케이션 성능을 검사할 수 있다. 쿠버네티스는 각 레벨에서
+애플리케이션의 리소스 사용량에 대한 상세 정보를 제공한다.
+이 정보는 애플리케이션의 성능을 평가하고
+병목 현상을 제거하여 전체 성능을 향상할 수 있게 해준다.</p><p>쿠버네티스에서 애플리케이션 모니터링은 단일 모니터링 솔루션에 의존하지 않는다.
+신규 클러스터에서는, <a href=#%EB%A6%AC%EC%86%8C%EC%8A%A4-%EB%A9%94%ED%8A%B8%EB%A6%AD-%ED%8C%8C%EC%9D%B4%ED%94%84%EB%9D%BC%EC%9D%B8>리소스 메트릭</a> 또는
+<a href=#%EC%99%84%EC%A0%84%ED%95%9C-%EB%A9%94%ED%8A%B8%EB%A6%AD-%ED%8C%8C%EC%9D%B4%ED%94%84%EB%9D%BC%EC%9D%B8>완전한 메트릭</a> 파이프라인으로 모니터링 통계를 수집할 수 있다.</p><h2 id=리소스-메트릭-파이프라인>리소스 메트릭 파이프라인</h2><p>리소스 메트릭 파이프라인은
+<a href=/ko/docs/tasks/run-application/horizontal-pod-autoscale>Horizontal Pod Autoscaler</a>
+컨트롤러와 같은 클러스터 구성요소나
+<code>kubectl top</code> 유틸리티에 관련되어 있는
+메트릭들로 제한된 집합을 제공한다. 이 메트릭은 경량의 단기 인메모리 저장소인
+<a href=https://github.com/kubernetes-sigs/metrics-server>metrics-server</a>에
+의해서 수집되며 <code>metrics.k8s.io</code> API를 통해 노출된다.</p><p>metrics-server는 클러스터 상의 모든 노드를 발견하고
+각 노드의 <a href=/docs/reference/command-line-tools-reference/kubelet/>kubelet</a>에
+CPU와 메모리 사용량을 질의한다.
+Kubelet은 쿠버네티스 마스터와 노드 간의 다리 역할을 하면서
+머신에서 구동되는 파드와 컨테이너를 관리한다.
+Kubelet은 각각의 파드를 해당하는 컨테이너에 매치시키고
+컨테이너 런타임 인터페이스를 통해
+컨테이너 런타임에서 개별 컨테이너의 사용량 통계를 가져온다.
+컨테이너를 구현하기 위해 리눅스 cgroup 및 네임스페이스를 활용하는 컨테이너 런타임을 사용하며,
+해당 컨테이너 런타임이 사용 통계치를 퍼블리싱 하지 않는 경우,
+kubelet은 해당 통계치를 (<a href=https://github.com/google/cadvisor>cAdvisor</a>의 코드 사용하여) 직접 조회 할 수 있다.
+이런 통계가 어떻게 도착하든 kubelet은 취합된 파드 리소스 사용량 통계를
+metric-server 리소스 메트릭 API를 통해 노출한다.
+이 API는 kubelet의 인증이 필요한 읽기 전용 포트 상의
+<code>/metrics/resource/v1beta1</code>에서 제공된다.</p><h2 id=완전한-메트릭-파이프라인>완전한 메트릭 파이프라인</h2><p>완전한 메트릭 파이프라인은 보다 풍부한 메트릭에 접근할 수 있도록 해준다.
+쿠버네티스는 Horizontal Pod Autoscaler와 같은 메커니즘을 활용해서 이런 메트릭에
+대한 반응으로 클러스터의 현재 상태를 기반으로 자동으로 스케일링하거나 클러스터를
+조정할 수 있다. 모니터링 파이프라인은 kubelet에서 메트릭을 가져와서 쿠버네티스에
+<code>custom.metrics.k8s.io</code>와 <code>external.metrics.k8s.io</code> API를 구현한 어댑터를 통해
+노출한다.</p><p>CNCF 프로젝트인 <a href=https://prometheus.io>프로메테우스</a>는 기본적으로 쿠버네티스, 노드, 프로메테우스 자체를 모니터링할 수 있다.
+CNCF 프로젝트가 아닌 완전한 메트릭 파이프라인 프로젝트는 쿠버네티스 문서의 범위가 아니다.</p><h2 id=다음-내용>다음 내용</h2><p>다음과 같은 추가 디버깅 도구에 대해 더 알아본다.</p><ul><li><a href=/ko/docs/concepts/cluster-administration/logging/>로깅</a></li><li><a href=/ko/docs/tasks/debug/debug-cluster/resource-usage-monitoring/>모니터링</a></li><li><a href=/ko/docs/tasks/debug/debug-application/get-shell-running-container/><code>exec</code>를 통해 컨테이너에 접속하기</a></li><li><a href=/ko/docs/tasks/extend-kubernetes/http-proxy-access-api/>프록시를 통해 컨테이너에 연결하기</a></li><li><a href=/ko/docs/tasks/access-application-cluster/port-forward-access-application-cluster/>포트 포워딩을 사용해서 클러스터 내 애플리케이션에 접근하기</a></li><li><a href=/ko/docs/tasks/debug/debug-cluster/crictl/>crictl을 사용하여 쿠버네티스 노드 조사하기</a></li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-20165c8269bed123bfb94fb6e7f85643>3 - 노드 헬스 모니터링하기</h1><p><em>노드 문제 감지기(Node Problem Detector)</em> 는 노드의 헬스에 대해 모니터링 및 보고하는 데몬이다.
+노드 문제 감지기를 <code>데몬셋(DaemonSet)</code> 혹은 스탠드얼론 데몬(standalone daemon)으로 실행할 수 있다.
+노드 문제 감지기는 다양한 데몬으로부터 노드의 문제에 관한 정보를 다양한 데몬으로부터 수집하고,
+이러한 컨디션들을 <a href=/docs/concepts/architecture/nodes/#condition>노드컨디션(NodeCondition)</a> 및
+<a href=/docs/reference/generated/kubernetes-api/v1.25/#event-v1-core>이벤트(Event)</a>형태로 API 서버에 보고한다.</p><p>노드 문제 감지기 설치 및 사용 방법을 보려면,
+<a href=https://github.com/kubernetes/node-problem-detector>노드 문제 감지기 프로젝트 문서</a>를 참조하자.</p><h2 id=시작하기-전에>시작하기 전에</h2><p>쿠버네티스 클러스터가 필요하고, kubectl 커맨드-라인 툴이 클러스터와
+통신할 수 있도록 설정되어 있어야 한다. 이 튜토리얼은 컨트롤 플레인 호스트가 아닌 노드가 적어도 2개 포함된 클러스터에서 실행하는 것을 추천한다. 만약, 아직 클러스터를 가지고
+있지 않다면,
+<a href=/ko/docs/tasks/tools/#minikube>minikube</a>를 사용해서 생성하거나
+다음 쿠버네티스 플레이그라운드 중 하나를 사용할 수 있다.</p><ul><li><a href=https://killercoda.com/playgrounds/scenario/kubernetes>Killercoda</a></li><li><a href=https://labs.play-with-k8s.com/>Play with Kubernetes</a></li></ul><h2 id=제약-사항>제약 사항</h2><ul><li><p>노드 문제 감지기는 파일 기반의 커널 로그만 지원한다.
+<code>journald</code> 와 같은 로그 도구는 지원하지 않는다.</p></li><li><p>노드 문제 감지기는 커널 로그 형식을 사용하여 커널 이슈를 보고한다.
+커널 로그 형식을 확장하는 방법을 배우려면 <a href=#support-other-log-format>기타 로그 형식 지원 추가</a>를 살펴보자.</p></li></ul><h2 id=노드-문제-감지기-활성화하기>노드 문제 감지기 활성화하기</h2><p>일부 클라우드 사업자는 노드 문제 감지기를 <a class=glossary-tooltip title='쿠버네티스의 기능을 확장하는 리소스.' data-toggle=tooltip data-placement=top href=/ko/docs/concepts/cluster-administration/addons/ target=_blank aria-label=애드온>애드온</a> 으로서 제공한다.
+또한, <code>kubectl</code>을 이용하거나 애드온 파드를 생성하여 노드 문제 감지기를 활성화할 수도 있다.</p><h3 id=using-kubectl>kubectl를 이용하여 노드 문제 감지기 활성화하기</h3><p><code>kubectl</code>은 노드 문제 감지기를 관리하는 가장 유연한 방법이다.
+현재 환경에 맞게 조정하거나 사용자 정의 노드 문제를 탐지하기 위해
+기본 설정값을 덮어쓸 수 있다. 예를 들면 아래와 같다.</p><ol><li><p><code>node-problem-detector.yaml</code>와 유사하게 노드 문제 감지기 구성을 생성한다:</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/ko/examples/debug/node-problem-detector.yaml download=debug/node-problem-detector.yaml><code>debug/node-problem-detector.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("debug-node-problem-detector-yaml")' title="Copy debug/node-problem-detector.yaml to clipboard"></img></div><div class=includecode id=debug-node-problem-detector-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>apps/v1<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>DaemonSet<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>node-problem-detector-v0.1<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>namespace</span>:<span style=color:#bbb> </span>kube-system<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>k8s-app</span>:<span style=color:#bbb> </span>node-problem-detector<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>version</span>:<span style=color:#bbb> </span>v0.1<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>kubernetes.io/cluster-service</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;true&#34;</span><span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>selector</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>matchLabels</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>k8s-app</span>:<span style=color:#bbb> </span>node-problem-detector  <span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>version</span>:<span style=color:#bbb> </span>v0.1<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>kubernetes.io/cluster-service</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;true&#34;</span><span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>template</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>k8s-app</span>:<span style=color:#bbb> </span>node-problem-detector<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>version</span>:<span style=color:#bbb> </span>v0.1<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>kubernetes.io/cluster-service</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;true&#34;</span><span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>hostNetwork</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>true</span><span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>node-problem-detector<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>registry.k8s.io/node-problem-detector:v0.1<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>securityContext</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>privileged</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>true</span><span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>resources</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>limits</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>cpu</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;200m&#34;</span><span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>memory</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;100Mi&#34;</span><span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>requests</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>cpu</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;20m&#34;</span><span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>memory</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;20Mi&#34;</span><span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>volumeMounts</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>        </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>log<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>mountPath</span>:<span style=color:#bbb> </span>/log<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>readOnly</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>true</span><span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>volumes</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>log<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>hostPath</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>path</span>:<span style=color:#bbb> </span>/var/log/</span></span></code></pre></div></div></div><div class="alert alert-info note callout" role=alert><strong>참고:</strong> 현재 운영 체제 배포판의 시스템 로그 디렉토리와 일치하도록 기재했는지 확인해야 한다.</div></li><li><p><code>kubectl</code>을 이용하여 노드 문제 감지기를 시작한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -f https://k8s.io/examples/debug/node-problem-detector.yaml
+</span></span></code></pre></div></li></ol><h3 id=using-addon-pod>애드온 파드를 이용하여 노드 문제 감지기 활성화하기</h3><p>만약 커스텀 클러스터 부트스트랩 솔루션을 사용중이고
+기본 설정값을 덮어쓸 필요가 없다면,
+디플로이먼트를 추가로 자동화하기 위해 애드온 파드를 활용할 수 있다.</p><p><code>node-problem-detector.yaml</code>를 생성하고,
+컨트롤 플레인 노드의 애드온 파드의 디렉토리 <code>/etc/kubernetes/addons/node-problem-detector</code>에 설정을 저장한다.</p><h2 id=설정-덮어쓰기>설정 덮어쓰기</h2><p>노드 문제 감지기를 빌드할 때,
+<a href=https://github.com/kubernetes/node-problem-detector/tree/v0.1/config>기본 설정</a>이 포함되어 있다.</p><p>하지만 <a href=/docs/tasks/configure-pod-container/configure-pod-configmap/><code>컨피그맵(ConfigMap)</code></a>을 이용해
+설정을 덮어쓸 수 있다.</p><ol><li><p><code>config/</code> 내의 설정 파일을 변경한다.</p></li><li><p><code>node-problem-detector-config</code> <code>컨피그맵(ConfigMap)</code>을 생성한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create configmap node-problem-detector-config --from-file<span style=color:#666>=</span>config/
+</span></span></code></pre></div></li><li><p><code>컨피그맵(ConfigMap)</code>을 사용하도록 <code>node-problem-detector.yaml</code>을 변경한다.</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/ko/examples/debug/node-problem-detector-configmap.yaml download=debug/node-problem-detector-configmap.yaml><code>debug/node-problem-detector-configmap.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("debug-node-problem-detector-configmap-yaml")' title="Copy debug/node-problem-detector-configmap.yaml to clipboard"></img></div><div class=includecode id=debug-node-problem-detector-configmap-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>apps/v1<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>DaemonSet<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>node-problem-detector-v0.1<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>namespace</span>:<span style=color:#bbb> </span>kube-system<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>k8s-app</span>:<span style=color:#bbb> </span>node-problem-detector<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>version</span>:<span style=color:#bbb> </span>v0.1<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>kubernetes.io/cluster-service</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;true&#34;</span><span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>selector</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>matchLabels</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>k8s-app</span>:<span style=color:#bbb> </span>node-problem-detector  <span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>version</span>:<span style=color:#bbb> </span>v0.1<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>kubernetes.io/cluster-service</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;true&#34;</span><span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>template</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>k8s-app</span>:<span style=color:#bbb> </span>node-problem-detector<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>version</span>:<span style=color:#bbb> </span>v0.1<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>kubernetes.io/cluster-service</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;true&#34;</span><span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>hostNetwork</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>true</span><span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>node-problem-detector<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>registry.k8s.io/node-problem-detector:v0.1<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>securityContext</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>privileged</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>true</span><span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>resources</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>limits</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>cpu</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;200m&#34;</span><span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>memory</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;100Mi&#34;</span><span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>requests</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>cpu</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;20m&#34;</span><span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>memory</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;20Mi&#34;</span><span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>volumeMounts</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>        </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>log<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>mountPath</span>:<span style=color:#bbb> </span>/log<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>readOnly</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>true</span><span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>        </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>config<span style=color:#bbb> </span><span style=color:#080;font-style:italic># config/ 디렉토리를 컨피그맵 볼륨(ConfigMap volume)으로 덮어쓴다</span><span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>mountPath</span>:<span style=color:#bbb> </span>/config<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>readOnly</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>true</span><span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>volumes</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>log<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>hostPath</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>path</span>:<span style=color:#bbb> </span>/var/log/<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>config<span style=color:#bbb> </span><span style=color:#080;font-style:italic># 컨피그맵 볼륨(ConfigMap volume)을 정의한다</span><span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>configMap</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>node-problem-detector-config</span></span></code></pre></div></div></div></li><li><p>새로운 설정 파일을 사용하여 노드 문제 감지기를 재생성한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#080;font-style:italic># 만약 노드 문제 감지기가 동작하고 있다면, 재생성 전 삭제한다</span>
+</span></span><span style=display:flex><span>kubectl delete -f https://k8s.io/examples/debug/node-problem-detector.yaml
+</span></span><span style=display:flex><span>kubectl apply -f https://k8s.io/examples/debug/node-problem-detector-configmap.yaml
+</span></span></code></pre></div></li></ol><div class="alert alert-info note callout" role=alert><strong>참고:</strong> 이 접근법은 노드 문제 감지기를 <code>kubectl</code>로 시작했을 때에만 적용된다.</div><p>만약 노드 문제 감지기가 클러스터 애드온으로 실행된 경우, 설정 덮어쓰기가 지원되지 않는다.
+애드온 매니저는 <code>컨피그맵(ConfigMap)</code>을 지원하지 않는다.</p><h2 id=커널-모니터>커널 모니터</h2><p><em>커널 모니터</em>는 노드 문제 감지기에서 지원하는 시스템 로그 모니터링 데몬이다.
+커널 모니터는 커널 로그를 감시하며, 미리 설정된 규칙에 따라 알려진 커널 이슈를 감지한다.</p><p>커널 모니터는 <a href=https://github.com/kubernetes/node-problem-detector/blob/v0.1/config/kernel-monitor.json><code>config/kernel-monitor.json</code></a>에
+미리 설정된 규칙 모음과 커널 이슈를 매칭한다.
+규칙 리스트는 확장 가능하다. 설정을 덮어쓰기 해 규칙 리스트를 확장할 수 있다.</p><h3 id=신규-노드컨디션-nodeconditions-추가하기>신규 노드컨디션(NodeConditions) 추가하기</h3><p>신규 <code>NodeCondition</code>를 지원하려면, <code>config/kernel-monitor.json</code>의 <code>conditions</code>필드 내 조건 정의를 생성해야한다.
+예를 들면 아래와 같다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;type&#34;</span>: <span style=color:#b44>&#34;NodeConditionType&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;reason&#34;</span>: <span style=color:#b44>&#34;CamelCaseDefaultNodeConditionReason&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;message&#34;</span>: <span style=color:#b44>&#34;arbitrary default node condition message&#34;</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=신규-문제-감지하기>신규 문제 감지하기</h3><p>신규 문제를 감지하려면 <code>config/kernel-monitor.json</code>의 <code>rules</code>필드를
+신규 규칙 정의로 확장하면 된다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;type&#34;</span>: <span style=color:#b44>&#34;temporary/permanent&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;condition&#34;</span>: <span style=color:#b44>&#34;NodeConditionOfPermanentIssue&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;reason&#34;</span>: <span style=color:#b44>&#34;CamelCaseShortReason&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;message&#34;</span>: <span style=color:#b44>&#34;regexp matching the issue in the kernel log&#34;</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=kernel-log-device-path>커널 로그 장치를 위한 경로 설정하기</h3><p>운영 체제 (OS) 배포판의 커널 로그 경로를 확인한다.
+리눅스 커널 <a href=https://www.kernel.org/doc/Documentation/ABI/testing/dev-kmsg>로그 장치(log device)</a>는 보통 <code>/dev/kmsg</code>와 같이 표시된다. 하지만, 로그 경로 장소는 OS 배포판마다 상이하다.
+<code>config/kernel-monitor.json</code> 의 <code>log</code> 필드는 컨테이너 내부의 로그 경로를 나타낸다.
+<code>log</code> 필드를 노드 문제 감지기가 감시하는 장치 경로와 일치하도록 구성하면 된다.</p><h3 id=support-other-log-format>기타 로그 포맷 지원 추가하기</h3><p>커널 모니터는 커널 로그의 내부 데이터 구조를 해석하기 위해
+<a href=https://github.com/kubernetes/node-problem-detector/blob/v0.1/pkg/kernelmonitor/translator/translator.go><code>Translator</code></a> 플러그인을 사용한다.
+신규 로그 포맷을 사용하기 위해 신규 해석기를 구현할 수 있다.</p><h2 id=권장-사항-및-제약-사항>권장 사항 및 제약 사항</h2><p>노드 헬스를 모니터링하기 위해 클러스터에 노드 문제 탐지기를 실행할 것을 권장한다.
+노드 문제 감지기를 실행할 때, 각 노드에 추가 리소스 오버헤드가 발생할 수 있다.
+다음과 같은 이유 때문에 일반적으로는 문제가 없다.</p><ul><li>커널 로그는 비교적 천천히 늘어난다.</li><li>노드 문제 감지기에는 리소스 제한이 설정되어 있다.</li><li>높은 부하가 걸리더라도, 리소스 사용량은 허용 가능한 수준이다. 추가 정보를 위해 노드 문제 감지기의
+<a href=https://github.com/kubernetes/node-problem-detector/issues/2#issuecomment-220255629>벤치마크 결과</a>를 살펴보자.</li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-6ca4f22ef4d1713577ada4815f0a3b5a>4 - crictl로 쿠버네티스 노드 디버깅하기</h1><div style=margin-top:10px;margin-bottom:10px><b>기능 상태:</b> <code>Kubernetes v1.11 [stable]</code></div><p><code>crictl</code>은 CRI-호환 컨테이너 런타임에 사용할 수 있는 커맨드라인 인터페이스이다.
+쿠버네티스 노드에서 컨테이너 런타임과 애플리케이션을 검사하고
+디버그하는 데 사용할 수 있다.
+<code>crictl</code>과 그 소스는 <a href=https://github.com/kubernetes-sigs/cri-tools>cri-tools</a> 저장소에서 호스팅한다.</p><h2 id=시작하기-전에>시작하기 전에</h2><p><code>crictl</code>은 CRI 런타임이 있는 리눅스 운영체제를 필요로 한다.</p><h2 id=crictl-설치하기>crictl 설치하기</h2><p>cri-tools <a href=https://github.com/kubernetes-sigs/cri-tools/releases>릴리스 페이지</a>에서
+다양한 아키텍처 별로 압축된 <code>crictl</code> 아카이브(archive)를 다운로드할 수 있다.
+설치된 쿠버네티스 버전에 해당하는 버전을 다운로드한다.
+<code>/usr/local/bin/</code>와 같은 시스템 경로의 위치에
+압축을 푼다.</p><h2 id=일반적인-사용법>일반적인 사용법</h2><p><code>crictl</code> 커맨드에는 여러 하위 커맨드와 런타임 플래그가 있다.
+자세한 내용은 <code>crictl help</code> 또는 <code>crictl &lt;subcommand> help</code>를 참조한다.</p><p>아래 내용 중 하나를 통해 <code>crictl</code>의 엔드포인트를 설정할 수 있다.</p><ul><li><code>--runtime-endpoint</code>와 <code>--image-endpoint</code> 플래그 설정.</li><li><code>CONTAINER_RUNTIME_ENDPOINT</code>와 <code>IMAGE_SERVICE_ENDPOINT</code> 환경 변수
+설정.</li><li>구성 파일 <code>/etc/crictl.yaml</code>에 엔드포인트 설정.
+다른 파일을 지정하기 위해서는 <code>crictl</code>을 실행할 때 <code>--config=PATH_TO_FILE</code> 플래그를 사용한다.</li></ul><div class="alert alert-info note callout" role=alert><strong>참고:</strong> 엔드포인트를 설정하지 않으면,
+<code>crictl</code>이 알려진 엔드포인트 목록에 연결을 시도하므로 성능에 영향을 줄 수 있다.</div><p>서버에 연결할 때 구성 파일에서 <code>timeout</code> 또는 <code>debug</code> 값을 명시하거나,
+<code>--timeout</code> 그리고 <code>--debug</code> 커맨드라인 플래그를 사용하여
+타임아웃 값을 지정하고 디버깅을 활성화하거나 비활성화할 수 있다.</p><p>현재 구성을 보거나 편집하려면 <code>/etc/crictl.yaml</code>의 내용을 보거나 편집한다.
+예를 들어,
+<code>containerd</code> 컨테이너 런타임 사용 시 구성은 아래와 유사하다.</p><pre tabindex=0><code>runtime-endpoint: unix:///var/run/containerd/containerd.sock
+image-endpoint: unix:///var/run/containerd/containerd.sock
+timeout: 10
+debug: true
+</code></pre><p><code>crictl</code>에 대해 자세히 알고 싶다면,
+<a href=https://github.com/kubernetes-sigs/cri-tools/blob/master/docs/crictl.md><code>crictl</code> 문서</a>를 참조한다.</p><h2 id=crictl-커맨드-예시>crictl 커맨드 예시</h2><p>아래 예시를 통해 <code>crictl</code> 커맨드와 출력을 확인해보자.</p><div class="alert alert-danger warning callout" role=alert><strong>경고:</strong> 구동 중인 쿠버네티스 클러스터에서 <code>crictl</code>을 사용하여 파드 샌드박스(sandbox)나 컨테이너를 만들게 되면,
+결국에는 kubelet이 그것들을 삭제하게 된다.
+<code>crictl</code>은 일반적인 워크플로우 툴이 아니라 디버깅에 유용한 툴임을 명심해야 한다.</div><h3 id=파드-목록-조회>파드 목록 조회</h3><p>모든 파드의 목록 조회</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>crictl pods
+</span></span></code></pre></div><p>출력은 다음과 유사하다.</p><pre tabindex=0><code>POD ID              CREATED              STATE               NAME                         NAMESPACE           ATTEMPT
+926f1b5a1d33a       About a minute ago   Ready               sh-84d7dcf559-4r2gq          default             0
+4dccb216c4adb       About a minute ago   Ready               nginx-65899c769f-wv2gp       default             0
+a86316e96fa89       17 hours ago         Ready               kube-proxy-gblk4             kube-system         0
+919630b8f81f1       17 hours ago         Ready               nvidia-device-plugin-zgbbv   kube-system         0
+</code></pre><p>이름으로 파드의 목록 조회</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>crictl pods --name nginx-65899c769f-wv2gp
+</span></span></code></pre></div><p>출력은 다음과 유사하다.</p><pre tabindex=0><code>POD ID              CREATED             STATE               NAME                     NAMESPACE           ATTEMPT
+4dccb216c4adb       2 minutes ago       Ready               nginx-65899c769f-wv2gp   default             0
+</code></pre><p>레이블로 파드의 목록 조회</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>crictl pods --label <span style=color:#b8860b>run</span><span style=color:#666>=</span>nginx
+</span></span></code></pre></div><p>출력은 다음과 유사하다.</p><pre tabindex=0><code>POD ID              CREATED             STATE               NAME                     NAMESPACE           ATTEMPT
+4dccb216c4adb       2 minutes ago       Ready               nginx-65899c769f-wv2gp   default             0
+</code></pre><h3 id=이미지-목록-조회>이미지 목록 조회</h3><p>모든 이미지의 목록 조회</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>crictl images
+</span></span></code></pre></div><p>출력은 다음과 유사하다.</p><pre tabindex=0><code>IMAGE                                     TAG                 IMAGE ID            SIZE
+busybox                                   latest              8c811b4aec35f       1.15MB
+k8s-gcrio.azureedge.net/hyperkube-amd64   v1.10.3             e179bbfe5d238       665MB
+k8s-gcrio.azureedge.net/pause-amd64       3.1                 da86e6ba6ca19       742kB
+nginx                                     latest              cd5239a0906a6       109MB
+</code></pre><p>저장소로 이미지 목록 조회</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>crictl images nginx
+</span></span></code></pre></div><p>출력은 다음과 유사하다.</p><pre tabindex=0><code>IMAGE               TAG                 IMAGE ID            SIZE
+nginx               latest              cd5239a0906a6       109MB
+</code></pre><p>이미지의 IDs 목록만 조회</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>crictl images -q
+</span></span></code></pre></div><p>출력은 다음과 유사하다.</p><pre tabindex=0><code>sha256:8c811b4aec35f259572d0f79207bc0678df4c736eeec50bc9fec37ed936a472a
+sha256:e179bbfe5d238de6069f3b03fccbecc3fb4f2019af741bfff1233c4d7b2970c5
+sha256:da86e6ba6ca197bf6bc5e9d900febd906b133eaa4750e6bed647b0fbe50ed43e
+sha256:cd5239a0906a6ccf0562354852fae04bc5b52d72a2aff9a871ddb6bd57553569
+</code></pre><h3 id=컨테이너-목록-조회>컨테이너 목록 조회</h3><p>모든 컨테이너 목록 조회</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>crictl ps -a
+</span></span></code></pre></div><p>출력은 다음과 유사하다.</p><pre tabindex=0><code>CONTAINER ID        IMAGE                                                                                                             CREATED             STATE               NAME                       ATTEMPT
+1f73f2d81bf98       busybox@sha256:141c253bc4c3fd0a201d32dc1f493bcf3fff003b6df416dea4f41046e0f37d47                                   7 minutes ago       Running             sh                         1
+9c5951df22c78       busybox@sha256:141c253bc4c3fd0a201d32dc1f493bcf3fff003b6df416dea4f41046e0f37d47                                   8 minutes ago       Exited              sh                         0
+87d3992f84f74       nginx@sha256:d0a8828cccb73397acb0073bf34f4d7d8aa315263f1e7806bf8c55d8ac139d5f                                     8 minutes ago       Running             nginx                      0
+1941fb4da154f       k8s-gcrio.azureedge.net/hyperkube-amd64@sha256:00d814b1f7763f4ab5be80c58e98140dfc69df107f253d7fdd714b30a714260a   18 hours ago        Running             kube-proxy                 0
+</code></pre><p>실행 중인 컨테이너 목록 조회</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>crictl ps
+</span></span></code></pre></div><p>출력은 다음과 유사하다.</p><pre tabindex=0><code>CONTAINER ID        IMAGE                                                                                                             CREATED             STATE               NAME                       ATTEMPT
+1f73f2d81bf98       busybox@sha256:141c253bc4c3fd0a201d32dc1f493bcf3fff003b6df416dea4f41046e0f37d47                                   6 minutes ago       Running             sh                         1
+87d3992f84f74       nginx@sha256:d0a8828cccb73397acb0073bf34f4d7d8aa315263f1e7806bf8c55d8ac139d5f                                     7 minutes ago       Running             nginx                      0
+1941fb4da154f       k8s-gcrio.azureedge.net/hyperkube-amd64@sha256:00d814b1f7763f4ab5be80c58e98140dfc69df107f253d7fdd714b30a714260a   17 hours ago        Running             kube-proxy                 0
+</code></pre><h3 id=실행-중인-컨테이너-안에서-명령-실행>실행 중인 컨테이너 안에서 명령 실행</h3><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>crictl <span style=color:#a2f>exec</span> -i -t 1f73f2d81bf98 ls
+</span></span></code></pre></div><p>출력은 다음과 유사하다.</p><pre tabindex=0><code>bin   dev   etc   home  proc  root  sys   tmp   usr   var
+</code></pre><h3 id=컨테이너의-로그-조회>컨테이너의 로그 조회</h3><p>모든 컨테이너의 로그 조회</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>crictl logs 87d3992f84f74
+</span></span></code></pre></div><p>출력은 다음과 유사하다.</p><pre tabindex=0><code>10.240.0.96 - - [06/Jun/2018:02:45:49 +0000] &#34;GET / HTTP/1.1&#34; 200 612 &#34;-&#34; &#34;curl/7.47.0&#34; &#34;-&#34;
+10.240.0.96 - - [06/Jun/2018:02:45:50 +0000] &#34;GET / HTTP/1.1&#34; 200 612 &#34;-&#34; &#34;curl/7.47.0&#34; &#34;-&#34;
+10.240.0.96 - - [06/Jun/2018:02:45:51 +0000] &#34;GET / HTTP/1.1&#34; 200 612 &#34;-&#34; &#34;curl/7.47.0&#34; &#34;-&#34;
+</code></pre><p>최신 <code>N</code>개 줄의 로그만 조회</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>crictl logs --tail<span style=color:#666>=</span><span style=color:#666>1</span> 87d3992f84f74
+</span></span></code></pre></div><p>출력은 다음과 유사하다.</p><pre tabindex=0><code>10.240.0.96 - - [06/Jun/2018:02:45:51 +0000] &#34;GET / HTTP/1.1&#34; 200 612 &#34;-&#34; &#34;curl/7.47.0&#34; &#34;-&#34;
+</code></pre><h3 id=파드-샌드박스-실행>파드 샌드박스 실행</h3><p><code>crictl</code>을 사용하여 파드 샌드박스를 실행하는 것은 컨테이너 런타임 디버깅에 유용하다.
+구동 중인 쿠버네티스 클러스터에서
+이러한 샌드박스는 kubelet에 의해서 결국 중지 및 삭제된다.</p><ol><li><p>다음과 같은 JSON 파일 생성한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;metadata&#34;</span>: {
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;name&#34;</span>: <span style=color:#b44>&#34;nginx-sandbox&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;namespace&#34;</span>: <span style=color:#b44>&#34;default&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;attempt&#34;</span>: <span style=color:#666>1</span>,
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;uid&#34;</span>: <span style=color:#b44>&#34;hdishd83djaidwnduwk28bcsb&#34;</span>
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;log_directory&#34;</span>: <span style=color:#b44>&#34;/tmp&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;linux&#34;</span>: {
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div></li><li><p><code>crictl runp</code> 커맨드를 사용하여 JSON을 적용하고 샌드박스를 실행한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>crictl runp pod-config.json
+</span></span></code></pre></div><p>결과로 샌드박스의 ID가 반환될 것이다.</p></li></ol><h3 id=컨테이너-생성>컨테이너 생성</h3><p><code>crictl</code>을 사용하여 컨테이너를 만드는 것은 컨테이너 런타임 디버깅에 유용하다.
+구동 중인 쿠버네티스 클러스터에서
+이러한 샌드박스는 kubelet에 의해서 결국 중지 및 삭제된다.</p><ol><li><p>busybox 이미지 가져오기</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>crictl pull busybox
+</span></span></code></pre></div><pre tabindex=0><code class=language-none data-lang=none>Image is up to date for busybox@sha256:141c253bc4c3fd0a201d32dc1f493bcf3fff003b6df416dea4f41046e0f37d47
+</code></pre></li><li><p>파드와 컨테이너 구성(config) 생성</p><p><strong>파드 구성</strong>:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;metadata&#34;</span>: {
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;name&#34;</span>: <span style=color:#b44>&#34;busybox-sandbox&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;namespace&#34;</span>: <span style=color:#b44>&#34;default&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;attempt&#34;</span>: <span style=color:#666>1</span>,
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;uid&#34;</span>: <span style=color:#b44>&#34;aewi4aeThua7ooShohbo1phoj&#34;</span>
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;log_directory&#34;</span>: <span style=color:#b44>&#34;/tmp&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;linux&#34;</span>: {
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><strong>컨테이너 구성</strong>:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;metadata&#34;</span>: {
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;name&#34;</span>: <span style=color:#b44>&#34;busybox&#34;</span>
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;image&#34;</span>:{
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;image&#34;</span>: <span style=color:#b44>&#34;busybox&#34;</span>
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;command&#34;</span>: [
+</span></span><span style=display:flex><span>    <span style=color:#b44>&#34;top&#34;</span>
+</span></span><span style=display:flex><span>  ],
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;log_path&#34;</span>:<span style=color:#b44>&#34;busybox.log&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;linux&#34;</span>: {
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div></li><li><p>이전에 생성한 파드의 ID 및 컨테이너 구성 파일과 파드 구성 파일을 커맨드 인자로 전달하여,
+컨테이너를 생성한다.
+결과로 컨테이너의 ID가 반환될 것이다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>crictl create f84dd361f8dc51518ed291fbadd6db537b0496536c1d2d6c05ff943ce8c9a54f container-config.json pod-config.json
+</span></span></code></pre></div></li><li><p>모든 컨테이너의 목록을 조회하여
+새로 생성된 컨테이너의 상태가 <code>Created</code>임을 확인한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>crictl ps -a
+</span></span></code></pre></div><p>출력은 다음과 유사하다.</p><pre tabindex=0><code>CONTAINER ID        IMAGE               CREATED             STATE               NAME                ATTEMPT
+3e025dd50a72d       busybox             32 seconds ago      Created             busybox             0
+</code></pre></li></ol><h3 id=컨테이너-시작하기>컨테이너 시작하기</h3><p>컨테이너를 시작하기 위해서 컨테이너 ID를 <code>crictl start</code>에 인자로 전달한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>crictl start 3e025dd50a72d956c4f14881fbb5b1080c9275674e95fb67f965f6478a957d60
+</span></span></code></pre></div><p>출력은 다음과 유사하다.</p><pre tabindex=0><code>3e025dd50a72d956c4f14881fbb5b1080c9275674e95fb67f965f6478a957d60
+</code></pre><p>컨테이너의 상태가 <code>Running</code>임을 확인한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>crictl ps
+</span></span></code></pre></div><p>출력은 다음과 유사하다.</p><pre tabindex=0><code>CONTAINER ID   IMAGE    CREATED              STATE    NAME     ATTEMPT
+3e025dd50a72d  busybox  About a minute ago   Running  busybox  0
+</code></pre><h2 id=다음-내용>다음 내용</h2><ul><li><a href=https://github.com/kubernetes-sigs/cri-tools><code>crictl</code> 더 알아보기</a>.</li><li><a href=/docs/reference/tools/map-crictl-dockercli/><code>docker</code> CLI 커맨드를 <code>crictl</code>로 매핑하기</a>.</li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-38387ad04dd284933cb502944ea3515b>5 - 감사(auditing)</h1><p>쿠버네티스 <em>감사(auditing)</em> 는 클러스터의 작업 순서를 문서화하는 보안 관련 시간별 레코드 세트를 제공한다.
+클러스터는 사용자, 쿠버네티스 API를 사용하는 애플리케이션 및
+컨트롤 플레인 자체에서 생성된 활동을 감사한다.</p><p>감사를 통해 클러스터 관리자는 다음 질문에 답할 수 있다.</p><ul><li>무슨 일이 일어났는지?</li><li>언제 일어난 일인지?</li><li>누가 시작했는지?</li><li>어떤 일이 있었는지?</li><li>어디서 관찰되었는지?</li><li>어디서부터 시작되었는지?</li><li>그래서 어디까지 갔는지?</li></ul><p>감사 기록은 <a href=/docs/reference/command-line-tools-reference/kube-apiserver/>kube-apiserver</a>
+컴포넌트 내에서 수명주기를 시작한다.
+실행의 각 단계에서 각 요청은 감사 이벤트를 생성하고,
+감사 이벤트는 특정 정책에 따라 사전 처리되고 백엔드에 기록된다.
+정책은 기록된 내용을 결정하고 백엔드는 기록을 유지한다.
+현재 백엔드 구현에는 로그 파일 및
+웹훅이 포함된다.</p><p>각 요청들은 연관된 <em>단계(stage)</em> 와 함께 기록될 수 있다. 정의된 단계는 다음과 같다.</p><ul><li><code>RequestReceived</code> - 감사 핸들러가 요청을 수신한 직후,
+그리고 핸들러 체인으로 위임되기 전에
+생성되는 이벤트에 대한 단계이다.</li><li><code>ResponseStarted</code> - 응답 헤더는 전송되었지만,
+응답 본문(body)은 전송되기 전인 단계이다.
+이 단계는 오래 실행되는 요청(예: watch)에 대해서만 생성된다.</li><li><code>ResponseComplete</code> - 응답 내용이 완료되었으며,
+더 이상 바이트가 전송되지 않을 때의 단계이다.</li><li><code>Panic</code> - 패닉이 발생했을 때 생성되는 이벤트이다.</li></ul><div class="alert alert-info note callout" role=alert><strong>참고:</strong> <a href=/docs/reference/config-api/apiserver-audit.v1/#audit-k8s-io-v1-Event>Audit Event configuration</a>
+의 구성은
+<a href=/docs/reference/generated/kubernetes-api/v1.25/#event-v1-core>Event</a>
+API 오브젝트와는
+다르다.</div><p>감사 로깅 기능은 감사에 필요한 일부 컨텍스트가 요청마다
+저장되기 때문에 API 서버의 메모리 사용량을 증가시킨다.
+메모리 소비량은 감사 로깅 구성에 따라 다르다.</p><h2 id=감사-정책>감사 정책</h2><p>감사 정책은 기록해야 하는 이벤트와 포함해야 하는
+데이터에 대한 규칙을 정의한다. 감사 정책 오브젝트 구조는
+<a href=/docs/reference/config-api/apiserver-audit.v1/#audit-k8s-io-v1-Policy><code>audit.k8s.io</code> API 그룹</a>에 정의되어 있다.
+이벤트가 처리되면 규칙 목록과 순서대로 비교된다.
+첫번째 일치 규칙은 이벤트의 <em>감사 수준(audit level)</em> 을 설정한다.
+정의된 감사 수준은 다음과 같다.</p><ul><li><code>None</code> - 이 규칙에 해당되는 이벤트는 로깅하지 않는다.</li><li><code>Metadata</code> - 요청 메타데이터(요청하는 사용자, 타임스탬프, 리소스, 동사(verb) 등)는 로깅하지만
+요청/응답 본문은 로깅하지 않는다.</li><li><code>Request</code> - 이벤트 메타데이터 및 요청 본문을 로깅하지만 응답 본문은 로깅하지 않는다.
+리소스 외의 요청에는 적용되지 않는다.</li><li><code>RequestResponse</code> - 이벤트 메타데이터 및 요청/응답 본문을 로깅한다.
+리소스 외의 요청에는 적용되지 않는다.</li></ul><p><code>--audit-policy-file</code> 플래그를 사용하여 정책이 포함된 파일을
+<code>kube-apiserver</code>에 전달할 수 있다. 플래그를 생략하면 이벤트가 기록되지 않는다.
+감사 정책 파일에 <code>rules</code> 필드 <strong>반드시</strong> 가 제공되어야 한다.
+규칙이 없는(0개인) 정책은 적절하지 않은(illegal) 것으로 간주된다.</p><p>다음은 감사 정책 파일의 예이다.</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/ko/examples/audit/audit-policy.yaml download=audit/audit-policy.yaml><code>audit/audit-policy.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("audit-audit-policy-yaml")' title="Copy audit/audit-policy.yaml to clipboard"></img></div><div class=includecode id=audit-audit-policy-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>audit.k8s.io/v1<span style=color:#bbb> </span><span style=color:#080;font-style:italic># 필수사항임.</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Policy<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#080;font-style:italic># Request Received 단계의 모든 요청에 대해 감사 이벤트를 생성하지 않음.</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>omitStages</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:#b44>&#34;RequestReceived&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>rules</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#080;font-style:italic># RequestResponse 수준에서 파드 변경 사항 기록</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>level</span>:<span style=color:#bbb> </span>RequestResponse<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>resources</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>group</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:#080;font-style:italic># 리소스 &#34;파드&#34; 가 RBAC 정책과 부합하는 파드의 하위 리소스에 대한</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:#080;font-style:italic># 요청과 일치하지 않음.</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>resources</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;pods&#34;</span>]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#080;font-style:italic># 메타데이터 수준에서 &#34;pods/log&#34;, &#34;pods/status&#34;를 기록함.</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>level</span>:<span style=color:#bbb> </span>Metadata<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>resources</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>group</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>resources</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;pods/log&#34;</span>,<span style=color:#bbb> </span><span style=color:#b44>&#34;pods/status&#34;</span>]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#080;font-style:italic># &#34;controller-leader&#34; 라는 컨피그맵에 요청을 기록하지 않음.&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>level</span>:<span style=color:#bbb> </span>None<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>resources</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>group</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>resources</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;configmaps&#34;</span>]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>resourceNames</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;controller-leader&#34;</span>]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#080;font-style:italic># 엔드포인트 또는 서비스의 &#34;system:kube-proxy&#34;에 의한 감시 요청 기록하지 않음.</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>level</span>:<span style=color:#bbb> </span>None<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>users</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;system:kube-proxy&#34;</span>]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>verbs</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;watch&#34;</span>]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>resources</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>group</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;&#34;</span><span style=color:#bbb> </span><span style=color:#080;font-style:italic># 핵심 API 그룹</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>resources</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;endpoints&#34;</span>,<span style=color:#bbb> </span><span style=color:#b44>&#34;services&#34;</span>]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#080;font-style:italic># 인증된 요청을 특정 리소스가 아닌 URL 경로에 기록하지 않음.</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>level</span>:<span style=color:#bbb> </span>None<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>userGroups</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;system:authenticated&#34;</span>]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>nonResourceURLs</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:#b44>&#34;/api*&#34;</span><span style=color:#bbb> </span><span style=color:#080;font-style:italic># 와일드카드 매칭(wildcard matching).</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:#b44>&#34;/version&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#080;font-style:italic># kube-system에 컨피그맵 변경 사항의 요청 본문을 기록함.</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>level</span>:<span style=color:#bbb> </span>Request<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>resources</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>group</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;&#34;</span><span style=color:#bbb> </span><span style=color:#080;font-style:italic># 핵심 API 그룹</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>resources</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;configmaps&#34;</span>]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:#080;font-style:italic># 이 정책은 &#34;kube-system&#34; 네임스페이스의 리소스에만 적용됨.</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:#080;font-style:italic># 빈 문자열 &#34;&#34; 은 네임스페이스가 없는 리소스를 선택하는데 사용할 수 있음.</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>namespaces</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;kube-system&#34;</span>]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#080;font-style:italic># 메타데이터 수준에서 다른 모든 네임스페이스의 컨피그맵과 시크릿 변경 사항을 기록함.</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>level</span>:<span style=color:#bbb> </span>Metadata<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>resources</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>group</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;&#34;</span><span style=color:#bbb> </span><span style=color:#080;font-style:italic># 핵심 API 그룹</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>resources</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;secrets&#34;</span>,<span style=color:#bbb> </span><span style=color:#b44>&#34;configmaps&#34;</span>]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#080;font-style:italic># 요청 수준에서 코어 및 확장에 있는 다른 모든 리소스를 기록함.</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>level</span>:<span style=color:#bbb> </span>Request<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>resources</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>group</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;&#34;</span><span style=color:#bbb> </span><span style=color:#080;font-style:italic># 핵심 API 그룹</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>group</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;extensions&#34;</span><span style=color:#bbb> </span><span style=color:#080;font-style:italic># 그룹의 버전을 기재하면 안 된다.</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#080;font-style:italic># 메타데이터 수준에서 다른 모든 요청을 기록하기 위한 모든 수집 정책.</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>level</span>:<span style=color:#bbb> </span>Metadata<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:#080;font-style:italic># 이 정책에 해당하는 감시자와 같은 장기 실행 요청은</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:#080;font-style:italic># RequestReceived에서 감사 이벤트를 생성하지 않음.</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>omitStages</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:#b44>&#34;RequestReceived&#34;</span><span style=color:#bbb>
+</span></span></span></code></pre></div></div></div><p>최소 감사 정책 파일을 사용하여 <code>Metadata</code> 수준에서 모든 요청을 기록할 수 있다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#080;font-style:italic># Log all requests at the Metadata level.</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>audit.k8s.io/v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Policy<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>rules</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>level</span>:<span style=color:#bbb> </span>Metadata<span style=color:#bbb>
+</span></span></span></code></pre></div><p>자체 감사 프로필을 만드는 경우 Google Container-Optimized OS에 대한 감사 프로필을 시작점으로 사용할 수 있다.
+감사 정책 파일을 생성하는 <a href=https://github.com/kubernetes/kubernetes/blob/master/cluster/gce/gci/configure-helper.sh>configure-helper.sh</a>
+스크립트를 확인하면 된다. 스크립트로 대부분의 감사 정책 파일을 볼 수 있다.</p><p>정의된 필드에 대한 자세한 내용은 <a href=/docs/reference/config-api/apiserver-audit.v1/#audit-k8s-io-v1-Policy><code>Policy</code> configuration reference</a>를
+참조할 수도 있다.</p><h2 id=감사-백엔드>감사 백엔드</h2><p>감사 백엔드는 감사 이벤트를 외부 저장소에 유지한다.
+기본적으로 kube-apiserver는 두 가지 백엔드를 제공한다.</p><ul><li>이벤트를 파일 시스템에 기록하는 로그 백엔드</li><li>이벤트를 외부 HTTP API로 보내는 Webhook 백엔드</li></ul><p>모든 경우에 감사 이벤트는 쿠버네티스 API의
+<a href=/docs/reference/config-api/apiserver-audit.v1/#audit-k8s-io-v1-Event><code>audit.k8s.io</code> API 그룹</a>에서 정의한 구조를 따른다.</p><div class="alert alert-info note callout" role=alert><strong>참고:</strong><p>패치의 경우 요청 내용은 적절한 쿠버네티스 API 오브젝트를 포함하는 JSON 오브젝트가 아니라
+패치 작업을 포함하는 JSON 배열이다. 예를 들어 다음 요청 내용은
+<code>/apis/batch/v1/namespaces/some-namespace/jobs/some-job-name</code>에 대한 유효한 패치 요청이다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>[
+</span></span><span style=display:flex><span>  {
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;op&#34;</span>: <span style=color:#b44>&#34;replace&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;path&#34;</span>: <span style=color:#b44>&#34;/spec/parallelism&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;value&#34;</span>: <span style=color:#666>0</span>
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>  {
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;op&#34;</span>: <span style=color:#b44>&#34;remove&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;path&#34;</span>: <span style=color:#b44>&#34;/spec/template/spec/containers/0/terminationMessagePolicy&#34;</span>
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>]
+</span></span></code></pre></div></div><h3 id=로그-백엔드>로그 백엔드</h3><p>로그 백엔드는 감사이벤트를 <a href=https://jsonlines.org/>JSONlines</a> 형식으로 파일에 기록한다.
+다음의 <code>kube-apiserver</code> 플래그를 사용하여 로그 감사 백엔드를 구성할 수 있다.</p><ul><li><code>--audit-log-path</code> 는 로그 백엔드가 감사 이벤트를 쓰는 데 사용하는 로그 파일 경로를 지정한다.
+이 플래그를 지정하지 않으면 로그 백엔드가 비활성화된다. <code>-</code> 는 표준 출력을 의미한다.</li><li><code>--audit-log-maxage</code> 는 오래된 감사 로그 파일을 보관할 최대 일수를 정의한다.</li><li><code>--audit-log-maxbackup</code> 은 보관할 감사 로그 파일의 최대 수를 정의한다.</li><li><code>--audit-log-maxsize</code> 는 감사 로그 파일이 로테이트 되기 전의 최대 크기(MB)를 정의한다.</li></ul><p>클러스터의 컨트롤 플레인이 kube-apiserver를 파드로 실행하는 경우 감사 레코드가 지속되도록
+정책 파일 및 로그 파일의 위치에 <code>hostPath</code> 를 마운트 해야한다. 예를 들면</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>    --audit-policy-file<span style=color:#666>=</span>/etc/kubernetes/audit-policy.yaml <span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>    --audit-log-path<span style=color:#666>=</span>/var/log/kubernetes/audit/audit.log
+</span></span></code></pre></div><p>그런 다음 볼륨을 마운트 한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#00f;font-weight:700>...</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>volumeMounts</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>mountPath</span>:<span style=color:#bbb> </span>/etc/kubernetes/audit-policy.yaml<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>audit<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>readOnly</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>true</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>mountPath</span>:<span style=color:#bbb> </span>/var/log/kubernetes/audit/<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>audit-log<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>readOnly</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>false</span><span style=color:#bbb>
+</span></span></span></code></pre></div><p>그리고 마지막으로 <code>hostPath</code> 를 구성한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#00f;font-weight:700>...</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>volumes</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>audit<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>hostPath</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>path</span>:<span style=color:#bbb> </span>/etc/kubernetes/audit-policy.yaml<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>type</span>:<span style=color:#bbb> </span>File<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>audit-log<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>hostPath</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>path</span>:<span style=color:#bbb> </span>/var/log/kubernetes/audit/<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>type</span>:<span style=color:#bbb> </span>DirectoryOrCreate<span style=color:#bbb>
+</span></span></span></code></pre></div><h3 id=웹훅-백엔드>웹훅 백엔드</h3><p>웹훅 감사 백엔드는 원격 웹 API로 감사 이벤트를 전송하는데, 이는 인증 수단을 포함하여
+쿠버네티스 API의 한 형태로 간주된다.
+다음 kube-apiserver 플래그를 사용하여 웹훅 감사 백엔드를 구성할 수 있다.</p><ul><li><code>--audit-webhook-config-file</code> 은 웹훅 구성이 있는 파일의 경로를 지정한다.
+웹훅 구성은 효과적으로 전문화된
+<a href=/ko/docs/tasks/access-application-cluster/configure-access-multiple-clusters/>kubeconfig</a>이다.</li><li><code>--audit-webhook-initial-backoff</code> 는 첫 번째 실패한 요청 후 다시 시도하기 전에 대기할 시간을 지정한다.
+이후 요청은 지수의 백오프로 재시도 된다.</li></ul><p>웹훅 구성 파일은 kubeconfig 형식을 사용하여
+서비스의 원격 주소와 서비스에 연결하는 데 사용되는 자격 증명을 지정한다.</p><h2 id=배치>이벤트 배치</h2><p>로그 및 웹 훅 백엔드는 모두 배치를 지원한다. 웹훅 사용을 예로 들면, 다음은 사용 가능한 플래그 목록이다.
+로그 백엔드에 대해 동일한 플래그를 가져오려면 플래그 이름에 있는 <code>webhook</code> 을 <code>log</code> 로 바꾼다.
+기본적으로 배치 기능은 <code>webhook</code> 에서 활성화되고 <code>log</code> 에서 비활성화된다. 마찬가지로, 기본적으로
+쓰로틀링은 <code>webhook</code> 에서는 활성화되고 <code>log</code> 에서는 비활성화된다.</p><ul><li><code>--audit-webhook-mode</code> 은 버퍼링 전략을 정의한다. 다음 중 하나이다.<ul><li><code>batch</code> - 이벤트를 버퍼링하고 비동기식으로 배치한다. 이것이 기본값이다.</li><li><code>blocking</code> - 각 개별 이벤트를 처리할 때 API 서버 응답을 차단한다.</li><li><code>blocking-strict</code> - <code>blocking</code>과 동일하지만, RequestReceived 단계에서 감사 로깅 중에 오류가 발생하면
+kube-apiserver에 대한 전체 요청이 실패한다.</li></ul></li></ul><p>다음 플래그는 <code>batch</code> 모드에서만 사용된다.</p><ul><li><code>--audit-webhook-batch-buffer-size</code> 는 배치하기 전에 버퍼링할 이벤트 수를 정의한다.
+들어오는 이벤트의 비율이 버퍼를 초과하면 이벤트가 삭제된다.</li><li><code>--audit-webhook-batch-max-size</code> 는 한 배치의 최대 이벤트 수를 정의한다.</li><li><code>--audit-webhook-batch-max-wait</code> 는 대기열에서 이벤트를 무조건 배치하기 전에
+대기할 최대 시간을 정의한다.</li><li><code>--audit-webhook-batch-throttle-qps</code> 는 초당 생성되는 최대 평균 배치 수를
+정의한다.</li><li><code>--audit-webhook-batch-throttle-burst</code> 는 허용된 QPS가 이전에 충분히 활용되지 않은 경우
+동시에 생성되는 최대 배치 수를 정의한다.</li></ul><h2 id=파라미터-튜닝>파라미터 튜닝</h2><p>파라미터는 API 서버의 로드를 수용할 수 있도록 설정해야 한다.</p><p>예를 들어 kube-apiserver가 초당 100건의 요청을 수신하고 각 요청이
+<code>ResponseStarted</code> 와 <code>ResponseComplete</code> 단계에서만 감사되는 경우 초당 생성되는 ≅200건의 감사 이벤트를 고려해야 한다.
+일괄적으로 최대 100개의 이벤트가 있다고 가정할 때
+초당 최소 2개의 쿼리 조절 수준을 설정해야 한다.
+백엔드가 이벤트를 쓰는 데 최대 5초가 걸릴 수 있다고 가정하면 버퍼크기를 최대 5초의 이벤트를 보유하도록 설정해야 한다.
+즉, 10개의 배치 또는 100개의 이벤트이다.</p><p>그러나 대부분의 경우 기본 매개 변수만 있으면 충분하며 수동으로 설정할 필요가 없다.
+kube-apiserver에서 노출된 다음과 같은 프로메테우스 메트릭과 로그에서
+감사 하위 시스템의 상태를 모니터링할 수 있다.</p><ul><li><code>apiserver_audit_event_total</code> 의 메트릭에는 내보낸 감사 이벤트의 총 수가 포함된다.</li><li><code>apiserver_audit_error_total</code> 의 메트릭에는 내보내기 중 오류로 인해 삭제된 총 이벤트
+수가 포함된다.</li></ul><h3 id=truncate>로그 항목 자르기</h3><p>로그 및 웹훅 백엔드는 모두 로깅되는 이벤트의 크기 제한을 지원한다.
+예를 들어 로그 백엔드에 사용할 수 있는 플래그 목록은 다음과 같다.</p><ul><li><code>audit-log-truncate-enabled</code> 는 이벤트 및 자르기 배치가 활성화 되었는지 여부를 나타낸다.</li><li><code>audit-log-truncate-max-batch-size</code> 는 기본 백엔드로 전송되는 배치의 바이트 단위의 최대 크기이다.</li><li><code>audit-log-truncate-max-event-size</code> 는 기본 백엔드로 전송된 감사 이벤트의 바이트 단위의 최대 크기이다.</li></ul><p>기본적으로 <code>webhook</code> 과 <code>log</code> 모두에서 자르기 기능이 비활성화되어 있으므로 이 기능을 활성화 하기 위해
+클러스터 관리자는 <code>audit-log-truncate-enabled</code> 또는 <code>audit-webhook-truncate-enabled</code> 를 설정해야 한다.</p><h2 id=다음-내용>다음 내용</h2><ul><li><a href=/docs/reference/access-authn-authz/extensible-admission-controllers/#mutating-webhook-auditing-annotations>Mutating webhook auditing annotations</a> 에 대해 알아보기.</li><li><a href=/docs/reference/config-api/apiserver-audit.v1/#audit-k8s-io-v1-Event><code>Event</code></a> 에 대해 알아보고
+감사 구성 참조를 읽고 <a href=/docs/reference/config-api/apiserver-audit.v1/#audit-k8s-io-v1-Policy><code>Policy</code></a>
+리소스 유형 확인하기.</li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-60dca0ec8d41f0045e7d73e1d6bd7bce>6 - 로컬에서 텔레프레즌스를 이용한 서비스 개발 및 디버깅</h1><div class="alert alert-secondary callout third-party-content" role=alert><strong>참고:</strong>
+이 섹션은 쿠버네티스에 필요한 기능을 제공하는 써드파티 프로젝트와 관련이 있다. 쿠버네티스 프로젝트 작성자는 써드파티 프로젝트에 책임이 없다. 이 페이지는 <a href=https://github.com/cncf/foundation/blob/master/website-guidelines.md target=_blank>CNCF 웹사이트 가이드라인</a>에 따라 프로젝트를 알파벳 순으로 나열한다. 이 목록에 프로젝트를 추가하려면 변경사항을 제출하기 전에 <a href=/contribute/style/content-guide/#third-party-content>콘텐츠 가이드</a>를 읽어본다.</div><p>쿠버네티스 애플리케이션은 일반적으로 각각 자체 컨테이너에서 실행되는 여러 개의 개별 서비스로 구성된다. 원격 쿠버네티스 클러스터 상에서 이러한 서비스를 개발하고 디버깅하려면 디버깅 도구를 실행하기 위해 <a href=/ko/docs/tasks/debug/debug-application/get-shell-running-container/>동작 중인 컨테이너의 셸(shell)에 접근</a>해야 하기 때문에 번거로울 수 있다.</p><p><code>텔레프레즌스(telepresence)</code>는 원격 쿠버네티스 클러스터로 서비스를 프록시하면서 로컬에서 서비스를 개발 및 디버깅하는 과정을 용이하게 하는 도구이다. <code>텔레프레즌스</code>를 사용하면 로컬 서비스에 디버거 및 IDE와 같은 사용자 지정 도구를 사용할 수 있고 원격 클러스터에서 실행되는 컨피그맵(ConfigMap), 시크릿(Secret) 및 서비스(Service)에 대한 전체 접근 권한을 서비스에 제공할 수 있다.</p><p>이 문서는 <code>텔레프레즌스</code>를 사용하여 원격 클러스터에서 실행 중인 서비스를 로컬로 개발하고 디버그하는 방법을 설명한다.</p><h2 id=시작하기-전에>시작하기 전에</h2><ul><li>쿠버네티스 클러스터가 설치되어 있어야 한다.</li><li><code>kubectl</code>은 클러스터와 통신하도록 구성되어 있어야 한다.</li><li><a href=https://www.telepresence.io/reference/install>텔레프레즌스</a>가 설치되어 있어야 한다.</li></ul><h2 id=로컬-머신을-원격-쿠버네티스-클러스터에-연결>로컬 머신을 원격 쿠버네티스 클러스터에 연결</h2><p><code>텔레프레즌스</code>를 설치한 후 <code>텔레프레즌스 커넥트(telepresence connect)</code>를 실행하여 데몬을 실행하고 로컬 워크스테이션을 클러스터에 연결한다.</p><pre tabindex=0><code>$ telepresence connect
+ 
+Launching Telepresence Daemon
+...
+Connected to context default (https://&lt;cluster public IP&gt;)
+</code></pre><p>쿠버네티스 구문을 사용하여 서비스에 curl이 가능하다. 예, <code>curl -ik https://kubernetes.default</code></p><h2 id=기존-서비스-개발-또는-디버깅>기존 서비스 개발 또는 디버깅</h2><p>쿠버네티스에서 애플리케이션을 개발할 때 일반적으로 단일 서비스를 프로그래밍하거나 디버그한다. 서비스를 테스트 및 디버깅하기 위해 다른 서비스에 접근이 필요할 수 있다. 지속적 배포(continuous deployment) 파이프라인을 사용하는 것도 한 가지 옵션이지만, 가장 빠른 배포 파이프라인이라도 프로그래밍 또는 디버그 주기에 지연이 발생할 수 있다.</p><p><code>telepresence intercept $SERVICE_NAME --port $LOCAL_PORT:$REMOTE_PORT</code> 명령을 사용하여 원격 서비스 트래픽을 다시 라우팅하기 위한 "인터셉트(intercept)"를 생성한다.</p><p>아래의 각 항목에 대한 설명을 참고한다.</p><ul><li><code>$SERVICE_NAME</code>은 로컬 서비스의 이름이다.</li><li><code>$LOCAL_PORT</code>는 서비스가 로컬 워크스테이션에서 실행 중인 포트이다.</li><li><code>$REMOTE_PORT</code>는 서비스가 클러스터에서 수신하는 포트이다.</li></ul><p>이 명령을 실행하면 원격 쿠버네티스 클러스터의 서비스 대신 로컬 서비스에 원격 트래픽을 보내도록 텔레프레즌스에 지시한다. 서비스 소스 코드를 로컬에서 편집하고 저장하여 원격 애플리케이션에 접근할 때 해당 변경 사항이 즉시 적용되는지 확인한다. 디버거 또는 기타 로컬 개발 도구를 사용하여 로컬 서비스를 실행할 수도 있다.</p><h2 id=텔레프레즌스는-어떻게-작동하는가>텔레프레즌스는 어떻게 작동하는가?</h2><p>Telepresence는 원격 클러스터에서 실행 중인 기존 애플리케이션의 컨테이너 옆에 트래픽 에이전트 사이드카(sidecar)를 설치한다. 그런 다음 파드로 들어오는 모든 트래픽 요청을 캡처하고, 이를 원격 클러스터의 애플리케이션에 전달하는 대신, 모든 트래픽(<a href=https://www.getambassador.io/docs/telepresence/latest/concepts/intercepts/#global-intercept>글로벌 인터셉트</a>를 생성하는 경우) 또는 일부 트래픽(<a href=https://www.getambassador.io/docs/telepresence/latest/concepts/intercepts/#personal-intercept>개인 인터셉트</a>를 생성하는 경우)을 로컬 개발 환경으로 라우팅한다.</p><h2 id=다음-내용>다음 내용</h2><p>핸즈온 튜토리얼에 관심이 있다면 구글 쿠버네티스 엔진 상의 방명록 애플리케이션을 로컬로 개발하는 과정을 안내하는 <a href=https://cloud.google.com/community/tutorials/developing-services-with-k8s>이 튜토리얼</a>을 확인한다.</p><p>자세한 내용은 <a href=https://www.telepresence.io>텔레프레즌스 웹사이트</a>를 참조한다.</p></div><div class=td-content style=page-break-before:always><h1 id=pg-34f51c9306a166418b33355c09e672be>7 - 윈도우 디버깅 팁</h1><h2 id=troubleshooting-node>노드-수준 트러블슈팅</h2><ol><li><p>내 파드가 "Container Creating"에서 멈췄거나 계속해서 다시 시작된다.</p><p>퍼즈(pause) 이미지가 OS 버전과 호환되는지 확인한다.
+<a href=/ko/docs/concepts/windows/intro/#%ED%8D%BC%EC%A6%88-pause-%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%84%88>퍼즈 컨테이너</a>에서
+최신 / 추천 퍼즈 이미지 및 추가 정보를 확인한다.</p><div class="alert alert-info note callout" role=alert><strong>참고:</strong> 컨테이너 런타임으로 containerd를 사용하고 있다면, 퍼즈 이미지는
+<code>config.toml</code> 환경 설정 파일의 <code>plugins.plugins.cri.sandbox_image</code> 필드에 명시되어 있다.</div></li><li><p>내 파드의 상태가 <code>ErrImgPull</code> 또는 <code>ImagePullBackOff</code>이다.</p><p>파드가
+<a href=https://docs.microsoft.com/virtualization/windowscontainers/deploy-containers/version-compatibility>호환되는</a> 윈도우 노드에
+스케줄링되었는지 확인한다.</p><p>각 파드와 호환되는 노드를 찾는 방법에 대한 추가 정보는
+<a href=/ko/docs/concepts/windows/user-guide/#%ED%8A%B9%EC%A0%95-OS-%EC%9B%8C%ED%81%AC%EB%A1%9C%EB%93%9C%EB%A5%BC-%EC%A0%81%EC%A0%88%ED%95%9C-%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%84%88-%ED%98%B8%EC%8A%A4%ED%8A%B8%EC%97%90%EC%84%9C-%EC%B2%98%EB%A6%AC%ED%95%98%EB%8F%84%EB%A1%9D-%EB%B3%B4%EC%9E%A5%ED%95%98%EA%B8%B0>이 가이드</a>를 참고한다.</p></li></ol><h2 id=troubleshooting-network>네트워크 트러블슈팅</h2><ol><li><p>내 윈도우 파드에 네트워크 연결이 없다.</p><p>가상 머신을 사용하는 경우,
+모든 VM 네트워크 어댑터에 MAC 스푸핑이 <strong>활성화</strong>되어 있는지 확인한다.</p></li><li><p>내 윈도우 파드가 외부 리소스를 ping 할 수 없다.</p><p>윈도우 파드에는 현재 ICMP 프로토콜용으로 프로그래밍된 아웃바운드 규칙이 없다.
+그러나 TCP/UDP는 지원된다.
+클러스터 외부 리소스에 대한 연결을 시연하려는 경우,
+<code>ping &lt;IP></code>를 대응되는 <code>curl &lt;IP></code>명령으로 대체한다.</p><p>여전히 문제가 발생하는 경우,
+<a href=https://github.com/Microsoft/SDN/blob/master/Kubernetes/flannel/l2bridge/cni/config/cni.conf>cni.conf</a>의 네트워크 구성에 특별히 추가 확인이 필요하다.
+언제든지 이 정적 파일을 편집할 수 있다.
+구성 업데이트는 새로 생성된 모든 쿠버네티스 리소스에 적용된다.</p><p>쿠버네티스 네트워킹 요구
+사항(<a href=/ko/docs/concepts/cluster-administration/networking/>쿠버네티스 모델</a> 참조)
+중 하나는
+클러스터 통신이 NAT 없이 내부적으로 발생해야 한다는 것이다.
+이 요구 사항을 준수하기 위해
+아웃바운드 NAT가 발생하지 않도록 하는
+모든 통신에 대한 <a href=https://github.com/Microsoft/SDN/blob/master/Kubernetes/flannel/l2bridge/cni/config/cni.conf#L20>ExceptionList</a>가 있다.
+그러나 이것은 쿼리하려는 외부 IP를 <code>ExceptionList</code>에서 제외해야 함도 의미한다.
+그래야만 윈도우 파드에서 발생하는 트래픽이 제대로 SNAT 되어 외부에서 응답을 받는다.
+이와 관련하여 <code>cni.conf</code>의 <code>ExceptionList</code>는 다음과 같아야 한다.</p><pre tabindex=0><code class=language-conf data-lang=conf>&#34;ExceptionList&#34;: [
+                &#34;10.244.0.0/16&#34;,  # 클러스터 서브넷
+                &#34;10.96.0.0/12&#34;,   # 서비스 서브넷
+                &#34;10.127.130.0/24&#34; # 관리(호스트) 서브넷
+            ]
+</code></pre></li><li><p>내 윈도우 노드가 <code>NodePort</code> 서비스에 접근할 수 없다.</p><p>노드 자체에서는 로컬 NodePort 접근이 실패한다. 이것은 알려진 제약사항이다.
+NodePort 접근은 다른 노드 또는 외부 클라이언트에서는 가능하다.</p></li><li><p>컨테이너의 vNIC 및 HNS 엔드포인트가 삭제된다.</p><p>이 문제는 <code>hostname-override</code> 파라미터가
+<a href=/ko/docs/reference/command-line-tools-reference/kube-proxy/>kube-proxy</a>에 전달되지 않은 경우 발생할 수 있다.
+이를 해결하려면 사용자는 다음과 같이 hostname을 kube-proxy에 전달해야 한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-powershell data-lang=powershell><span style=display:flex><span>C:\k\<span style=color:#a2f>kube-proxy</span>.exe --hostname-override=$(hostname)
+</span></span></code></pre></div></li><li><p>내 윈도우 노드가 서비스 IP를 사용하여 내 서비스에 접근할 수 없다.</p><p>이는 윈도우에서 현재 네트워킹 스택의 알려진 제약 사항이다. 그러나 윈도우 파드는 서비스 IP에 접근할 수 있다.</p></li><li><p>kubelet을 시작할 때 네트워크 어댑터를 찾을 수 없다.</p><p>윈도우 네트워킹 스택에는 쿠버네티스 네트워킹이 작동하기 위한 가상 어댑터가 필요하다.
+(어드민 셸에서) 다음 명령이 결과를 반환하지 않으면,
+Kubelet이 작동하는 데 필요한 필수 구성 요소인 가상 네트워크 생성이 실패한 것이다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-powershell data-lang=powershell><span style=display:flex><span><span style=color:#a2f>Get-HnsNetwork</span> | ? Name <span style=color:#666>-ieq</span> <span style=color:#b44>&#34;cbr0&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f>Get-NetAdapter</span> | ? Name <span style=color:#666>-Like</span> <span style=color:#b44>&#34;vEthernet (Ethernet*&#34;</span>
+</span></span></code></pre></div><p>호스트 네트워크 어댑터가 "Ethernet"이 아닌 경우, 종종 <code>start.ps1</code> 스크립트의
+<a href=https://github.com/microsoft/SDN/blob/master/Kubernetes/flannel/start.ps1#L7>InterfaceName</a> 파라미터를 수정하는 것이 좋다.
+그렇지 않으면 <code>start-kubelet.ps1</code> 스크립트의 출력을 참조하여 가상 네트워크 생성 중에 오류가 있는지 확인한다.</p></li><li><p>DNS 해석(resolution)이 제대로 작동하지 않는다.</p><p>이 <a href=/ko/docs/concepts/services-networking/dns-pod-service/#dns-windows>섹션</a>에서 윈도우에서의 DNS 제한을 확인한다.</p></li><li><p><code>kubectl port-forward</code>가 "unable to do port forwarding: wincat not found" 에러와 함께 실패한다.</p><p>이 기능은 퍼즈 인프라 컨테이너 <code>mcr.microsoft.com/oss/kubernetes/pause:3.6</code>에
+<code>wincat.exe</code>를 포함시킴으로써 쿠버네티스 1.15에서 구현되었다.
+지원되는 쿠버네티스 버전을 사용하고 있는지 확인한다.
+퍼즈 인프라 컨테이너를 직접 빌드하려면
+<a href=https://github.com/kubernetes/kubernetes/tree/master/build/pause/windows/wincat>wincat</a>을 포함시켜야 한다.</p></li><li><p>내 윈도우 서버 노드가 프록시 뒤에 있기 때문에 쿠버네티스 설치에 실패한다.</p><p>프록시 뒤에 있는 경우, 다음 PowerShell 환경 변수를 정의해야 한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-PowerShell data-lang=PowerShell><span style=display:flex><span>[<span style=color:#800>Environment</span>]::SetEnvironmentVariable(<span style=color:#b44>&#34;HTTP_PROXY&#34;</span>, <span style=color:#b44>&#34;http://proxy.example.com:80/&#34;</span>, [<span style=color:#800>EnvironmentVariableTarget</span>]::Machine)
+</span></span><span style=display:flex><span>[<span style=color:#800>Environment</span>]::SetEnvironmentVariable(<span style=color:#b44>&#34;HTTPS_PROXY&#34;</span>, <span style=color:#b44>&#34;http://proxy.example.com:443/&#34;</span>, [<span style=color:#800>EnvironmentVariableTarget</span>]::Machine)
+</span></span></code></pre></div></li></ol><h3 id=플란넬-트러블슈팅>플란넬 트러블슈팅</h3><ol><li><p>플란넬(flannel)을 사용하면 클러스터에 다시 조인(join)한 후 노드에 이슈가 발생한다.</p><p>이전에 삭제된 노드가 클러스터에 다시 조인될 때마다,
+flannelD는 새 파드 서브넷을 노드에 할당하려고 한다.
+사용자는 다음 경로에서 이전 파드 서브넷 구성 파일을 제거해야 한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-powershell data-lang=powershell><span style=display:flex><span><span style=color:#a2f>Remove-Item</span> C:\k\SourceVip.json
+</span></span><span style=display:flex><span><span style=color:#a2f>Remove-Item</span> C:\k\SourceVipRequest.json
+</span></span></code></pre></div></li><li><p>flanneld가 "Waiting for the Network to be created" 상태에서 멈춘다.</p><p>이 <a href=https://github.com/coreos/flannel/issues/1066>이슈</a>에 대한 수많은 보고가 있다.
+플란넬 네트워크의 관리 IP가 설정될 때의 타이밍 이슈일 가능성이 높다.
+해결 방법은 start.ps1을 다시 시작하거나 다음과 같이 수동으로 다시 시작하는 것이다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-powershell data-lang=powershell><span style=display:flex><span>[<span style=color:#800>Environment</span>]::SetEnvironmentVariable(<span style=color:#b44>&#34;NODE_NAME&#34;</span>, <span style=color:#b44>&#34;&lt;Windows_Worker_Hostname&gt;&#34;</span>)
+</span></span><span style=display:flex><span>C:\flannel\flanneld.exe --kubeconfig<span style=color:#666>-file</span>=c:\k\config --iface=&lt;Windows_Worker_Node_IP&gt; --ip-masq=<span style=color:#666>1</span> --kube-subnet-mgr=<span style=color:#666>1</span>
+</span></span></code></pre></div></li><li><p><code>/run/flannel/subnet.env</code> 누락으로 인해 윈도우 파드를 시작할 수 없다.</p><p>이것은 플란넬이 제대로 실행되지 않았음을 나타낸다.
+<code>flanneld.exe</code>를 다시 시작하거나
+쿠버네티스 마스터의 <code>/run/flannel/subnet.env</code>에서 윈도우 워커 노드의 <code>C:\run\flannel\subnet.env</code>로 파일을 수동으로 복사할 수 있고,
+<code>FLANNEL_SUBNET</code> 행을 다른 숫자로 수정한다.
+예를 들어, 노드 서브넷 10.244.4.1/24가 필요한 경우 다음과 같이 설정한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-env data-lang=env><span style=display:flex><span><span style=color:#b8860b>FLANNEL_NETWORK</span><span style=color:#666>=</span>10.244.0.0/16
+</span></span><span style=display:flex><span><span style=color:#b8860b>FLANNEL_SUBNET</span><span style=color:#666>=</span>10.244.4.1/24
+</span></span><span style=display:flex><span><span style=color:#b8860b>FLANNEL_MTU</span><span style=color:#666>=</span><span style=color:#666>1500</span>
+</span></span><span style=display:flex><span><span style=color:#b8860b>FLANNEL_IPMASQ</span><span style=color:#666>=</span><span style=color:#a2f>true</span>
+</span></span></code></pre></div></li></ol><h3 id=추가-조사>추가 조사</h3><p>이러한 단계로 문제가 해결되지 않으면, 다음을 통해 쿠버네티스의 윈도우 노드에서 윈도우 컨테이너를 실행하는 데 도움을 받을 수 있다.</p><ul><li>스택오버플로우 <a href=https://stackoverflow.com/questions/tagged/windows-server-container>윈도우 서버 컨테이너</a> 주제</li><li>쿠버네티스 공식 포럼 <a href=https://discuss.kubernetes.io/>discuss.kubernetes.io</a></li><li>쿠버네티스 슬랙 <a href=https://kubernetes.slack.com/messages/sig-windows>#SIG-Windows Channel</a></li></ul></div></main></div></div><footer class=d-print-none><div class=footer__links><nav><a class=text-white href=/ko/docs/home/>홈</a>
+<a class=text-white href=/ko/blog/>블로그</a>
+<a class=text-white href=/ko/training/>교육</a>
+<a class=text-white href=/ko/partners/>파트너</a>
+<a class=text-white href=/ko/community/>Community</a>
+<a class=text-white href=/ko/case-studies/>사례 연구</a></nav></div><div class=container-fluid><div class=row><div class="col-6 col-sm-2 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="User mailing list" aria-label="User mailing list"><a class=text-white target=_blank href=https://discuss.kubernetes.io><i class="fa fa-envelope"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank href=https://twitter.com/kubernetesio><i class="fab fa-twitter"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Calendar aria-label=Calendar><a class=text-white target=_blank href="https://calendar.google.com/calendar/embed?src=calendar%40kubernetes.io"><i class="fas fa-calendar-alt"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Youtube aria-label=Youtube><a class=text-white target=_blank href=https://youtube.com/kubernetescommunity><i class="fab fa-youtube"></i></a></li></ul></div><div class="col-6 col-sm-2 text-right text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank href=https://github.com/kubernetes/kubernetes><i class="fab fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Slack aria-label=Slack><a class=text-white target=_blank href=https://slack.k8s.io><i class="fab fa-slack"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Contribute aria-label=Contribute><a class=text-white target=_blank href=https://git.k8s.io/community/contributors/guide><i class="fas fa-edit"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="Stack Overflow" aria-label="Stack Overflow"><a class=text-white target=_blank href=https://stackoverflow.com/questions/tagged/kubernetes><i class="fab fa-stack-overflow"></i></a></li></ul></div><div class="col-12 col-sm-8 text-center order-sm-2"><small class=text-white>&copy; 2023 The Kubernetes Authors | Documentation Distributed under <a href=https://git.k8s.io/website/LICENSE class=light-text>CC BY 4.0</a></small><br><small class=text-white>Copyright &copy; 2023 The Linux Foundation &reg;. All rights reserved. The Linux Foundation has registered trademarks and uses trademarks. For a list of trademarks of The Linux Foundation, please see our <a href=https://www.linuxfoundation.org/trademark-usage class=light-text>Trademark Usage page</a></small><br><small class=text-white>ICP license: 京ICP备17074266号-3</small></div></div></div></footer></div><script src=/js/jquery-3.6.0.min.js integrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script>
+<script src=/js/popper-1.16.1.min.js intregrity=sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN crossorigin=anonymous></script>
+<script src=/js/bootstrap-4.6.1.min.js integrity=sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2 crossorigin=anonymous></script>
+<script src=/js/script.js></script>
+<script async src=/js/mermaid-8.13.4.min.js integrity=sha384-5hHNvPeMrNH14oM3IcQofDoBhiclNK3g2+hnEinKzQ07C4AliMeVpnvxuiwEGpaO crossorigin=anonymous></script>
+<script src=/js/main.min.5c0bf7f21dc4f66485f74efbbeeff28a7e4f8cddaac1bae47043159c922ff3a3.js integrity="sha256-XAv38h3E9mSF9077vu/yin5PjN2qwbrkcEMVnJIv86M=" crossorigin=anonymous></script></body></html>

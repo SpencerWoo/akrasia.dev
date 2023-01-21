@@ -1,0 +1,389 @@
+<!doctype html><html lang=en class=no-js><head><meta name=robots content="noindex, nofollow"><link rel=alternate hreflang=zh-cn href=https://kubernetes.io/zh-cn/docs/contribute/new-content/><link rel=alternate hreflang=ko href=https://kubernetes.io/ko/docs/contribute/new-content/><link rel=alternate hreflang=ja href=https://kubernetes.io/ja/docs/contribute/new-content/><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.110.0"><link rel=canonical type=text/html href=https://kubernetes.io/docs/contribute/new-content/><link rel="shortcut icon" type=image/png href=/images/favicon.png><link rel=apple-touch-icon href=/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=manifest href=/manifest.webmanifest><link rel=apple-touch-icon href=/images/kubernetes-192x192.png><title>Contributing new content | Kubernetes</title><meta property="og:title" content="Contributing new content"><meta property="og:description" content="Production-Grade Container Orchestration"><meta property="og:type" content="website"><meta property="og:url" content="https://kubernetes.io/docs/contribute/new-content/"><meta property="og:site_name" content="Kubernetes"><meta itemprop=name content="Contributing new content"><meta itemprop=description content="Production-Grade Container Orchestration"><meta name=twitter:card content="summary"><meta name=twitter:title content="Contributing new content"><meta name=twitter:description content="Production-Grade Container Orchestration"><link href=/scss/main.css rel=stylesheet><script type=application/ld+json>{"@context":"https://schema.org","@type":"Organization","url":"https://kubernetes.io","logo":"https://kubernetes.io/images/favicon.png","potentialAction":{"@type":"SearchAction","target":"https://kubernetes.io/search/?q={search_term_string}","query-input":"required name=search_term_string"}}</script><meta name=theme-color content="#326ce5"><link rel=stylesheet href=/css/feature-states.css><meta name=description content="This section contains information you should know before contributing new content.
+flowchart LR subgraph second[Before you begin] direction TB S[ ] -.- A[Sign the CNCF CLA] --> B[Choose Git branch] B --> C[One language per PR] C --> F[Check out
+contributor tools] end subgraph first[Contributing Basics] direction TB T[ ] -.- D[Write docs in markdown
+and build site with Hugo] --- E[source in GitHub] E --- G['/content/../docs' folder contains docs"><meta property="og:description" content="This section contains information you should know before contributing new content.
+flowchart LR subgraph second[Before you begin] direction TB S[ ] -.- A[Sign the CNCF CLA] --> B[Choose Git branch] B --> C[One language per PR] C --> F[Check out
+contributor tools] end subgraph first[Contributing Basics] direction TB T[ ] -.- D[Write docs in markdown
+and build site with Hugo] --- E[source in GitHub] E --- G['/content/../docs' folder contains docs"><meta name=twitter:description content="This section contains information you should know before contributing new content.
+flowchart LR subgraph second[Before you begin] direction TB S[ ] -.- A[Sign the CNCF CLA] --> B[Choose Git branch] B --> C[One language per PR] C --> F[Check out
+contributor tools] end subgraph first[Contributing Basics] direction TB T[ ] -.- D[Write docs in markdown
+and build site with Hugo] --- E[source in GitHub] E --- G['/content/../docs' folder contains docs"><meta property="og:url" content="https://kubernetes.io/docs/contribute/new-content/"><meta property="og:title" content="Contributing new content"><meta name=twitter:title content="Contributing new content"><meta name=twitter:image content="https://kubernetes.io/images/favicon.png"><meta name=twitter:image:alt content="Kubernetes"><meta property="og:image" content="/images/kubernetes-horizontal-color.png"><meta property="og:type" content="article"><script async src=/js/mermaid-8.13.4.min.js></script>
+<script src=/js/jquery-3.6.0.min.js intregrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script></head><body class=td-section><header><nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar" data-auto-burger=primary><a class=navbar-brand href=/></a><div class="td-navbar-nav-scroll ml-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0"><li class="nav-item mr-2 mb-lg-0"><a class="nav-link active" href=/docs/>Documentation</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/blog/>Kubernetes Blog</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/training/>Training</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/partners/>Partners</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/community/>Community</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/case-studies/>Case Studies</a></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>Versions</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/releases>Release Information</a>
+<a class=dropdown-item href=https://kubernetes.io/docs/contribute/new-content/>v1.25</a>
+<a class=dropdown-item href=https://v1-24.docs.kubernetes.io/docs/contribute/new-content/>v1.24</a>
+<a class=dropdown-item href=https://v1-23.docs.kubernetes.io/docs/contribute/new-content/>v1.23</a>
+<a class=dropdown-item href=https://v1-22.docs.kubernetes.io/docs/contribute/new-content/>v1.22</a>
+<a class=dropdown-item href=https://v1-21.docs.kubernetes.io/docs/contribute/new-content/>v1.21</a></div></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdownMenuLink role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>English</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/zh-cn/docs/contribute/new-content/>中文 (Chinese)</a>
+<a class=dropdown-item href=/ko/docs/contribute/new-content/>한국어 (Korean)</a>
+<a class=dropdown-item href=/ja/docs/contribute/new-content/>日本語 (Japanese)</a></div></li></ul></div><button id=hamburger onclick=kub.toggleMenu() data-auto-burger-exclude><div></div></button></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><div class=td-content><div class="pageinfo pageinfo-primary d-print-none"><p>This is the multi-page printable view of this section.
+<a href=# onclick="return print(),!1">Click here to print</a>.</p><p><a href=/docs/contribute/new-content/>Return to the regular view of this page</a>.</p></div><h1 class=title>Contributing new content</h1><ul><li>1: <a href=#pg-553b51f3b1991ff428a01644a7c20d90>Opening a pull request</a></li><li>2: <a href=#pg-10ed45584b496b99003f299b4614ff78>Documenting a feature for a release</a></li><li>3: <a href=#pg-563096c308e08ee8545a117b10f2254a>Submitting blog posts and case studies</a></li></ul><div class=content><p>This section contains information you should know before contributing new
+content.</p><figure><div class=mermaid>flowchart LR
+subgraph second[Before you begin]
+direction TB
+S[ ] -.-
+A[Sign the CNCF CLA] --> B[Choose Git branch]
+B --> C[One language per PR]
+C --> F[Check out<br>contributor tools]
+end
+subgraph first[Contributing Basics]
+direction TB
+T[ ] -.-
+D[Write docs in markdown<br>and build site with Hugo] --- E[source in GitHub]
+E --- G['/content/../docs' folder contains docs<br>for multiple languages]
+G --- H[Review Hugo page content<br>types and shortcodes]
+end
+first ----> second
+classDef grey fill:#dddddd,stroke:#ffffff,stroke-width:px,color:#000000, font-size:15px;
+classDef white fill:#ffffff,stroke:#000,stroke-width:px,color:#000,font-weight:bold
+classDef spacewhite fill:#ffffff,stroke:#fff,stroke-width:0px,color:#000
+class A,B,C,D,E,F,G,H grey
+class S,T spacewhite
+class first,second white</div></figure><noscript><div class="alert alert-secondary callout" role=alert><em class=javascript-required>JavaScript must be <a href=https://www.enable-javascript.com/>enabled</a> to view this content</em></div></noscript><p><em><strong>Figure - Contributing new content preparation</strong></em></p><p>The figure above depicts the information you should know
+prior to submitting new content. The information details follow.</p><h2 id=contributing-basics>Contributing basics</h2><ul><li>Write Kubernetes documentation in Markdown and build the Kubernetes site
+using <a href=https://gohugo.io/>Hugo</a>.</li><li>Kubernetes documentation uses <a href=https://commonmark.org/>CommonMark</a> as its flavor of Markdown.</li><li>The source is in <a href=https://github.com/kubernetes/website>GitHub</a>. You can find
+Kubernetes documentation at <code>/content/en/docs/</code>. Some of the reference
+documentation is automatically generated from scripts in
+the <code>update-imported-docs/</code> directory.</li><li><a href=/docs/contribute/style/page-content-types/>Page content types</a> describe the
+presentation of documentation content in Hugo.</li><li>You can use <a href=https://www.docsy.dev/docs/adding-content/shortcodes/>Docsy shortcodes</a> or <a href=/docs/contribute/style/hugo-shortcodes/>custom Hugo shortcodes</a> to contribute to Kubernetes documentation.</li><li>In addition to the standard Hugo shortcodes, we use a number of
+<a href=/docs/contribute/style/hugo-shortcodes/>custom Hugo shortcodes</a> in our
+documentation to control the presentation of content.</li><li>Documentation source is available in multiple languages in <code>/content/</code>. Each
+language has its own folder with a two-letter code determined by the
+<a href=https://www.loc.gov/standards/iso639-2/php/code_list.php>ISO 639-1 standard</a>
+. For example, English documentation source is stored in <code>/content/en/docs/</code>.</li><li>For more information about contributing to documentation in multiple languages
+or starting a new translation,
+see <a href=/docs/contribute/localization>localization</a>.</li></ul><h2 id=before-you-begin>Before you begin</h2><h3 id=sign-the-cla>Sign the CNCF CLA</h3><p>All Kubernetes contributors <strong>must</strong> read
+the <a href=https://github.com/kubernetes/community/blob/master/contributors/guide/README.md>Contributor guide</a>
+and <a href=https://github.com/kubernetes/community/blob/master/CLA.md>sign the Contributor License Agreement (CLA)</a>
+.</p><p>Pull requests from contributors who haven't signed the CLA fail the automated
+tests. The name and email you provide must match those found in
+your <code>git config</code>, and your git name and email must match those used for the
+CNCF CLA.</p><h3 id=choose-which-git-branch-to-use>Choose which Git branch to use</h3><p>When opening a pull request, you need to know in advance which branch to base
+your work on.</p><table><thead><tr><th style=text-align:left>Scenario</th><th style=text-align:left>Branch</th></tr></thead><tbody><tr><td style=text-align:left>Existing or new English language content for the current release</td><td style=text-align:left><code>main</code></td></tr><tr><td style=text-align:left>Content for a feature change release</td><td style=text-align:left>The branch which corresponds to the major and minor version the feature change is in, using the pattern <code>dev-&lt;version></code>. For example, if a feature changes in the <code>v1.26</code> release, then add documentation changes to the <code>dev-1.26</code> branch.</td></tr><tr><td style=text-align:left>Content in other languages (localizations)</td><td style=text-align:left>Use the localization's convention. See the <a href=/docs/contribute/localization/#branching-strategy>Localization branching strategy</a> for more information.</td></tr></tbody></table><p>If you're still not sure which branch to choose, ask in <code>#sig-docs</code> on Slack.</p><div class="alert alert-info note callout" role=alert><strong>Note:</strong> If you already submitted your pull request and you know that the
+base branch was wrong, you (and only you, the submitter) can change it.</div><h3 id=languages-per-pr>Languages per PR</h3><p>Limit pull requests to one language per PR. If you need to make an identical
+change to the same code sample in multiple languages, open a separate PR for
+each language.</p><h2 id=tools-for-contributors>Tools for contributors</h2><p>The <a href=https://github.com/kubernetes/website/tree/main/content/en/docs/doc-contributor-tools>doc contributors tools</a>
+directory in the <code>kubernetes/website</code> repository contains tools to help your
+contribution journey go more smoothly.</p></div></div><div class=td-content style=page-break-before:always><h1 id=pg-553b51f3b1991ff428a01644a7c20d90>1 - Opening a pull request</h1><div class="alert alert-info note callout" role=alert><strong>Note:</strong> <strong>Code developers</strong>: If you are documenting a new feature for an
+upcoming Kubernetes release, see
+<a href=/docs/contribute/new-content/new-features/>Document a new feature</a>.</div><p>To contribute new content pages or improve existing content pages, open a pull request (PR).
+Make sure you follow all the requirements in the
+<a href=/docs/contribute/new-content/>Before you begin</a> section.</p><p>If your change is small, or you're unfamiliar with git, read
+<a href=#changes-using-github>Changes using GitHub</a> to learn how to edit a page.</p><p>If your changes are large, read <a href=#fork-the-repo>Work from a local fork</a> to learn how to make
+changes locally on your computer.</p><h2 id=changes-using-github>Changes using GitHub</h2><p>If you're less experienced with git workflows, here's an easier method of
+opening a pull request. Figure 1 outlines the steps and the details follow.</p><figure><div class=mermaid>flowchart LR
+A([fa:fa-user New<br>Contributor]) --- id1[(K8s/Website<br>GitHub)]
+subgraph tasks[Changes using GitHub]
+direction TB
+0[ ] -.-
+1[1. Edit this page] --> 2[2. Use GitHub markdown<br>editor to make changes]
+2 --> 3[3. fill in Propose file change]
+end
+subgraph tasks2[ ]
+direction TB
+4[4. select Propose file change] --> 5[5. select Create pull request] --> 6[6. fill in Open a pull request]
+6 --> 7[7. select Create pull request]
+end
+id1 --> tasks --> tasks2
+classDef grey fill:#dddddd,stroke:#ffffff,stroke-width:px,color:#000000, font-size:15px;
+classDef white fill:#ffffff,stroke:#000,stroke-width:px,color:#000,font-weight:bold
+classDef k8s fill:#326ce5,stroke:#fff,stroke-width:1px,color:#fff;
+classDef spacewhite fill:#ffffff,stroke:#fff,stroke-width:0px,color:#000
+class A,1,2,3,4,5,6,7 grey
+class 0 spacewhite
+class tasks,tasks2 white
+class id1 k8s</div></figure><noscript><div class="alert alert-secondary callout" role=alert><em class=javascript-required>JavaScript must be <a href=https://www.enable-javascript.com/>enabled</a> to view this content</em></div></noscript><p>Figure 1. Steps for opening a PR using GitHub.</p><ol><li><p>On the page where you see the issue, select the pencil icon at the top right.
+You can also scroll to the bottom of the page and select <strong>Edit this page</strong>.</p></li><li><p>Make your changes in the GitHub markdown editor.</p></li><li><p>Below the editor, fill in the <strong>Propose file change</strong> form.
+In the first field, give your commit message a title.
+In the second field, provide a description.</p><div class="alert alert-info note callout" role=alert><strong>Note:</strong> Do not use any <a href=https://help.github.com/en/github/managing-your-work-on-github/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword>GitHub Keywords</a>
+in your commit message. You can add those to the pull request description later.</div></li><li><p>Select <strong>Propose file change</strong>.</p></li><li><p>Select <strong>Create pull request</strong>.</p></li><li><p>The <strong>Open a pull request</strong> screen appears. Fill in the form:</p><ul><li>The <strong>Subject</strong> field of the pull request defaults to the commit summary.
+You can change it if needed.</li><li>The <strong>Body</strong> contains your extended commit message, if you have one,
+and some template text. Add the
+details the template text asks for, then delete the extra template text.</li><li>Leave the <strong>Allow edits from maintainers</strong> checkbox selected.</li></ul><div class="alert alert-info note callout" role=alert><strong>Note:</strong> PR descriptions are a great way to help reviewers understand your change.
+For more information, see <a href=#open-a-pr>Opening a PR</a>.</div></li><li><p>Select <strong>Create pull request</strong>.</p></li></ol><h3 id=addressing-feedback-in-github>Addressing feedback in GitHub</h3><p>Before merging a pull request, Kubernetes community members review and
+approve it. The <code>k8s-ci-robot</code> suggests reviewers based on the nearest
+owner mentioned in the pages. If you have someone specific in mind,
+leave a comment with their GitHub username in it.</p><p>If a reviewer asks you to make changes:</p><ol><li>Go to the <strong>Files changed</strong> tab.</li><li>Select the pencil (edit) icon on any files changed by the pull request.</li><li>Make the changes requested.</li><li>Commit the changes.</li></ol><p>If you are waiting on a reviewer, reach out once every 7 days. You can also post a message in the
+<code>#sig-docs</code> Slack channel.</p><p>When your review is complete, a reviewer merges your PR and your changes go live a few minutes later.</p><h2 id=fork-the-repo>Work from a local fork</h2><p>If you're more experienced with git, or if your changes are larger than a few lines,
+work from a local fork.</p><p>Make sure you have <a href=https://git-scm.com/book/en/v2/Getting-Started-Installing-Git>git</a> installed
+on your computer. You can also use a git UI application.</p><p>Figure 2 shows the steps to follow when you work from a local fork. The details for each step follow.</p><figure><div class=mermaid>flowchart LR
+1[Fork the K8s/website<br>repository] --> 2[Create local clone<br>and set upstream]
+subgraph changes[Your changes]
+direction TB
+S[ ] -.-
+3[Create a branch<br>example: my_new_branch] --> 3a[Make changes using<br>text editor] --> 4["Preview your changes<br>locally using Hugo<br>(localhost:1313)<br>or build container image"]
+end
+subgraph changes2[Commit / Push]
+direction TB
+T[ ] -.-
+5[Commit your changes] --> 6[Push commit to<br>origin/my_new_branch]
+end
+2 --> changes --> changes2
+classDef grey fill:#dddddd,stroke:#ffffff,stroke-width:px,color:#000000, font-size:15px;
+classDef white fill:#ffffff,stroke:#000,stroke-width:px,color:#000,font-weight:bold
+classDef k8s fill:#326ce5,stroke:#fff,stroke-width:1px,color:#fff;
+classDef spacewhite fill:#ffffff,stroke:#fff,stroke-width:0px,color:#000
+class 1,2,3,3a,4,5,6 grey
+class S,T spacewhite
+class changes,changes2 white</div></figure><noscript><div class="alert alert-secondary callout" role=alert><em class=javascript-required>JavaScript must be <a href=https://www.enable-javascript.com/>enabled</a> to view this content</em></div></noscript><p>Figure 2. Working from a local fork to make your changes.</p><h3 id=fork-the-kubernetes-website-repository>Fork the kubernetes/website repository</h3><ol><li>Navigate to the <a href=https://github.com/kubernetes/website/><code>kubernetes/website</code></a> repository.</li><li>Select <strong>Fork</strong>.</li></ol><h3 id=create-a-local-clone-and-set-the-upstream>Create a local clone and set the upstream</h3><ol><li><p>In a terminal window, clone your fork and update the <a href=https://github.com/google/docsy#readme>Docsy Hugo theme</a>:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git clone git@github.com/&lt;github_username&gt;/website
+</span></span><span style=display:flex><span><span style=color:#a2f>cd</span> website
+</span></span><span style=display:flex><span>git submodule update --init --recursive --depth <span style=color:#666>1</span>
+</span></span></code></pre></div></li><li><p>Navigate to the new <code>website</code> directory. Set the <code>kubernetes/website</code> repository as the <code>upstream</code> remote:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f>cd</span> website
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>git remote add upstream https://github.com/kubernetes/website.git
+</span></span></code></pre></div></li><li><p>Confirm your <code>origin</code> and <code>upstream</code> repositories:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git remote -v
+</span></span></code></pre></div><p>Output is similar to:</p><pre tabindex=0><code class=language-none data-lang=none>origin	git@github.com:&lt;github_username&gt;/website.git (fetch)
+origin	git@github.com:&lt;github_username&gt;/website.git (push)
+upstream	https://github.com/kubernetes/website.git (fetch)
+upstream	https://github.com/kubernetes/website.git (push)
+</code></pre></li><li><p>Fetch commits from your fork's <code>origin/main</code> and <code>kubernetes/website</code>'s <code>upstream/main</code>:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git fetch origin
+</span></span><span style=display:flex><span>git fetch upstream
+</span></span></code></pre></div><p>This makes sure your local repository is up to date before you start making changes.</p><div class="alert alert-info note callout" role=alert><strong>Note:</strong> This workflow is different than the
+<a href=https://github.com/kubernetes/community/blob/master/contributors/guide/github-workflow.md>Kubernetes Community GitHub Workflow</a>.
+You do not need to merge your local copy of <code>main</code> with <code>upstream/main</code> before pushing updates
+to your fork.</div></li></ol><h3 id=create-a-branch>Create a branch</h3><ol><li><p>Decide which branch base to your work on:</p><ul><li>For improvements to existing content, use <code>upstream/main</code>.</li><li>For new content about existing features, use <code>upstream/main</code>.</li><li>For localized content, use the localization's conventions. For more information, see
+<a href=/docs/contribute/localization/>localizing Kubernetes documentation</a>.</li><li>For new features in an upcoming Kubernetes release, use the feature branch. For more
+information, see <a href=/docs/contribute/new-content/new-features/>documenting for a release</a>.</li><li>For long-running efforts that multiple SIG Docs contributors collaborate on,
+like content reorganization, use a specific feature branch created for that effort.</li></ul><p>If you need help choosing a branch, ask in the <code>#sig-docs</code> Slack channel.</p></li><li><p>Create a new branch based on the branch identified in step 1. This example assumes the base
+branch is <code>upstream/main</code>:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git checkout -b &lt;my_new_branch&gt; upstream/main
+</span></span></code></pre></div></li><li><p>Make your changes using a text editor.</p></li></ol><p>At any time, use the <code>git status</code> command to see what files you've changed.</p><h3 id=commit-your-changes>Commit your changes</h3><p>When you are ready to submit a pull request, commit your changes.</p><ol><li><p>In your local repository, check which files you need to commit:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git status
+</span></span></code></pre></div><p>Output is similar to:</p><pre tabindex=0><code class=language-none data-lang=none>On branch &lt;my_new_branch&gt;
+Your branch is up to date with &#39;origin/&lt;my_new_branch&gt;&#39;.
+
+Changes not staged for commit:
+(use &#34;git add &lt;file&gt;...&#34; to update what will be committed)
+(use &#34;git checkout -- &lt;file&gt;...&#34; to discard changes in working directory)
+
+modified:   content/en/docs/contribute/new-content/contributing-content.md
+
+no changes added to commit (use &#34;git add&#34; and/or &#34;git commit -a&#34;)
+</code></pre></li><li><p>Add the files listed under <strong>Changes not staged for commit</strong> to the commit:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git add &lt;your_file_name&gt;
+</span></span></code></pre></div><p>Repeat this for each file.</p></li><li><p>After adding all the files, create a commit:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git commit -m <span style=color:#b44>&#34;Your commit message&#34;</span>
+</span></span></code></pre></div><div class="alert alert-info note callout" role=alert><strong>Note:</strong> Do not use any <a href=https://help.github.com/en/github/managing-your-work-on-github/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword>GitHub Keywords</a>
+in your commit message. You can add those to the pull request
+description later.</div></li><li><p>Push your local branch and its new commit to your remote fork:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git push origin &lt;my_new_branch&gt;
+</span></span></code></pre></div></li></ol><h3 id=preview-locally>Preview your changes locally</h3><p>It's a good idea to preview your changes locally before pushing them or opening a pull request.
+A preview lets you catch build errors or markdown formatting problems.</p><p>You can either build the website's container image or run Hugo locally. Building the container
+image is slower but displays <a href=/docs/contribute/style/hugo-shortcodes/>Hugo shortcodes</a>, which can
+be useful for debugging.</p><ul class="nav nav-tabs" id=tab-with-hugo role=tablist><li class=nav-item><a data-toggle=tab class="nav-link active" href=#tab-with-hugo-0 role=tab aria-controls=tab-with-hugo-0 aria-selected=true>Hugo in a container</a></li><li class=nav-item><a data-toggle=tab class=nav-link href=#tab-with-hugo-1 role=tab aria-controls=tab-with-hugo-1>Hugo on the command line</a></li></ul><div class=tab-content id=tab-with-hugo><div id=tab-with-hugo-0 class="tab-pane show active" role=tabpanel aria-labelledby=tab-with-hugo-0><p><div class="alert alert-info note callout" role=alert><strong>Note:</strong> The commands below use Docker as default container engine. Set the <code>CONTAINER_ENGINE</code> environment
+variable to override this behaviour.</div><ol><li><p>Build the container image locally<br><em>You only need this step if you are testing a change to the Hugo tool itself</em></p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#080;font-style:italic># Run this in a terminal (if required)</span>
+</span></span><span style=display:flex><span>make container-image
+</span></span></code></pre></div></li><li><p>Start Hugo in a container:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#080;font-style:italic># Run this in a terminal</span>
+</span></span><span style=display:flex><span>make container-serve
+</span></span></code></pre></div></li><li><p>In a web browser, navigate to <code>https://localhost:1313</code>. Hugo watches the
+changes and rebuilds the site as needed.</p></li><li><p>To stop the local Hugo instance, go back to the terminal and type <code>Ctrl+C</code>,
+or close the terminal window.</p></li></ol></div><div id=tab-with-hugo-1 class=tab-pane role=tabpanel aria-labelledby=tab-with-hugo-1><p><p>Alternately, install and use the <code>hugo</code> command on your computer:</p><ol><li><p>Install the <a href=https://gohugo.io/getting-started/installing/>Hugo</a> version specified in
+<a href=https://raw.githubusercontent.com/kubernetes/website/main/netlify.toml><code>website/netlify.toml</code></a>.</p></li><li><p>If you have not updated your website repository, the <code>website/themes/docsy</code> directory is empty.
+The site cannot build without a local copy of the theme. To update the website theme, run:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git submodule update --init --recursive --depth <span style=color:#666>1</span>
+</span></span></code></pre></div></li><li><p>In a terminal, go to your Kubernetes website repository and start the Hugo server:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f>cd</span> &lt;path_to_your_repo&gt;/website
+</span></span><span style=display:flex><span>hugo server --buildFuture
+</span></span></code></pre></div></li><li><p>In a web browser, navigate to <code>https://localhost:1313</code>. Hugo watches the
+changes and rebuilds the site as needed.</p></li><li><p>To stop the local Hugo instance, go back to the terminal and type <code>Ctrl+C</code>,
+or close the terminal window.</p></li></ol></div></div><h3 id=open-a-pr>Open a pull request from your fork to kubernetes/website</h3><p>Figure 3 shows the steps to open a PR from your fork to the K8s/website. The details follow.</p><figure><div class=mermaid>flowchart LR
+subgraph first[ ]
+direction TB
+1[1. Go to K8s/website repository] --> 2[2. Select New Pull Request]
+2 --> 3[3. Select compare across forks]
+3 --> 4[4. Select your fork from<br>head repository drop-down menu]
+end
+subgraph second [ ]
+direction TB
+5[5. Select your branch from<br>the compare drop-down menu] --> 6[6. Select Create Pull Request]
+6 --> 7[7. Add a description<br>to your PR]
+7 --> 8[8. Select Create pull request]
+end
+first --> second
+classDef grey fill:#dddddd,stroke:#ffffff,stroke-width:px,color:#000000, font-size:15px;
+classDef white fill:#ffffff,stroke:#000,stroke-width:px,color:#000,font-weight:bold
+class 1,2,3,4,5,6,7,8 grey
+class first,second white</div></figure><noscript><div class="alert alert-secondary callout" role=alert><em class=javascript-required>JavaScript must be <a href=https://www.enable-javascript.com/>enabled</a> to view this content</em></div></noscript><p>Figure 3. Steps to open a PR from your fork to the K8s/website.</p><ol><li><p>In a web browser, go to the <a href=https://github.com/kubernetes/website/><code>kubernetes/website</code></a> repository.</p></li><li><p>Select <strong>New Pull Request</strong>.</p></li><li><p>Select <strong>compare across forks</strong>.</p></li><li><p>From the <strong>head repository</strong> drop-down menu, select your fork.</p></li><li><p>From the <strong>compare</strong> drop-down menu, select your branch.</p></li><li><p>Select <strong>Create Pull Request</strong>.</p></li><li><p>Add a description for your pull request:</p><ul><li><p><strong>Title</strong> (50 characters or less): Summarize the intent of the change.</p></li><li><p><strong>Description</strong>: Describe the change in more detail.</p><ul><li>If there is a related GitHub issue, include <code>Fixes #12345</code> or <code>Closes #12345</code> in the
+description. GitHub's automation closes the mentioned issue after merging the PR if used.
+If there are other related PRs, link those as well.</li><li>If you want advice on something specific, include any questions you'd like reviewers to
+think about in your description.</li></ul></li></ul></li><li><p>Select the <strong>Create pull request</strong> button.</p></li></ol><p>Congratulations! Your pull request is available in <a href=https://github.com/kubernetes/website/pulls>Pull requests</a>.</p><p>After opening a PR, GitHub runs automated tests and tries to deploy a preview using
+<a href=https://www.netlify.com/>Netlify</a>.</p><ul><li>If the Netlify build fails, select <strong>Details</strong> for more information.</li><li>If the Netlify build succeeds, select <strong>Details</strong> opens a staged version of the Kubernetes
+website with your changes applied. This is how reviewers check your changes.</li></ul><p>GitHub also automatically assigns labels to a PR, to help reviewers. You can add them too, if
+needed. For more information, see <a href=/docs/contribute/review/for-approvers/#adding-and-removing-issue-labels>Adding and removing issue labels</a>.</p><h3 id=addressing-feedback-locally>Addressing feedback locally</h3><ol><li><p>After making your changes, amend your previous commit:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git commit -a --amend
+</span></span></code></pre></div><ul><li><code>-a</code>: commits all changes</li><li><code>--amend</code>: amends the previous commit, rather than creating a new one</li></ul></li><li><p>Update your commit message if needed.</p></li><li><p>Use <code>git push origin &lt;my_new_branch></code> to push your changes and re-run the Netlify tests.</p><div class="alert alert-info note callout" role=alert><strong>Note:</strong> If you use <code>git commit -m</code> instead of amending, you must <a href=#squashing-commits>squash your commits</a>
+before merging.</div></li></ol><h4 id=changes-from-reviewers>Changes from reviewers</h4><p>Sometimes reviewers commit to your pull request. Before making any other changes, fetch those commits.</p><ol><li><p>Fetch commits from your remote fork and rebase your working branch:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git fetch origin
+</span></span><span style=display:flex><span>git rebase origin/&lt;your-branch-name&gt;
+</span></span></code></pre></div></li><li><p>After rebasing, force-push new changes to your fork:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git push --force-with-lease origin &lt;your-branch-name&gt;
+</span></span></code></pre></div></li></ol><h4 id=merge-conflicts-and-rebasing>Merge conflicts and rebasing</h4><div class="alert alert-info note callout" role=alert><strong>Note:</strong> For more information, see <a href=https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging#_basic_merge_conflicts>Git Branching - Basic Branching and Merging</a>,
+<a href=https://git-scm.com/book/en/v2/Git-Tools-Advanced-Merging>Advanced Merging</a>, or ask in the
+<code>#sig-docs</code> Slack channel for help.</div><p>If another contributor commits changes to the same file in another PR, it can create a merge
+conflict. You must resolve all merge conflicts in your PR.</p><ol><li><p>Update your fork and rebase your local branch:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git fetch origin
+</span></span><span style=display:flex><span>git rebase origin/&lt;your-branch-name&gt;
+</span></span></code></pre></div><p>Then force-push the changes to your fork:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git push --force-with-lease origin &lt;your-branch-name&gt;
+</span></span></code></pre></div></li><li><p>Fetch changes from <code>kubernetes/website</code>'s <code>upstream/main</code> and rebase your branch:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git fetch upstream
+</span></span><span style=display:flex><span>git rebase upstream/main
+</span></span></code></pre></div></li><li><p>Inspect the results of the rebase:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git status
+</span></span></code></pre></div><p>This results in a number of files marked as conflicted.</p></li><li><p>Open each conflicted file and look for the conflict markers: <code>>>></code>, <code>&lt;&lt;&lt;</code>, and <code>===</code>.
+Resolve the conflict and delete the conflict marker.</p><div class="alert alert-info note callout" role=alert><strong>Note:</strong> For more information, see <a href=https://git-scm.com/docs/git-merge#_how_conflicts_are_presented>How conflicts are presented</a>.</div></li><li><p>Add the files to the changeset:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git add &lt;filename&gt;
+</span></span></code></pre></div></li><li><p>Continue the rebase:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git rebase --continue
+</span></span></code></pre></div></li><li><p>Repeat steps 2 to 5 as needed.</p><p>After applying all commits, the <code>git status</code> command shows that the rebase is complete.</p></li><li><p>Force-push the branch to your fork:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git push --force-with-lease origin &lt;your-branch-name&gt;
+</span></span></code></pre></div><p>The pull request no longer shows any conflicts.</p></li></ol><h3 id=squashing-commits>Squashing commits</h3><div class="alert alert-info note callout" role=alert><strong>Note:</strong> For more information, see <a href=https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History>Git Tools - Rewriting History</a>,
+or ask in the <code>#sig-docs</code> Slack channel for help.</div><p>If your PR has multiple commits, you must squash them into a single commit before merging your PR.
+You can check the number of commits on your PR's <strong>Commits</strong> tab or by running the <code>git log</code>
+command locally.</p><div class="alert alert-info note callout" role=alert><strong>Note:</strong> This topic assumes <code>vim</code> as the command line text editor.</div><ol><li><p>Start an interactive rebase:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git rebase -i HEAD~&lt;number_of_commits_in_branch&gt;
+</span></span></code></pre></div><p>Squashing commits is a form of rebasing. The <code>-i</code> switch tells git you want to rebase interactively.
+<code>HEAD~&lt;number_of_commits_in_branch</code> indicates how many commits to look at for the rebase.</p><p>Output is similar to:</p><pre tabindex=0><code class=language-none data-lang=none>pick d875112ca Original commit
+pick 4fa167b80 Address feedback 1
+pick 7d54e15ee Address feedback 2
+
+# Rebase 3d18sf680..7d54e15ee onto 3d183f680 (3 commands)
+
+...
+
+# These lines can be re-ordered; they are executed from top to bottom.
+</code></pre><p>The first section of the output lists the commits in the rebase. The second section lists the
+options for each commit. Changing the word <code>pick</code> changes the status of the commit once the rebase
+is complete.</p><p>For the purposes of rebasing, focus on <code>squash</code> and <code>pick</code>.</p><div class="alert alert-info note callout" role=alert><strong>Note:</strong> For more information, see <a href=https://git-scm.com/docs/git-rebase#_interactive_mode>Interactive Mode</a>.</div></li><li><p>Start editing the file.</p><p>Change the original text:</p><pre tabindex=0><code class=language-none data-lang=none>pick d875112ca Original commit
+pick 4fa167b80 Address feedback 1
+pick 7d54e15ee Address feedback 2
+</code></pre><p>To:</p><pre tabindex=0><code class=language-none data-lang=none>pick d875112ca Original commit
+squash 4fa167b80 Address feedback 1
+squash 7d54e15ee Address feedback 2
+</code></pre><p>This squashes commits <code>4fa167b80 Address feedback 1</code> and <code>7d54e15ee Address feedback 2</code> into
+<code>d875112ca Original commit</code>, leaving only <code>d875112ca Original commit</code> as a part of the timeline.</p></li><li><p>Save and exit your file.</p></li><li><p>Push your squashed commit:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git push --force-with-lease origin &lt;branch_name&gt;
+</span></span></code></pre></div></li></ol><h2 id=contribute-to-other-repos>Contribute to other repos</h2><p>The <a href=https://github.com/kubernetes>Kubernetes project</a> contains 50+ repositories. Many of these
+repositories contain documentation: user-facing help text, error messages, API references or code
+comments.</p><p>If you see text you'd like to improve, use GitHub to search all repositories in the Kubernetes
+organization. This can help you figure out where to submit your issue or PR.</p><p>Each repository has its own processes and procedures. Before you file an issue or submit a PR,
+read that repository's <code>README.md</code>, <code>CONTRIBUTING.md</code>, and <code>code-of-conduct.md</code>, if they exist.</p><p>Most repositories use issue and PR templates. Have a look through some open issues and PRs to get
+a feel for that team's processes. Make sure to fill out the templates with as much detail as
+possible when you file issues or PRs.</p><h2 id=what-s-next>What's next</h2><ul><li>Read <a href=/docs/contribute/review/reviewing-prs>Reviewing</a> to learn more about the review process.</li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-10ed45584b496b99003f299b4614ff78>2 - Documenting a feature for a release</h1><p>Each major Kubernetes release introduces new features that require documentation. New releases also bring updates to existing features and documentation (such as upgrading a feature from alpha to beta).</p><p>Generally, the SIG responsible for a feature submits draft documentation of the
+feature as a pull request to the appropriate development branch of the
+<code>kubernetes/website</code> repository, and someone on the SIG Docs team provides
+editorial feedback or edits the draft directly. This section covers the branching
+conventions and process used during a release by both groups.</p><h2 id=for-documentation-contributors>For documentation contributors</h2><p>In general, documentation contributors don't write content from scratch for a release.
+Instead, they work with the SIG creating a new feature to refine the draft documentation and make it release ready.</p><p>After you've chosen a feature to document or assist, ask about it in the <code>#sig-docs</code>
+Slack channel, in a weekly SIG Docs meeting, or directly on the PR filed by the
+feature SIG. If you're given the go-ahead, you can edit into the PR using one of
+the techniques described in
+<a href=/docs/contribute/review/for-approvers/#commit-into-another-person-s-pr>Commit into another person's PR</a>.</p><h3 id=find-out-about-upcoming-features>Find out about upcoming features</h3><p>To find out about upcoming features, attend the weekly SIG Release meeting (see
+the <a href=/community/>community</a> page for upcoming meetings)
+and monitor the release-specific documentation
+in the <a href=https://github.com/kubernetes/sig-release/>kubernetes/sig-release</a>
+repository. Each release has a sub-directory in the <a href=https://github.com/kubernetes/sig-release/tree/master/releases>/sig-release/tree/master/releases/</a>
+directory. The sub-directory contains a release schedule, a draft of the release
+notes, and a document listing each person on the release team.</p><p>The release schedule contains links to all other documents, meetings,
+meeting minutes, and milestones relating to the release. It also contains
+information about the goals and timeline of the release, and any special
+processes in place for this release. Near the bottom of the document, several
+release-related terms are defined.</p><p>This document also contains a link to the <strong>Feature tracking sheet</strong>, which is
+the official way to find out about all new features scheduled to go into the
+release.</p><p>The release team document lists who is responsible for each release role. If
+it's not clear who to talk to about a specific feature or question you have,
+either attend the release meeting to ask your question, or contact the release
+lead so that they can redirect you.</p><p>The release notes draft is a good place to find out about
+specific features, changes, deprecations, and more about the release. The
+content is not finalized until late in the release cycle, so use caution.</p><h3 id=feature-tracking-sheet>Feature tracking sheet</h3><p>The feature tracking sheet <a href=https://github.com/kubernetes/sig-release/tree/master/releases>for a given Kubernetes release</a>
+lists each feature that is planned for a release.
+Each line item includes the name of the feature, a link to the feature's main
+GitHub issue, its stability level (Alpha, Beta, or Stable), the SIG and
+individual responsible for implementing it, whether it
+needs docs, a draft release note for the feature, and whether it has been
+merged. Keep the following in mind:</p><ul><li>Beta and Stable features are generally a higher documentation priority than
+Alpha features.</li><li>It's hard to test (and therefore to document) a feature that hasn't been merged,
+or is at least considered feature-complete in its PR.</li><li>Determining whether a feature needs documentation is a manual process. Even if
+a feature is not marked as needing docs, you may need to document the feature.</li></ul><h2 id=for-developers-or-other-sig-members>For developers or other SIG members</h2><p>This section is information for members of other Kubernetes SIGs documenting new features
+for a release.</p><p>If you are a member of a SIG developing a new feature for Kubernetes, you need
+to work with SIG Docs to be sure your feature is documented in time for the
+release. Check the
+<a href=https://github.com/kubernetes/sig-release/tree/master/releases>feature tracking spreadsheet</a>
+or check in the <code>#sig-release</code> Kubernetes Slack channel to verify scheduling details and
+deadlines.</p><h3 id=open-a-placeholder-pr>Open a placeholder PR</h3><ol><li>Open a <strong>draft</strong> pull request against the
+<code>dev-1.26</code> branch in the <code>kubernetes/website</code> repository, with a small
+commit that you will amend later. To create a draft pull request, use the
+Create Pull Request drop-down and select <strong>Create Draft Pull Request</strong>,
+then click <strong>Draft Pull Request</strong>.</li><li>Edit the pull request description to include links to <a href=https://github.com/kubernetes/kubernetes>kubernetes/kubernetes</a>
+PR(s) and <a href=https://github.com/kubernetes/enhancements>kubernetes/enhancements</a> issue(s).</li><li>Leave a comment on the related <a href=https://github.com/kubernetes/enhancements>kubernetes/enhancements</a>
+issue with a link to the PR to notify the docs person managing this release that
+the feature docs are coming and should be tracked for the release.</li></ol><p>If your feature does not need
+any documentation changes, make sure the sig-release team knows this, by
+mentioning it in the <code>#sig-release</code> Slack channel. If the feature does need
+documentation but the PR is not created, the feature may be removed from the
+milestone.</p><h3 id=pr-ready-for-review>PR ready for review</h3><p>When ready, populate your placeholder PR with feature documentation and change
+the state of the PR from draft to <strong>ready for review</strong>. To mark a pull request
+as ready for review, navigate to the merge box and click <strong>Ready for review</strong>.</p><p>Do your best to describe your feature and how to use it. If you need help structuring your documentation, ask in the <code>#sig-docs</code> Slack channel.</p><p>When you complete your content, the documentation person assigned to your feature reviews it.
+To ensure technical accuracy, the content may also require a technical review from corresponding SIG(s).
+Use their suggestions to get the content to a release ready state.</p><p>If your feature is an Alpha or Beta feature and is behind a feature gate,
+make sure you add it to <a href=/docs/reference/command-line-tools-reference/feature-gates/#feature-gates-for-alpha-or-beta-features>Alpha/Beta Feature gates</a>
+table as part of your pull request. With new feature gates, a description of
+the feature gate is also required. If your feature is GA'ed or deprecated,
+make sure to move it from the
+<a href=/docs/reference/command-line-tools-reference/feature-gates/#feature-gates-for-alpha-or-beta-features>Feature gates for Alpha/Feature</a> table
+to <a href=/docs/reference/command-line-tools-reference/feature-gates-removed/#feature-gates-that-are-removed>Feature gates for graduated or deprecated features</a>
+table with Alpha and Beta history intact.</p><p>If your feature needs documentation and the first draft
+content is not received, the feature may be removed from the milestone.</p><h3 id=all-prs-reviewed-and-ready-to-merge>All PRs reviewed and ready to merge</h3><p>If your PR has not yet been merged into the <code>dev-1.26</code> branch by the release deadline, work with the
+docs person managing the release to get it in by the deadline. If your feature needs
+documentation and the docs are not ready, the feature may be removed from the
+milestone.</p></div><div class=td-content style=page-break-before:always><h1 id=pg-563096c308e08ee8545a117b10f2254a>3 - Submitting blog posts and case studies</h1><p>Anyone can write a blog post and submit it for review.
+Case studies require extensive review before they're approved.</p><h2 id=the-kubernetes-blog>The Kubernetes Blog</h2><p>The Kubernetes blog is used by the project to communicate new features, community reports, and any
+news that might be relevant to the Kubernetes community. This includes end users and developers.
+Most of the blog's content is about things happening in the core project, but we encourage you to
+submit about things happening elsewhere in the ecosystem too!</p><p>Anyone can write a blog post and submit it for review.</p><h3 id=submit-a-post>Submit a Post</h3><p>Blog posts should not be commercial in nature and should consist of original content that applies
+broadly to the Kubernetes community. Appropriate blog content includes:</p><ul><li>New Kubernetes capabilities</li><li>Kubernetes projects updates</li><li>Updates from Special Interest Groups</li><li>Tutorials and walkthroughs</li><li>Thought leadership around Kubernetes</li><li>Kubernetes Partner OSS integration</li><li><strong>Original content only</strong></li></ul><p>Unsuitable content includes:</p><ul><li>Vendor product pitches</li><li>Partner updates without an integration and customer story</li><li>Syndicated posts (language translations ok)</li></ul><p>To submit a blog post, follow these steps:</p><ol><li><p><a href=https://github.com/kubernetes/community/blob/master/CLA.md>Sign the CLA</a>
+if you have not yet done so.</p></li><li><p>Have a look at the Markdown format for existing blog posts in the
+<a href=https://github.com/kubernetes/website/tree/master/content/en/blog/_posts>website repository</a>.</p></li><li><p>Write out your blog post in a text editor of your choice.</p></li><li><p>On the same link from step 2, click the Create new file button. Paste your content into the editor.
+Name the file to match the proposed title of the blog post, but don’t put the date in the file name.
+The blog reviewers will work with you on the final file name and the date the blog will be published.</p></li><li><p>When you save the file, GitHub will walk you through the pull request process.</p></li><li><p>A blog post reviewer will review your submission and work with you on feedback and final details.
+When the blog post is approved, the blog will be scheduled for publication.</p></li></ol><h3 id=guidelines-and-expectations>Guidelines and expectations</h3><ul><li><p>Blog posts should not be vendor pitches.</p><ul><li>Articles must contain content that applies broadly to the Kubernetes community. For example, a
+submission should focus on upstream Kubernetes as opposed to vendor-specific configurations.
+Check the <a href=/docs/contribute/style/content-guide/#what-s-allowed>Documentation style guide</a> for
+what is typically allowed on Kubernetes properties.</li><li>Links should primarily be to the official Kubernetes documentation. When using external
+references, links should be diverse - For example a submission shouldn't contain only links
+back to a single company's blog.</li><li>Sometimes this is a delicate balance. The <a href=https://kubernetes.slack.com/messages/sig-docs-blog/>blog team</a>
+is there to give guidance on whether a post is appropriate for the Kubernetes blog, so don't
+hesitate to reach out.</li></ul></li><li><p>Blog posts are not published on specific dates.</p><ul><li>Articles are reviewed by community volunteers. We'll try our best to accommodate specific
+timing, but we make no guarantees.</li><li>Many core parts of the Kubernetes projects submit blog posts during release windows, delaying
+publication times. Consider submitting during a quieter period of the release cycle.</li><li>If you are looking for greater coordination on post release dates, coordinating with
+<a href=https://www.cncf.io/about/contact/>CNCF marketing</a> is a more appropriate choice than submitting a blog post.</li><li>Sometimes reviews can get backed up. If you feel your review isn't getting the attention it needs,
+you can reach out to the blog team on the <a href=https://kubernetes.slack.com/messages/sig-docs-blog/><code>#sig-docs-blog</code> Slack channel</a>
+to ask in real time.</li></ul></li><li><p>Blog posts should be relevant to Kubernetes users.</p><ul><li>Topics related to participation in or results of Kubernetes SIGs activities are always on
+topic (see the work in the <a href=https://github.com/kubernetes/community/blob/master/communication/contributor-comms/storytelling-resources/blog-guidelines.md#upstream-marketing-blog-guidelines>Contributor Comms Team</a>
+for support on these posts).</li><li>The components of Kubernetes are purposely modular, so tools that use existing integration
+points like CNI and CSI are on topic.</li><li>Posts about other CNCF projects may or may not be on topic. We recommend asking the blog team
+before submitting a draft.<ul><li>Many CNCF projects have their own blog. These are often a better choice for posts. There are
+times of major feature or milestone for a CNCF project that users would be interested in
+reading on the Kubernetes blog.</li></ul></li><li>Blog posts about contributing to the Kubernetes project should be in the
+<a href=https://kubernetes.dev>Kubernetes Contributors site</a></li></ul></li><li><p>Blog posts should be original content</p><ul><li>The official blog is not for repurposing existing content from a third party as new content.</li><li>The <a href=https://github.com/kubernetes/website/blob/main/LICENSE>license</a> for the blog allows
+commercial use of the content for commercial purposes, but not the other way around.</li></ul></li><li><p>Blog posts should aim to be future proof</p><ul><li>Given the development velocity of the project, we want evergreen content that won't require
+updates to stay accurate for the reader.</li><li>It can be a better choice to add a tutorial or update official documentation than to write a
+high level overview as a blog post.<ul><li>Consider concentrating the long technical content as a call to action of the blog post, and
+focus on the problem space or why readers should care.</li></ul></li></ul></li></ul><h3 id=technical-considerations-for-submitting-a-blog-post>Technical Considerations for submitting a blog post</h3><p>Submissions need to be in Markdown format to be used by the <a href=https://gohugo.io/>Hugo</a> generator
+for the blog. There are <a href=https://gohugo.io/documentation/>many resources available</a> on how to use
+this technology stack.</p><p>We recognize that this requirement makes the process more difficult for less-familiar folks to
+submit, and we're constantly looking at solutions to lower this bar. If you have ideas on how to
+lower the barrier, please volunteer to help out.</p><p>The SIG Docs <a href=https://github.com/kubernetes/community/tree/master/sig-docs/blog-subproject>blog subproject</a>
+manages the review process for blog posts. For more information, see
+<a href=https://github.com/kubernetes/community/tree/master/sig-docs/blog-subproject#submit-a-post>Submit a post</a>.</p><p>To submit a blog post follow these directions:</p><ul><li><p><a href=/docs/contribute/new-content/open-a-pr/#fork-the-repo>Open a pull request</a> with a new blog post.
+New blog posts go under the <a href=https://github.com/kubernetes/website/tree/main/content/en/blog/_posts><code>content/en/blog/_posts</code></a>
+directory.</p></li><li><p>Ensure that your blog post follows the correct naming conventions and the following frontmatter
+(metadata) information:</p><ul><li><p>The Markdown file name must follow the format <code>YYYY-MM-DD-Your-Title-Here.md</code>. For example,
+<code>2020-02-07-Deploying-External-OpenStack-Cloud-Provider-With-Kubeadm.md</code>.</p></li><li><p>Do <strong>not</strong> include dots in the filename. A name like <code>2020-01-01-whats-new-in-1.19.md</code> causes
+failures during a build.</p></li><li><p>The front matter must include the following:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#00f;font-weight:700>---</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>layout</span>:<span style=color:#bbb> </span>blog<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>title</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;Your Title Here&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>date</span>:<span style=color:#bbb> </span>YYYY-MM-DD<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>slug</span>:<span style=color:#bbb> </span>text-for-URL-link-here-no-spaces<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#00f;font-weight:700>---</span><span style=color:#bbb>
+</span></span></span></code></pre></div></li><li><p>The first or initial commit message should be a short summary of the work being done and
+should stand alone as a description of the blog post. Please note that subsequent edits to
+your blog will be squashed into this main commit, so it should be as useful as possible.</p><ul><li>Examples of a good commit message:<ul><li><em>Add blog post on the foo kubernetes feature</em></li><li><em>blog: foobar announcement</em></li></ul></li><li>Examples of bad commit message:<ul><li><em>Add blog post</em></li><li><em>.</em></li><li><em>initial commit</em></li><li><em>draft post</em></li></ul></li></ul></li><li><p>The blog team will then review your PR and give you comments on things you might need to fix.
+After that the bot will merge your PR and your blog post will be published.</p></li><li><p>If the content of the blog post contains only content that is not expected to require updates
+to stay accurate for the reader, it can be marked as evergreen and exempted from the automatic
+warning about outdated content added to blog posts older than one year.</p><ul><li><p>To mark a blog post as evergreen, add this to the front matter:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>evergreen</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>true</span><span style=color:#bbb>
+</span></span></span></code></pre></div></li><li><p>Examples of content that should not be marked evergreen:</p><ul><li><strong>Tutorials</strong> that only apply to specific releases or versions and not all future versions</li><li>References to pre-GA APIs or features</li></ul></li></ul></li></ul></li></ul><h2 id=submit-a-case-study>Submit a case study</h2><p>Case studies highlight how organizations are using Kubernetes to solve real-world problems. The
+Kubernetes marketing team and members of the <a class=glossary-tooltip title='Cloud Native Computing Foundation' data-toggle=tooltip data-placement=top href=https://cncf.io/ target=_blank aria-label=CNCF>CNCF</a>
+collaborate with you on all case studies.</p><p>Have a look at the source for the
+<a href=https://github.com/kubernetes/website/tree/main/content/en/case-studies>existing case studies</a>.</p><p>Refer to the <a href=https://github.com/cncf/foundation/blob/master/case-study-guidelines.md>case study guidelines</a>
+and submit your request as outlined in the guidelines.</p></div></main></div></div><footer class=d-print-none><div class=footer__links><nav><a class=text-white href=/docs/home/>Home</a>
+<a class=text-white href=/blog/>Blog</a>
+<a class=text-white href=/training/>Training</a>
+<a class=text-white href=/partners/>Partners</a>
+<a class=text-white href=/community/>Community</a>
+<a class=text-white href=/case-studies/>Case Studies</a></nav></div><div class=container-fluid><div class=row><div class="col-6 col-sm-2 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="User mailing list" aria-label="User mailing list"><a class=text-white target=_blank href=https://discuss.kubernetes.io><i class="fa fa-envelope"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank href=https://twitter.com/kubernetesio><i class="fab fa-twitter"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Calendar aria-label=Calendar><a class=text-white target=_blank href="https://calendar.google.com/calendar/embed?src=calendar%40kubernetes.io"><i class="fas fa-calendar-alt"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Youtube aria-label=Youtube><a class=text-white target=_blank href=https://youtube.com/kubernetescommunity><i class="fab fa-youtube"></i></a></li></ul></div><div class="col-6 col-sm-2 text-right text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank href=https://github.com/kubernetes/kubernetes><i class="fab fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Slack aria-label=Slack><a class=text-white target=_blank href=https://slack.k8s.io><i class="fab fa-slack"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Contribute aria-label=Contribute><a class=text-white target=_blank href=https://git.k8s.io/community/contributors/guide><i class="fas fa-edit"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="Stack Overflow" aria-label="Stack Overflow"><a class=text-white target=_blank href=https://stackoverflow.com/questions/tagged/kubernetes><i class="fab fa-stack-overflow"></i></a></li></ul></div><div class="col-12 col-sm-8 text-center order-sm-2"><small class=text-white>&copy; 2023 The Kubernetes Authors | Documentation Distributed under <a href=https://git.k8s.io/website/LICENSE class=light-text>CC BY 4.0</a></small><br><small class=text-white>Copyright &copy; 2023 The Linux Foundation &reg;. All rights reserved. The Linux Foundation has registered trademarks and uses trademarks. For a list of trademarks of The Linux Foundation, please see our <a href=https://www.linuxfoundation.org/trademark-usage class=light-text>Trademark Usage page</a></small><br><small class=text-white>ICP license: 京ICP备17074266号-3</small></div></div></div></footer></div><script src=/js/jquery-3.6.0.min.js integrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script>
+<script src=/js/popper-1.16.1.min.js intregrity=sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN crossorigin=anonymous></script>
+<script src=/js/bootstrap-4.6.1.min.js integrity=sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2 crossorigin=anonymous></script>
+<script src=/js/script.js></script>
+<script async src=/js/mermaid-8.13.4.min.js integrity=sha384-5hHNvPeMrNH14oM3IcQofDoBhiclNK3g2+hnEinKzQ07C4AliMeVpnvxuiwEGpaO crossorigin=anonymous></script>
+<script src=/js/main.min.5c0bf7f21dc4f66485f74efbbeeff28a7e4f8cddaac1bae47043159c922ff3a3.js integrity="sha256-XAv38h3E9mSF9077vu/yin5PjN2qwbrkcEMVnJIv86M=" crossorigin=anonymous></script></body></html>

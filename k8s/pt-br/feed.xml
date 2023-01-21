@@ -1,0 +1,181 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Kubernetes – Orquestração de contêineres prontos para produção</title><link>https://kubernetes.io/pt-br/</link><description>The Kubernetes project blog</description><generator>Hugo -- gohugo.io</generator><image><url>https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.png</url><title>Kubernetes.io</title><link>https://kubernetes.io/pt-br/</link></image><atom:link href="https://kubernetes.io/pt-br/feed.xml" rel="self" type="application/rss+xml"/><item><title>Blog: Atualizado: Perguntas frequentes (FAQ) sobre a remoção do Dockershim</title><link>https://kubernetes.io/pt-br/blog/2022/02/17/dockershim-faq/</link><pubDate>Thu, 17 Feb 2022 00:00:00 +0000</pubDate><guid>https://kubernetes.io/pt-br/blog/2022/02/17/dockershim-faq/</guid><description>
+&lt;p>&lt;strong>Esta é uma atualização do artigo original &lt;a href="https://kubernetes.io/blog/2020/12/02/dockershim-faq/">FAQ sobre a depreciação do Dockershim&lt;/a>,
+publicado no final de 2020.&lt;/strong>&lt;/p>
+&lt;p>Este documento aborda algumas perguntas frequentes sobre a
+descontinuação e remoção do &lt;em>dockershim&lt;/em>, que foi
+&lt;a href="https://kubernetes.io/blog/2020/12/08/kubernetes-1-20-release-announcement/">anunciado&lt;/a>
+como parte do lançamento do Kubernetes v1.20. Para obter mais detalhes sobre
+o que isso significa, confira a postagem do blog
+&lt;a href="https://kubernetes.io/pt-br/blog/2020/12/02/dont-panic-kubernetes-and-docker/">Não entre em pânico: Kubernetes e Docker&lt;/a>.&lt;/p>
+&lt;p>Além disso, você pode ler &lt;a href="https://kubernetes.io/docs/tasks/administer-cluster/migrating-from-dockershim/check-if-dockershim-removal-affects-you/">verifique se a remoção do dockershim afeta você&lt;/a>
+para determinar qual impacto a remoção do &lt;em>dockershim&lt;/em> teria para você
+ou para sua organização.&lt;/p>
+&lt;p>Como o lançamento do Kubernetes 1.24 se tornou iminente, estamos trabalhando bastante para tentar fazer uma transição suave.&lt;/p>
+&lt;ul>
+&lt;li>Escrevemos uma postagem no blog detalhando nosso &lt;a href="https://kubernetes.io/blog/2022/01/07/kubernetes-is-moving-on-from-dockershim/">compromisso e os próximos passos&lt;/a>.&lt;/li>
+&lt;li>Acreditamos que não há grandes obstáculos para a migração para &lt;a href="https://kubernetes.io/docs/setup/production-environment/container-runtimes/#container-runtimes">outros agentes de execução de contêiner&lt;/a>.&lt;/li>
+&lt;li>Há também um guia &lt;a href="https://kubernetes.io/docs/tasks/administer-cluster/migrating-from-dockershim/">Migrando do dockershim&lt;/a> disponível.&lt;/li>
+&lt;li>Também criamos uma página para listar
+&lt;a href="https://kubernetes.io/docs/reference/node/topics-on-dockershim-and-cri-compatible-runtimes/">artigos sobre a remoção do dockershim e sobre o uso de agentes de execução compatíveis com CRI&lt;/a>. Essa lista inclui alguns dos documentos já mencionados e também
+abrange fontes externas selecionadas (incluindo guias de fornecedores).&lt;/li>
+&lt;/ul>
+&lt;h3 id="por-que-o-dockershim-está-sendo-removido-do-kubernetes">Por que o &lt;em>dockershim&lt;/em> está sendo removido do Kubernetes?&lt;/h3>
+&lt;p>As primeiras versões do Kubernetes funcionavam apenas com um ambiente de execução de contêiner específico:
+Docker Engine. Mais tarde, o Kubernetes adicionou suporte para trabalhar com outros agentes de execução de contêiner.
+O padrão CRI (&lt;em>Container Runtime Interface&lt;/em> ou Interface de Agente de Execução de Containers) foi &lt;a href="https://kubernetes.io/blog/2016/12/container-runtime-interface-cri-in-kubernetes/">criado&lt;/a> para
+habilitar a interoperabilidade entre orquestradores (como Kubernetes) e diferentes agentes
+de execução de contêiner.
+O Docker Engine não implementa essa interface (CRI), então o projeto Kubernetes criou um
+código especial para ajudar na transição, e tornou esse código &lt;em>dockershim&lt;/em> parte do projeto
+Kubernetes.&lt;/p>
+&lt;p>O código &lt;em>dockershim&lt;/em> sempre foi destinado a ser uma solução temporária (daí o nome: &lt;em>shim&lt;/em>).
+Você pode ler mais sobre a discussão e o planejamento da comunidade na
+&lt;a href="https://github.com/kubernetes/enhancements/tree/master/keps/sig-node/2221-remove-dockershim">Proposta de remoção do Dockershim para aprimoramento do Kubernetes&lt;/a>.
+Na verdade, manter o &lt;em>dockershim&lt;/em> se tornou um fardo pesado para os mantenedores do Kubernetes.&lt;/p>
+&lt;p>Além disso, recursos que são amplamente incompatíveis com o &lt;em>dockershim&lt;/em>, como
+&lt;em>cgroups v2&lt;/em> e &lt;em>namespaces&lt;/em> de usuário estão sendo implementados nos agentes de execução de CRI
+mais recentes. A remoção do suporte para o &lt;em>dockershim&lt;/em> permitirá um maior
+desenvolvimento nessas áreas.&lt;/p>
+&lt;h3 id="ainda-posso-usar-o-docker-engine-no-kubernetes-1-23">Ainda posso usar o Docker Engine no Kubernetes 1.23?&lt;/h3>
+&lt;p>Sim, a única coisa que mudou na versão 1.20 é a presença de um aviso no log de inicialização
+do &lt;a href="https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/">kubelet&lt;/a> se estiver usando o Docker Engine como agente de execução de contêiner.
+Você verá este aviso em todas as versões até 1.23. A remoção do &lt;em>dockershim&lt;/em> ocorre no Kubernetes 1.24.&lt;/p>
+&lt;h3 id="quando-o-dockershim-será-removido">Quando o &lt;em>dockershim&lt;/em> será removido?&lt;/h3>
+&lt;p>Dado o impacto dessa mudança, estamos definindo um cronograma de depreciação mais longo.
+A remoção do &lt;em>dockershim&lt;/em> está agendada para o Kubernetes v1.24, consulte a
+&lt;a href="https://github.com/kubernetes/enhancements/tree/master/keps/sig-node/2221-remove-dockershim">Proposta de remoção do Dockershim para aprimoramento do Kubernetes&lt;/a>.
+O projeto Kubernetes trabalhará em estreita colaboração com fornecedores e outros ecossistemas para garantir
+uma transição suave e avaliará os acontecimentos à medida que a situação for evoluindo.&lt;/p>
+&lt;h3 id="ainda-posso-usar-o-docker-engine-como-meu-agente-de-execução-do-contêiner">Ainda posso usar o Docker Engine como meu agente de execução do contêiner?&lt;/h3>
+&lt;p>Primeiro, se você usa o Docker em seu próprio PC para desenvolver ou testar contêineres: nada muda.
+Você ainda pode usar o Docker localmente, independentemente dos agentes de execução de contêiner que
+você usa em seus Clusters Kubernetes. Os contêineres tornam esse tipo de interoperabilidade possível.&lt;/p>
+&lt;p>Mirantis e Docker &lt;a href="https://www.mirantis.com/blog/mirantis-to-take-over-support-of-kubernetes-dockershim-2/">comprometeram-se&lt;/a> a manter um adaptador substituto para o
+Docker Engine, e a manter este adaptador mesmo após o &lt;em>dockershim&lt;/em> ser removido
+do Kubernetes. O adaptador substituto é chamado &lt;a href="https://github.com/Mirantis/cri-dockerd">&lt;code>cri-dockerd&lt;/code>&lt;/a>.&lt;/p>
+&lt;h3 id="minhas-imagens-de-contêiner-existentes-ainda-funcionarão">Minhas imagens de contêiner existentes ainda funcionarão?&lt;/h3>
+&lt;p>Sim, as imagens produzidas a partir do &lt;code>docker build&lt;/code> funcionarão com todas as implementações do CRI.
+Todas as suas imagens existentes ainda funcionarão exatamente da mesma forma.&lt;/p>
+&lt;h4 id="e-as-imagens-privadas">E as imagens privadas?&lt;/h4>
+&lt;p>Sim. Todos os agentes de execução de CRI são compatíveis com as mesmas configurações de segredos usadas no
+Kubernetes, seja por meio do PodSpec ou ServiceAccount.&lt;/p>
+&lt;h3 id="docker-e-contêineres-são-a-mesma-coisa">Docker e contêineres são a mesma coisa?&lt;/h3>
+&lt;p>Docker popularizou o padrão de contêineres Linux e tem sido fundamental no
+desenvolvimento desta tecnologia. No entanto, os contêineres já existiam
+no Linux há muito tempo. O ecossistema de contêineres cresceu para ser muito
+mais abrangente do que apenas Docker. Padrões como o OCI e o CRI ajudaram muitas
+ferramentas a crescer e prosperar no nosso ecossistema, alguns substituindo
+aspectos do Docker, enquanto outros aprimoram funcionalidades já existentes.&lt;/p>
+&lt;h3 id="existem-exemplos-de-pessoas-que-usam-outros-agentes-de-execução-de-contêineres-em-produção-hoje">Existem exemplos de pessoas que usam outros agentes de execução de contêineres em produção hoje?&lt;/h3>
+&lt;p>Todos os artefatos produzidos pelo projeto Kubernetes (binários Kubernetes) são validados
+a cada lançamento de versão.&lt;/p>
+&lt;p>Além disso, o projeto &lt;a href="https://kind.sigs.k8s.io/">kind&lt;/a> vem usando containerd há algum tempo e tem
+visto uma melhoria na estabilidade para seu caso de uso. Kind e containerd são executados
+várias vezes todos os dias para validar quaisquer alterações na base de código do Kubernetes.
+Outros projetos relacionados seguem um padrão semelhante, demonstrando a estabilidade e
+usabilidade de outros agentes de execução de contêiner. Como exemplo, o OpenShift 4.x utiliza
+o agente de execução &lt;a href="https://cri-o.io/">CRI-O&lt;/a> em produção desde junho de 2019.&lt;/p>
+&lt;p>Para outros exemplos e referências, dê uma olhada em projetos adeptos do containerd e
+CRI-O, dois agentes de execução de contêineres sob o controle da &lt;em>Cloud Native Computing Foundation&lt;/em>
+(&lt;a href="https://cncf.io">CNCF&lt;/a>).&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/containerd/containerd/blob/master/ADOPTERS.md">containerd&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/cri-o/cri-o/blob/master/ADOPTERS.md">CRI-O&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h3 id="as-pessoas-continuam-referenciando-oci-o-que-é-isso">As pessoas continuam referenciando OCI, o que é isso?&lt;/h3>
+&lt;p>OCI significa &lt;em>&lt;a href="https://opencontainers.org/about/overview/">Open Container Initiative&lt;/a>&lt;/em> (ou Iniciativa Open Source de Contêineres), que padronizou muitas das
+interfaces entre ferramentas e tecnologias de contêiner. Eles mantêm uma
+especificação padrão para imagens de contêiner (OCI image-spec) e para
+contêineres em execução (OCI runtime-spec). Eles também mantêm uma implementação real
+da especificação do agente de execução na forma de &lt;a href="https://github.com/opencontainers/runc">runc&lt;/a>, que é o agente de execução padrão
+para ambos &lt;a href="https://containerd.io/">containerd&lt;/a> e &lt;a href="https://cri-o.io/">CRI-O&lt;/a>. O CRI baseia-se nessas especificações de baixo nível para
+fornecer um padrão de ponta a ponta para gerenciar contêineres.&lt;/p>
+&lt;h3 id="qual-implementação-de-cri-devo-usar">Qual implementação de CRI devo usar?&lt;/h3>
+&lt;p>Essa é uma pergunta complexa e depende de muitos fatores. Se você estiver
+trabalhando com Docker, mudar para containerd deve ser uma troca relativamente fácil e
+terá um desempenho estritamente melhor e menos sobrecarga. No entanto, nós encorajamos você a
+explorar todas as opções do &lt;a href="https://landscape.cncf.io/card-mode?category=container-runtime&amp;amp;grouping=category">cenário CNCF&lt;/a>, pois outro agente de execução de contêiner
+pode funcionar ainda melhor para o seu ambiente.&lt;/p>
+&lt;h3 id="o-que-devo-ficar-atento-ao-mudar-a-minha-implementação-de-cri-utilizada">O que devo ficar atento ao mudar a minha implementação de CRI utilizada?&lt;/h3>
+&lt;p>Embora o código de conteinerização base seja o mesmo entre o Docker e a maioria dos
+CRIs (incluindo containerd), existem algumas poucas diferenças. Alguns
+pontos a se considerar ao migrar são:&lt;/p>
+&lt;ul>
+&lt;li>Configuração de &lt;em>log&lt;/em>&lt;/li>
+&lt;li>Limitações de recursos de agentes de execução&lt;/li>
+&lt;li>Scripts de provisionamento que chamam o docker ou usam o docker por meio de seu soquete de controle&lt;/li>
+&lt;li>Plugins kubectl que exigem CLI do docker ou o soquete de controle&lt;/li>
+&lt;li>Ferramentas do projeto Kubernetes que requerem acesso direto ao Docker Engine
+(por exemplo: a ferramenta depreciada &lt;code>kube-imagepuller&lt;/code>)&lt;/li>
+&lt;li>Configuração de funcionalidades como &lt;code>registry-mirrors&lt;/code> e &lt;em>registries&lt;/em> inseguros&lt;/li>
+&lt;li>Outros scripts de suporte ou &lt;em>daemons&lt;/em> que esperam que o Docker Engine esteja disponível e seja executado
+fora do Kubernetes (por exemplo, agentes de monitoramento ou segurança)&lt;/li>
+&lt;li>GPUs ou hardware especial e como eles se integram ao seu agente de execução e ao Kubernetes&lt;/li>
+&lt;/ul>
+&lt;p>Se você usa solicitações ou limites de recursos do Kubernetes ou usa DaemonSets para coleta de logs
+em arquivos, eles continuarão a funcionar da mesma forma. Mas se você personalizou
+sua configuração &lt;code>dockerd&lt;/code>, você precisará adaptá-la para seu novo agente de execução de
+contêiner assim que possível.&lt;/p>
+&lt;p>Outro aspecto a ser observado é que ferramentas para manutenção do sistema ou execuções dentro de um
+contêiner no momento da criação de imagens podem não funcionar mais. Para o primeiro, a ferramenta
+&lt;a href="https://github.com/kubernetes-sigs/cri-tools">&lt;code>crictl&lt;/code>&lt;/a> pode ser utilizada como um substituto natural (veja
+&lt;a href="https://kubernetes.io/docs/tasks/debug/debug-cluster/crictl/#mapping-from-docker-cli-to-crictl">migrando do docker cli para o crictl&lt;/a>)
+e para o último, você pode usar novas opções de construções de contêiner, como &lt;a href="https://github.com/genuinetools/img">img&lt;/a>, &lt;a href="https://github.com/containers/buildah">buildah&lt;/a>,
+&lt;a href="https://github.com/GoogleContainerTools/kaniko">kaniko&lt;/a>, ou &lt;a href="https://github.com/vmware-tanzu/buildkit-cli-for-kubectl">buildkit-cli-for-kubectl&lt;/a> que não requerem Docker.&lt;/p>
+&lt;p>Para containerd, você pode começar com sua &lt;a href="https://github.com/containerd/cri/blob/master/docs/registry.md">documentação&lt;/a> para ver quais opções de configuração
+estão disponíveis à medida que você vá realizando a migração.&lt;/p>
+&lt;p>Para obter instruções sobre como usar containerd e CRI-O com Kubernetes, consulte o
+documentação do Kubernetes em &lt;a href="https://kubernetes.io/docs/setup/production-environment/container-runtimes/">Agentes de execução de contêineres&lt;/a>&lt;/p>
+&lt;h3 id="e-se-eu-tiver-mais-perguntas">E se eu tiver mais perguntas?&lt;/h3>
+&lt;p>Se você usa uma distribuição do Kubernetes com suporte do fornecedor, pode perguntar a eles sobre
+planos de atualização para seus produtos. Para perguntas de usuário final, poste-as
+no nosso fórum da comunidade de usuários: &lt;a href="https://discuss.kubernetes.io/">https://discuss.kubernetes.io/&lt;/a>.&lt;/p>
+&lt;p>Você também pode conferir a excelente postagem do blog
+&lt;a href="https://dev.to/inductor/wait-docker-is-deprecated-in-kubernetes-now-what-do-i-do-e4m">Espere, o Docker está depreciado no Kubernetes agora?&lt;/a>, uma discussão técnica mais aprofundada
+sobre as mudanças.&lt;/p>
+&lt;h3 id="posso-ganhar-um-abraço">Posso ganhar um abraço?&lt;/h3>
+&lt;p>Sim, ainda estamos dando abraços se solicitado. 🤗🤗🤗&lt;/p></description></item><item><title>Blog: Não entre em pânico: Kubernetes e Docker</title><link>https://kubernetes.io/pt-br/blog/2020/12/02/dont-panic-kubernetes-and-docker/</link><pubDate>Wed, 02 Dec 2020 00:00:00 +0000</pubDate><guid>https://kubernetes.io/pt-br/blog/2020/12/02/dont-panic-kubernetes-and-docker/</guid><description>
+&lt;p>&lt;strong>Autores / Autoras&lt;/strong>: Jorge Castro, Duffie Cooley, Kat Cosgrove, Justin Garrison, Noah Kantrowitz, Bob Killen, Rey Lejano, Dan “POP” Papandrea, Jeffrey Sica, Davanum “Dims” Srinivas&lt;/p>
+&lt;p>&lt;strong>Tradução:&lt;/strong> João Brito&lt;/p>
+&lt;p>Kubernetes está &lt;a href="https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.20.md#deprecation">deixando de usar Docker&lt;/a> como seu agente de execução após a versão v1.20.&lt;/p>
+&lt;p>&lt;strong>Não entre em pânico. Não é tão dramático quanto parece.&lt;/strong>&lt;/p>
+&lt;p>TL;DR Docker como um agente de execução primário está sendo deixado de lado em favor de agentes de execução que utilizam a Interface de Agente de Execução de Containers (Container Runtime Interface &amp;quot;CRI&amp;quot;) criada para o Kubernetes. As imagens criadas com o Docker continuarão a funcionar em seu cluster com os agentes atuais, como sempre estiveram.&lt;/p>
+&lt;p>Se você é um usuário final de Kubernetes, quase nada mudará para você. Isso não significa a morte do Docker, e isso não significa que você não pode, ou não deva, usar ferramentas Docker em desenvolvimento mais. Docker ainda é uma ferramenta útil para a construção de containers, e as imagens resultantes de executar &lt;code>docker build&lt;/code> ainda rodarão em seu cluster Kubernetes.&lt;/p>
+&lt;p>Se você está usando um Kubernetes gerenciado como GKE, EKS, ou AKS (que usa como &lt;a href="https://github.com/Azure/AKS/releases/tag/2020-11-16">padrão containerd&lt;/a>) você precisará ter certeza que seus nós estão usando um agente de execução de container suportado antes que o suporte ao Docker seja removido nas versões futuras do Kubernetes. Se você tem mudanças em seus nós, talvez você precise atualizá-los baseado em seu ambiente e necessidades do agente de execução.&lt;/p>
+&lt;p>Se você está rodando seus próprios clusters, você também precisa fazer mudanças para evitar quebras em seu cluster. Na versão v1.20, você terá o aviso de alerta da perda de suporte ao Docker. Quando o suporte ao agente de execução do Docker for removido em uma versão futura (atualmente planejado para a versão 1.22 no final de 2021) do Kubernetes ele não será mais suportado e você precisará trocar para um dos outros agentes de execução de container compatível, como o containerd ou CRI-O. Mas tenha certeza que esse agente de execução escolhido tenha suporte às configurações do daemon do Docker usadas atualmente (Ex.: logs)&lt;/p>
+&lt;h2 id="então-porque-a-confusão-e-toda-essa-turma-surtando">Então porque a confusão e toda essa turma surtando?&lt;/h2>
+&lt;p>Estamos falando aqui de dois ambientes diferentes, e isso está criando essa confusão. Dentro do seu cluster Kubernetes, existe uma coisa chamada de agente de execução de container que é responsável por baixar e executar as imagens de seu container. Docker é a escolha popular para esse agente de execução (outras escolhas comuns incluem containerd e CRI-O), mas Docker não foi projetado para ser embutido no Kubernetes, e isso causa problemas.&lt;/p>
+&lt;p>Se liga, o que chamamos de &amp;quot;Docker&amp;quot; não é exatamente uma coisa - é uma stack tecnológica inteira, e uma parte disso é chamado de &amp;quot;containerd&amp;quot;, que é o agente de execução de container de alto-nível por si só. Docker é legal e útil porque ele possui muitas melhorias de experiência do usuário e isso o torna realmente fácil para humanos interagirem com ele enquanto estão desenvolvendo, mas essas melhorias para o usuário não são necessárias para o Kubernetes, pois ele não é humano.&lt;/p>
+&lt;p>Como resultado dessa camada de abstração amigável aos humanos, seu cluster Kubernetes precisa usar outra ferramenta chamada Dockershim para ter o que ele realmente precisa, que é o containerd. Isso não é muito bom, porque adiciona outra coisa a ser mantida e que pode quebrar. O que está atualmente acontecendo aqui é que o Dockershim está sendo removido do Kubelet assim que que a versão v1.23 for lançada, que remove o suporte ao Docker como agente de execução de container como resultado. Você deve estar pensando, mas se o containerd está incluso na stack do Docker, porque o Kubernetes precisa do Dockershim?&lt;/p>
+&lt;p>Docker não é compatível com CRI, a &lt;a href="https://kubernetes.io/blog/2016/12/container-runtime-interface-cri-in-kubernetes/">Container Runtime Interface&lt;/a> (interface do agente de execução de container). Se fosse, nós não precisaríamos do shim, e isso não seria nenhum problema. Mas isso não é o fim do mundo, e você não precisa entrar em pânico - você só precisa mudar seu agente de execução de container do Docker para um outro suportado.&lt;/p>
+&lt;p>Uma coisa a ser notada: Se você está contando com o socket do Docker (&lt;code>/var/run/docker.sock&lt;/code>) como parte do seu fluxo de trabalho em seu cluster hoje, mover para um agente de execução diferente acaba com sua habilidade de usá-lo. Esse modelo é conhecido como Docker em Docker. Existem diversas opções por aí para esse caso específico como o &lt;a href="https://github.com/GoogleContainerTools/kaniko">kaniko&lt;/a>, &lt;a href="https://github.com/genuinetools/img">img&lt;/a>, e &lt;a href="https://github.com/containers/buildah">buildah&lt;/a>.&lt;/p>
+&lt;h2 id="o-que-essa-mudança-representa-para-os-desenvolvedores-ainda-escrevemos-dockerfiles-ainda-vamos-fazer-build-com-docker">O que essa mudança representa para os desenvolvedores? Ainda escrevemos Dockerfiles? Ainda vamos fazer build com Docker?&lt;/h2>
+&lt;p>Essa mudança aborda um ambiente diferente do que a maioria das pessoas usa para interagir com Docker. A instalação do Docker que você está usando em desenvolvimento não tem relação com o agente de execução de Docker dentro de seu cluster Kubernetes. É confuso, dá pra entender.
+Como desenvolvedor, Docker ainda é útil para você em todas as formas que era antes dessa mudança ser anunciada. A imagem que o Docker cria não é uma imagem específica para Docker e sim uma imagem que segue o padrão OCI (&lt;a href="https://opencontainers.org/">Open Container Initiative&lt;/a>).&lt;/p>
+&lt;p>Qualquer imagem compatível com OCI, independente da ferramenta usada para construí-la será vista da mesma forma pelo Kubernetes. Ambos &lt;a href="https://containerd.io/">containerd&lt;/a> e &lt;a href="https://cri-o.io/">CRI-O&lt;/a> sabem como baixar e executá-las. Esse é o porque temos um padrão para containers.&lt;/p>
+&lt;p>Então, essa mudança está chegando. Isso irá causar problemas para alguns, mas nada catastrófico, no geral é uma boa coisa. Dependendo de como você interage com o Kubernetes, isso tornará as coisas mais fáceis. Se isso ainda é confuso para você, tudo bem, tem muita coisa rolando aqui; Kubernetes tem um monte de partes móveis, e ninguém é 100% especialista nisso. Nós encorajamos toda e qualquer tipo de questão independente do nível de experiência ou de complexidade! Nosso objetivo é ter certeza que todos estão entendendo o máximo possível as mudanças que estão chegando. Esperamos que isso tenha respondido a maioria de suas questões e acalmado algumas ansiedades! ❤️&lt;/p>
+&lt;p>Procurando mais respostas? Dê uma olhada em nosso apanhado de &lt;a href="https://kubernetes.io/blog/2020/12/02/dockershim-faq/">questões quanto ao desuso do Dockershim&lt;/a>.&lt;/p></description></item><item><title>Blog: Escalando a rede do Kubernetes com EndpointSlices</title><link>https://kubernetes.io/pt-br/blog/2020/09/02/scaling-kubernetes-networking-with-endpointslices/</link><pubDate>Wed, 02 Sep 2020 00:00:00 +0000</pubDate><guid>https://kubernetes.io/pt-br/blog/2020/09/02/scaling-kubernetes-networking-with-endpointslices/</guid><description>
+&lt;p>&lt;strong>Autor:&lt;/strong> Rob Scott (Google)&lt;/p>
+&lt;p>EndpointSlices é um novo tipo de API que provê uma alternativa escalável e extensível à API de Endpoints. EndpointSlices mantém o rastreio dos endereços IP, portas, informações de topologia e prontidão de Pods que compõem um serviço.&lt;/p>
+&lt;p>No Kubernetes 1.19 essa funcionalidade está habilitada por padrão, com o kube-proxy lendo os &lt;a href="https://kubernetes.io/docs/concepts/services-networking/endpoint-slices/">EndpointSlices&lt;/a> ao invés de Endpoints. Apesar de isso ser uma mudança praticamente transparente, resulta numa melhoria notável de escalabilidade em grandes clusters. Também permite a adição de novas funcionalidades em releases futuras do Kubernetes, como o &lt;a href="https://kubernetes.io/docs/concepts/services-networking/service-topology/">Roteamento baseado em topologia.&lt;/a>.&lt;/p>
+&lt;h2 id="limitações-de-escalabilidade-da-api-de-endpoints">Limitações de escalabilidade da API de Endpoints&lt;/h2>
+&lt;p>Na API de Endpoints, existia apenas um recurso de Endpoint por serviço (Service). Isso significa que
+era necessário ser possível armazenar endereços IPs e portas para cada Pod que compunha o serviço correspondente. Isso resultava em recursos imensos de API. Para piorar, o kube-proxy rodava em cada um dos nós e observava qualquer alteração nos recursos de Endpoint. Mesmo que fosse uma simples mudança em um Endpoint, todo o objeto precisava ser enviado para cada uma das instâncias do kube-proxy.&lt;/p>
+&lt;p>Outra limitação da API de Endpoints era que ela limitava o número de objetos que podiam ser associados a um &lt;em>Service&lt;/em>. O tamanho padrão de um objeto armazenado no etcd é 1.5MB. Em alguns casos, isso poderia limitar um Endpoint a 5,000 IPs de Pod. Isso não chega a ser um problema para a maioria dos usuários, mas torna-se um problema significativo para serviços que se aproximem desse tamanho.&lt;/p>
+&lt;p>Para demonstrar o quão significante se torna esse problema em grande escala, vamos usar de um simples exemplo: Imagine um &lt;em>Service&lt;/em> que possua 5,000 Pods, e que possa causar o Endpoint a ter 1.5Mb . Se apenas um Endpoint nessa lista sofra uma alteração, todo o objeto de Endpoint precisará ser redistribuído para cada um dos nós do cluster. Em um cluster com 3.000 nós, essa atualização causará o envio de 4.5Gb de dados (1.5Mb de Endpoints * 3,000 nós) para todo o cluster. Isso é quase que o suficiente para encher um DVD, e acontecerá para cada mudança de Endpoint. Agora imagine uma atualização gradual em um &lt;em>Deployment&lt;/em> que resulte nos 5,000 Pods serem substituídos - isso é mais que 22Tb (ou 5,000 DVDs) de dados transferidos.&lt;/p>
+&lt;h2 id="dividindo-os-endpoints-com-a-api-de-endpointslice">Dividindo os endpoints com a API de EndpointSlice&lt;/h2>
+&lt;p>A API de EndpointSlice foi desenhada para resolver esse problema com um modelo similar de &lt;em>sharding&lt;/em>. Ao invés de rastrar todos os IPs dos Pods para um &lt;em>Service&lt;/em>, com um único recurso de Endpoint, nós dividimos eles em múltiplos EndpointSlices menores.&lt;/p>
+&lt;p>Usemos por exemplo um serviço com 15 pods. Nós teríamos um único recurso de Endpoints referente a todos eles. Se o EndpointSlices for configurado para armazenar 5 &lt;em>endpoints&lt;/em> cada, nós teríamos 3 EndpointSlices diferentes:
+&lt;img src="https://kubernetes.io/images/blog/2020-09-02-scaling-kubernetes-networking-endpointslices/endpoint-slices.png" alt="EndpointSlices">&lt;/p>
+&lt;p>Por padrão, o EndpointSlices armazena um máximo de 100 &lt;em>endpoints&lt;/em> cada, podendo isso ser configurado com a flag &lt;code>--max-endpoints-per-slice&lt;/code> no kube-controller-manager.&lt;/p>
+&lt;h2 id="endpointslices-provê-uma-melhoria-de-escalabilidade-em-10x">EndpointSlices provê uma melhoria de escalabilidade em 10x&lt;/h2>
+&lt;p>Essa API melhora dramaticamente a escalabilidade da rede. Agora quando um Pod é adicionado ou removido, apenas 1 pequeno EndpointSlice necessita ser atualizado. Essa diferença começa a ser notada quando centenas ou milhares de Pods compõem um único &lt;em>Service&lt;/em>.&lt;/p>
+&lt;p>Mais significativo, agora que todos os IPs de Pods para um &lt;em>Service&lt;/em> não precisam ser armazenados em um único recurso, nós não precisamos nos preocupar com o limite de tamanho para objetos armazendos no etcd. EndpointSlices já foram utilizados para escalar um serviço além de 100,000 endpoints de rede.&lt;/p>
+&lt;p>Tudo isso é possível com uma melhoria significativa de performance feita no kube-proxy. Quando o EndpointSlices é usado em grande escala, muito menos dados serão transferidos para as atualizações de endpoints e o kube-proxy torna-se mais rápido para atualizar regras do iptables ou do ipvs. Além disso, os &lt;em>Services&lt;/em> podem escalar agora para pelo menos 10x mais além dos limites anteriores.&lt;/p>
+&lt;h2 id="endpointslices-permitem-novas-funcionalidades">EndpointSlices permitem novas funcionalidades&lt;/h2>
+&lt;p>Introduzido como uma funcionalidade alpha no Kubernetes v1.16, os EndpointSlices foram construídos para permitir algumas novas funcionalidades arrebatadoras em futuras versões do Kubernetes. Isso inclui serviços dual-stack, roteamento baseado em topologia e subconjuntos de &lt;em>endpoints&lt;/em>.&lt;/p>
+&lt;p>Serviços Dual-stack são uma nova funcionalidade que foi desenvolvida juntamente com o EndpointSlices. Eles irão utilizar simultâneamente endereços IPv4 e IPv6 para serviços, e dependem do campo addressType do Endpointslices para conter esses novos tipos de endereço por família de IP.&lt;/p>
+&lt;p>O roteamento baseado por topologia irá atualizar o kube-proxy para dar preferência no roteamento de requisições para a mesma região ou zona, utilizando-se de campos de topologia armazenados em cada endpoint dentro de um EndpointSlice. Como uma melhoria futura disso, estamos explorando o potencial de subconjuntos de endpoint. Isso irá permitir o kube-proxy apenas observar um subconjunto de EndpointSlices. Por exemplo, isso pode ser combinado com o roteamento baseado em topologia e assim, o kube-proxy precisará observar apenas EndpointSlices contendo &lt;em>endpoints&lt;/em> na mesma zona. Isso irá permitir uma outra melhoria significativa de escalabilidade.&lt;/p>
+&lt;h2 id="o-que-isso-significa-para-a-api-de-endpoints">O que isso significa para a API de Endpoints?&lt;/h2>
+&lt;p>Apesar da API de EndpointSlice prover uma alternativa nova e escalável à API de Endpoints, a API de Endpoints continuará a ser considerada uma funcionalidade estável. A mudança mais significativa para a API de Endpoints envolve começar a truncar Endpoints que podem causar problemas de escalabilidade.&lt;/p>
+&lt;p>A API de Endpoints não será removida, mas muitas novas funcionalidades irão depender da nova API EndpointSlice. Para obter vantágem da funcionalidade e escalabilidade que os EndpointSlices provém, aplicações que hoje consomem a API de Endpoints devem considerar suportar EndpointSlices no futuro.&lt;/p></description></item></channel></rss>

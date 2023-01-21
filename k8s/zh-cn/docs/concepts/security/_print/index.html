@@ -1,0 +1,621 @@
+<!doctype html><html lang=zh-cn class=no-js><head><meta name=robots content="noindex, nofollow"><link rel=alternate hreflang=en href=https://kubernetes.io/docs/concepts/security/><link rel=alternate hreflang=ko href=https://kubernetes.io/ko/docs/concepts/security/><link rel=alternate hreflang=ja href=https://kubernetes.io/ja/docs/concepts/security/><link rel=alternate hreflang=fr href=https://kubernetes.io/fr/docs/concepts/security/><link rel=alternate hreflang=es href=https://kubernetes.io/es/docs/concepts/security/><link rel=alternate hreflang=pt-br href=https://kubernetes.io/pt-br/docs/concepts/security/><link rel=alternate hreflang=id href=https://kubernetes.io/id/docs/concepts/security/><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.110.0"><link rel=canonical type=text/html href=https://kubernetes.io/zh-cn/docs/concepts/security/><link rel="shortcut icon" type=image/png href=/images/favicon.png><link rel=apple-touch-icon href=/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=manifest href=/manifest.webmanifest><link rel=apple-touch-icon href=/images/kubernetes-192x192.png><title>安全 | Kubernetes</title><meta property="og:title" content="安全"><meta property="og:description" content="确保云原生工作负载安全的一组概念。"><meta property="og:type" content="website"><meta property="og:url" content="https://kubernetes.io/zh-cn/docs/concepts/security/"><meta property="og:site_name" content="Kubernetes"><meta itemprop=name content="安全"><meta itemprop=description content="确保云原生工作负载安全的一组概念。"><meta name=twitter:card content="summary"><meta name=twitter:title content="安全"><meta name=twitter:description content="确保云原生工作负载安全的一组概念。"><link href=/scss/main.css rel=stylesheet><script type=application/ld+json>{"@context":"https://schema.org","@type":"Organization","url":"https://kubernetes.io","logo":"https://kubernetes.io/images/favicon.png","potentialAction":{"@type":"SearchAction","target":"https://kubernetes.io/search/?q={search_term_string}","query-input":"required name=search_term_string"}}</script><meta name=theme-color content="#326ce5"><link rel=stylesheet href=/css/feature-states.css><meta name=description content="确保云原生工作负载安全的一组概念。"><meta property="og:description" content="确保云原生工作负载安全的一组概念。"><meta name=twitter:description content="确保云原生工作负载安全的一组概念。"><meta property="og:url" content="https://kubernetes.io/zh-cn/docs/concepts/security/"><meta property="og:title" content="安全"><meta name=twitter:title content="安全"><meta name=twitter:image content="https://kubernetes.io/images/favicon.png"><meta name=twitter:image:alt content="Kubernetes"><meta property="og:image" content="/images/kubernetes-horizontal-color.png"><meta property="og:type" content="article"><script src=/js/jquery-3.6.0.min.js intregrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script></head><body class=td-section><header><nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar" data-auto-burger=primary><a class=navbar-brand href=/zh-cn/></a><div class="td-navbar-nav-scroll ml-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0"><li class="nav-item mr-2 mb-lg-0"><a class="nav-link active" href=/zh-cn/docs/>文档</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/blog/>Kubernetes 博客</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/training/>培训</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/partners/>合作伙伴</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/community/>社区</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/case-studies/>案例分析</a></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>版本列表</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/zh-cn/releases>Release Information</a>
+<a class=dropdown-item href=https://kubernetes.io/zh-cn/docs/concepts/security/>v1.25</a>
+<a class=dropdown-item href=https://v1-24.docs.kubernetes.io/zh-cn/docs/concepts/security/>v1.24</a>
+<a class=dropdown-item href=https://v1-23.docs.kubernetes.io/zh-cn/docs/concepts/security/>v1.23</a>
+<a class=dropdown-item href=https://v1-22.docs.kubernetes.io/zh-cn/docs/concepts/security/>v1.22</a>
+<a class=dropdown-item href=https://v1-21.docs.kubernetes.io/zh-cn/docs/concepts/security/>v1.21</a></div></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdownMenuLink role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>中文 (Chinese)</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/docs/concepts/security/>English</a>
+<a class=dropdown-item href=/ko/docs/concepts/security/>한국어 (Korean)</a>
+<a class=dropdown-item href=/ja/docs/concepts/security/>日本語 (Japanese)</a>
+<a class=dropdown-item href=/fr/docs/concepts/security/>Français (French)</a>
+<a class=dropdown-item href=/es/docs/concepts/security/>Español (Spanish)</a>
+<a class=dropdown-item href=/pt-br/docs/concepts/security/>Português (Portuguese)</a>
+<a class=dropdown-item href=/id/docs/concepts/security/>Bahasa Indonesia</a></div></li></ul></div><button id=hamburger onclick=kub.toggleMenu() data-auto-burger-exclude><div></div></button></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><div class=td-content><div class="pageinfo pageinfo-primary d-print-none"><p>这是本节的多页打印视图。
+<a href=# onclick="return print(),!1">点击此处打印</a>.</p><p><a href=/zh-cn/docs/concepts/security/>返回本页常规视图</a>.</p></div><h1 class=title>安全</h1><div class=lead>确保云原生工作负载安全的一组概念。</div><ul><li>1: <a href=#pg-04eeb110d75afc8acb2cf7a3db743985>云原生安全概述</a></li><li>2: <a href=#pg-1fb24c1dd155f43849da490a74c4b8c5>Pod 安全性标准</a></li><li>3: <a href=#pg-bc9934fccfeaf880eec6ea79025c0381>Pod 安全性准入</a></li><li>4: <a href=#pg-ac71855bb20cbf21edc666e810f4103a>Pod 安全策略</a></li><li>5: <a href=#pg-9a68f631b6bc38c279bbc9a145e34ef2>Windows 节点的安全性</a></li><li>6: <a href=#pg-4d77d1ae4c06aa14f54b385191627881>Kubernetes API 访问控制</a></li><li>7: <a href=#pg-07f58aa0218d666795499c2e2306ff96>基于角色的访问控制良好实践</a></li><li>8: <a href=#pg-a7863bfad3d69f33f5b318b9028eecb8>Kubernetes Secret 良好实践</a></li><li>9: <a href=#pg-9dd9b8c71fa39ff803fd15b0e784069d>多租户</a></li><li>10: <a href=#pg-265c06c3d1349382453ced9f2a7ecfde>Kubernetes API 服务器旁路风险</a></li><li>11: <a href=#pg-6f8354561fd5286f997909e14b13110c>安全检查清单</a></li></ul><div class=content></div></div><div class=td-content><h1 id=pg-04eeb110d75afc8acb2cf7a3db743985>1 - 云原生安全概述</h1><div class=lead>在云原生安全的背景下思考 Kubernetes 安全模型。</div><p>本概述定义了一个模型，用于在 Cloud Native 安全性上下文中考虑 Kubernetes 安全性。</p><div class="alert alert-danger warning callout" role=alert><strong>警告：</strong> 此容器安全模型只提供建议，而不是经过验证的信息安全策略。</div><h2 id=the-4c-s-of-cloud-native-security>云原生安全的 4 个 C</h2><p>你可以分层去考虑安全性，云原生安全的 4 个 C 分别是云（Cloud）、集群（Cluster）、容器（Container）和代码（Code）。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong> 这种分层方法增强了<a href=https://en.wikipedia.org/wiki/Defense_in_depth_(computing)>深度防护方法</a>在安全性方面的
+防御能力，该方法被广泛认为是保护软件系统的最佳实践。</div><figure><img src=/images/docs/4c.png><figcaption><h4>云原生安全的 4C</h4></figcaption></figure><p>云原生安全模型的每一层都是基于下一个最外层，代码层受益于强大的基础安全层（云、集群、容器）。
+你无法通过在代码层解决安全问题来为基础层中糟糕的安全标准提供保护。</p><h2 id=cloud>云</h2><p>在许多方面，云（或者位于同一位置的服务器，或者是公司数据中心）是 Kubernetes 集群中的
+<a href=https://en.wikipedia.org/wiki/Trusted_computing_base>可信计算基</a>。
+如果云层容易受到攻击（或者被配置成了易受攻击的方式），就不能保证在此基础之上构建的组件是安全的。
+每个云提供商都会提出安全建议，以在其环境中安全地运行工作负载。</p><h3 id=cloud-provider-security>云提供商安全性</h3><p>如果你是在你自己的硬件或者其他不同的云提供商上运行 Kubernetes 集群，
+请查阅相关文档来获取最好的安全实践。</p><p>下面是一些比较流行的云提供商的安全性文档链接：</p><table><caption style=display:none>云提供商安全</caption><thead><tr><th>IaaS 提供商</th><th>链接</th></tr></thead><tbody><tr><td>Alibaba Cloud</td><td><a href=https://www.alibabacloud.com/trust-center>https://www.alibabacloud.com/trust-center</a></td></tr><tr><td>Amazon Web Services</td><td><a href=https://aws.amazon.com/security>https://aws.amazon.com/security</a></td></tr><tr><td>Google Cloud Platform</td><td><a href=https://cloud.google.com/security>https://cloud.google.com/security</a></td></tr><tr><td>Huawei Cloud</td><td><a href=https://www.huaweicloud.com/securecenter/overallsafety>https://www.huaweicloud.com/securecenter/overallsafety</a></td></tr><tr><td>IBM Cloud</td><td><a href=https://www.ibm.com/cloud/security>https://www.ibm.com/cloud/security</a></td></tr><tr><td>Microsoft Azure</td><td><a href=https://docs.microsoft.com/en-us/azure/security/azure-security>https://docs.microsoft.com/en-us/azure/security/azure-security</a></td></tr><tr><td>Oracle Cloud Infrastructure</td><td><a href=https://www.oracle.com/security>https://www.oracle.com/security</a></td></tr><tr><td>VMWare VSphere</td><td><a href=https://www.vmware.com/security/hardening-guides>https://www.vmware.com/security/hardening-guides</a></td></tr></tbody></table><h3 id=infrastructure-security>基础设施安全</h3><p>关于在 Kubernetes 集群中保护你的基础设施的建议：</p><table><caption style=display:none>基础设施安全</caption><thead><tr><th>Kubernetes 基础架构关注领域</th><th>建议</th></tr></thead><tbody><tr><td>通过网络访问 API 服务（控制平面）</td><td>所有对 Kubernetes 控制平面的访问不允许在 Internet 上公开，同时应由网络访问控制列表控制，该列表包含管理集群所需的 IP 地址集。</td></tr><tr><td>通过网络访问 Node（节点）</td><td>节点应配置为 <em>仅能</em> 从控制平面上通过指定端口来接受（通过网络访问控制列表）连接，以及接受 NodePort 和 LoadBalancer 类型的 Kubernetes 服务连接。如果可能的话，这些节点不应完全暴露在公共互联网上。</td></tr><tr><td>Kubernetes 访问云提供商的 API</td><td>每个云提供商都需要向 Kubernetes 控制平面和节点授予不同的权限集。为集群提供云提供商访问权限时，最好遵循对需要管理的资源的<a href=https://en.wikipedia.org/wiki/Principle_of_least_privilege>最小特权原则</a>。<a href=https://github.com/kubernetes/kops/blob/master/docs/iam_roles.md#iam-roles>Kops 文档</a>提供有关 IAM 策略和角色的信息。</td></tr><tr><td>访问 etcd</td><td>对 etcd（Kubernetes 的数据存储）的访问应仅限于控制平面。根据配置情况，你应该尝试通过 TLS 来使用 etcd。更多信息可以在 <a href=https://github.com/etcd-io/etcd/tree/master/Documentation>etcd 文档</a>中找到。</td></tr><tr><td>etcd 加密</td><td>在所有可能的情况下，最好对所有存储进行静态数据加密，并且由于 etcd 拥有整个集群的状态（包括机密信息），因此其磁盘更应该进行静态数据加密。</td></tr></tbody></table><h2 id=cluster>集群</h2><p>保护 Kubernetes 有两个方面需要注意：</p><ul><li>保护可配置的集群组件</li><li>保护在集群中运行的应用程序</li></ul><h3 id=cluster-components>集群组件</h3><p>如果想要保护集群免受意外或恶意的访问，采取良好的信息管理实践，请阅读并遵循有关<a href=/zh-cn/docs/tasks/administer-cluster/securing-a-cluster/>保护集群</a>的建议。</p><h3 id=cluster-applications>集群中的组件（你的应用）</h3><p>根据你的应用程序的受攻击面，你可能需要关注安全性的特定面，比如：
+如果你正在运行中的一个服务（A 服务）在其他资源链中很重要，并且所运行的另一工作负载（服务 B）
+容易受到资源枯竭的攻击，则如果你不限制服务 B 的资源的话，损害服务 A 的风险就会很高。
+下表列出了安全性关注的领域和建议，用以保护 Kubernetes 中运行的工作负载：</p><table><thead><tr><th>工作负载安全性关注领域</th><th>建议</th></tr></thead><tbody><tr><td>RBAC 授权(访问 Kubernetes API)</td><td><a href=https://kubernetes.io/zh-cn/docs/reference/access-authn-authz/rbac/>https://kubernetes.io/zh-cn/docs/reference/access-authn-authz/rbac/</a></td></tr><tr><td>认证方式</td><td><a href=https://kubernetes.io/zh-cn/docs/concepts/security/controlling-access/>https://kubernetes.io/zh-cn/docs/concepts/security/controlling-access/</a></td></tr><tr><td>应用程序 Secret 管理 (并在 etcd 中对其进行静态数据加密)</td><td><a href=https://kubernetes.io/zh-cn/docs/concepts/configuration/secret/>https://kubernetes.io/zh-cn/docs/concepts/configuration/secret/</a><br><a href=https://kubernetes.io/zh-cn/docs/tasks/administer-cluster/encrypt-data/>https://kubernetes.io/zh-cn/docs/tasks/administer-cluster/encrypt-data/</a></td></tr><tr><td>确保 Pod 符合定义的 Pod 安全标准</td><td><a href=https://kubernetes.io/zh-cn/docs/concepts/security/pod-security-standards/#policy-instantiation>https://kubernetes.io/zh-cn/docs/concepts/security/pod-security-standards/#policy-instantiation</a></td></tr><tr><td>服务质量（和集群资源管理）</td><td><a href=https://kubernetes.io/zh-cn/docs/tasks/configure-pod-container/quality-service-pod/>https://kubernetes.io/zh-cn/docs/tasks/configure-pod-container/quality-service-pod/</a></td></tr><tr><td>网络策略</td><td><a href=https://kubernetes.io/zh-cn/docs/concepts/services-networking/network-policies/>https://kubernetes.io/zh-cn/docs/concepts/services-networking/network-policies/</a></td></tr><tr><td>Kubernetes Ingress 的 TLS 支持</td><td><a href=https://kubernetes.io/zh-cn/docs/concepts/services-networking/ingress/#tls>https://kubernetes.io/zh-cn/docs/concepts/services-networking/ingress/#tls</a></td></tr></tbody></table><h2 id=container>容器</h2><p>容器安全性不在本指南的探讨范围内。下面是一些探索此主题的建议和连接：</p><table><thead><tr><th>容器关注领域</th><th>建议</th></tr></thead><tbody><tr><td>容器漏洞扫描和操作系统依赖安全性</td><td>作为镜像构建的一部分，你应该扫描你的容器里的已知漏洞。</td></tr><tr><td>镜像签名和执行</td><td>对容器镜像进行签名，以维护对容器内容的信任。</td></tr><tr><td>禁止特权用户</td><td>构建容器时，请查阅文档以了解如何在具有最低操作系统特权级别的容器内部创建用户，以实现容器的目标。</td></tr><tr><td>使用带有较强隔离能力的容器运行时</td><td>选择提供较强隔离能力的<a href=/zh-cn/docs/concepts/containers/runtime-class/>容器运行时类</a>。</td></tr></tbody></table><h2 id=code>代码</h2><p>应用程序代码是你最能够控制的主要攻击面之一，虽然保护应用程序代码不在 Kubernetes 安全主题范围内，但以下是保护应用程序代码的建议：</p><h3 id=code-security>代码安全性</h3><table><caption style=display:none>代码安全</caption><thead><tr><th>代码关注领域</th><th>建议</th></tr></thead><tbody><tr><td>仅通过 TLS 访问</td><td>如果你的代码需要通过 TCP 通信，请提前与客户端执行 TLS 握手。除少数情况外，请加密传输中的所有内容。更进一步，加密服务之间的网络流量是一个好主意。这可以通过被称为双向 TLS 或 <a href=https://en.wikipedia.org/wiki/Mutual_authentication>mTLS</a> 的过程来完成，该过程对两个证书持有服务之间的通信执行双向验证。</td></tr><tr><td>限制通信端口范围</td><td>此建议可能有点不言自明，但是在任何可能的情况下，你都只应公开服务上对于通信或度量收集绝对必要的端口。</td></tr><tr><td>第三方依赖性安全</td><td>最好定期扫描应用程序的第三方库以了解已知的安全漏洞。每种编程语言都有一个自动执行此检查的工具。</td></tr><tr><td>静态代码分析</td><td>大多数语言都提供给了一种方法，来分析代码段中是否存在潜在的不安全的编码实践。只要有可能，你都应该使用自动工具执行检查，该工具可以扫描代码库以查找常见的安全错误，一些工具可以在以下连接中找到： <a href=https://owasp.org/www-community/Source_Code_Analysis_Tools>https://owasp.org/www-community/Source_Code_Analysis_Tools</a></td></tr><tr><td>动态探测攻击</td><td>你可以对服务运行一些自动化工具，来尝试一些众所周知的服务攻击。这些攻击包括 SQL 注入、CSRF 和 XSS。<a href=https://owasp.org/www-project-zap/>OWASP Zed Attack</a> 代理工具是最受欢迎的动态分析工具之一。</td></tr></tbody></table><h2 id=接下来>接下来</h2><p>学习了解相关的 Kubernetes 安全主题：</p><ul><li><a href=/zh-cn/docs/concepts/security/pod-security-standards/>Pod 安全标准</a></li><li><a href=/zh-cn/docs/concepts/services-networking/network-policies/>Pod 的网络策略</a></li><li><a href=/zh-cn/docs/concepts/security/controlling-access/>控制对 Kubernetes API 的访问</a></li><li><a href=/zh-cn/docs/tasks/administer-cluster/securing-a-cluster/>保护你的集群</a></li><li>为控制面<a href=/zh-cn/docs/tasks/tls/managing-tls-in-a-cluster/>加密通信中的数据</a></li><li><a href=/zh-cn/docs/tasks/administer-cluster/encrypt-data/>加密静止状态的数据</a></li><li><a href=/zh-cn/docs/concepts/configuration/secret/>Kubernetes 中的 Secret</a></li><li><a href=/zh-cn/docs/concepts/containers/runtime-class>运行时类</a></li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-1fb24c1dd155f43849da490a74c4b8c5>2 - Pod 安全性标准</h1><div class=lead>详细了解 Pod 安全性标准（Pod Security Standards）中所定义的不同策略级别。</div><p>Pod 安全性标准定义了三种不同的 <strong>策略（Policy）</strong>，以广泛覆盖安全应用场景。
+这些策略是 <strong>叠加式的（Cumulative）</strong>，安全级别从高度宽松至高度受限。
+本指南概述了每个策略的要求。</p><table><thead><tr><th>Profile</th><th>描述</th></tr></thead><tbody><tr><td><strong style=white-space:nowrap>Privileged</strong></td><td>不受限制的策略，提供最大可能范围的权限许可。此策略允许已知的特权提升。</td></tr><tr><td><strong style=white-space:nowrap>Baseline</strong></td><td>限制性最弱的策略，禁止已知的策略提升。允许使用默认的（规定最少）Pod 配置。</td></tr><tr><td><strong style=white-space:nowrap>Restricted</strong></td><td>限制性非常强的策略，遵循当前的保护 Pod 的最佳实践。</td></tr></tbody></table><h2 id=profile-details>Profile 细节</h2><h3 id=privileged>Privileged</h3><p><strong><em>Privileged</em> 策略是有目的地开放且完全无限制的策略。</strong>
+此类策略通常针对由特权较高、受信任的用户所管理的系统级或基础设施级负载。</p><p>Privileged 策略定义中限制较少。默认允许的（Allow-by-default）实施机制（例如 gatekeeper）
+可以缺省设置为 Privileged。
+与此不同，对于默认拒绝（Deny-by-default）的实施机制（如 Pod 安全策略）而言，
+Privileged 策略应该禁止所有限制。</p><h3 id=baseline>Baseline</h3><p><strong><em>Baseline</em> 策略的目标是便于常见的容器化应用采用，同时禁止已知的特权提升。</strong>
+此策略针对的是应用运维人员和非关键性应用的开发人员。
+下面列举的控制应该被实施（禁止）：</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>在下述表格中，通配符（<code>*</code>）意味着一个列表中的所有元素。
+例如 <code>spec.containers[*].securityContext</code> 表示 <em>所定义的所有容器</em> 的安全性上下文对象。
+如果所列出的任一容器不能满足要求，整个 Pod 将无法通过校验。</div><table><caption style=display:none>Baseline 策略规范</caption><tbody><tr><td>控制（Control）</td><td>策略（Policy）</td></tr><tr><td style=white-space:nowrap>HostProcess</td><td><p>Windows Pod 提供了运行 <a href=/zh-cn/docs/tasks/configure-pod-container/create-hostprocess-pod>HostProcess 容器</a> 的能力，这使得对 Windows 节点的特权访问成为可能。Baseline 策略中禁止对宿主的特权访问。<div style=margin-top:10px;margin-bottom:10px><b>特性状态：</b> <code>Kubernetes v1.23 [beta]</code></div></p><p><strong>限制的字段</strong></p><ul><li><code>spec.securityContext.windowsOptions.hostProcess</code></li><li><code>spec.containers[*].securityContext.windowsOptions.hostProcess</code></li><li><code>spec.initContainers[*].securityContext.windowsOptions.hostProcess</code></li><li><code>spec.ephemeralContainers[*].securityContext.windowsOptions.hostProcess</code></li></ul><p><strong>准许的取值</strong></p><ul><li>未定义、nil</li><li><code>false</code></li></ul></td></tr><tr><td style=white-space:nowrap>宿主名字空间</td><td><p>必须禁止共享宿主上的名字空间。</p><p><strong>限制的字段</strong></p><ul><li><code>spec.hostNetwork</code></li><li><code>spec.hostPID</code></li><li><code>spec.hostIPC</code></li></ul><p><strong>准许的取值</strong></p><ul><li>未定义、nil</li><li><code>false</code></li></ul></td></tr><tr><td style=white-space:nowrap>特权容器</td><td><p>特权 Pod 会使大多数安全性机制失效，必须被禁止。</p><p><strong>限制的字段</strong></p><ul><li><code>spec.containers[*].securityContext.privileged</code></li><li><code>spec.initContainers[*].securityContext.privileged</code></li><li><code>spec.ephemeralContainers[*].securityContext.privileged</code></li></ul><p><strong>准许的取值</strong></p><ul><li>未定义、nil</li><li><code>false</code></li></ul></td></tr><tr><td style=white-space:nowrap>权能</td><td><p>必须禁止添加除下列字段之外的权能。</p><p><strong>限制的字段</strong></p><ul><li><code>spec.containers[*].securityContext.capabilities.add</code></li><li><code>spec.initContainers[*].securityContext.capabilities.add</code></li><li><code>spec.ephemeralContainers[*].securityContext.capabilities.add</code></li></ul><p><strong>准许的取值</strong></p><ul><li>未定义、nil</li><li><code>AUDIT_WRITE</code></li><li><code>CHOWN</code></li><li><code>DAC_OVERRIDE</code></li><li><code>FOWNER</code></li><li><code>FSETID</code></li><li><code>KILL</code></li><li><code>MKNOD</code></li><li><code>NET_BIND_SERVICE</code></li><li><code>SETFCAP</code></li><li><code>SETGID</code></li><li><code>SETPCAP</code></li><li><code>SETUID</code></li><li><code>SYS_CHROOT</code></li></ul></td></tr><tr><td style=white-space:nowrap>HostPath 卷</td><td><p>必须禁止 HostPath 卷。</p><p><strong>限制的字段</strong></p><ul><li><code>spec.volumes[*].hostPath</code></li></ul><p><strong>准许的取值</strong></p><ul><li>未定义、nil</li></ul></td></tr><tr><td style=white-space:nowrap>宿主端口</td><td><p>应该禁止使用宿主端口，或者至少限制只能使用某确定列表中的端口。</p><p><strong>限制的字段</strong></p><ul><li><code>spec.containers[*].ports[*].hostPort</code></li><li><code>spec.initContainers[*].ports[*].hostPort</code></li><li><code>spec.ephemeralContainers[*].ports[*].hostPort</code></li></ul><p><strong>准许的取值</strong></p><ul><li>未定义、nil</li><li>已知列表</li><li><code>0</code></li></ul></td></tr><tr><td style=white-space:nowrap>AppArmor</td><td><p>在受支持的主机上，默认使用 <code>runtime/default</code> AppArmor 配置。Baseline 策略应避免覆盖或者禁用默认策略，以及限制覆盖一些配置集合的权限。</p><p><strong>限制的字段</strong></p><ul><li><code>metadata.annotations["container.apparmor.security.beta.kubernetes.io/*"]</code></li></ul><p><strong>准许的取值</strong></p><ul><li>未定义、nil</li><li><code>runtime/default</code></li><li><code>localhost/*</code></li></ul></td></tr><tr><td style=white-space:nowrap>SELinux</td><td><p>设置 SELinux 类型的操作是被限制的，设置自定义的 SELinux 用户或角色选项是被禁止的。</p><p><strong>限制的字段</strong></p><ul><li><code>spec.securityContext.seLinuxOptions.type</code></li><li><code>spec.containers[*].securityContext.seLinuxOptions.type</code></li><li><code>spec.initContainers[*].securityContext.seLinuxOptions.type</code></li><li><code>spec.ephemeralContainers[*].securityContext.seLinuxOptions.type</code></li></ul><p><strong>准许的取值</strong></p><ul><li>未定义、""</li><li><code>container_t</code></li><li><code>container_init_t</code></li><li><code>container_kvm_t</code></li></ul><hr><p><strong>限制的字段</strong></p><ul><li><code>spec.securityContext.seLinuxOptions.user</code></li><li><code>spec.containers[*].securityContext.seLinuxOptions.user</code></li><li><code>spec.initContainers[*].securityContext.seLinuxOptions.user</code></li><li><code>spec.ephemeralContainers[*].securityContext.seLinuxOptions.user</code></li><li><code>spec.securityContext.seLinuxOptions.role</code></li><li><code>spec.containers[*].securityContext.seLinuxOptions.role</code></li><li><code>spec.initContainers[*].securityContext.seLinuxOptions.role</code></li><li><code>spec.ephemeralContainers[*].securityContext.seLinuxOptions.role</code></li></ul><p><strong>准许的取值</strong></p><ul><li>未定义、""</li></ul></td></tr><tr><td style=white-space:nowrap><code>/proc</code>挂载类型</td><td><p>要求使用默认的 <code>/proc</code> 掩码以减小攻击面。</p><p><strong>限制的字段</strong></p><ul><li><code>spec.containers[*].securityContext.procMount</code></li><li><code>spec.initContainers[*].securityContext.procMount</code></li><li><code>spec.ephemeralContainers[*].securityContext.procMount</code></li></ul><p><strong>准许的取值</strong></p><ul><li>未定义、nil</li><li><code>Default</code></li></ul></td></tr><tr><td>Seccomp</td><td><p>Seccomp 配置必须不能显式设置为 <code>Unconfined</code>。</p><p><strong>限制的字段</strong></p><ul><li><code>spec.securityContext.seccompProfile.type</code></li><li><code>spec.containers[*].securityContext.seccompProfile.type</code></li><li><code>spec.initContainers[*].securityContext.seccompProfile.type</code></li><li><code>spec.ephemeralContainers[*].securityContext.seccompProfile.type</code></li></ul><p><strong>准许的取值</strong></p><ul><li>未定义、nil</li><li><code>RuntimeDefault</code></li><li><code>Localhost</code></li></ul></td></tr><tr><td style=white-space:nowrap>Sysctls</td><td><p>Sysctls 可以禁用安全机制或影响宿主上所有容器，因此除了若干“安全”的子集之外，应该被禁止。如果某 sysctl 是受容器或 Pod 的名字空间限制，且与节点上其他 Pod 或进程相隔离，可认为是安全的。</p><p><strong>限制的字段</strong></p><ul><li><code>spec.securityContext.sysctls[*].name</code></li></ul><p><strong>准许的取值</strong></p><ul><li>未定义、nil</li><li><code>kernel.shm_rmid_forced</code></li><li><code>net.ipv4.ip_local_port_range</code></li><li><code>net.ipv4.ip_unprivileged_port_start</code></li><li><code>net.ipv4.tcp_syncookies</code></li><li><code>net.ipv4.ping_group_range</code></li></ul></td></tr></tbody></table><h3 id=restricted>Restricted</h3><p><strong><em>Restricted</em> 策略旨在实施当前保护 Pod 的最佳实践，尽管这样作可能会牺牲一些兼容性。</strong>
+该类策略主要针对运维人员和安全性很重要的应用的开发人员，以及不太被信任的用户。
+下面列举的控制需要被实施（禁止）：</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>在下述表格中，通配符（<code>*</code>）意味着一个列表中的所有元素。
+例如 <code>spec.containers[*].securityContext</code> 表示 <strong>所定义的所有容器</strong> 的安全性上下文对象。
+如果所列出的任一容器不能满足要求，整个 Pod 将无法通过校验。</div><table><caption style=display:none>Restricted 策略规范</caption><tbody><tr><td width=30%><strong>控制</strong></td><td><strong>策略</strong></td></tr><tr><td colspan=2><em>Baseline 策略的所有要求。</em></td></tr><tr><td style=white-space:nowrap>卷类型</td><td><p>除了限制 HostPath 卷之外，此类策略还限制可以通过 PersistentVolumes 定义的非核心卷类型。</p><p><strong>限制的字段</strong></p><ul><li><code>spec.volumes[*]</code></li></ul><p><strong>准许的取值</strong></p><code>spec.volumes[*]</code> 列表中的每个条目必须将下面字段之一设置为非空值：<ul><li><code>spec.volumes[*].configMap</code></li><li><code>spec.volumes[*].csi</code></li><li><code>spec.volumes[*].downwardAPI</code></li><li><code>spec.volumes[*].emptyDir</code></li><li><code>spec.volumes[*].ephemeral</code></li><li><code>spec.volumes[*].persistentVolumeClaim</code></li><li><code>spec.volumes[*].projected</code></li><li><code>spec.volumes[*].secret</code></li></ul></td></tr><tr><td style=white-space:nowrap>特权提升（v1.8+）</td><td><p>禁止（通过 SetUID 或 SetGID 文件模式）获得特权提升。<em><a href=#policies-specific-to-linux>这是 v1.25+ 中仅针对 Linux 的策略</a> <code>(spec.os.name != windows)</code></em></p><p><strong>限制的字段</strong></p><ul><li><code>spec.containers[*].securityContext.allowPrivilegeEscalation</code></li><li><code>spec.initContainers[*].securityContext.allowPrivilegeEscalation</code></li><li><code>spec.ephemeralContainers[*].securityContext.allowPrivilegeEscalation</code></li></ul><p><strong>允许的取值</strong></p><ul><li><code>false</code></li></ul></td></tr><tr><td style=white-space:nowrap>以非 root 账号运行</td><td><p>容器必须以非 root 账号运行。</p><p><strong>限制的字段</strong></p><ul><li><code>spec.securityContext.runAsNonRoot</code></li><li><code>spec.containers[*].securityContext.runAsNonRoot</code></li><li><code>spec.initContainers[*].securityContext.runAsNonRoot</code></li><li><code>spec.ephemeralContainers[*].securityContext.runAsNonRoot</code></li></ul><p><strong>准许的取值</strong></p><ul><li><code>true</code></li></ul><small>如果 Pod 级别 <code>spec.securityContext.runAsNonRoot</code> 设置为 <code>true</code>，则允许容器组的安全上下文字段设置为 未定义/<code>nil</code>。</small></td></tr><tr><td style=white-space:nowrap>非 root 用户（v1.23+）</td><td><p>容器不可以将 <tt>runAsUser</tt> 设置为 0</p><p><strong>限制的字段</strong></p><ul><li><code>spec.securityContext.runAsUser</code></li><li><code>spec.containers[*].securityContext.runAsUser</code></li><li><code>spec.initContainers[*].securityContext.runAsUser</code></li><li><code>spec.ephemeralContainers[*].securityContext.runAsUser</code></li></ul><p><strong>准许的取值</strong></p><ul><li>所有的非零值</li><li><code>undefined/null</code></li></ul></td></tr><tr><td style=white-space:nowrap>Seccomp (v1.19+)</td><td><p>Seccomp Profile 必须被显式设置成一个允许的值。禁止使用 <code>Unconfined</code> Profile 或者指定 <em>不存在的</em> Profile。<em><a href=#policies-specific-to-linux>这是 v1.25+ 中仅针对 Linux 的策略</a> <code>(spec.os.name != windows)</code></em></p><p><strong>限制的字段</strong></p><ul><li><code>spec.securityContext.seccompProfile.type</code></li><li><code>spec.containers[*].securityContext.seccompProfile.type</code></li><li><code>spec.initContainers[*].securityContext.seccompProfile.type</code></li><li><code>spec.ephemeralContainers[*].securityContext.seccompProfile.type</code></li></ul><p><strong>准许的取值</strong></p><ul><li><code>RuntimeDefault</code></li><li><code>Localhost</code></li></ul><small>如果 Pod 级别的 <code>spec.securityContext.seccompProfile.type</code>
+已设置得当，容器级别的安全上下文字段可以为未定义/<code>nil</code>。
+反之如果 <bold>所有的</bold> 容器级别的安全上下文字段已设置，
+则 Pod 级别的字段可为 未定义/<code>nil</code>。</small></td></tr><tr><td style=white-space:nowrap>权能（v1.22+）</td><td><p>容器必须弃用 <code>ALL</code> 权能，并且只允许添加
+<code>NET_BIND_SERVICE</code> 权能。<em><a href=#policies-specific-to-linux>这是 v1.25+ 中仅针对 Linux 的策略</a> <code>(.spec.os.name != "windows")</code></em></p><p><strong>限制的字段</strong></p><ul><li><code>spec.containers[*].securityContext.capabilities.drop</code></li><li><code>spec.initContainers[*].securityContext.capabilities.drop</code></li><li><code>spec.ephemeralContainers[*].securityContext.capabilities.drop</code></li></ul><p><strong>准许的取值</strong></p><ul><li>包括 <code>ALL</code> 在内的任意权能列表。</li></ul><hr><p><strong>限制的字段</strong></p><ul><li><code>spec.containers[*].securityContext.capabilities.add</code></li><li><code>spec.initContainers[*].securityContext.capabilities.add</code></li><li><code>spec.ephemeralContainers[*].securityContext.capabilities.add</code></li></ul><p><strong>准许的取值</strong></p><ul><li>未定义、nil</li><li><code>NET_BIND_SERVICE</code></li></ul></td></tr></tbody></table><h2 id=policy-instantiation>策略实例化</h2><p>将策略定义从策略实例中解耦出来有助于形成跨集群的策略理解和语言陈述，
+以免绑定到特定的下层实施机制。</p><p>随着相关机制的成熟，这些机制会按策略分别定义在下面。特定策略的实施方法不在这里定义。</p><p><a href=/zh-cn/docs/concepts/security/pod-security-admission/><strong>Pod 安全性准入控制器</strong></a></p><ul><li><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/zh-cn/examples/security/podsecurity-privileged.yaml download=security/podsecurity-privileged.yaml>Privileged 名字空间</a></li><li><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/zh-cn/examples/security/podsecurity-baseline.yaml download=security/podsecurity-baseline.yaml>Baseline 名字空间</a></li><li><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/zh-cn/examples/security/podsecurity-restricted.yaml download=security/podsecurity-restricted.yaml>Restricted 名字空间</a></li></ul><h3 id=alternatives>替代方案</h3><div class="alert alert-secondary callout third-party-content" role=alert><strong>说明：</strong>
+本部分链接到提供 Kubernetes 所需功能的第三方项目。Kubernetes 项目作者不负责这些项目。此页面遵循<a href=https://github.com/cncf/foundation/blob/master/website-guidelines.md target=_blank>CNCF 网站指南</a>，按字母顺序列出项目。要将项目添加到此列表中，请在提交更改之前阅读<a href=/docs/contribute/style/content-guide/#third-party-content>内容指南</a>。</div><p>在 Kubernetes 生态系统中还在开发一些其他的替代方案，例如：</p><ul><li><a href=https://github.com/kubewarden>Kubewarden</a></li><li><a href=https://kyverno.io/policies/pod-security/>Kyverno</a></li><li><a href=https://github.com/open-policy-agent/gatekeeper>OPA Gatekeeper</a></li></ul><h2 id=pod-os-field>Pod OS 字段</h2><p>Kubernetes 允许你使用运行 Linux 或 Windows 的节点。你可以在一个集群中混用两种类型的节点。
+Kubernetes 中的 Windows 与基于 Linux 的工作负载相比有一些限制和差异。
+具体而言，许多 Pod <code>securityContext</code>
+字段<a href=/zh-cn/docs/concepts/windows/intro/#compatibility-v1-pod-spec-containers-securitycontext>在 Windows 上不起作用</a>。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>v1.24 之前的 Kubelet 不强制处理 Pod OS 字段，如果集群中有些节点运行早于 v1.24 的版本，
+则应将限制性的策略锁定到 v1.25 之前的版本。</div><h3 id=restricted-pod-security-standard-changes>限制性的 Pod Security Standard 变更</h3><p>Kubernetes v1.25 中的另一个重要变化是 <strong>限制性的（Restricted）</strong> Pod 安全性已更新，
+能够处理 <code>pod.spec.os.name</code> 字段。根据 OS 名称，专用于特定 OS 的某些策略对其他 OS 可以放宽限制。</p><h4 id=os-特定的策略控制>OS 特定的策略控制</h4><p>仅当 <code>.spec.os.name</code> 不是 <code>windows</code> 时，才需要对以下控制进行限制：</p><ul><li>特权提升</li><li>Seccomp</li><li>Linux 权能</li></ul><h2 id=faq>常见问题</h2><h3 id=为什么不存在介于-privileged-和-baseline-之间的策略类型>为什么不存在介于 Privileged 和 Baseline 之间的策略类型</h3><p>这里定义的三种策略框架有一个明晰的线性递进关系，从最安全（Restricted）到最不安全，
+并且覆盖了很大范围的工作负载。特权要求超出 Baseline 策略者通常是特定于应用的需求，
+所以我们没有在这个范围内提供标准框架。
+这并不意味着在这样的情形下仍然只能使用 Privileged 框架，
+只是说处于这个范围的策略需要因地制宜地定义。</p><p>SIG Auth 可能会在将来考虑这个范围的框架，前提是有对其他框架的需求。</p><h3 id=安全配置与安全上下文的区别是什么>安全配置与安全上下文的区别是什么？</h3><p><a href=/zh-cn/docs/tasks/configure-pod-container/security-context/>安全上下文</a>在运行时配置 Pod
+和容器。安全上下文是在 Pod 清单中作为 Pod 和容器规约的一部分来定义的，
+所代表的是传递给容器运行时的参数。</p><p>安全策略则是控制面用来对安全上下文以及安全性上下文之外的参数实施某种设置的机制。
+在 2020 年 7 月，
+<a href=/zh-cn/docs/concepts/security/pod-security-policy/>Pod 安全性策略</a>已被废弃，
+取而代之的是内置的 <a href=/zh-cn/docs/concepts/security/pod-security-admission/>Pod 安全性准入控制器</a>。</p><h3 id=what-about-sandboxed-pods>沙箱（Sandboxed）Pod 怎么处理？</h3><p>现在还没有 API 标准来控制 Pod 是否被视作沙箱化 Pod。
+沙箱 Pod 可以通过其是否使用沙箱化运行时（如 gVisor 或 Kata Container）来辨别，
+不过目前还没有关于什么是沙箱化运行时的标准定义。</p><p>沙箱化负载所需要的保护可能彼此各不相同。例如，当负载与下层内核直接隔离开来时，
+限制特权化操作的许可就不那么重要。这使得那些需要更多许可权限的负载仍能被有效隔离。</p><p>此外，沙箱化负载的保护高度依赖于沙箱化的实现方法。
+因此，现在还没有针对所有沙箱化负载的建议配置。</p></div><div class=td-content style=page-break-before:always><h1 id=pg-bc9934fccfeaf880eec6ea79025c0381>3 - Pod 安全性准入</h1><div class=lead>对 Pod 安全性准入控制器的概述，Pod 安全性准入控制器可以实施 Pod 安全性标准。</div><div style=margin-top:10px;margin-bottom:10px><b>特性状态：</b> <code>Kubernetes v1.25 [stable]</code></div><p>Kubernetes <a href=/zh-cn/docs/concepts/security/pod-security-standards/>Pod 安全性标准（Security Standards）</a>
+为 Pod 定义不同的隔离级别。这些标准能够让你以一种清晰、一致的方式定义如何限制 Pod 行为。</p><p>Kubernetes 提供了一个内置的 <strong>Pod Security</strong>
+<a class=glossary-tooltip title='在对象持久化之前拦截 Kubernetes API 服务器请求的一段代码。' data-toggle=tooltip data-placement=top href=/zh-cn/docs/reference/access-authn-authz/admission-controllers/ target=_blank aria-label=准入控制器>准入控制器</a>来执行 Pod 安全标准
+（Pod Security Standard）。
+创建 Pod 时在<a class=glossary-tooltip title='名字空间是 Kubernetes 用来支持隔离单个集群中的资源组的一种抽象。' data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/overview/working-with-objects/namespaces/ target=_blank aria-label=名字空间>名字空间</a>级别应用这些 Pod 安全限制。</p><h3 id=built-in-pod-security-admission-enforcement>内置 Pod 安全准入强制执行</h3><p>本页面是 Kubernetes v1.25 文档的一部分。
+如果你运行的是其他版本的 Kubernetes，请查阅该版本的文档。</p><h2 id=pod-security-levels>Pod 安全性级别</h2><p>Pod 安全性准入插件对 Pod
+的<a href=/zh-cn/docs/tasks/configure-pod-container/security-context/>安全性上下文</a>有一定的要求，
+并且依据 <a href=/zh-cn/docs/concepts/security/pod-security-standards>Pod 安全性标准</a>所定义的三个级别
+（<code>privileged</code>、<code>baseline</code> 和 <code>restricted</code>）对其他字段也有要求。
+关于这些需求的更进一步讨论，请参阅
+<a href=/zh-cn/docs/concepts/security/pod-security-standards/>Pod 安全性标准</a>页面。</p><h2 id=pod-security-admission-labels-for-namespaces>为名字空间设置 Pod 安全性准入控制标签</h2><p>一旦特性被启用或者安装了 Webhook，你可以配置名字空间以定义每个名字空间中
+Pod 安全性准入控制模式。
+Kubernetes 定义了一组<a class=glossary-tooltip title=用来为对象设置可标识的属性标记；这些标记对用户而言是有意义且重要的。 data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/overview/working-with-objects/labels/ target=_blank aria-label=标签>标签</a>，
+你可以设置这些标签来定义某个名字空间上要使用的预定义的 Pod 安全性标准级别。
+你所选择的标签定义了检测到潜在违例时，
+<a class=glossary-tooltip title='控制平面是指容器编排层，它暴露 API 和接口来定义、部署容器和管理容器的生命周期。' data-toggle=tooltip data-placement=top href='/zh-cn/docs/reference/glossary/?all=true#term-control-plane' target=_blank aria-label=控制面>控制面</a>要采取什么样的动作。</p><table><caption style=display:none>Pod 安全准入模式</caption><thead><tr><th style=text-align:left>模式</th><th style=text-align:left>描述</th></tr></thead><tbody><tr><td style=text-align:left><strong>enforce</strong></td><td style=text-align:left>策略违例会导致 Pod 被拒绝</td></tr><tr><td style=text-align:left><strong>audit</strong></td><td style=text-align:left>策略违例会触发<a href=/zh-cn/docs/tasks/debug/debug-cluster/audit/>审计日志</a>中记录新事件时添加审计注解；但是 Pod 仍是被接受的。</td></tr><tr><td style=text-align:left><strong>warn</strong></td><td style=text-align:left>策略违例会触发用户可见的警告信息，但是 Pod 仍是被接受的。</td></tr></tbody></table><p>名字空间可以配置任何一种或者所有模式，或者甚至为不同的模式设置不同的级别。</p><p>对于每种模式，决定所使用策略的标签有两个：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#080;font-style:italic># 模式的级别标签用来标示对应模式所应用的策略级别</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#080;font-style:italic>#</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#080;font-style:italic># MODE 必须是 `enforce`、`audit` 或 `warn` 之一</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#080;font-style:italic># LEVEL 必须是 `privileged`、baseline` 或 `restricted` 之一</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>pod-security.kubernetes.io/&lt;MODE&gt;</span>:<span style=color:#bbb> </span>&lt;LEVEL&gt;<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#080;font-style:italic># 可选：针对每个模式版本的版本标签可以将策略锁定到</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#080;font-style:italic># 给定 Kubernetes 小版本号所附带的版本（例如 v1.25）</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#080;font-style:italic>#</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#080;font-style:italic># MODE 必须是 `enforce`、`audit` 或 `warn` 之一</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#080;font-style:italic># VERSION 必须是一个合法的 Kubernetes 小版本号或者 `latest`</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>pod-security.kubernetes.io/&lt;MODE&gt;-version</span>:<span style=color:#bbb> </span>&lt;VERSION&gt;<span style=color:#bbb>
+</span></span></span></code></pre></div><p>关于用法示例，可参阅<a href=/zh-cn/docs/tasks/configure-pod-container/enforce-standards-namespace-labels/>使用名字空间标签来强制实施 Pod 安全标准</a>。</p><h2 id=workload-resources-and-pod-templates>负载资源和 Pod 模板</h2><p>Pod 通常是通过创建 <a class=glossary-tooltip title=管理集群上的多副本应用。 data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/workloads/controllers/deployment/ target=_blank aria-label=Deployment>Deployment</a> 或
+<a class=glossary-tooltip title='Job 是需要运行完成的确定性的或批量的任务。' data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/workloads/controllers/job/ target=_blank aria-label=Job>Job</a>
+这类<a href=/zh-cn/docs/concepts/workloads/controllers/>工作负载对象</a>
+来间接创建的。工作负载对象为工作负载资源定义一个 <strong>Pod 模板</strong>
+和一个对应的负责基于该模板来创建 Pod 的<a class=glossary-tooltip title='控制器通过 API 服务器监控集群的公共状态，并致力于将当前状态转变为期望的状态。' data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/architecture/controller/ target=_blank aria-label=控制器>控制器</a>。
+为了尽早地捕获违例状况，<code>audit</code> 和 <code>warn</code> 模式都应用到负载资源。
+不过，<code>enforce</code> 模式并 <strong>不</strong> 应用到工作负载资源，仅应用到所生成的 Pod 对象上。</p><h2 id=exemptions>豁免</h2><p>你可以为 Pod 安全性的实施设置 <strong>豁免（Exemptions）</strong> 规则，
+从而允许创建一些本来会被与给定名字空间相关的策略所禁止的 Pod。
+豁免规则可以在<a href=/zh-cn/docs/tasks/configure-pod-container/enforce-standards-admission-controller/#configure-the-admission-controller>准入控制器配置</a>
+中静态配置。</p><p>豁免规则可以显式枚举。满足豁免标准的请求会被准入控制器 <strong>忽略</strong>
+（所有 <code>enforce</code>、<code>audit</code> 和 <code>warn</code> 行为都会被略过）。
+豁免的维度包括：</p><ul><li><strong>Username：</strong> 来自用户名已被豁免的、已认证的（或伪装的）的用户的请求会被忽略。</li><li><strong>RuntimeClassName：</strong> 指定了已豁免的运行时类名称的 Pod
+和<a href=#workload-resources-and-pod-templates>负载资源</a>会被忽略。</li><li><strong>Namespace：</strong> 位于被豁免的名字空间中的 Pod 和<a href=#workload-resources-and-pod-templates>负载资源</a>会被忽略。</li></ul><div class="alert alert-warning caution callout" role=alert><strong>注意：</strong><p>大多数 Pod 是作为对<a href=#workload-resources-and-pod-templates>工作负载资源</a>的响应，
+由控制器所创建的，这意味着为某最终用户提供豁免时，只会当该用户直接创建 Pod
+时对其实施安全策略的豁免。用户创建工作负载资源时不会被豁免。
+控制器服务账号（例如：<code>system:serviceaccount:kube-system:replicaset-controller</code>）
+通常不应该被豁免，因为豁免这类服务账号隐含着对所有能够创建对应工作负载资源的用户豁免。</div><p>策略检查时会对以下 Pod 字段的更新操作予以豁免，这意味着如果 Pod
+更新请求仅改变这些字段时，即使 Pod 违反了当前的策略级别，请求也不会被拒绝。</p><ul><li>除了对 seccomp 或 AppArmor 注解之外的所有元数据（Metadata）更新操作：<ul><li><code>seccomp.security.alpha.kubernetes.io/pod</code> （已弃用）</li><li><code>container.seccomp.security.alpha.kubernetes.io/*</code> （已弃用）</li><li><code>container.apparmor.security.beta.kubernetes.io/*</code></li></ul></li><li>对 <code>.spec.activeDeadlineSeconds</code> 的合法更新</li><li>对 <code>.spec.tolerations</code> 的合法更新</li></ul><h2 id=接下来>接下来</h2><ul><li><a href=/zh-cn/docs/concepts/security/pod-security-standards/>Pod 安全性标准</a></li><li><a href=/zh-cn/docs/setup/best-practices/enforcing-pod-security-standards/>强制实施 Pod 安全性标准</a></li><li><a href=/zh-cn/docs/tasks/configure-pod-container/enforce-standards-admission-controller/>通过配置内置的准入控制器强制实施 Pod 安全性标准</a></li><li><a href=/zh-cn/docs/tasks/configure-pod-container/enforce-standards-namespace-labels/>使用名字空间标签来实施 Pod 安全性标准</a></li><li><a href=/zh-cn/docs/tasks/configure-pod-container/migrate-from-psp/>从 PodSecurityPolicy 迁移到内置的 PodSecurity 准入控制器</a></li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-ac71855bb20cbf21edc666e810f4103a>4 - Pod 安全策略</h1><div class="alert alert-warning" role=alert><h4 class=alert-heading>被移除的特性</h4><p>PodSecurityPolicy 在 Kubernetes v1.21
+中<a href=/blog/2021/04/08/kubernetes-1-21-release-announcement/#podsecuritypolicy-deprecation>被弃用</a>，
+在 Kubernetes v1.25 中被移除。</div><p>作为替代，你可以使用下面任一方式执行类似的限制，或者同时使用下面这两种方式。</p><ul><li><a href=/zh-cn/docs/concepts/security/pod-security-admission/>Pod 安全准入</a></li><li>自行部署并配置第三方准入插件</li></ul><p>有关如何迁移，
+参阅<a href=/zh-cn/docs/tasks/configure-pod-container/migrate-from-psp/>从 PodSecurityPolicy 迁移到内置的 PodSecurity 准入控制器</a>。
+有关移除此 API 的更多信息，参阅
+<a href=/zh-cn/blog/2021/04/06/podsecuritypolicy-deprecation-past-present-and-future/>弃用 PodSecurityPolicy：过去、现在、未来</a>。</p><p>如果所运行的 Kubernetes 不是 v1.25 版本，则需要查看你所使用的 Kubernetes 版本的对应文档。</p></div><div class=td-content style=page-break-before:always><h1 id=pg-9a68f631b6bc38c279bbc9a145e34ef2>5 - Windows 节点的安全性</h1><p>本篇介绍特定于 Windows 操作系统的安全注意事项和最佳实践。</p><h2 id=protection-for-secret-data-on-nodes>保护节点上的 Secret 数据</h2><p>在 Windows 上，来自 Secret 的数据以明文形式写入节点的本地存储
+（与在 Linux 上使用 tmpfs / 内存中文件系统不同）。
+作为集群操作员，你应该采取以下两项额外措施：</p><ol><li>使用文件 ACL 来保护 Secret 的文件位置。</li><li>使用 <a href=https://docs.microsoft.com/windows/security/information-protection/bitlocker/bitlocker-how-to-deploy-on-windows-server>BitLocker</a>
+进行卷级加密。</li></ol><h2 id=container-users>容器用户</h2><p>可以为 Windows Pod 或容器指定 <a href=/zh-cn/docs/tasks/configure-pod-container/configure-runasusername>RunAsUsername</a>
+以作为特定用户执行容器进程。这大致相当于 <a href=/zh-cn/docs/concepts/security/pod-security-policy/#users-and-groups>RunAsUser</a>。</p><p>Windows 容器提供两个默认用户帐户，ContainerUser 和 ContainerAdministrator。
+在微软的 <strong>Windows 容器安全</strong> 文档
+<a href=https://docs.microsoft.com/zh-cn/virtualization/windowscontainers/manage-containers/container-security#when-to-use-containeradmin-and-containeruser-user-accounts>何时使用 ContainerAdmin 和 ContainerUser 用户帐户</a>
+中介绍了这两个用户帐户之间的区别。</p><p>在容器构建过程中，可以将本地用户添加到容器镜像中。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong><ul><li>基于 <a href=https://hub.docker.com/_/microsoft-windows-nanoserver>Nano Server</a> 的镜像默认以 <code>ContainerUser</code> 运行</li><li>基于 <a href=https://hub.docker.com/_/microsoft-windows-servercore>Server Core</a> 的镜像默认以 <code>ContainerAdministrator</code> 运行</li></ul></div><p>Windows 容器还可以通过使用<a href=/zh-cn/docs/tasks/configure-pod-container/configure-gmsa/>组管理的服务账号</a>作为
+Active Directory 身份运行。</p><h2 id=pod-level-security-isolation>Pod 级安全隔离</h2><p>Windows 节点不支持特定于 Linux 的 Pod 安全上下文机制（例如 SELinux、AppArmor、Seccomp 或自定义 POSIX 权能字）。</p><p>Windows 上<a href=/zh-cn/docs/concepts/windows/intro/#compatibility-v1-pod-spec-containers-securitycontext>不支持</a>特权容器。
+然而，可以在 Windows 上使用 <a href=/zh-cn/docs/tasks/configure-pod-container/create-hostprocess-pod>HostProcess 容器</a>来执行
+Linux 上特权容器执行的许多任务。</p></div><div class=td-content style=page-break-before:always><h1 id=pg-4d77d1ae4c06aa14f54b385191627881>6 - Kubernetes API 访问控制</h1><p>本页面概述了对 Kubernetes API 的访问控制。</p><p>用户使用 <code>kubectl</code>、客户端库或构造 REST 请求来访问 <a href=/zh-cn/docs/concepts/overview/kubernetes-api/>Kubernetes API</a>。
+人类用户和 <a href=/zh-cn/docs/tasks/configure-pod-container/configure-service-account/>Kubernetes 服务账户</a>都可以被鉴权访问 API。
+当请求到达 API 时，它会经历多个阶段，如下图所示：</p><p><img src=/images/docs/admin/access-control-overview.svg alt="Kubernetes API 请求处理步骤示意图"></p><h2 id=transport-security>传输安全</h2><p>默认情况下，Kubernetes API 服务器在第一个非 localhost 网络接口的 6443 端口上进行监听，
+受 TLS 保护。在一个典型的 Kubernetes 生产集群中，API 使用 443 端口。
+该端口可以通过 <code>--secure-port</code> 进行变更，监听 IP 地址可以通过 <code>--bind-address</code> 标志进行变更。</p><p>API 服务器出示证书。该证书可以使用私有证书颁发机构（CA）签名，也可以基于链接到公认的 CA 的公钥基础架构签名。
+该证书和相应的私钥可以通过使用 <code>--tls-cert-file</code> 和 <code>--tls-private-key-file</code> 标志进行设置。</p><p>如果你的集群使用私有证书颁发机构，你需要在客户端的 <code>~/.kube/config</code> 文件中提供该 CA 证书的副本，
+以便你可以信任该连接并确认该连接没有被拦截。</p><p>你的客户端可以在此阶段出示 TLS 客户端证书。</p><h2 id=authentication>认证</h2><p>如上图步骤 <strong>1</strong> 所示，建立 TLS 后， HTTP 请求将进入认证（Authentication）步骤。
+集群创建脚本或者集群管理员配置 API 服务器，使之运行一个或多个身份认证组件。
+身份认证组件在<a href=/zh-cn/docs/reference/access-authn-authz/authentication/>认证</a>节中有更详细的描述。</p><p>认证步骤的输入整个 HTTP 请求；但是，通常组件只检查头部或/和客户端证书。</p><p>认证模块包含客户端证书、密码、普通令牌、引导令牌和 JSON Web 令牌（JWT，用于服务账户）。</p><p>可以指定多个认证模块，在这种情况下，服务器依次尝试每个验证模块，直到其中一个成功。</p><p>如果请求认证不通过，服务器将以 HTTP 状态码 401 拒绝该请求。
+反之，该用户被认证为特定的 <code>username</code>，并且该用户名可用于后续步骤以在其决策中使用。
+部分验证器还提供用户的组成员身份，其他则不提供。</p><h2 id=authorization>鉴权</h2><p>如上图的步骤 <strong>2</strong> 所示，将请求验证为来自特定的用户后，请求必须被鉴权。</p><p>请求必须包含请求者的用户名、请求的行为以及受该操作影响的对象。
+如果现有策略声明用户有权完成请求的操作，那么该请求被鉴权通过。</p><p>例如，如果 Bob 有以下策略，那么他只能在 <code>projectCaribou</code> 名称空间中读取 Pod。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;apiVersion&#34;</span>: <span style=color:#b44>&#34;abac.authorization.kubernetes.io/v1beta1&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;kind&#34;</span>: <span style=color:#b44>&#34;Policy&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;spec&#34;</span>: {
+</span></span><span style=display:flex><span>        <span style=color:green;font-weight:700>&#34;user&#34;</span>: <span style=color:#b44>&#34;bob&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:green;font-weight:700>&#34;namespace&#34;</span>: <span style=color:#b44>&#34;projectCaribou&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:green;font-weight:700>&#34;resource&#34;</span>: <span style=color:#b44>&#34;pods&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:green;font-weight:700>&#34;readonly&#34;</span>: <span style=color:#a2f;font-weight:700>true</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>如果 Bob 执行以下请求，那么请求会被鉴权，因为允许他读取 <code>projectCaribou</code> 名称空间中的对象。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;apiVersion&#34;</span>: <span style=color:#b44>&#34;authorization.k8s.io/v1beta1&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;kind&#34;</span>: <span style=color:#b44>&#34;SubjectAccessReview&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;spec&#34;</span>: {
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;resourceAttributes&#34;</span>: {
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;namespace&#34;</span>: <span style=color:#b44>&#34;projectCaribou&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;verb&#34;</span>: <span style=color:#b44>&#34;get&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;group&#34;</span>: <span style=color:#b44>&#34;unicorn.example.org&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;resource&#34;</span>: <span style=color:#b44>&#34;pods&#34;</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>如果 Bob 在 <code>projectCaribou</code> 名字空间中请求写（<code>create</code> 或 <code>update</code>）对象，其鉴权请求将被拒绝。
+如果 Bob 在诸如 <code>projectFish</code> 这类其它名字空间中请求读取（<code>get</code>）对象，其鉴权也会被拒绝。</p><p>Kubernetes 鉴权要求使用公共 REST 属性与现有的组织范围或云提供商范围的访问控制系统进行交互。
+使用 REST 格式很重要，因为这些控制系统可能会与 Kubernetes API 之外的 API 交互。</p><p>Kubernetes 支持多种鉴权模块，例如 ABAC 模式、RBAC 模式和 Webhook 模式等。
+管理员创建集群时，他们配置应在 API 服务器中使用的鉴权模块。
+如果配置了多个鉴权模块，则 Kubernetes 会检查每个模块，任意一个模块鉴权该请求，请求即可继续；
+如果所有模块拒绝了该请求，请求将会被拒绝（HTTP 状态码 403）。</p><p>要了解更多有关 Kubernetes 鉴权的更多信息，包括有关使用支持鉴权模块创建策略的详细信息，
+请参阅<a href=/zh-cn/docs/reference/access-authn-authz/authorization/>鉴权</a>。</p><h2 id=admission-control>准入控制</h2><p>准入控制模块是可以修改或拒绝请求的软件模块。
+除鉴权模块可用的属性外，准入控制模块还可以访问正在创建或修改的对象的内容。</p><p>准入控制器对创建、修改、删除或（通过代理）连接对象的请求进行操作。
+准入控制器不会对仅读取对象的请求起作用。
+有多个准入控制器被配置时，服务器将依次调用它们。</p><p>这一操作如上图的步骤 <strong>3</strong> 所示。</p><p>与身份认证和鉴权模块不同，如果任何准入控制器模块拒绝某请求，则该请求将立即被拒绝。</p><p>除了拒绝对象之外，准入控制器还可以为字段设置复杂的默认值。</p><p>可用的准入控制模块在<a href=/zh-cn/docs/reference/access-authn-authz/admission-controllers/>准入控制器</a>中进行了描述。</p><p>请求通过所有准入控制器后，将使用检验例程检查对应的 API 对象，然后将其写入对象存储（如步骤 <strong>4</strong> 所示）。</p><h2 id=auditing>审计</h2><p>Kubernetes 审计提供了一套与安全相关的、按时间顺序排列的记录，其中记录了集群中的操作序列。
+集群对用户、使用 Kubernetes API 的应用程序以及控制平面本身产生的活动进行审计。</p><p>更多信息请参考<a href=/zh-cn/docs/tasks/debug/debug-cluster/audit/>审计</a>。</p><h2 id=接下来>接下来</h2><p>阅读更多有关身份认证、鉴权和 API 访问控制的文档：</p><ul><li><a href=/zh-cn/docs/reference/access-authn-authz/authentication/>认证</a><ul><li><a href=/zh-cn/docs/reference/access-authn-authz/bootstrap-tokens/>使用 Bootstrap 令牌进行身份认证</a></li></ul></li><li><a href=/zh-cn/docs/reference/access-authn-authz/admission-controllers/>准入控制器</a><ul><li><a href=/zh-cn/docs/reference/access-authn-authz/extensible-admission-controllers/>动态准入控制</a></li></ul></li><li><a href=/zh-cn/docs/reference/access-authn-authz/authorization/>鉴权</a><ul><li><a href=/zh-cn/docs/reference/access-authn-authz/rbac/>基于角色的访问控制</a></li><li><a href=/zh-cn/docs/reference/access-authn-authz/abac/>基于属性的访问控制</a></li><li><a href=/zh-cn/docs/reference/access-authn-authz/node/>节点鉴权</a></li><li><a href=/zh-cn/docs/reference/access-authn-authz/webhook/>Webhook 鉴权</a></li></ul></li><li><a href=/zh-cn/docs/reference/access-authn-authz/certificate-signing-requests/>证书签名请求</a><ul><li>包括 <a href=/zh-cn/docs/reference/access-authn-authz/certificate-signing-requests/#approval-rejection>CSR 认证</a>
+和<a href=/zh-cn/docs/reference/access-authn-authz/certificate-signing-requests/#signing>证书签名</a></li></ul></li><li>服务账户<ul><li><a href=/zh-cn/docs/tasks/configure-pod-container/configure-service-account/>开发者指导</a></li><li><a href=/zh-cn/docs/reference/access-authn-authz/service-accounts-admin/>管理</a></li></ul></li></ul><p>你可以了解</p><ul><li>Pod 如何使用
+<a href=/zh-cn/docs/concepts/configuration/secret/#service-accounts-automatically-create-and-attach-secrets-with-api-credentials>Secrets</a>
+获取 API 凭证。</li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-07f58aa0218d666795499c2e2306ff96>7 - 基于角色的访问控制良好实践</h1><div class=lead>为集群操作人员提供的良好的 RBAC 设计原则和实践。</div><p>Kubernetes <a class=glossary-tooltip title='管理授权决策，允许管理员通过 Kubernetes API 动态配置访问策略。' data-toggle=tooltip data-placement=top href=/zh-cn/docs/reference/access-authn-authz/rbac/ target=_blank aria-label=RBAC>RBAC</a>
+是一项重要的安全控制措施，用于保证集群用户和工作负载只能访问履行自身角色所需的资源。
+在为集群用户设计权限时，请务必确保集群管理员知道可能发生特权提级的地方，
+降低因过多权限而导致安全事件的风险。</p><p>此文档的良好实践应该与通用
+<a href=/zh-cn/docs/reference/access-authn-authz/rbac/#restrictions-on-role-creation-or-update>RBAC 文档</a>一起阅读。</p><h2 id=general-good-practice>通用的良好实践</h2><h3 id=least-privilege>最小特权</h3><p>理想情况下，分配给用户和服务帐户的 RBAC 权限应该是最小的。
+仅应使用操作明确需要的权限，虽然每个集群会有所不同，但可以应用的一些常规规则：</p><ul><li>尽可能在命名空间级别分配权限。授予用户在特定命名空间中的权限时使用 RoleBinding
+而不是 ClusterRoleBinding。</li><li>尽可能避免通过通配符设置权限，尤其是对所有资源的权限。
+由于 Kubernetes 是一个可扩展的系统，因此通过通配符来授予访问权限不仅会授予集群中当前的所有对象类型，
+还包含所有未来被创建的所有对象类型。</li><li>管理员不应使用 <code>cluster-admin</code> 账号，除非特别需要。为低特权帐户提供
+<a href=/zh-cn/docs/reference/access-authn-authz/authentication/#user-impersonation>伪装权限</a>
+可以避免意外修改集群资源。</li><li>避免将用户添加到 <code>system:masters</code> 组。任何属于此组成员的用户都会绕过所有 RBAC 权限检查，
+始终具有不受限制的超级用户访问权限，并且不能通过删除 <code>RoleBinding</code> 或 <code>ClusterRoleBinding</code>
+来取消其权限。顺便说一句，如果集群使用 Webhook 鉴权，此组的成员身份也会绕过该
+Webhook（来自属于该组成员的用户的请求永远不会发送到 Webhook）。</li></ul><h3 id=minimize-distribution-of-privileged-tokens>最大限度地减少特权令牌的分发</h3><p>理想情况下，不应为 Pod 分配具有强大权限（例如，在<a href=#privilege-escalation-risks>特权提级的风险</a>中列出的任一权限）的服务帐户。
+如果工作负载需要比较大的权限，请考虑以下做法：</p><ul><li>限制运行此类 Pod 的节点数量。确保你运行的任何 DaemonSet 都是必需的，
+并且以最小权限运行，以限制容器逃逸的影响范围。</li><li>避免将此类 Pod 与不可信任或公开的 Pod 在一起运行。
+考虑使用<a href=/zh-cn/docs/concepts/scheduling-eviction/taint-and-toleration/>污点和容忍度</a>、
+<a href=/zh-cn/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity>节点亲和性</a>或
+<a href=/zh-cn/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity>Pod 反亲和性</a>确保
+Pod 不会与不可信或不太受信任的 Pod 一起运行。
+特别注意可信度不高的 Pod 不符合 <strong>Restricted</strong> Pod 安全标准的情况。</li></ul><h3 id=hardening>加固</h3><p>Kubernetes 默认提供访问权限并非是每个集群都需要的。
+审查默认提供的 RBAC 权限为安全加固提供了机会。
+一般来说，不应该更改 <code>system:</code> 帐户的某些权限，有一些方式来强化现有集群的权限：</p><ul><li>审查 <code>system:unauthenticated</code> 组的绑定，并在可能的情况下将其删除，
+因为这会给所有能够访问 API 服务器的人以网络级别的权限。</li><li>通过设置 <code>automountServiceAccountToken: false</code> 来避免服务账号令牌的默认自动挂载，
+有关更多详细信息，请参阅<a href=/zh-cn/docs/tasks/configure-pod-container/configure-service-account/#use-the-default-service-account-to-access-the-api-server>使用默认服务账号令牌</a>。
+此参数可覆盖 Pod 服务账号设置，而需要服务账号令牌的工作负载仍可以挂载。</li></ul><h3 id=periodic-review>定期检查</h3><p>定期检查 Kubernetes RBAC 设置是否有冗余条目和提权可能性是至关重要的。
+如果攻击者能够创建与已删除用户同名的用户账号，
+他们可以自动继承被删除用户的所有权限，尤其是分配给该用户的权限。</p><h2 id=privilege-escalation-risks>Kubernetes RBAC - 权限提权的风险</h2><p>在 Kubernetes RBAC 中有许多特权，如果被授予，
+用户或服务帐户可以提升其在集群中的权限并可能影响集群外的系统。</p><p>本节旨在提醒集群操作员需要注意的不同领域，
+以确保他们不会无意中授予超出预期的集群访问权限。</p><h3 id=listing-secrets>列举 Secret</h3><p>大家都很清楚，若允许对 Secrets 执行 <code>get</code> 访问，用户就获得了访问 Secret 内容的能力。
+同样需要注意的是：<code>list</code> 和 <code>watch</code> 访问也会授权用户获取 Secret 的内容。
+例如，当返回 List 响应时（例如，通过
+<code>kubectl get secrets -A -o yaml</code>），响应包含所有 Secret 的内容。</p><h3 id=workload-creation>工作负载的创建</h3><p>在一个命名空间中创建工作负载（Pod 或管理 Pod 的<a href=/zh-cn/docs/concepts/workloads/controllers/>工作负载资源</a>）
+的权限隐式地授予了对该命名空间中许多其他资源的访问权限，例如可以挂载在
+Pod 中的 Secret、ConfigMap 和 PersistentVolume。
+此外，由于 Pod 可以被任何<a href=/zh-cn/docs/reference/access-authn-authz/service-accounts-admin/>服务账号</a>运行，
+因此授予创建工作负载的权限也会隐式地授予该命名空间中任何服务账号的 API 访问级别。</p><p>可以运行特权 Pod 的用户可以利用该访问权限获得节点访问权限，
+并可能进一步提升他们的特权。如果你不完全信任某用户或其他主体，
+不相信他们能够创建比较安全且相互隔离的 Pod，你应该强制实施 <strong>Baseline</strong>
+或 <strong>Restricted</strong> Pod 安全标准。
+你可以使用 <a href=/zh-cn/docs/concepts/security/pod-security-admission/>Pod 安全性准入</a>或其他（第三方）机制来强制实施这些限制。</p><p>出于这些原因，命名空间应该用于隔离不同的信任级别或不同租户所需的资源。
+遵循<a href=#least-privilege>最小特权</a>原则并分配最小权限集仍被认为是最佳实践，
+但命名空间内的边界概念应视为比较弱。</p><h3 id=persistent-volume-creation>持久卷的创建</h3><p>如 <a href=/zh-cn/docs/concepts/security/pod-security-policy/#volumes-and-file-systems>PodSecurityPolicy</a>
+文档中所述，创建 PersistentVolumes 的权限可以提权访问底层主机。
+如果需要访问 PersistentVolume，受信任的管理员应该创建 <code>PersistentVolume</code>，
+受约束的用户应该使用 <code>PersistentVolumeClaim</code> 访问该存储。</p><h3 id=access-to-proxy-subresource-of-nodes>访问 Node 的 <code>proxy</code> 子资源</h3><p>有权访问 Node 对象的 proxy 子资源的用户有权访问 Kubelet API，
+这允许在他们有权访问的节点上的所有 Pod 上执行命令。
+此访问绕过审计日志记录和准入控制，因此在授予对此资源的权限前应小心。</p><h3 id=escalate-verb>esclate 动词</h3><p>通常，RBAC 系统会阻止用户创建比他所拥有的更多权限的 <code>ClusterRole</code>。
+而 <code>escalate</code> 动词是个例外。如
+<a href=/zh-cn/docs/reference/access-authn-authz/rbac/#restrictions-on-role-creation-or-update>RBAC 文档</a>
+中所述，拥有此权限的用户可以有效地提升他们的权限。</p><h3 id=bind-verb>bind 动词</h3><p>与 <code>escalate</code> 动作类似，授予此权限的用户可以绕过 Kubernetes
+对权限提升的内置保护，用户可以创建并绑定尚不具有的权限的角色。</p><h3 id=impersonate-verb>impersonate 动词</h3><p>此动词允许用户伪装并获得集群中其他用户的权限。
+授予它时应小心，以确保通过其中一个伪装账号不会获得过多的权限。</p><h3 id=csrs-and-certificate-issuing>CSR 和证书颁发</h3><p>CSR API 允许用户拥有 <code>create</code> CSR 的权限和 <code>update</code>
+<code>certificatesigningrequests/approval</code> 的权限，
+其中签名者是 <code>kubernetes.io/kube-apiserver-client</code>，
+通过此签名创建的客户端证书允许用户向集群进行身份验证。
+这些客户端证书可以包含任意的名称，包括 Kubernetes 系统组件的副本。
+这将有利于特权提级。</p><h3 id=token-request>令牌请求</h3><p>拥有 <code>serviceaccounts/token</code> 的 <code>create</code> 权限的用户可以创建
+TokenRequest 来发布现有服务帐户的令牌。</p><h3 id=control-admission-webhooks>控制准入 Webhook</h3><p>可以控制 <code>validatingwebhookconfigurations</code> 或 <code>mutatingwebhookconfigurations</code>
+的用户可以控制能读取任何允许进入集群的对象的 webhook，
+并且在有变更 webhook 的情况下，还可以变更准入的对象。</p><h2 id=denial-of-service-risks>Kubernetes RBAC - 拒绝服务攻击的风险</h2><h3 id=object-creation-dos>对象创建拒绝服务</h3><p>有权在集群中创建对象的用户根据创建对象的大小和数量可能会创建足够大的对象，
+产生拒绝服务状况，如 <a href=https://github.com/kubernetes/kubernetes/issues/107325>Kubernetes 使用的 etcd 容易受到 OOM 攻击</a>中的讨论。
+允许太不受信任或者不受信任的用户对系统进行有限的访问在多租户集群中是特别重要的。</p><p>缓解此问题的一种选择是使用<a href=/zh-cn/docs/concepts/policy/resource-quotas/#object-count-quota>资源配额</a>以限制可以创建的对象数量。</p><h2 id=接下来>接下来</h2><ul><li>了解有关 RBAC 的更多信息，请参阅 <a href=/zh-cn/docs/reference/access-authn-authz/rbac/>RBAC 文档</a>。</li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-a7863bfad3d69f33f5b318b9028eecb8>8 - Kubernetes Secret 良好实践</h1><div class=lead>帮助集群管理员和应用开发者更好管理 Secret 的原理和实践。</div><p><p>在 Kubernetes 中，Secret 是这样一个对象： secret 用于存储敏感信息，如密码、OAuth 令牌和 SSH 密钥。</p></p><p>Secret 允许用户对如何使用敏感信息进行更多的控制，并减少信息意外暴露的风险。
+默认情况下，Secret 值被编码为 base64 字符串并以非加密的形式存储，但可以配置为
+<a href=/zh-cn/docs/tasks/administer-cluster/encrypt-data/#ensure-all-secrets-are-encrypted>静态加密（Encrypt at rest）</a>。</p><p><a class=glossary-tooltip title='Pod 表示你的集群上一组正在运行的容器。' data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/workloads/pods/ target=_blank aria-label=Pod>Pod</a> 可以通过多种方式引用 Secret，
+例如在卷挂载中引用或作为环境变量引用。Secret 设计用于机密数据，而
+<a href=/zh-cn/docs/tasks/configure-pod-container/configure-pod-configmap/>ConfigMap</a>
+设计用于非机密数据。</p><p>以下良好实践适用于集群管理员和应用开发者。遵从这些指导方针有助于提高 Secret 对象中敏感信息的安全性，
+还可以更有效地管理你的 Secret。</p><h2 id=cluster-administrators>集群管理员</h2><p>本节提供了集群管理员可用于提高集群中机密信息安全性的良好实践。</p><h3 id=configure-encryption-at-rest>配置静态加密</h3><p>默认情况下，Secret 对象以非加密的形式存储在 <a class=glossary-tooltip title='一致且高度可用的键值存储，用作 Kubernetes 的所有集群数据的后台数据库。' data-toggle=tooltip data-placement=top href=/zh-cn/docs/tasks/administer-cluster/configure-upgrade-etcd/ target=_blank aria-label=etcd>etcd</a> 中。
+你配置对在 <code>etcd</code> 中存储的 Secret 数据进行加密。相关的指导信息，
+请参阅<a href=/zh-cn/docs/tasks/administer-cluster/encrypt-data/>静态加密 Secret 数据</a>。</p><h3 id=least-privilege-secrets>配置 Secret 资源的最小特权访问</h3><p>当规划诸如 Kubernetes
+<a class=glossary-tooltip title='管理授权决策，允许管理员通过 Kubernetes API 动态配置访问策略。' data-toggle=tooltip data-placement=top href=/zh-cn/docs/reference/access-authn-authz/rbac/ target=_blank aria-label=基于角色的访问控制>基于角色的访问控制</a> <a href=/zh-cn/docs/reference/access-authn-authz/rbac/>(RBAC)</a>
+这类访问控制机制时，需要注意访问 <code>Secret</code> 对象的以下指导信息。
+你还应遵从 <a href=/zh-cn/docs/concepts/security/rbac-good-practices>RBAC 良好实践</a>中的其他指导信息。</p><ul><li><strong>组件</strong>：限制仅最高特权的系统级组件可以执行 <code>watch</code> 或 <code>list</code> 访问。
+仅在组件的正常行为需要时才授予对 Secret 的 <code>get</code> 访问权限。</li><li><strong>人员</strong>：限制对 Secret 的 <code>get</code>、<code>watch</code> 或 <code>list</code> 访问权限。仅允许集群管理员访问 <code>etcd</code>。
+这包括只读访问。对于更复杂的访问控制，例如使用特定注解限制对 Secret 的访问，请考虑使用第三方鉴权机制。</li></ul><div class="alert alert-warning caution callout" role=alert><strong>注意：</strong><p>授予对 Secret 的 <code>list</code> 访问权限将意味着允许对应主体获取 Secret 的内容。</div><p>如果一个用户可以创建使用某 Secret 的 Pod，则该用户也可以看到该 Secret 的值。
+即使集群策略不允许用户直接读取 Secret，同一用户也可能有权限运行 Pod 进而暴露该 Secret。
+你可以检测或限制具有此访问权限的用户有意或无意地暴露 Secret 数据所造成的影响。
+这里有一些建议：</p><ul><li>使用生命期短暂的 Secret</li><li>实现对特定事件发出警报的审计规则，例如同一用户并发读取多个 Secret 时发出警报</li></ul><h3 id=improve-etcd-management-policies>改进 etcd 管理策略</h3><p>不再使用 <code>etcd</code> 所使用的持久存储时，考虑擦除或粉碎这些数据。</p><p>如果存在多个 <code>etcd</code> 实例，则在实例之间配置加密的 SSL/TLS 通信以保护传输中的 Secret 数据。</p><h3 id=configure-access-to-external-secrets>配置对外部 Secret 的访问权限</h3><div class="alert alert-secondary callout third-party-content" role=alert><strong>说明：</strong>
+本部分链接到提供 Kubernetes 所需功能的第三方项目。Kubernetes 项目作者不负责这些项目。此页面遵循<a href=https://github.com/cncf/foundation/blob/master/website-guidelines.md target=_blank>CNCF 网站指南</a>，按字母顺序列出项目。要将项目添加到此列表中，请在提交更改之前阅读<a href=/docs/contribute/style/content-guide/#third-party-content>内容指南</a>。</div><p>你可以使用第三方 Secret 存储提供商将机密数据保存在你的集群之外，然后配置 Pod 访问该信息。
+<a href=https://secrets-store-csi-driver.sigs.k8s.io/>Kubernetes Secret 存储 CSI 驱动</a>是一个 DaemonSet，
+它允许 kubelet 从外部存储中检索 Secret，并将 Secret 作为卷挂载到特定的、你授权访问数据的 Pod。</p><p>有关支持的提供商列表，请参阅
+<a href=https://secrets-store-csi-driver.sigs.k8s.io/concepts.html#provider-for-the-secrets-store-csi-driver>Secret 存储 CSI 驱动的提供商</a>。</p><h2 id=developers>开发者</h2><p>本节为开发者提供了构建和部署 Kubernetes 资源时用于改进机密数据安全性的良好实践。</p><h3 id=restrict-secret-access-to-specific-containers>限制特定容器集合才能访问 Secret</h3><p>如果你在一个 Pod 中定义了多个容器，且仅其中一个容器需要访问 Secret，则可以定义卷挂载或环境变量配置，
+这样其他容器就不会有访问该 Secret 的权限。</p><h3 id=protect-secret-data-after-reading>读取后保护 Secret 数据</h3><p>应用程序从一个环境变量或一个卷读取机密信息的值后仍然需要保护这些值。
+例如，你的应用程序必须避免以明文记录 Secret 数据，还必须避免将这些数据传输给不受信任的一方。</p><h3 id=avoid-shareing-secret-manifests>避免共享 Secret 清单</h3><p>如果你通过<a class=glossary-tooltip title='一个或多个 Kubernetes API 对象的序列化规范。' data-toggle=tooltip data-placement=top href='/zh-cn/docs/reference/glossary/?all=true#term-manifest' target=_blank aria-label=清单（Manifest）>清单（Manifest）</a>配置 Secret，
+同时将该 Secret 数据编码为 base64，
+那么共享此文件或将其检入一个源代码仓库就意味着有权读取该清单的所有人都能使用该 Secret。</p><div class="alert alert-warning caution callout" role=alert><strong>注意：</strong><p>Base64 编码 <strong>不是</strong> 一种加密方法，它没有为纯文本提供额外的保密机制。</div></div><div class=td-content style=page-break-before:always><h1 id=pg-9dd9b8c71fa39ff803fd15b0e784069d>9 - 多租户</h1><p>此页面概述了集群多租户的可用配置选项和最佳实践。</p><p>共享集群可以节省成本并简化管理。
+然而，共享集群也带来了诸如安全性、公平性和管理<strong>嘈杂邻居</strong>等挑战。</p><p>集群可以通过多种方式共享。在某些情况下，不同的应用可能会在同一个集群中运行。
+在其他情况下，同一应用的多个实例可能在同一个集群中运行，每个实例对应一个最终用户。
+所有这些类型的共享经常使用一个总括术语 <strong>多租户（Multi-Tenancy）</strong> 来表述。</p><p>虽然 Kubernetes 没有最终用户或租户的一阶概念，
+它还是提供了几个特性来帮助管理不同的租户需求。下面将对此进行讨论。</p><h2 id=use-cases>用例</h2><p>确定如何共享集群的第一步是理解用例，以便你可以评估可用的模式和工具。
+一般来说，Kubernetes 集群中的多租户分为两大类，但也可以有许多变体和混合。</p><h3 id=multiple-teams>多团队</h3><p>多租户的一种常见形式是在组织内的多个团队之间共享一个集群，每个团队可以操作一个或多个工作负载。
+这些工作负载经常需要相互通信，并与位于相同或不同集群上的其他工作负载进行通信。</p><p>在这一场景中，团队成员通常可以通过类似 <code>kubectl</code> 等工具直接访问 Kubernetes 资源，
+或者通过 GitOps 控制器或其他类型的自动化发布工具间接访问 Kubernetes 资源。
+不同团队的成员之间通常存在某种程度的信任，
+但 RBAC、配额和网络策略等 Kubernetes 策略对于安全、公平地共享集群至关重要。</p><h3 id=multiple-customers>多客户</h3><p>多租户的另一种主要形式通常涉及为客户运行多个工作负载实例的软件即服务 (SaaS) 供应商。
+这种业务模型与其部署风格之间的相关非常密切，以至于许多人称之为 “SaaS 租户”。<br>但是，更好的术语可能是“多客户租户（Multi-Customer Tenancy）”，因为 SaaS 供应商也可以使用其他部署模型，
+并且这种部署模型也可以在 SaaS 之外使用。</p><p>在这种情况下，客户无权访问集群；
+从他们的角度来看，Kubernetes 是不可见的，仅由供应商用于管理工作负载。
+成本优化通常是一个关键问题，Kubernetes 策略用于确保工作负载彼此高度隔离。</p><h2 id=terminology>术语</h2><h3 id=tenants>租户</h3><p>在讨论 Kubernetes 中的多租户时，“租户”没有单一的定义。
+相反，租户的定义将根据讨论的是多团队还是多客户租户而有所不同。</p><p>在多团队使用中，租户通常是一个团队，
+每个团队通常部署少量工作负载，这些工作负载会随着服务的复杂性而发生规模伸缩。
+然而，“团队”的定义本身可能是模糊的，
+因为团队可能被组织成更高级别的部门或细分为更小的团队。</p><p>相反，如果每个团队为每个新客户部署专用的工作负载，那么他们使用的是多客户租户模型。
+在这种情况下，“租户”只是共享单个工作负载的一组用户。
+这种租户可能大到整个公司，也可能小到该公司的一个团队。</p><p>在许多情况下，同一组织可能在不同的上下文中使用“租户”的两种定义。
+例如，一个平台团队可能向多个内部“客户”提供安全工具和数据库等共享服务，
+而 SaaS 供应商也可能让多个团队共享一个开发集群。
+最后，混合架构也是可能的，
+例如，某 SaaS 提供商为每个客户的敏感数据提供独立的工作负载，同时提供多租户共享的服务。</p><figure class=diagram-large><img src=/images/docs/multi-tenancy.png><figcaption><h4>展示共存租户模型的集群</h4></figcaption></figure><h3 id=isolation>隔离</h3><p>使用 Kubernetes 设计和构建多租户解决方案有多种方法。
+每种方法都有自己的一组权衡，这些权衡会影响隔离级别、实现工作量、操作复杂性和服务成本。</p><p>Kubernetes 集群由运行 Kubernetes 软件的控制平面和由工作节点组成的数据平面组成，
+租户工作负载作为 Pod 在工作节点上执行。
+租户隔离可以根据组织要求应用于控制平面和数据平面。</p><p>所提供的隔离级别有时会使用一些术语来描述，例如 “硬性（Hard）” 多租户意味着强隔离，
+而 “柔性（Soft）” 多租户意味着较弱的隔离。
+特别是，“硬性”多租户通常用于描述租户彼此不信任的情况，
+并且大多是从安全和资源共享的角度（例如，防范数据泄露或 DoS 攻击等）。
+由于数据平面通常具有更大的攻击面，“硬性”多租户通常需要额外注意隔离数据平面，
+尽管控制平面隔离也很关键。</p><p>但是，“硬性”和“柔性”这两个术语常常令人困惑，因为没有一种定义能够适用于所有用户。
+相反，依据“硬度（Hardness）”或“柔度（Softness）”所定义的广泛谱系则更容易理解，
+根据你的需求，可以使用许多不同的技术在集群中维护不同类型的隔离。</p><p>在更极端的情况下，彻底放弃所有集群级别的共享并为每个租户分配其专用集群可能更容易或有必要，
+如果认为虚拟机所提供的安全边界还不够，甚至可以在专用硬件上运行。
+对于托管的 Kubernetes 集群而言，这种方案可能更容易，
+其中创建和操作集群的开销至少在一定程度上由云提供商承担。
+必须根据管理多个集群的成本和复杂性来评估更强的租户隔离的好处。
+<a href=https://git.k8s.io/community/sig-multicluster/README.md>Multi-Cluster SIG</a> 负责解决这些类型的用例。</p><p>本页的其余部分重点介绍用于共享 Kubernetes 集群的隔离技术。
+但是，即使你正在考虑使用专用集群，查看这些建议也可能很有价值，
+因为如果你的需求或功能发生变化，它可以让你在未来比较灵活地切换到共享集群。</p><h2 id=control-plane-isolation>控制面隔离</h2><p>控制平面隔离确保不同租户无法访问或影响彼此的 Kubernetes API 资源。</p><h3 id=namespaces>命名空间</h3><p>在 Kubernetes 中，
+<a class=glossary-tooltip title='名字空间是 Kubernetes 用来支持隔离单个集群中的资源组的一种抽象。' data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/overview/working-with-objects/namespaces/ target=_blank aria-label=命名空间>命名空间</a>提供了一种在单个集群中隔离 API 资源组的机制。
+这种隔离有两个关键维度：</p><ol><li>一个命名空间中的对象名称可以与其他命名空间中的名称重叠，类似于文件夹中的文件。
+这允许租户命名他们的资源，而无需考虑其他租户在做什么。</li></ol><ol start=2><li>许多 Kubernetes 安全策略的作用域是命名空间。
+例如，RBAC Role 和 NetworkPolicy 是命名空间作用域的资源。
+使用 RBAC，可以将用户和服务帐户限制在一个命名空间中。</li></ol><p>在多租户环境中，命名空间有助于将租户的工作负载划分到各不相同的逻辑管理单元中。
+事实上，一种常见的做法是将每个工作负载隔离在自己的命名空间中，
+即使多个工作负载由同一个租户操作。
+这可确保每个工作负载都有自己的身份，并且可以使用适当的安全策略进行配置。</p><p>命名空间隔离模型需要配置其他几个 Kubernetes 资源、网络插件，
+并遵守安全最佳实践以正确隔离租户工作负载。
+这些考虑将在下面讨论。</p><h3 id=access-controls>访问控制</h3><p>控制平面最重要的隔离类型是授权。如果各个团队或其工作负载可以访问或修改彼此的 API 资源，
+他们可以更改或禁用所有其他类型的策略，从而取消这些策略可能提供的任何保护。
+因此，确保每个租户只对他们需要的命名空间有适当的访问权，
+而不是更多，这一点至关重要。这被称为“最小特权原则（Principle of Least Privileges）”。</p><p>基于角色的访问控制 (RBAC) 通常用于在 Kubernetes 控制平面中对用户和工作负载（服务帐户）强制执行鉴权。
+<a href=/zh-cn/docs/reference/access-authn-authz/rbac/#role-and-clusterrole>角色</a>
+和<a href=/zh-cn/docs/reference/access-authn-authz/rbac/#rolebinding-and-clusterrolebinding>角色绑定</a>是两种
+Kubernetes 对象，用来在命名空间级别对应用实施访问控制；
+对集群级别的对象访问鉴权也有类似的对象，不过这些对象对于多租户集群不太有用。</p><p>在多团队环境中，必须使用 RBAC 来限制租户只能访问合适的命名空间，
+并确保集群范围的资源只能由集群管理员等特权用户访问或修改。</p><p>如果一个策略最终授予用户的权限比他们所需要的还多，
+这可能是一个信号，表明包含受影响资源的命名空间应该被重构为更细粒度的命名空间。
+命名空间管理工具可以通过将通用 RBAC 策略应用于不同的命名空间来简化这些细粒度命名空间的管理，
+同时在必要时仍允许细粒度策略。</p><h3 id=quotas>配额</h3><p>Kubernetes 工作负载消耗节点资源，例如 CPU 和内存。在多租户环境中，
+你可以使用<a href=/zh-cn/docs/concepts/policy/resource-quotas/>资源配额</a>来管理租户工作负载的资源使用情况。
+对于多团队场景，各个租户可以访问 Kubernetes API，你可以使用资源配额来限制租户可以创建的 API 资源的数量
+（例如：Pod 的数量，或 ConfigMap 的数量）。
+对对象计数的限制确保了公平性，并有助于避免<strong>嘈杂邻居</strong>问题影响共享控制平面的其他租户。</p><p>资源配额是命名空间作用域的对象。
+通过将租户映射到命名空间，
+集群管理员可以使用配额来确保租户不能垄断集群的资源或压垮控制平面。
+命名空间管理工具简化了配额的管理。
+此外，虽然 Kubernetes 配额仅针对单个命名空间，
+但一些命名空间管理工具允许多个命名空间组共享配额，
+与内置配额相比，降低了管理员的工作量，同时为其提供了更大的灵活性。</p><p>配额可防止单个租户所消耗的资源超过其被分配的份额，从而最大限度地减少<strong>嘈杂邻居</strong>问题，
+即一个租户对其他租户工作负载的性能产生负面影响。</p><p>当你对命名空间应用配额时，
+Kubernetes 要求你还为每个容器指定资源请求和限制。
+限制是容器可以消耗的资源量的上限。
+根据资源类型，尝试使用超出配置限制的资源的容器将被限制或终止。
+当资源请求设置为低于限制时，
+每个容器所请求的数量都可以得到保证，但可能仍然存在跨工作负载的一些潜在影响。</p><p>配额不能针对所共享的所有资源（例如网络流量）提供保护。
+节点隔离（如下所述）可能是解决此问题的更好方法。</p><h2 id=data-plane-isolation>数据平面隔离</h2><p>数据平面隔离确保不同租户的 Pod 和工作负载之间被充分隔离。</p><h3 id=network-isolation>网络隔离</h3><p>默认情况下，Kubernetes 集群中的所有 Pod 都可以相互通信，并且所有网络流量都是未加密的。
+这可能导致安全漏洞，导致流量被意外或恶意发送到非预期目的地，
+或被受感染节点上的工作负载拦截。</p><p>Pod 之间的通信可以使用<a href=/zh-cn/docs/concepts/services-networking/network-policies/>网络策略</a>来控制，
+它使用命名空间标签或 IP 地址范围来限制 Pod 之间的通信。
+在需要租户之间严格网络隔离的多租户环境中，
+建议从拒绝 Pod 之间通信的默认策略入手，
+然后添加一条允许所有 Pod 查询 DNS 服务器以进行名称解析的规则。
+有了这样的默认策略之后，你就可以开始添加允许在命名空间内进行通信的更多规则。
+另外建议不要在网络策略定义中对 namespaceSelector 字段使用空标签选择算符 “{}”，
+以防需要允许在命名空间之间传输流量。
+该方案可根据需要进一步细化。
+请注意，这仅适用于单个控制平面内的 Pod；
+属于不同虚拟控制平面的 Pod 不能通过 Kubernetes 网络相互通信。</p><p>命名空间管理工具可以简化默认或通用网络策略的创建。
+此外，其中一些工具允许你在整个集群中强制实施一组一致的命名空间标签，
+确保它们是你策略的可信基础。</p><div class="alert alert-danger warning callout" role=alert><strong>警告：</strong><p>网络策略需要一个支持网络策略实现的
+<a href=/zh-cn/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/#cni>CNI 插件</a>。
+否则，NetworkPolicy 资源将被忽略。</div><p>服务网格可以提供更高级的网络隔离，
+除了命名空间之外，它还提供基于工作负载身份的 OSI 第 7 层策略。
+这些更高层次的策略可以更轻松地管理基于命名空间的多租户，
+尤其是存在多个命名空间专用于某一个租户时。
+服务网格还经常使用双向 TLS 提供加密能力，
+即使在存在受损节点的情况下也能保护你的数据，
+并且可以跨专用或虚拟集群工作。
+但是，它们的管理可能要复杂得多，并且可能并不适合所有用户。</p><h3 id=storage-isolation>存储隔离</h3><p>Kubernetes 提供了若干类型的卷，可以用作工作负载的持久存储。
+为了安全和数据隔离，建议使用<a href=/zh-cn/docs/concepts/storage/dynamic-provisioning/>动态卷制备</a>，
+并且应避免使用节点资源的卷类型。</p><p><a href=/zh-cn/docs/concepts/storage/storage-classes/>存储类（StorageClass）</a>允许你根据服务质量级别、
+备份策略或由集群管理员确定的自定义策略描述集群提供的自定义存储“类”。</p><p>Pod 可以使用<a href=/zh-cn/docs/concepts/storage/persistent-volumes/>持久卷申领（PersistentVolumeClaim）</a>请求存储。
+PersistentVolumeClaim 是一种命名空间作用域的资源，
+它可以隔离存储系统的不同部分，并将隔离出来的存储提供给共享 Kubernetes 集群中的租户专用。
+但是，重要的是要注意 PersistentVolume 是集群作用域的资源，
+并且其生命周期独立于工作负载和命名空间的生命周期。</p><p>例如，你可以为每个租户配置一个单独的 StorageClass，并使用它来加强隔离。
+如果一个 StorageClass 是共享的，你应该设置一个<a href=/zh-cn/docs/concepts/storage/storage-classes/#reclaim-policy>回收策略</a>
+以确保 PersistentVolume 不能在不同的命名空间中重复使用。</p><h3 id=sandboxing-containers>沙箱容器</h3><div class="alert alert-secondary callout third-party-content" role=alert><strong>说明：</strong>
+本部分链接到提供 Kubernetes 所需功能的第三方项目。Kubernetes 项目作者不负责这些项目。此页面遵循<a href=https://github.com/cncf/foundation/blob/master/website-guidelines.md target=_blank>CNCF 网站指南</a>，按字母顺序列出项目。要将项目添加到此列表中，请在提交更改之前阅读<a href=/docs/contribute/style/content-guide/#third-party-content>内容指南</a>。</div><p>Kubernetes Pod 由在工作节点上执行的一个或多个容器组成。
+容器利用操作系统级别的虚拟化，
+因此提供的隔离边界比使用基于硬件虚拟化的虚拟机弱一些。</p><p>在共享环境中，攻击者可以利用应用和系统层中未修补的漏洞实现容器逃逸和远程代码执行，
+从而允许访问主机资源。
+在某些应用中，例如内容管理系统（CMS），
+客户可能被授权上传和执行非受信的脚本或代码。
+无论哪种情况，都需要使用强隔离进一步隔离和保护工作负载的机制。</p><p>沙箱提供了一种在共享集群中隔离运行中的工作负载的方法。
+它通常涉及在单独的执行环境（例如虚拟机或用户空间内核）中运行每个 Pod。
+当你运行不受信任的代码时（假定工作负载是恶意的），通常建议使用沙箱，
+这种隔离是必要的，部分原因是由于容器是在共享内核上运行的进程。
+它们从底层主机挂载像 /sys 和 /proc 这样的文件系统，
+这使得它们不如在具有自己内核的虚拟机上运行的应用安全。
+虽然 seccomp、AppArmor 和 SELinux 等控件可用于加强容器的安全性，
+但很难将一套通用规则应用于在共享集群中运行的所有工作负载。
+在沙箱环境中运行工作负载有助于将主机隔离开来，不受容器逃逸影响，
+在容器逃逸场景中，攻击者会利用漏洞来访问主机系统以及在该主机上运行的所有进程/文件。</p><p>虚拟机和用户空间内核是两种流行的沙箱方法。
+可以使用以下沙箱实现：</p><ul><li><a href=https://gvisor.dev/>gVisor</a> 拦截来自容器的系统调用，并通过用户空间内核运行它们，
+用户空间内核采用 Go 编写，对底层主机的访问是受限的</li><li><a href=https://katacontainers.io/>Kata Containers</a> 是符合 OCI 的运行时，允许你在 VM 中运行容器。
+Kata 中提供的硬件虚拟化为运行不受信任代码的容器提供了额外的安全层。</li></ul><h3 id=node-isolation>节点隔离</h3><p>节点隔离是另一种可用于将租户工作负载相互隔离的技术。
+通过节点隔离，一组节点专用于运行来自特定租户的 Pod，并且禁止混合不同租户 Pod 集合。
+这种配置减少了嘈杂的租户问题，因为在一个节点上运行的所有 Pod 都将属于一个租户。
+节点隔离的信息泄露风险略低，
+因为成功实现容器逃逸的攻击者也只能访问挂载在该节点上的容器和卷。</p><p>尽管来自不同租户的工作负载在不同的节点上运行，
+仍然很重要的是要注意 kubelet 和
+（除非使用虚拟控制平面）API 服务仍然是共享服务。
+熟练的攻击者可以使用分配给 kubelet 或节点上运行的其他 Pod
+的权限在集群内横向移动并获得对其他节点上运行的租户工作负载的访问权限。
+如果这是一个主要问题，请考虑实施补偿控制，
+例如使用 seccomp、AppArmor 或 SELinux，或者探索使用沙箱容器，或者为每个租户创建单独的集群。</p><p>从计费的角度来看，节点隔离比沙箱容器更容易理解，
+因为你可以按节点而不是按 Pod 收费。
+它的兼容性和性能问题也较少，而且可能比沙箱容器更容易实现。
+例如，可以为每个租户的节点配置污点，
+以便只有具有相应容忍度的 Pod 才能在其上运行。
+然后可以使用变更性质的 Webhook 自动向部署到租户命名空间中的 Pod 添加容忍度和节点亲和性，
+以便它们在为该租户指定的一组特定节点上运行。</p><p>节点隔离可以使用<a href=/zh-cn/docs/concepts/scheduling-eviction/assign-pod-node/>将 Pod 指派给节点</a>或
+<a href=https://github.com/virtual-kubelet>Virtual Kubelet</a> 来实现。</p><h2 id=additional-considerations>额外的注意事项</h2><p>本节讨论与多租户相关的其他 Kubernetes 结构和模式。</p><h3 id=api-priority-and-fairness>API 优先级和公平性</h3><p><a href=/zh-cn/docs/concepts/cluster-administration/flow-control/>API 优先级和公平性</a>是 Kubernetes 的一个特性，
+允许你为集群中运行的某些 Pod 赋予优先级。
+当应用调用 Kubernetes API 时，API 服务器会评估分配给 Pod 的优先级。
+来自具有较高优先级的 Pod 的调用会在具有较低优先级的 Pod 的调用之前完成。
+当争用很激烈时，较低优先级的调用可以排队，直到服务器不那么忙，或者你可以拒绝请求。</p><p>使用 API 优先级和公平性在 SaaS 环境中并不常见，
+除非你允许客户运行与 Kubernetes API 接口的应用，例如控制器。</p><h3 id=qos>服务质量 (QoS)</h3><p>当你运行 SaaS 应用时，
+你可能希望能够为不同的租户提供不同的服务质量 (QoS) 层级。
+例如，你可能拥有具有性能保证和功能较差的免费增值服务，
+以及具有一定性能保证的收费服务层。
+幸运的是，有几个 Kubernetes 结构可以帮助你在共享集群中完成此任务，
+包括网络 QoS、存储类以及 Pod 优先级和抢占。
+这些都是为了给租户提供他们所支付的服务质量。
+让我们从网络 QoS 开始。</p><p>通常，节点上的所有 Pod 共享一个网络接口。
+如果没有网络 QoS，一些 Pod 可能会以牺牲其他 Pod 为代价不公平地消耗可用带宽。
+Kubernetes <a href=https://www.cni.dev/plugins/current/meta/bandwidth/>带宽插件</a>为网络创建
+<a href=/zh-cn/docs/concepts/configuration/manage-resources-containers/#extended-resources>扩展资源</a>，
+以允许你使用 Kubernetes 的 resources 结构，即 requests 和 limits 设置。
+通过使用 Linux tc 队列将速率限制应用于 Pod。
+请注意，根据<a href=/zh-cn/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/#support-traffic-shaping>支持流量整形</a>文档，
+该插件被认为是实验性的，在生产环境中使用之前应该进行彻底的测试。</p><p>对于存储 QoS，你可能希望创建具有不同性能特征的不同存储类或配置文件。
+每个存储配置文件可以与不同的服务层相关联，该服务层针对 IO、冗余或吞吐量等不同的工作负载进行优化。
+可能需要额外的逻辑来允许租户将适当的存储配置文件与其工作负载相关联。</p><p>最后，还有 <a href=/zh-cn/docs/concepts/scheduling-eviction/pod-priority-preemption/>Pod 优先级和抢占</a>，
+你可以在其中为 Pod 分配优先级值。
+在调度 Pod 时，当没有足够的资源来调度分配了较高优先级的 Pod 时，
+调度程序将尝试驱逐具有较低优先级的 Pod。
+如果你有一个用例，其中租户在共享集群中具有不同的服务层，例如免费和付费，
+你可能希望使用此功能为某些层级提供更高的优先级。</p><h3 id=dns>DNS</h3><p>Kubernetes 集群包括一个域名系统（DNS）服务，
+可为所有服务和 Pod 提供从名称到 IP 地址的转换。
+默认情况下，Kubernetes DNS 服务允许在集群中的所有命名空间中进行查找。</p><p>在多租户环境中，租户可以访问 Pod 和其他 Kubernetes 资源，
+或者在需要更强隔离的情况下，可能需要阻止 Pod 在其他名称空间中查找服务。
+你可以通过为 DNS 服务配置安全规则来限制跨命名空间的 DNS 查找。
+例如，CoreDNS（Kubernetes 的默认 DNS 服务）可以利用 Kubernetes
+元数据来限制对命名空间内的 Pod 和服务的查询。
+有关更多信息，请阅读 CoreDNS 文档中配置此功能的
+<a href=https://github.com/coredns/policy#kubernetes-metadata-multi-tenancy-policy>示例</a>。</p><p>当使用<a href=#virtual-control-plane-per-tenant>各租户独立虚拟控制面</a>模型时，
+必须为每个租户配置 DNS 服务或必须使用多租户 DNS 服务。参见一个
+<a href=https://github.com/kubernetes-sigs/cluster-api-provider-nested/blob/main/virtualcluster/doc/tenant-dns.md>CoreDNS 的定制版本</a>支持多租户的示例。</p><h3 id=operators>Operators</h3><p><a href=/zh-cn/docs/concepts/extend-kubernetes/operator/>Operator 模式</a>是管理应用的 Kubernetes 控制器。
+Operator 可以简化应用的多个实例的管理，例如数据库服务，
+这使它们成为多消费者 (SaaS) 多租户用例中的通用构建块。</p><p>在多租户环境中使用 Operators 应遵循一套更严格的准则。具体而言，Operator 应：</p><ul><li>支持在不同的租户命名空间内创建资源，而不仅仅是在部署 Operator 的命名空间内。</li><li>确保 Pod 配置了资源请求和限制，以确保调度和公平。</li><li>支持节点隔离、沙箱容器等数据平面隔离技术的 Pod 配置。</li></ul><h2 id=implementations>实现</h2><div class="alert alert-secondary callout third-party-content" role=alert><strong>说明：</strong>
+本部分链接到提供 Kubernetes 所需功能的第三方项目。Kubernetes 项目作者不负责这些项目。此页面遵循<a href=https://github.com/cncf/foundation/blob/master/website-guidelines.md target=_blank>CNCF 网站指南</a>，按字母顺序列出项目。要将项目添加到此列表中，请在提交更改之前阅读<a href=/docs/contribute/style/content-guide/#third-party-content>内容指南</a>。</div><p>为多租户共享 Kubernetes 集群有两种主要方法：
+使用命名空间（即每个租户独立的命名空间）
+或虚拟化控制平面（即每个租户独立的虚拟控制平面）。</p><p>在这两种情况下，还建议对数据平面隔离和其他考虑事项，如 API 优先级和公平性，进行管理。</p><p>Kubernetes 很好地支持命名空间隔离，其资源开销可以忽略不计，并提供了允许租户适当交互的机制，
+例如允许服务之间的通信。
+但是，它可能很难配置，而且不适用于非命名空间作用域的 Kubernetes 资源，例如自定义资源定义、存储类和 Webhook 等。</p><p>控制平面虚拟化允许以更高的资源使用率和更困难的跨租户共享为代价隔离非命名空间作用域的资源。
+当命名空间隔离不足但不希望使用专用集群时，这是一个不错的选择，
+因为维护专用集群的成本很高（尤其是本地集群），
+或者由于专用集群的额外开销较高且缺乏资源共享。
+但是，即使在虚拟化控制平面中，你也可能会看到使用命名空间的好处。</p><p>以下各节将更详细地讨论这两个选项：</p><h3 id=namespace-per-tenant>每个租户独立的命名空间</h3><p>如前所述，你应该考虑将每个工作负载隔离在其自己的命名空间中，
+即使你使用的是专用集群或虚拟化控制平面。
+这可确保每个工作负载只能访问其自己的资源，例如 ConfigMap 和 Secret，
+并允许你为每个工作负载定制专用的安全策略。
+此外，最佳实践是为整个集群中的每个命名空间名称提供唯一的名称（即，即使它们位于单独的集群中），
+因为这使你将来可以灵活地在专用集群和共享集群之间切换，
+或者使用多集群工具，例如服务网格。</p><p>相反，在租户级别分配命名空间也有优势，
+而不仅仅是工作负载级别，
+因为通常有一些策略适用于单个租户拥有的所有工作负载。
+然而，这种方案也有自己的问题。
+首先，这使得为各个工作负载定制策略变得困难或不可能，
+其次，确定应该赋予命名空间的单一级别的 “租户” 可能很困难。
+例如，一个组织可能有部门、团队和子团队 - 哪些应该分配一个命名空间？</p><p>为了解决这个问题，Kubernetes 提供了
+<a href=https://github.com/kubernetes-sigs/hierarchical-namespaces>Hierarchical Namespace Controller (HNC)</a>，
+它允许你将多个命名空间组织成层次结构，并在它们之间共享某些策略和资源。
+它还可以帮助你管理命名空间标签、命名空间生命周期和委托管理，
+并在相关命名空间之间共享资源配额。
+这些功能在多团队和多客户场景中都很有用。</p><p>下面列出了提供类似功能并有助于管理命名空间资源的其他项目：</p><h4 id=multi-team-tenancy>多团队租户</h4><ul><li><a href=https://github.com/clastix/capsule>Capsule</a></li><li><a href=https://github.com/loft-sh/kiosk>Kiosk</a></li></ul><h4 id=multi-customer-tenancy>多客户租户</h4><ul><li><a href=https://github.com/cloud-ark/kubeplus>Kubeplus</a></li></ul><h4 id=policy-engines>策略引擎</h4><p>策略引擎提供了验证和生成租户配置的特性：</p><ul><li><a href=https://kyverno.io/>Kyverno</a></li><li><a href=https://github.com/open-policy-agent/gatekeeper>OPA/Gatekeeper</a></li></ul><h3 id=virtual-control-plane-per-tenant>每个租户独立的虚拟控制面</h3><p>控制面隔离的另一种形式是使用 Kubernetes 扩展为每个租户提供一个虚拟控制面，
+以实现集群范围内 API 资源的分段。
+<a href=#data-plane-isolation>数据平面隔离</a>技术可以与此模型一起使用，
+以安全地跨多个租户管理工作节点。</p><p>基于虚拟控制面的多租户模型通过为每个租户提供专用控制面组件来扩展基于命名空间的多租户，
+从而完全控制集群范围的资源和附加服务。
+工作节点在所有租户之间共享，并由租户通常无法访问的 Kubernetes 集群管理。
+该集群通常被称为 <strong>超集群（Super-Cluster）</strong>（或有时称为 <strong>host-cluster</strong>）。
+由于租户的控制面不直接与底层计算资源相关联，因此它被称为<strong>虚拟控制平面</strong>。</p><p>虚拟控制面通常由 Kubernetes API 服务器、控制器管理器和 etcd 数据存储组成。
+它通过元数据同步控制器与超集群交互，
+该控制器跨租户控制面和超集群控制面对变化进行协调。</p><p>通过使用每个租户单独的专用控制面，可以解决由于所有租户共享一个 API 服务器而导致的大部分隔离问题。
+例如，控制平面中的嘈杂邻居、策略错误配置导致的不可控爆炸半径以及如
+Webhook 和 CRD 等集群范围对象之间的冲突。
+因此，虚拟控制平面模型特别适用于每个租户都需要访问
+Kubernetes API 服务器并期望具有完整集群可管理性的情况。</p><p>改进的隔离是以每个租户运行和维护一个单独的虚拟控制平面为代价的。
+此外，租户层面的控制面不能解决数据面的隔离问题，
+例如节点级的嘈杂邻居或安全威胁。这些仍然必须单独解决。</p><p>Kubernetes <a href=https://github.com/kubernetes-sigs/cluster-api-provider-nested/tree/main/virtualcluster>Cluster API - Nested (CAPN)</a>
+项目提供了虚拟控制平面的实现。</p><h4 id=other-implementations>其他实现</h4><ul><li><a href=https://github.com/clastix/kamaji>Kamaji</a></li><li><a href=https://github.com/loft-sh/vcluster>vcluster</a></li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-265c06c3d1349382453ced9f2a7ecfde>10 - Kubernetes API 服务器旁路风险</h1><div class=lead>与 API 服务器及其他组件相关的安全架构信息</div><p>Kubernetes API 服务器是外部（用户和服务）与集群交互的主要入口。</p><p>作为此角色的一部分，API 服务器有几个关键的内置安全控制，
+例如审计日志和<a class=glossary-tooltip title='在对象持久化之前拦截 Kubernetes API 服务器请求的一段代码。' data-toggle=tooltip data-placement=top href=/zh-cn/docs/reference/access-authn-authz/admission-controllers/ target=_blank aria-label=准入控制器>准入控制器</a>。
+但是，有一些方法可以绕过这些安全控制从而修改集群的配置或内容。</p><p>本页描述了绕过 Kubernetes API 服务器中内置安全控制的几种方式，
+以便集群运维人员和安全架构师可以确保这些绕过方式被适当地限制。</p><h2 id=static-pods>静态 Pod</h2><p>每个节点上的 <a class=glossary-tooltip title='一个在集群中每个节点上运行的代理。它保证容器都运行在 Pod 中。' data-toggle=tooltip data-placement=top href=/docs/reference/generated/kubelet target=_blank aria-label=kubelet>kubelet</a>
+会加载并直接管理集群中存储在指定目录中或从特定 URL
+获取的<a href=/zh-cn/docs/tasks/configure-pod-container/static-pod><strong>静态 Pod</strong></a> 清单。
+API 服务器不管理这些静态 Pod。对该位置具有写入权限的攻击者可以修改从该位置加载的静态 Pod 的配置，或引入新的静态 Pod。</p><p>静态 Pod 被限制访问 Kubernetes API 中的其他对象。例如，你不能将静态 Pod 配置为从集群挂载 Secret。
+但是，这些 Pod 可以执行其他安全敏感的操作，例如挂载来自下层节点的 <code>hostPath</code> 卷。</p><p>默认情况下，kubelet 会创建一个<a class=glossary-tooltip title='API 服务器中的一个对象，用于跟踪 kubelet 上的静态 pod。' data-toggle=tooltip data-placement=top href='/zh-cn/docs/reference/glossary/?all=true#term-mirror-pod' target=_blank aria-label='镜像 Pod（Mirror Pod）'>镜像 Pod（Mirror Pod）</a>，
+以便静态 Pod 在 Kubernetes API 中可见。但是，如果攻击者在创建 Pod 时使用了无效的名字空间名称，
+则该 Pod 将在 Kubernetes API 中不可见，只能通过对受影响主机有访问权限的工具发现。</p><p>如果静态 Pod 无法通过准入控制，kubelet 不会将 Pod 注册到 API 服务器。但该 Pod 仍然在节点上运行。
+有关更多信息，请参阅 <a href=https://github.com/kubernetes/kubeadm/issues/1541#issuecomment-487331701>kubeadm issue #1541</a>。</p><h3 id=static-pods-mitigations>缓解措施</h3><ul><li>仅在节点需要时<a href=/zh-cn/docs/tasks/configure-pod-container/static-pod/#static-pod-creation>启用 kubelet 静态 Pod 清单功能</a>。</li><li>如果节点使用静态 Pod 功能，请将对静态 Pod 清单目录或 URL 的文件系统的访问权限限制为需要访问的用户。</li><li>限制对 kubelet 配置参数和文件的访问，以防止攻击者设置静态 Pod 路径或 URL。</li><li>定期审计并集中报告所有对托管静态 Pod 清单和 kubelet 配置文件的目录或 Web 存储位置的访问。</li></ul><h2 id=kubelet-api>kubelet API</h2><p>kubelet 提供了一个 HTTP API，通常暴露在集群工作节点上的 TCP 端口 10250 上。
+在某些 Kubernetes 发行版中，API 也可能暴露在控制平面节点上。
+对 API 的直接访问允许公开有关运行在节点上的 Pod、这些 Pod 的日志以及在节点上运行的每个容器中执行命令的信息。</p><p>当 Kubernetes 集群用户具有对 <code>Node</code> 对象子资源 RBAC 访问权限时，该访问权限可用作与 kubelet API 交互的授权。
+实际的访问权限取决于授予了哪些子资源访问权限，详见
+<a href=/zh-cn/docs/reference/access-authn-authz/kubelet-authn-authz/#kubelet-authorization>kubelet 鉴权</a>。</p><p>对 kubelet API 的直接访问不受准入控制影响，也不会被 Kubernetes 审计日志记录。
+能直接访问此 API 的攻击者可能会绕过能检测或防止某些操作的控制机制。</p><p>kubelet API 可以配置为以多种方式验证请求。
+默认情况下，kubelet 的配置允许匿名访问。大多数 Kubernetes 提供商将默认值更改为使用 Webhook 和证书身份认证。
+这使得控制平面能够确保调用者访问 <code>Node</code> API 资源或子资源是经过授权的。但控制平面不能确保默认的匿名访问也是如此。</p><h3 id=mitigations>缓解措施</h3><ul><li>使用 <a href=/zh-cn/docs/reference/access-authn-authz/rbac/>RBAC</a> 等机制限制对 <code>Node</code> API 对象的子资源的访问。
+只在有需要时才授予此访问权限，例如监控服务。</li><li>限制对 kubelet 端口的访问。只允许指定和受信任的 IP 地址段访问该端口。</li><li><a href=/zh-cn/docs/reference/access-authn-authz/kubelet-authn-authz/#kubelet-authentication>确保将 kubelet 身份验证设置为 Webhook 或证书模式</a>。</li><li>确保集群上未启用不作身份认证的“只读” Kubelet 端口。</li></ul><h2 id=the-etcd-api>etcd API</h2><p>Kubernetes 集群使用 etcd 作为数据存储。<code>etcd</code> 服务监听 TCP 端口 2379。
+只有 Kubernetes API 服务器和你所使用的备份工具需要访问此存储。对该 API 的直接访问允许公开或修改集群中保存的数据。</p><p>对 etcd API 的访问通常通过客户端证书身份认证来管理。
+由 etcd 信任的证书颁发机构所颁发的任何证书都可以完全访问 etcd 中存储的数据。</p><p>对 etcd 的直接访问不受 Kubernetes 准入控制的影响，也不会被 Kubernetes 审计日志记录。
+具有对 API 服务器的 etcd 客户端证书私钥的读取访问权限（或可以创建一个新的受信任的客户端证书）
+的攻击者可以通过访问集群 Secret 或修改访问规则来获得集群管理员权限。
+即使不提升其 Kubernetes RBAC 权限，可以修改 etcd 的攻击者也可以在集群内检索所有 API 对象或创建新的工作负载。</p><p>许多 Kubernetes 提供商配置 etcd 为使用双向 TLS（客户端和服务器都验证彼此的证书以进行身份验证）。
+尽管存在该特性，但目前还没有被广泛接受的 etcd API 鉴权实现。
+由于缺少鉴权模型，任何具有对 etcd 的客户端访问权限的证书都可以用于获得对 etcd 的完全访问权限。
+通常，仅用于健康检查的 etcd 客户端证书也可以授予完全读写访问权限。</p><h3 id=etcd-api-mitigations>缓解措施</h3><ul><li>确保 etcd 所信任的证书颁发机构仅用于该服务的身份认证。</li><li>控制对 etcd 服务器证书的私钥以及 API 服务器的客户端证书和密钥的访问。</li><li>考虑在网络层面限制对 etcd 端口的访问，仅允许来自特定和受信任的 IP 地址段的访问。</li></ul><h2 id=runtime-socket>容器运行时套接字</h2><p>在 Kubernetes 集群中的每个节点上，与容器交互的访问都由容器运行时控制。
+通常，容器运行时会公开一个 kubelet 可以访问的 UNIX 套接字。
+具有此套接字访问权限的攻击者可以启动新容器或与正在运行的容器进行交互。</p><p>在集群层面，这种访问造成的影响取决于在受威胁节点上运行的容器是否可以访问 Secret 或其他机密数据，
+攻击者可以使用这些机密数据将权限提升到其他工作节点或控制平面组件。</p><h3 id=runtime-socket-mitigations>缓解措施</h3><ul><li>确保严格控制对容器运行时套接字所在的文件系统访问。如果可能，限制为仅 <code>root</code> 用户可访问。</li><li>使用 Linux 内核命名空间等机制将 kubelet 与节点上运行的其他组件隔离。</li><li>确保限制或禁止使用包含容器运行时套接字的 <a href=/zh-cn/docs/concepts/storage/volumes/#hostpath><code>hostPath</code> 挂载</a>，
+无论是直接挂载还是通过挂载父目录挂载。此外，<code>hostPath</code> 挂载必须设置为只读，以降低攻击者绕过目录限制的风险。</li><li>限制用户对节点的访问，特别是限制超级用户对节点的访问。</li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-6f8354561fd5286f997909e14b13110c>11 - 安全检查清单</h1><div class=lead>确保 Kubernetes 集群安全的基线检查清单。</div><p>本清单旨在提供一个基本的指导列表，其中包含链接，指向各个主题的更为全面的文档。
+此清单不求详尽无遗，是预计会不断演化的。</p><p>关于如何阅读和使用本文档：</p><ul><li>主题的顺序并不代表优先级的顺序。</li><li>在每章节的列表下面的段落中，都详细列举了一些检查清项目。</li></ul><div class="alert alert-warning caution callout" role=alert><strong>注意：</strong><p>单靠检查清单是<strong>不够的</strong>，无法获得良好的安全态势。
+实现良好的安全态势需要持续的关注和改进，实现安全上有备无患的目标道路漫长，清单可作为征程上的第一步。
+对于你的特定安全需求，此清单中的某些建议可能过于严格或过于宽松。
+由于 Kubernetes 的安全性并不是“一刀切”的，因此针对每一类检查清单项目都应该做价值评估。</div><h2 id=authentication-authorization>认证和鉴权</h2><ul><li><input disabled type=checkbox> 在启动后 <code>system:masters</code> 组不用于用户或组件的身份验证。</li><li><input disabled type=checkbox> kube-controller-manager 运行时要启用 <code>--use-service-account-credentials</code> 参数。</li><li><input disabled type=checkbox> 根证书要受到保护（或离线 CA，或一个具有有效访问控制的托管型在线 CA）。</li><li><input disabled type=checkbox> 中级证书和叶子证书的有效期不要超过未来 3 年。</li><li><input disabled type=checkbox> 存在定期访问审查的流程，审查间隔不要超过 24 个月。</li><li><input disabled type=checkbox> 遵循<a href=/zh-cn/docs/concepts/security/rbac-good-practices/>基于角色的访问控制良好实践</a>，以获得与身份验证和授权相关的指导。</li></ul><p>在启动后，用户和组件都不应以 <code>system:masters</code> 身份向 Kubernetes API 进行身份验证。
+同样，应避免将任何 kube-controller-manager 以 <code>system:masters</code> 运行。
+事实上，<code>system:masters</code> 应该只用作一个例外机制，而不是管理员用户。</p><h2 id=network-security>网络安全</h2><ul><li><input disabled type=checkbox> 使用的 CNI 插件可支持网络策略。</li><li><input disabled type=checkbox> 对集群中的所有工作负载应用入站和出站的网络策略。</li><li><input disabled type=checkbox> 落实每个名称空间内的默认网络策略，覆盖所有 Pod，拒绝一切访问。</li><li><input disabled type=checkbox> 如果合适，使用服务网格来加密集群内的所有通信。</li><li><input disabled type=checkbox> 不在互联网上公开 Kubernetes API、kubelet API 和 etcd。</li><li><input disabled type=checkbox> 过滤工作负载对云元数据 API 的访问。</li><li><input disabled type=checkbox> 限制使用 LoadBalancer 和 ExternalIP。</li></ul><p>许多<a href=/zh-cn/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/>容器网络接口（Container Network Interface，CNI）插件</a>提供了限制
+Pod 可能与之通信的网络资源的功能。
+这种限制通常通过<a href=/zh-cn/docs/concepts/services-networking/network-policies/>网络策略</a>来完成，
+网络策略提供了一种名称空间作用域的资源来定义规则。
+在每个名称空间中，默认的网络策略会阻塞所有的出入站流量，并选择所有 Pod，
+采用允许列表的方法很有用，可以确保不遗漏任何工作负载。</p><p>并非所有 CNI 插件都在传输过程中提供加密。
+如果所选的插件缺少此功能，一种替代方案是可以使用服务网格来提供该功能。</p><p>控制平面的 etcd 数据存储应该实施访问限制控制，并且不要在互联网上公开。
+此外，应使用双向 TLS（mTLS）与其进行安全通信。
+用在这里的证书机构应该仅用于 etcd。</p><p>应该限制外部互联网对 Kubernetes API 服务器未公开的 API 的访问。
+请小心，因为许多托管的 Kubernetes 发行版在默认情况下公开了 API 服务器。
+当然，你可以使用堡垒机访问服务器。</p><p>对 <a href=/zh-cn/docs/reference/command-line-tools-reference/kubelet/>kubelet</a> API 的访问应该受到限制，
+并且不公开，当没有使用 <code>--config</code> 参数来设置配置文件时，默认的身份验证和鉴权设置是过于宽松的。</p><p>如果使用云服务供应商托管的 Kubernetes，在没有明确需要的情况下，
+也应该限制或阻止从 Pod 对云元数据 API <code>169.254.169.254</code> 的访问，因为这可能泄露信息。</p><p>关于限制使用 LoadBalancer 和 ExternalIP 请参阅
+<a href=https://github.com/kubernetes/kubernetes/issues/97076>CVE-2020-8554：中间人使用 LoadBalancer 或 ExternalIP</a>
+和
+<a href=/zh-cn/docs/reference/access-authn-authz/admission-controllers/#denyserviceexternalips>DenyServiceExternalIPs 准入控制器</a>获取更多信息。</p><h2 id=pod-security>Pod 安全</h2><ul><li><input disabled type=checkbox> 仅在必要时才授予 <code>create</code>、<code>update</code>、<code>patch</code>、<code>delete</code> 工作负载的 RBAC 权限。</li><li><input disabled type=checkbox> 对所有名字空间实施适当的 Pod 安全标准策略，并强制执行。</li><li><input disabled type=checkbox> 为工作负载设置内存限制值，并确保限制值等于或者不高于请求值。</li><li><input disabled type=checkbox> 对敏感工作负载可以设置 CPU 限制。</li><li><input disabled type=checkbox> 对于支持 Seccomp 的节点，可以为程序启用合适的系统调用配置文件。</li><li><input disabled type=checkbox> 对于支持 AppArmor 或 SELinux 的系统，可以为程序启用合适的配置文件。</li></ul><p>RBAC 的授权是至关重要的，
+但<a href=/zh-cn/docs/concepts/security/rbac-good-practices/#workload-creation>不能在足够细的粒度上对 Pod 的资源进行授权</a>，
+也不足以对管理 Pod 的任何资源进行授权。
+唯一的粒度是资源本身上的 API 动作，例如，对 Pod 的 <code>create</code>。
+在未指定额外许可的情况下，创建这些资源的权限允许直接不受限制地访问集群的可调度节点。</p><p><a href=/zh-cn/docs/concepts/security/pod-security-standards/>Pod 安全性标准</a>定义了三种不同的策略：
+特权策略（Privileged）、基线策略（Baseline）和限制策略（Restricted），它们限制了 <code>PodSpec</code> 中关于安全的字段的设置。
+这些标准可以通过默认启用的新的
+<a href=/zh-cn/docs/concepts/security/pod-security-admission/>Pod 安全性准入</a>或第三方准入 Webhook 在名称空间级别强制执行。
+请注意，与它所取代的、已被删除的 PodSecurityPolicy 准入机制相反，
+<a href=/zh-cn/docs/concepts/security/pod-security-admission/>Pod 安全性准入</a>可以轻松地与准入 Webhook 和外部服务相结合使用。</p><p><code>restricted</code> Pod 安全准入策略是 <a href=/zh-cn/docs/concepts/security/pod-security-standards/>Pod 安全性标准</a>集中最严格的策略，
+可以在<a href=/zh-cn/docs/concepts/security/pod-security-admission/#pod-security-admission-labels-for-namespaces>多种种模式下运行</a>，
+根据最佳安全实践，逐步地采用 <code>warn</code>、<code>audit</code> 或者 <code>enforce</code>
+模式以应用最合适的<a href=/zh-cn/docs/tasks/configure-pod-container/security-context/>安全上下文（Security Context）</a>。
+尽管如此，对于特定的用例，应该单独审查 Pod 的<a href=/zh-cn/docs/tasks/configure-pod-container/security-context/>安全上下文</a>，
+以限制 Pod 在预定义的安全性标准之上可能具有的特权和访问权限。</p><p>有关 <a href=/zh-cn/docs/concepts/security/pod-security-admission/>Pod 安全性</a>的实践教程，
+请参阅博文 <a href=/blog/2021/12/09/pod-security-admission-beta/>Kubernetes 1.23：Pod 安全性升级到 Beta</a>。</p><p>为了限制一个 Pod 可以使用的内存和 CPU 资源，
+应该设置 Pod 在节点上可消费的<a href=/zh-cn/docs/concepts/configuration/manage-resources-containers/>内存和 CPU 限制</a>,
+从而防止来自恶意的或已被攻破的工作负载的潜在 DoS 攻击。这种策略可以由准入控制器强制执行。
+请注意，CPU 限制设置可能会影响 CPU 用量，从而可能会对自动扩缩功能或效率产生意外的影响，
+换言之，系统会在可用的 CPU 资源下最大限度地运行进程。</p><div class="alert alert-warning caution callout" role=alert><strong>注意：</strong><p>内存限制高于请求的，可能会使整个节点面临 OOM 问题。</div><h3 id=enabling-seccomp>启用 Seccomp</h3><p>Seccomp 通过减少容器内对 Linux 内核的系统调用（System Call）以缩小攻击面，从而提高工作负载的安全性。
+Seccomp 过滤器模式借助 BPF 创建了配置文件（Profile），文件中设置对具体系统调用的允许或拒绝，
+可以针对单个工作负载上启用这类 Seccomp 配置文件。你可以阅读相应的<a href=/zh-cn/docs/tutorials/security/seccomp/>安全教程</a>。
+此外，<a href=https://github.com/kubernetes-sigs/security-profiles-operator>Kubernetes Security Profiles Operator</a>
+是一个方便在集群中管理和使用 Seccomp 的项目。</p><p>从历史背景看，请注意 Docker 自 2016 年以来一直使用<a href=https://docs.docker.com/engine/security/seccomp/>默认的 Seccomp 配置文件</a>，
+仅允许来自 <a href=https://www.docker.com/blog/docker-engine-1-10-security/>Docker Engine 1.10</a> 的很小的一组系统调用，
+但是，在默认情况下 Kubernetes 仍不限制工作负载。
+默认的 Seccomp 配置文件也可以在
+<a href=https://github.com/containerd/containerd/blob/main/contrib/seccomp/seccomp_default.go>containerd</a> 中找到。
+幸运的是，<a href=/blog/2021/08/25/seccomp-default/>Seccomp Default</a> 可将默认的 Seccomp 配置文件用于所有工作负载，
+这是一项新的 Alpha 功能，现在可以启用和测试了。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>Seccomp 仅适用于 Linux 节点。</div><h3 id=enabling-appArmor-or-SELinux>启用 AppArmor 或 SELinux</h3><h4 id=apparmor>AppArmor</h4><p><a href=https://apparmor.net/>AppArmor</a> 是一个 Linux 内核安全模块，
+可以提供一种简单的方法来实现强制访问控制（Mandatory Access Control， MAC）并通过系统日志进行更好地审计。
+要在 Kubernetes 中<a href=/zh-cn/docs/tutorials/security/apparmor/>启用 AppArmor</a>，至少需要 1.4 版本。
+与 Seccomp 一样，AppArmor 也通过配置文件进行配置，
+其中每个配置文件要么在强制（Enforcing）模式下运行，即阻止访问不允许的资源，要么在投诉（Complaining）模式下运行，只报告违规行为。
+AppArmor 配置文件是通过注解的方式，以容器为粒度强制执行的，允许进程获得刚好合适的权限。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>AppArmor 仅在 Linux 节点上可用，在<a href=https://gitlab.com/apparmor/apparmor/-/wikis/home#distributions-and-ports>一些 Linux 发行版</a>中已启用。</div><h4 id=selinux>SELinux</h4><p><a href=https://github.com/SELinuxProject/selinux-notebook/blob/main/src/selinux_overview.md>SELinux</a>
+也是一个 Linux 内核安全模块，可以提供支持访问控制安全策略的机制，包括强制访问控制（MAC）。
+SELinux 标签可以<a href=/zh-cn/docs/tasks/configure-pod-container/security-context/#assign-selinux-labels-to-a-container>通过 <code>securityContext</code> 节</a>指配给容器或 Pod。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>SELinux 仅在 Linux 节点上可用，在<a href=https://en.wikipedia.org/wiki/Security-Enhanced_Linux#Implementations>一些 Linux 发行版</a>中已启用。</div><h2 id=pod-placement>Pod 布局</h2><ul><li><input disabled type=checkbox> Pod 布局是根据应用程序的敏感级别来完成的。</li><li><input disabled type=checkbox> 敏感应用程序在节点上隔离运行或使用特定的沙箱运行时运行。</li></ul><p>处于不同敏感级别的 Pod，例如，应用程序 Pod 和 Kubernetes API 服务器，应该部署到不同的节点上。
+节点隔离的目的是防止应用程序容器的逃逸，进而直接访问敏感度更高的应用，
+甚至轻松地改变集群工作机制。
+这种隔离应该被强制执行，以防止 Pod 集合被意外部署到同一节点上。
+可以通过以下功能实现：</p><dl><dt><a href=/zh-cn/docs/concepts/scheduling-eviction/assign-pod-node/>节点选择器（Node Selector）</a></dt><dd>作为 Pod 规约的一部分来设置的键值对，指定 Pod 可部署到哪些节点。
+通过 <a href=/zh-cn/docs/reference/access-authn-authz/admission-controllers/#podnodeselector>PodNodeSelector</a>
+准入控制器可以在名字空间和集群级别强制实施节点选择。</dd></dl><dl><dt><a href=/zh-cn/docs/reference/access-authn-authz/admission-controllers/#podtolerationrestriction>PodTolerationRestriction</a></dt><dd><a href=/zh-cn/docs/concepts/scheduling-eviction/taint-and-toleration/>容忍度</a>准入控制器，
+允许管理员设置在名字空间内允许使用的容忍度。
+名字空间中的 Pod 只能使用名字空间对象的注解键上所指定的容忍度，这些键提供默认和允许的容忍度集合。</dd></dl><dl><dt><a href=/zh-cn/docs/concepts/containers/runtime-class/>RuntimeClass</a></dt><dd>RuntimeClass 是一个用于选择容器运行时配置的特性，容器运行时配置用于运行 Pod 中的容器，
+并以性能开销为代价提供或多或少的主机隔离能力。</dd></dl><h2 id=secrets>Secrets</h2><ul><li><input disabled type=checkbox> 不用 ConfigMap 保存机密数据。</li><li><input disabled type=checkbox> 为 Secret API 配置静态加密。</li><li><input disabled type=checkbox> 如果合适，可以部署和使用一种机制，负责注入保存在第三方存储中的 Secret。</li><li><input disabled type=checkbox> 不应该将服务账号令牌挂载到不需要它们的 Pod 中。</li><li><input disabled type=checkbox> 使用<a href=/zh-cn/docs/reference/access-authn-authz/service-accounts-admin/#bound-service-account-token-volume>绑定的服务账号令牌卷</a>，
+而不要使用不会过期的令牌。</li></ul><p>Pod 所需的秘密信息应该存储在 Kubernetes Secret 中，而不是像 ConfigMap 这样的替代品中。
+存储在 etcd 中的 Secret 资源应该被静态加密。</p><p>需要 Secret 的 Pod 应该通过卷自动挂载这些信息，
+最好使用 <a href=/zh-cn/docs/concepts/storage/volumes/#emptydir><code>emptyDir.medium</code> 选项</a>存储在内存中。
+该机制还可以用于从第三方存储中注入 Secret 作为卷，如 <a href=https://secrets-store-csi-driver.sigs.k8s.io/>Secret Store CSI 驱动</a>。
+与通过 RBAC 来允许 Pod 服务帐户访问 Secret 相比，应该优先使用上述机制。这种机制允许将 Secret 作为环境变量或文件添加到 Pod 中。
+请注意，与带访问权限控制的文件相比，由于日志的崩溃转储，以及 Linux 的环境变量的非机密性，环境变量方法可能更容易发生泄漏。</p><p>不应该将服务账号令牌挂载到不需要它们的 Pod 中。
+这可以通过在服务帐号内将
+<a href=/zh-cn/docs/tasks/configure-pod-container/configure-service-account/#use-the-default-service-account-to-access-the-api-server><code>automountServiceAccountToken</code></a>
+设置为 <code>false</code> 来完成整个名字空间范围的配置，
+或者也可以单独在 Pod 层面定制。
+对于 Kubernetes v1.22 及更高版本，
+请使用<a href=/zh-cn/docs/reference/access-authn-authz/service-accounts-admin/#bound-service-account-token-volume>绑定服务账号</a>作为有时间限制的服务帐号凭证。</p><h2 id=images>镜像</h2><ul><li><input disabled type=checkbox> 尽量减少容器镜像中不必要的内容。</li><li><input disabled type=checkbox> 容器镜像配置为以非特权用户身份运行。</li><li><input disabled type=checkbox> 对容器镜像的引用是通过 Sha256 摘要实现的，而不是标签（tags），
+或者<a href=/zh-cn/docs/tasks/administer-cluster/verify-signed-images/#verifying-image-signatures-with-admission-controller>通过准入控制器</a>在部署时验证镜像的数字签名来验证镜像的来源。</li><li><input disabled type=checkbox> 在创建和部署过程中定期扫描容器镜像，并对已知的漏洞软件进行修补。</li></ul><p>容器镜像应该包含运行其所打包的程序所需要的最少内容。
+最好，只使用程序及其依赖项，基于最小的基础镜像来构建镜像。
+尤其是，在生产中使用的镜像不应包含 Shell 或调试工具，
+因为可以使用<a href=/zh-cn/docs/tasks/debug/debug-application/debug-running-pod/#ephemeral-container>临时调试容器</a>进行故障排除。</p><p>构建镜像时使用 <a href=https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user>Dockerfile 中的 <code>USER</code></a>
+指令直接开始使用非特权用户。
+<a href=/zh-cn/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod>安全上下文（Security Context）</a>
+允许使用 <code>runAsUser</code> 和 <code>runAsGroup</code> 来指定使用特定的用户和组来启动容器镜像，
+即使没有在镜像清单文件（Manifest）中指定这些配置信息。
+不过，镜像层中的文件权限设置可能无法做到在不修改镜像的情况下，使用新的非特权用户来启动进程。</p><p>避免使用镜像标签来引用镜像，尤其是 <code>latest</code> 标签，因为标签对应的镜像可以在仓库中被轻松地修改。
+首选使用完整的 <code>Sha256</code> 摘要，该摘要对特定镜像清单文件而言是唯一的。
+可以通过 <a href=/zh-cn/docs/reference/access-authn-authz/admission-controllers/#imagepolicywebhook>ImagePolicyWebhook</a>
+强制执行此策略。
+镜像签名还可以在部署时由<a href=/zh-cn/docs/reference/access-authn-authz/admission-controllers/#imagepolicywebhook>准入控制器自动验证</a>，
+以验证其真实性和完整性。</p><p>扫描容器镜像可以防止关键性的漏洞随着容器镜像一起被部署到集群中。
+镜像扫描应在将容器镜像部署到集群之前完成，通常作为 CI/CD 流水线中的部署过程的一部分来完成。
+镜像扫描的目的是获取有关容器镜像中可能存在的漏洞及其预防措施的信息，
+例如使用<a href=https://www.first.org/cvss/>公共漏洞评分系统 （Common Vulnerability Scoring System，CVSS）</a>评分。
+如果镜像扫描的结果与管道合性规则匹配，则只有经过正确修补的容器镜像才会最终进入生产环境。</p><h2 id=admission-controllers>准入控制器</h2><ul><li><input disabled type=checkbox> 选择启用适当的准入控制器。</li><li><input disabled type=checkbox> Pod 安全策略由 Pod 安全准入强制执行，或者和 Webhook 准入控制器一起强制执行。</li><li><input disabled type=checkbox> 保证准入链插件和 Webhook 的配置都是安全的。</li></ul><p>准入控制器可以帮助提高集群的安全性。
+然而，由于它们是对 API 服务器的扩展，其自身可能会带来风险，
+所以它们<a href=/blog/2022/01/19/secure-your-admission-controllers-and-webhooks/>应该得到适当的保护</a>。</p><p>下面列出了一些准入控制器，可以考虑用这些控制器来增强集群和应用程序的安全状况。
+列表中包括了可能在本文档其他部分曾提及的控制器。</p><p>第一组准入控制器包括<a href=/zh-cn/docs/reference/access-authn-authz/admission-controllers/#which-plugins-are-enabled-by-default>默认启用的插件</a>，
+除非你知道自己在做什么，否则请考虑保持它们处于被启用的状态：</p><dl><dt><a href=/zh-cn/docs/reference/access-authn-authz/admission-controllers/#certificateapproval><code>CertificateApproval</code></a></dt><dd>执行额外的授权检查，以确保审批用户具有审批证书请求的权限。</dd></dl><dl><dt><a href=/zh-cn/docs/reference/access-authn-authz/admission-controllers/#certificatesigning><code>CertificateSigning</code></a></dt><dd>执行其他授权检查，以确保签名用户具有签名证书请求的权限。</dd></dl><dl><dt><a href=/zh-cn/docs/reference/access-authn-authz/admission-controllers/#certificatesubjectrestriction><code>CertificateSubjectRestriction</code></a></dt><dd>拒绝将 <code>group</code>（或 <code>organization attribute</code> ）设置为 <code>system:masters</code> 的所有证书请求。</dd></dl><dl><dt><a href=/zh-cn/docs/reference/access-authn-authz/admission-controllers/#limitranger><code>LimitRanger</code></a></dt><dd>强制执行 LimitRange API 约束。</dd></dl><dl><dt><a href=/zh-cn/docs/reference/access-authn-authz/admission-controllers/#mutatingadmissionwebhook><code>MutatingAdmissionWebhook</code></a></dt><dd>允许通过 Webhook 使用自定义控制器，这些控制器可能会变更它所审查的请求。</dd></dl><dl><dt><a href=/zh-cn/docs/reference/access-authn-authz/admission-controllers/#podsecurity><code>PodSecurity</code></a></dt><dd>Pod Security Policy 的替代品，用于约束所部署 Pod 的安全上下文。</dd></dl><dl><dt><a href=/zh-cn/docs/reference/access-authn-authz/admission-controllers/#resourcequota><code>ResourceQuota</code></a></dt><dd>强制执行资源配额，以防止资源被过度使用。</dd></dl><dl><dt><a href=/zh-cn/docs/reference/access-authn-authz/admission-controllers/#validatingadmissionwebhook><code>ValidatingAdmissionWebhook</code></a></dt><dd>允许通过 Webhook 使用自定义控制器，这些控制器不变更它所审查的请求。</dd></dl><p>第二组包括默认情况下没有启用、但处于正式发布状态的插件，建议启用这些插件以改善你的安全状况：</p><dl><dt><a href=/zh-cn/docs/reference/access-authn-authz/admission-controllers/#denyserviceexternalips><code>DenyServiceExternalIPs</code></a></dt><dd>拒绝使用 <code>Service.spec.externalIPs</code> 字段，已有的 Service 不受影响，新增或者变更时不允许使用。
+这是 <a href=https://github.com/kubernetes/kubernetes/issues/97076>CVE-2020-8554：中间人使用 LoadBalancer 或 ExternalIP</a> 的缓解措施。</dd></dl><dl><dt><a href=/zh-cn/docs/reference/access-authn-authz/admission-controllers/#noderestriction><code>NodeRestriction</code></a></dt><dd>将 kubelet 的权限限制为只能修改其拥有的 Pod API 资源或代表其自身的节点 API 资源。
+此插件还可以防止 kubelet 使用 <code>node-restriction.kubernetes.io/</code> 注解，
+攻击者可以使用该注解来访问 kubelet 的凭证，从而影响所控制的节点上的 Pod 布局。</dd></dl><p>第三组包括默认情况下未启用，但可以考虑在某些场景下启用的插件：</p><dl><dt><a href=/zh-cn/docs/reference/access-authn-authz/admission-controllers/#alwayspullimages><code>AlwaysPullImages</code></a></dt><dd>强制使用最新版本标记的镜像，并确保部署者有权使用该镜像。</dd></dl><dl><dt><a href=/zh-cn/docs/reference/access-authn-authz/admission-controllers/#imagepolicywebhook><code>ImagePolicyWebhook</code></a></dt><dd>允许通过 Webhook 对镜像强制执行额外的控制。</dd></dl><h2 id=接下来>接下来</h2><ul><li><a href=/zh-cn/docs/concepts/security/rbac-good-practices/>RBAC 良好实践</a>提供有关授权的更多信息。</li><li><a href=/zh-cn/docs/concepts/security/multi-tenancy/>集群多租户指南</a>提供有关多租户的配置选项建议和最佳实践。</li><li><a href=/blog/2021/10/05/nsa-cisa-kubernetes-hardening-guidance/#building-secure-container-images>博文“深入了解 NSA/CISA Kubernetes 强化指南”</a>为强化
+Kubernetes 集群提供补充资源。</li></ul></div></main></div></div><footer class=d-print-none><div class=footer__links><nav><a class=text-white href=/zh-cn/docs/home/>主页</a>
+<a class=text-white href=/zh-cn/blog/>博客</a>
+<a class=text-white href=/zh-cn/training/>培训</a>
+<a class=text-white href=/zh-cn/partners/>合作伙伴</a>
+<a class=text-white href=/zh-cn/community/>社区</a>
+<a class=text-white href=/zh-cn/case-studies/>案例分析</a></nav></div><div class=container-fluid><div class=row><div class="col-6 col-sm-2 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="User mailing list" aria-label="User mailing list"><a class=text-white target=_blank href=https://discuss.kubernetes.io><i class="fa fa-envelope"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank href=https://twitter.com/kubernetesio><i class="fab fa-twitter"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Calendar aria-label=Calendar><a class=text-white target=_blank href="https://calendar.google.com/calendar/embed?src=calendar%40kubernetes.io"><i class="fas fa-calendar-alt"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Youtube aria-label=Youtube><a class=text-white target=_blank href=https://youtube.com/kubernetescommunity><i class="fab fa-youtube"></i></a></li></ul></div><div class="col-6 col-sm-2 text-right text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank href=https://github.com/kubernetes/kubernetes><i class="fab fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Slack aria-label=Slack><a class=text-white target=_blank href=https://slack.k8s.io><i class="fab fa-slack"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Contribute aria-label=Contribute><a class=text-white target=_blank href=https://git.k8s.io/community/contributors/guide><i class="fas fa-edit"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="Stack Overflow" aria-label="Stack Overflow"><a class=text-white target=_blank href=https://stackoverflow.com/questions/tagged/kubernetes><i class="fab fa-stack-overflow"></i></a></li></ul></div><div class="col-12 col-sm-8 text-center order-sm-2"><small class=text-white>&copy; 2023 The Kubernetes 作者 | 文档发布基于 <a href=https://git.k8s.io/website/LICENSE class=light-text>CC BY 4.0</a> 授权许可</small><br><small class=text-white>Copyright &copy; 2023 Linux 基金会&reg;。保留所有权利。Linux 基金会已注册并使用商标。如需了解 Linux 基金会的商标列表，请访问<a href=https://www.linuxfoundation.org/trademark-usage class=light-text>商标使用页面</a></small><br><small class=text-white>ICP license: 京ICP备17074266号-3</small></div></div></div></footer></div><script src=/js/jquery-3.6.0.min.js integrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script>
+<script src=/js/popper-1.16.1.min.js intregrity=sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN crossorigin=anonymous></script>
+<script src=/js/bootstrap-4.6.1.min.js integrity=sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2 crossorigin=anonymous></script>
+<script src=/js/script.js></script>
+<script async src=/js/mermaid-8.13.4.min.js integrity=sha384-5hHNvPeMrNH14oM3IcQofDoBhiclNK3g2+hnEinKzQ07C4AliMeVpnvxuiwEGpaO crossorigin=anonymous></script>
+<script src=/js/main.min.5c0bf7f21dc4f66485f74efbbeeff28a7e4f8cddaac1bae47043159c922ff3a3.js integrity="sha256-XAv38h3E9mSF9077vu/yin5PjN2qwbrkcEMVnJIv86M=" crossorigin=anonymous></script></body></html>

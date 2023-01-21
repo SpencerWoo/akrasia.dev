@@ -1,0 +1,415 @@
+<!doctype html><html lang=ko class=no-js><head><meta name=robots content="noindex, nofollow"><link rel=alternate hreflang=en href=https://kubernetes.io/docs/concepts/policy/><link rel=alternate hreflang=zh-cn href=https://kubernetes.io/zh-cn/docs/concepts/policy/><link rel=alternate hreflang=ja href=https://kubernetes.io/ja/docs/concepts/policy/><link rel=alternate hreflang=fr href=https://kubernetes.io/fr/docs/concepts/policy/><link rel=alternate hreflang=de href=https://kubernetes.io/de/docs/concepts/policy/><link rel=alternate hreflang=es href=https://kubernetes.io/es/docs/concepts/policy/><link rel=alternate hreflang=pt-br href=https://kubernetes.io/pt-br/docs/concepts/policy/><link rel=alternate hreflang=id href=https://kubernetes.io/id/docs/concepts/policy/><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.110.0"><link rel=canonical type=text/html href=https://kubernetes.io/ko/docs/concepts/policy/><link rel="shortcut icon" type=image/png href=/images/favicon.png><link rel=apple-touch-icon href=/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=manifest href=/manifest.webmanifest><link rel=apple-touch-icon href=/images/kubernetes-192x192.png><title>정책 | Kubernetes</title><meta property="og:title" content="정책"><meta property="og:description" content="리소스의 그룹에 적용되도록 구성할 수 있는 정책
+"><meta property="og:type" content="website"><meta property="og:url" content="https://kubernetes.io/ko/docs/concepts/policy/"><meta property="og:site_name" content="Kubernetes"><meta itemprop=name content="정책"><meta itemprop=description content="리소스의 그룹에 적용되도록 구성할 수 있는 정책
+"><meta name=twitter:card content="summary"><meta name=twitter:title content="정책"><meta name=twitter:description content="리소스의 그룹에 적용되도록 구성할 수 있는 정책
+"><link href=/scss/main.css rel=stylesheet><script type=application/ld+json>{"@context":"https://schema.org","@type":"Organization","url":"https://kubernetes.io","logo":"https://kubernetes.io/images/favicon.png","potentialAction":{"@type":"SearchAction","target":"https://kubernetes.io/search/?q={search_term_string}","query-input":"required name=search_term_string"}}</script><meta name=theme-color content="#326ce5"><link rel=stylesheet href=/css/feature-states.css><meta name=description content="리소스의 그룹에 적용되도록 구성할 수 있는 정책
+"><meta property="og:description" content="리소스의 그룹에 적용되도록 구성할 수 있는 정책
+"><meta name=twitter:description content="리소스의 그룹에 적용되도록 구성할 수 있는 정책
+"><meta property="og:url" content="https://kubernetes.io/ko/docs/concepts/policy/"><meta property="og:title" content="정책"><meta name=twitter:title content="정책"><meta name=twitter:image content="https://kubernetes.io/images/favicon.png"><meta name=twitter:image:alt content="Kubernetes"><meta property="og:image" content="/images/kubernetes-horizontal-color.png"><meta property="og:type" content="article"><script src=/js/jquery-3.6.0.min.js intregrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script></head><body class=td-section><header><nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar" data-auto-burger=primary><a class=navbar-brand href=/ko/></a><div class="td-navbar-nav-scroll ml-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0"><li class="nav-item mr-2 mb-lg-0"><a class="nav-link active" href=/ko/docs/>문서</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ko/blog/>쿠버네티스 블로그</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ko/training/>교육</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ko/partners/>파트너</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ko/community/>Community</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ko/case-studies/>사례 연구</a></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>버전</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/ko/releases>Release Information</a>
+<a class=dropdown-item href=https://kubernetes.io/ko/docs/concepts/policy/>v1.25</a>
+<a class=dropdown-item href=https://v1-24.docs.kubernetes.io/ko/docs/concepts/policy/>v1.24</a>
+<a class=dropdown-item href=https://v1-23.docs.kubernetes.io/ko/docs/concepts/policy/>v1.23</a>
+<a class=dropdown-item href=https://v1-22.docs.kubernetes.io/ko/docs/concepts/policy/>v1.22</a>
+<a class=dropdown-item href=https://v1-21.docs.kubernetes.io/ko/docs/concepts/policy/>v1.21</a></div></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdownMenuLink role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>한국어 (Korean)</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/docs/concepts/policy/>English</a>
+<a class=dropdown-item href=/zh-cn/docs/concepts/policy/>中文 (Chinese)</a>
+<a class=dropdown-item href=/ja/docs/concepts/policy/>日本語 (Japanese)</a>
+<a class=dropdown-item href=/fr/docs/concepts/policy/>Français (French)</a>
+<a class=dropdown-item href=/de/docs/concepts/policy/>Deutsch (German)</a>
+<a class=dropdown-item href=/es/docs/concepts/policy/>Español (Spanish)</a>
+<a class=dropdown-item href=/pt-br/docs/concepts/policy/>Português (Portuguese)</a>
+<a class=dropdown-item href=/id/docs/concepts/policy/>Bahasa Indonesia</a></div></li></ul></div><button id=hamburger onclick=kub.toggleMenu() data-auto-burger-exclude><div></div></button></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><div class=td-content><div class="pageinfo pageinfo-primary d-print-none"><p>이 섹션의 다중 페이지 출력 화면임.
+<a href=# onclick="return print(),!1">여기를 클릭하여 프린트</a>.</p><p><a href=/ko/docs/concepts/policy/>이 페이지의 일반 화면으로 돌아가기</a>.</p></div><h1 class=title>정책</h1><div class=lead>리소스의 그룹에 적용되도록 구성할 수 있는 정책</div><ul><li>1: <a href=#pg-a935ff8c59eb116b43494255cc67f69a>리밋 레인지(Limit Range)</a></li><li>2: <a href=#pg-94ddc6e901c30f256138db11d09f05a3>리소스 쿼터</a></li><li>3: <a href=#pg-7352434db5f5954d2f7656b46fe5a324>프로세스 ID 제한 및 예약</a></li><li>4: <a href=#pg-b528c4464c030f3f044124b38d778f04>노드 리소스 매니저</a></li></ul><div class=content></div></div><div class=td-content><h1 id=pg-a935ff8c59eb116b43494255cc67f69a>1 - 리밋 레인지(Limit Range)</h1><p>기본적으로 컨테이너는 쿠버네티스 클러스터에서 무제한 <a href=/ko/docs/concepts/configuration/manage-resources-containers/>컴퓨팅 리소스</a>로 실행된다.
+리소스 쿼터을 사용하면 클러스터 관리자는 <a class=glossary-tooltip title='쿠버네티스에서, 하나의 클러스터 내에서 리소스 그룹의 격리를 지원하기 위해 사용하는 추상화.' data-toggle=tooltip data-placement=top href=/ko/docs/concepts/overview/working-with-objects/namespaces/ target=_blank aria-label=네임스페이스>네임스페이스</a>별로 리소스 사용과 생성을 제한할 수 있다.
+네임스페이스 내에서 파드나 컨테이너는 네임스페이스의 리소스 쿼터에 정의된 만큼의 CPU와 메모리를 사용할 수 있다. 하나의 파드 또는 컨테이너가 사용 가능한 모든 리소스를 독점할 수 있다는 우려가 있다. 리밋레인지는 네임스페이스에서 리소스 할당(파드 또는 컨테이너)을 제한하는 정책이다.</p><p><em>리밋레인지</em> 는 다음과 같은 제약 조건을 제공한다.</p><ul><li>네임스페이스에서 파드 또는 컨테이너별 최소 및 최대 컴퓨팅 리소스 사용량을 지정한다.</li><li>네임스페이스에서 스토리지클래스별 최소 및 최대 스토리지 요청을 지정한다.</li><li>네임스페이스에서 리소스에 대한 요청과 제한 사이의 비율을 지정한다.</li><li>네임스페이스에서 컴퓨팅 리소스에 대한 기본 요청/제한을 설정하고 런타임에 있는 컨테이너에 자동으로 설정한다.</li></ul><h2 id=리밋레인지-활성화>리밋레인지 활성화</h2><p>쿠버네티스 1.10 버전부터 리밋레인지 지원이 기본적으로 활성화되었다.</p><p>해당 네임스페이스에 리밋레인지 오브젝트가 있는 경우
+특정 네임스페이스에 리밋레인지가 지정된다.</p><p>리밋레인지 오브젝트의 이름은 유효한
+<a href=/ko/docs/concepts/overview/working-with-objects/names/#dns-%EC%84%9C%EB%B8%8C%EB%8F%84%EB%A9%94%EC%9D%B8-%EC%9D%B4%EB%A6%84>DNS 서브도메인 이름</a>이어야 한다.</p><h3 id=리밋-레인지-개요>리밋 레인지 개요</h3><ul><li>관리자는 하나의 네임스페이스에 하나의 리밋레인지를 만든다.</li><li>사용자는 네임스페이스에서 파드, 컨테이너 및 퍼시스턴트볼륨클레임과 같은 리소스를 생성한다.</li><li><code>LimitRanger</code> 어드미션 컨트롤러는 컴퓨팅 리소스 요청 사항을 설정하지 않은 모든 파드와 컨테이너에 대한 기본값과 제한을 지정하고 네임스페이스의 리밋레인지에 정의된 리소스의 최소, 최대 및 비율을 초과하지 않도록 사용량을 추적한다.</li><li>리밋레인지 제약 조건을 위반하는 리소스(파드, 컨테이너, 퍼시스턴트볼륨클레임)를 생성하거나 업데이트하는 경우 HTTP 상태 코드 <code>403 FORBIDDEN</code> 및 위반된 제약 조건을 설명하는 메시지와 함께 API 서버에 대한 요청이 실패한다.</li><li><code>cpu</code>, <code>memory</code>와 같은 컴퓨팅 리소스의 네임스페이스에서 리밋레인지가 활성화된 경우 사용자는 해당 값에
+대한 요청 또는 제한을 지정해야 한다. 그렇지 않으면 시스템에서 파드 생성이 거부될 수 있다.</li><li>리밋레인지 유효성 검사는 파드 실행 단계가 아닌 파드 어드미션 단계에서만 발생한다.</li></ul><p>리밋 레인지를 사용하여 생성할 수 있는 정책의 예는 다음과 같다.</p><ul><li>용량이 8GiB RAM과 16 코어인 2 노드 클러스터에서 네임스페이스의 파드를 제한하여 CPU의 최대 제한이 500m인 CPU 100m를 요청하고 메모리의 최대 제한이 600M인 메모리 200Mi를 요청하라.</li><li>스펙에 CPU 및 메모리 요청없이 시작된 컨테이너에 대해 기본 CPU 제한 및 요청을 150m로, 메모리 기본 요청을 300Mi로 정의하라.</li></ul><p>네임스페이스의 총 제한이 파드/컨테이너의 제한 합보다 작은 경우 리소스에 대한 경합이 있을 수 있다.
+이 경우 컨테이너 또는 파드가 생성되지 않는다.</p><p>경합이나 리밋레인지 변경은 이미 생성된 리소스에 영향을 미치지 않는다.</p><h2 id=다음-내용>다음 내용</h2><p>자세한 내용은 <a href=https://git.k8s.io/design-proposals-archive/resource-management/admission_control_limit_range.md>LimitRanger 디자인 문서</a>를 참조한다.</p><p>제한의 사용에 대한 예시는 다음을 참조한다.</p><ul><li><a href=/ko/docs/tasks/administer-cluster/manage-resources/cpu-constraint-namespace/>네임스페이스당 최소 및 최대 CPU 제약 조건을 설정하는 방법</a>.</li><li><a href=/ko/docs/tasks/administer-cluster/manage-resources/memory-constraint-namespace/>네임스페이스당 최소 및 최대 메모리 제약 조건을 설정하는 방법</a>.</li><li><a href=/ko/docs/tasks/administer-cluster/manage-resources/cpu-default-namespace/>네임스페이스당 기본 CPU 요청과 제한을 설정하는 방법</a>.</li><li><a href=/ko/docs/tasks/administer-cluster/manage-resources/memory-default-namespace/>네임스페이스당 기본 메모리 요청과 제한을 설정하는 방법</a>.</li><li><a href=/ko/docs/tasks/administer-cluster/limit-storage-consumption/#%EC%8A%A4%ED%86%A0%EB%A6%AC%EC%A7%80-%EC%9A%94%EC%B2%AD%EC%9D%84-%EC%A0%9C%ED%95%9C%ED%95%98%EA%B8%B0-%EC%9C%84%ED%95%9C-%EB%A6%AC%EB%B0%8B%EB%A0%88%EC%9D%B8%EC%A7%80-limitrange>네임스페이스당 최소 및 최대 스토리지 사용량을 설정하는 방법</a>.</li><li><a href=/ko/docs/tasks/administer-cluster/manage-resources/quota-memory-cpu-namespace/>네임스페이스당 할당량을 설정하는 자세한 예시</a>.</li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-94ddc6e901c30f256138db11d09f05a3>2 - 리소스 쿼터</h1><p>여러 사용자나 팀이 정해진 수의 노드로 클러스터를 공유할 때
+한 팀이 공정하게 분배된 리소스보다 많은 리소스를 사용할 수 있다는 우려가 있다.</p><p>리소스 쿼터는 관리자가 이 문제를 해결하기 위한 도구이다.</p><p><code>ResourceQuota</code> 오브젝트로 정의된 리소스 쿼터는 네임스페이스별 총 리소스 사용을 제한하는
+제약 조건을 제공한다. 유형별로 네임스페이스에서 만들 수 있는 오브젝트 수와
+해당 네임스페이스의 리소스가 사용할 수 있는 총 컴퓨트 리소스의 양을
+제한할 수 있다.</p><p>리소스 쿼터는 다음과 같이 작동한다.</p><ul><li><p>다른 팀은 다른 네임스페이스에서 작업한다. 이것은 <a href=/docs/reference/access-authn-authz/rbac/>RBAC</a>으로 설정할 수 있다.</p></li><li><p>관리자는 각 네임스페이스에 대해 하나의 리소스쿼터를 생성한다.</p></li><li><p>사용자는 네임스페이스에서 리소스(파드, 서비스 등)를 생성하고 쿼터 시스템은
+사용량을 추적하여 리소스쿼터에 정의된 하드(hard) 리소스 제한을 초과하지 않도록 한다.</p></li><li><p>리소스를 생성하거나 업데이트할 때 쿼터 제약 조건을 위반하면 위반된 제약 조건을 설명하는
+메시지와 함께 HTTP 상태 코드 <code>403 FORBIDDEN</code>으로 요청이 실패한다.</p></li><li><p><code>cpu</code>, <code>memory</code>와 같은 컴퓨트 리소스에 대해 네임스페이스에서 쿼터가 활성화된 경우
+사용자는 해당값에 대한 요청 또는 제한을 지정해야 한다. 그렇지 않으면 쿼터 시스템이
+파드 생성을 거부할 수 있다. 힌트: 컴퓨트 리소스 요구 사항이 없는 파드를 기본값으로 설정하려면 <code>LimitRanger</code> 어드미션 컨트롤러를 사용하자.</p><p>이 문제를 회피하는 방법에 대한 예제는
+<a href=/ko/docs/tasks/administer-cluster/manage-resources/quota-memory-cpu-namespace/>연습</a>을 참고하길 바란다.</p></li></ul><p>리소스쿼터 오브젝트의 이름은 유효한
+<a href=/ko/docs/concepts/overview/working-with-objects/names#dns-%EC%84%9C%EB%B8%8C%EB%8F%84%EB%A9%94%EC%9D%B8-%EC%9D%B4%EB%A6%84>DNS 서브도메인 이름</a>이어야 한다.</p><p>네임스페이스와 쿼터를 사용하여 만들 수 있는 정책의 예는 다음과 같다.</p><ul><li>용량이 32GiB RAM, 16 코어인 클러스터에서 A 팀이 20GiB 및 10 코어를 사용하고
+B 팀은 10GiB 및 4 코어를 사용하게 하고 2GiB 및 2 코어를 향후 할당을 위해 보유하도록 한다.</li><li>"testing" 네임스페이스를 1 코어 및 1GiB RAM을 사용하도록 제한한다.
+"production" 네임스페이스에는 원하는 양을 사용하도록 한다.</li></ul><p>클러스터의 총 용량이 네임스페이스의 쿼터 합보다 작은 경우 리소스에 대한 경합이 있을 수 있다.
+이것은 선착순으로 처리된다.</p><p>경합이나 쿼터 변경은 이미 생성된 리소스에 영향을 미치지 않는다.</p><h2 id=리소스-쿼터-활성화>리소스 쿼터 활성화</h2><p>많은 쿠버네티스 배포판에 기본적으로 리소스 쿼터 지원이 활성화되어 있다.
+<a class=glossary-tooltip title='쿠버네티스 API를 제공하는 컨트롤 플레인 컴포넌트.' data-toggle=tooltip data-placement=top href=/ko/docs/concepts/overview/components/#kube-apiserver target=_blank aria-label='API 서버'>API 서버</a>
+<code>--enable-admission-plugins=</code> 플래그의 인수 중 하나로
+<code>ResourceQuota</code>가 있는 경우 활성화된다.</p><p>해당 네임스페이스에 리소스쿼터가 있는 경우 특정 네임스페이스에
+리소스 쿼터가 적용된다.</p><h2 id=컴퓨트-리소스-쿼터>컴퓨트 리소스 쿼터</h2><p>지정된 네임스페이스에서 요청할 수 있는 총
+<a href=/ko/docs/concepts/configuration/manage-resources-containers/>컴퓨트 리소스</a>
+합을 제한할 수 있다.</p><p>다음과 같은 리소스 유형이 지원된다.</p><table><thead><tr><th>리소스 이름</th><th>설명</th></tr></thead><tbody><tr><td><code>limits.cpu</code></td><td>터미널이 아닌 상태의 모든 파드에서 CPU 제한의 합은 이 값을 초과할 수 없음.</td></tr><tr><td><code>limits.memory</code></td><td>터미널이 아닌 상태의 모든 파드에서 메모리 제한의 합은 이 값을 초과할 수 없음.</td></tr><tr><td><code>requests.cpu</code></td><td>터미널이 아닌 상태의 모든 파드에서 CPU 요청의 합은 이 값을 초과할 수 없음.</td></tr><tr><td><code>requests.memory</code></td><td>터미널이 아닌 상태의 모든 파드에서 메모리 요청의 합은 이 값을 초과할 수 없음.</td></tr><tr><td><code>hugepages-&lt;size></code></td><td>터미널 상태가 아닌 모든 파드에 걸쳐서, 지정된 사이즈의 휴즈 페이지 요청은 이 값을 초과하지 못함.</td></tr><tr><td><code>cpu</code></td><td><code>requests.cpu</code> 와 같음.</td></tr><tr><td><code>memory</code></td><td><code>requests.memory</code> 와 같음.</td></tr></tbody></table><h3 id=확장된-리소스에-대한-리소스-쿼터>확장된 리소스에 대한 리소스 쿼터</h3><p>위에서 언급한 리소스 외에도 릴리스 1.10에서는
+<a href=/ko/docs/concepts/configuration/manage-resources-containers/#%ED%99%95%EC%9E%A5%EB%90%9C-%EB%A6%AC%EC%86%8C%EC%8A%A4>확장된 리소스</a>에 대한 쿼터 지원이 추가되었다.</p><p>확장된 리소스에는 오버커밋(overcommit)이 허용되지 않으므로 하나의 쿼터에서
+동일한 확장된 리소스에 대한 <code>requests</code>와 <code>limits</code>을 모두 지정하는 것은 의미가 없다. 따라서 확장된
+리소스의 경우 지금은 접두사 <code>requests.</code>이 있는 쿼터 항목만 허용된다.</p><p>예를 들어, 리소스 이름이 <code>nvidia.com/gpu</code>이고 네임스페이스에서 요청된 총 GPU 수를 4개로 제한하려는 경우,
+GPU 리소스를 다음과 같이 쿼터를 정의할 수 있다.</p><ul><li><code>requests.nvidia.com/gpu: 4</code></li></ul><p>자세한 내용은 <a href=#%EC%BF%BC%ED%84%B0-%EB%B3%B4%EA%B8%B0-%EB%B0%8F-%EC%84%A4%EC%A0%95>쿼터 보기 및 설정</a>을 참고하길 바란다.</p><h2 id=스토리지-리소스-쿼터>스토리지 리소스 쿼터</h2><p>지정된 네임스페이스에서 요청할 수 있는 총 <a href=/ko/docs/concepts/storage/persistent-volumes/>스토리지 리소스</a> 합을 제한할 수 있다.</p><p>또한 연관된 스토리지 클래스를 기반으로 스토리지 리소스 사용을 제한할 수 있다.</p><table><thead><tr><th>리소스 이름</th><th>설명</th></tr></thead><tbody><tr><td><code>requests.storage</code></td><td>모든 퍼시스턴트 볼륨 클레임에서 스토리지 요청의 합은 이 값을 초과할 수 없음</td></tr><tr><td><code>persistentvolumeclaims</code></td><td>네임스페이스에 존재할 수 있는 총 <a href=/ko/docs/concepts/storage/persistent-volumes/#%ED%8D%BC%EC%8B%9C%EC%8A%A4%ED%84%B4%ED%8A%B8%EB%B3%BC%EB%A5%A8%ED%81%B4%EB%A0%88%EC%9E%84>퍼시스턴트 볼륨 클레임</a> 수</td></tr><tr><td><code>&lt;storage-class-name>.storageclass.storage.k8s.io/requests.storage</code></td><td>storage-class-name과 관련된 모든 퍼시스턴트 볼륨 클레임에서 스토리지 요청의 합은 이 값을 초과할 수 없음</td></tr><tr><td><code>&lt;storage-class-name>.storageclass.storage.k8s.io/persistentvolumeclaims</code></td><td><code>&lt;storage-class-name></code> 과 관련된 모든 퍼시스턴트 볼륨 클레임에서 네임스페이스에 존재할 수 있는 총 <a href=/ko/docs/concepts/storage/persistent-volumes/#%ED%8D%BC%EC%8B%9C%EC%8A%A4%ED%84%B4%ED%8A%B8%EB%B3%BC%EB%A5%A8%ED%81%B4%EB%A0%88%EC%9E%84>퍼시스턴트 볼륨 클레임</a> 수</td></tr></tbody></table><p>예를 들어, 운영자가 <code>bronze</code> 스토리지 클래스와 별도로 <code>gold</code> 스토리지 클래스를 사용하여 스토리지에 쿼터를 지정하려는 경우 운영자는 다음과 같이
+쿼터를 정의할 수 있다.</p><ul><li><code>gold.storageclass.storage.k8s.io/requests.storage: 500Gi</code></li><li><code>bronze.storageclass.storage.k8s.io/requests.storage: 100Gi</code></li></ul><p>릴리스 1.8에서는 로컬 임시 스토리지에 대한 쿼터 지원이 알파 기능으로 추가되었다.</p><table><thead><tr><th>리소스 이름</th><th>설명</th></tr></thead><tbody><tr><td><code>requests.ephemeral-storage</code></td><td>네임스페이스의 모든 파드에서 로컬 임시 스토리지 요청의 합은 이 값을 초과할 수 없음.</td></tr><tr><td><code>limits.ephemeral-storage</code></td><td>네임스페이스의 모든 파드에서 로컬 임시 스토리지 제한의 합은 이 값을 초과할 수 없음.</td></tr><tr><td><code>ephemeral-storage</code></td><td><code>requests.ephemeral-storage</code> 와 같음.</td></tr></tbody></table><div class="alert alert-info note callout" role=alert><strong>참고:</strong> CRI 컨테이너 런타임을 사용할 때, 컨테이너 로그는 임시 스토리지 쿼터에 포함된다.
+이로 인해 스토리지 쿼터를 소진한 파드가 예기치 않게 축출될 수 있다.
+자세한 내용은 <a href=/ko/docs/concepts/cluster-administration/logging/>로깅 아키텍처</a>를 참조한다.</div><h2 id=오브젝트-수-쿼터>오브젝트 수 쿼터</h2><p>다음 구문을 사용하여 모든 표준 네임스페이스 처리된(namespaced) 리소스 유형에 대한
+특정 리소스 전체 수에 대하여 쿼터를 지정할 수 있다.</p><ul><li>코어 그룹이 아닌(non-core) 리소스를 위한 <code>count/&lt;resource>.&lt;group></code></li><li>코어 그룹의 리소스를 위한 <code>count/&lt;resource></code></li></ul><p>다음은 사용자가 오브젝트 수 쿼터 아래에 배치하려는 리소스 셋의 예이다.</p><ul><li><code>count/persistentvolumeclaims</code></li><li><code>count/services</code></li><li><code>count/secrets</code></li><li><code>count/configmaps</code></li><li><code>count/replicationcontrollers</code></li><li><code>count/deployments.apps</code></li><li><code>count/replicasets.apps</code></li><li><code>count/statefulsets.apps</code></li><li><code>count/jobs.batch</code></li><li><code>count/cronjobs.batch</code></li></ul><p>사용자 정의 리소스를 위해 동일한 구문을 사용할 수 있다.
+예를 들어 <code>example.com</code> API 그룹에서 <code>widgets</code> 사용자 정의 리소스에 대한 쿼터를 생성하려면 <code>count/widgets.example.com</code>을 사용한다.</p><p><code>count/*</code> 리소스 쿼터를 사용할 때 서버 스토리지 영역에 있다면 오브젝트는 쿼터에 대해 과금된다.
+이러한 유형의 쿼터는 스토리지 리소스 고갈을 방지하는 데 유용하다. 예를 들어,
+크기가 큰 서버에서 시크릿 수에 쿼터를 지정할 수 있다. 클러스터에 시크릿이 너무 많으면 실제로 서버와
+컨트롤러가 시작되지 않을 수 있다. 잘못 구성된 크론 잡으로부터의 보호를 위해
+잡의 쿼터를 설정할 수 있다. 네임스페이스 내에서 너무 많은 잡을 생성하는 크론 잡은 서비스 거부를 유발할 수 있다.</p><p>또한 제한된 리소스 셋에 대해서 일반 오브젝트 수(generic object count) 쿼터를 적용하는 것도 가능하다.
+다음 유형이 지원된다.</p><table><thead><tr><th>리소스 이름</th><th>설명</th></tr></thead><tbody><tr><td><code>configmaps</code></td><td>네임스페이스에 존재할 수 있는 총 컨피그맵 수</td></tr><tr><td><code>persistentvolumeclaims</code></td><td>네임스페이스에 존재할 수 있는 총 <a href=/ko/docs/concepts/storage/persistent-volumes/#%ED%8D%BC%EC%8B%9C%EC%8A%A4%ED%84%B4%ED%8A%B8%EB%B3%BC%EB%A5%A8%ED%81%B4%EB%A0%88%EC%9E%84>퍼시스턴트 볼륨 클레임</a> 수</td></tr><tr><td><code>pods</code></td><td>네임스페이스에 존재할 수 있는 터미널이 아닌 상태의 파드의 총 수. <code>.status.phase in (Failed, Succeeded)</code>가 true인 경우 파드는 터미널 상태임</td></tr><tr><td><code>replicationcontrollers</code></td><td>네임스페이스에 존재할 수 있는 총 레플리케이션컨트롤러 수</td></tr><tr><td><code>resourcequotas</code></td><td>네임스페이스에 존재할 수 있는 총 리소스쿼터 수</td></tr><tr><td><code>services</code></td><td>네임스페이스에 존재할 수 있는 총 서비스 수</td></tr><tr><td><code>services.loadbalancers</code></td><td>네임스페이스에 존재할 수 있는 <code>LoadBalancer</code> 유형의 총 서비스 수</td></tr><tr><td><code>services.nodeports</code></td><td>네임스페이스에 존재할 수 있는 <code>NodePort</code> 유형의 총 서비스 수</td></tr><tr><td><code>secrets</code></td><td>네임스페이스에 존재할 수 있는 총 시크릿 수</td></tr></tbody></table><p>예를 들어, <code>pods</code> 쿼터는 터미널이 아닌 단일 네임스페이스에서 생성된 <code>pods</code> 수를
+계산하고 최댓값을 적용한다. 사용자가 작은 파드를 많이 생성하여 클러스터의 파드 IP
+공급이 고갈되는 경우를 피하기 위해 네임스페이스에
+<code>pods</code> 쿼터를 설정할 수 있다.</p><h2 id=쿼터-범위>쿼터 범위</h2><p>각 쿼터에는 연결된 <code>scopes</code> 셋이 있을 수 있다. 쿼터는 열거된 범위의 교차 부분과 일치하는 경우에만
+리소스 사용량을 측정한다.</p><p>범위가 쿼터에 추가되면 해당 범위와 관련된 리소스를 지원하는 리소스 수가 제한된다.
+허용된 셋 이외의 쿼터에 지정된 리소스는 유효성 검사 오류가 발생한다.</p><table><thead><tr><th>범위</th><th>설명</th></tr></thead><tbody><tr><td><code>Terminating</code></td><td><code>.spec.activeDeadlineSeconds >= 0</code>에 일치하는 파드</td></tr><tr><td><code>NotTerminating</code></td><td><code>.spec.activeDeadlineSeconds is nil</code>에 일치하는 파드</td></tr><tr><td><code>BestEffort</code></td><td>최상의 서비스 품질을 제공하는 파드</td></tr><tr><td><code>NotBestEffort</code></td><td>서비스 품질이 나쁜 파드</td></tr><tr><td><code>PriorityClass</code></td><td>지정된 <a href=/ko/docs/concepts/scheduling-eviction/pod-priority-preemption/>프라이어리티클래스</a>를 참조하여 일치하는 파드.</td></tr><tr><td><code>CrossNamespacePodAffinity</code></td><td>크로스-네임스페이스 파드 [(안티)어피니티 용어]가 있는 파드</td></tr></tbody></table><p><code>BestEffort</code> 범위는 다음의 리소스를 추적하도록 쿼터를 제한한다.</p><ul><li><code>pods</code></li></ul><p><code>Terminating</code>, <code>NotTerminating</code>, <code>NotBestEffort</code> 및 <code>PriorityClass</code>
+범위는 쿼터를 제한하여 다음의 리소스를 추적한다.</p><ul><li><code>pods</code></li><li><code>cpu</code></li><li><code>memory</code></li><li><code>requests.cpu</code></li><li><code>requests.memory</code></li><li><code>limits.cpu</code></li><li><code>limits.memory</code></li></ul><p><code>Terminating</code> 과 <code>NotTerminating</code> 범위를 동일한 쿼터 내에 모두
+명시하지는 못하며, 마찬가지로 <code>BestEffort</code> 와
+<code>NotBestEffort</code> 범위도 동일한 쿼터 내에서 모두 명시하지는 못한다.</p><p><code>scopeSelector</code> 는 <code>operator</code> 필드에 다음의 값을 지원한다.</p><ul><li><code>In</code></li><li><code>NotIn</code></li><li><code>Exists</code></li><li><code>DoesNotExist</code></li></ul><p><code>scopeSelector</code> 를 정의할 때, <code>scopeName</code> 으로 다음의 값 중 하나를 사용하는
+경우, <code>operator</code> 는 <code>Exists</code> 이어야 한다.</p><ul><li><code>Terminating</code></li><li><code>NotTerminating</code></li><li><code>BestEffort</code></li><li><code>NotBestEffort</code></li></ul><p>만약 <code>operator</code> 가 <code>In</code> 또는 <code>NotIn</code> 인 경우, <code>values</code> 필드는 적어도 하나의 값은
+가져야 한다. 예를 들면 다음과 같다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>scopeSelector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>matchExpressions</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>scopeName</span>:<span style=color:#bbb> </span>PriorityClass<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>operator</span>:<span style=color:#bbb> </span>In<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>values</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span>- middle<span style=color:#bbb>
+</span></span></span></code></pre></div><p>만약 <code>operator</code> 가 <code>Exists</code> 또는 <code>DoesNotExist</code> 이라면, <code>values</code> 필드는 명시되면
+<em>안된다</em>.</p><h3 id=priorityclass별-리소스-쿼터>PriorityClass별 리소스 쿼터</h3><div style=margin-top:10px;margin-bottom:10px><b>기능 상태:</b> <code>Kubernetes v1.17 [stable]</code></div><p>특정 <a href=/ko/docs/concepts/scheduling-eviction/pod-priority-preemption/#%ED%8C%8C%EB%93%9C-%EC%9A%B0%EC%84%A0%EC%88%9C%EC%9C%84>우선 순위</a>로 파드를 생성할 수 있다.
+쿼터 스펙의 <code>scopeSelector</code> 필드를 사용하여 파드의 우선 순위에 따라 파드의 시스템 리소스 사용을
+제어할 수 있다.</p><p>쿼터 스펙의 <code>scopeSelector</code>가 파드를 선택한 경우에만 쿼터가 일치하고 사용된다.</p><p><code>scopeSelector</code> 필드를 사용하여 우선 순위 클래스의 쿼터 범위를 지정하면,
+쿼터 오브젝트는 다음의 리소스만 추적하도록 제한된다.</p><ul><li><code>pods</code></li><li><code>cpu</code></li><li><code>memory</code></li><li><code>ephemeral-storage</code></li><li><code>limits.cpu</code></li><li><code>limits.memory</code></li><li><code>limits.ephemeral-storage</code></li><li><code>requests.cpu</code></li><li><code>requests.memory</code></li><li><code>requests.ephemeral-storage</code></li></ul><p>이 예에서는 쿼터 오브젝트를 생성하여 특정 우선 순위의 파드와 일치시킨다.
+예제는 다음과 같이 작동한다.</p><ul><li>클러스터의 파드는 "low(낮음)", "medium(중간)", "high(높음)"의 세 가지 우선 순위 클래스 중 하나를 가진다.</li><li>각 우선 순위마다 하나의 쿼터 오브젝트가 생성된다.</li></ul><p>다음 YAML을 <code>quota.yml</code> 파일에 저장한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>List<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>items</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>ResourceQuota<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>pods-high<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>hard</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>cpu</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;1000&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>memory</span>:<span style=color:#bbb> </span>200Gi<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>pods</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;10&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>scopeSelector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>matchExpressions</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>operator </span>:<span style=color:#bbb> </span>In<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>scopeName</span>:<span style=color:#bbb> </span>PriorityClass<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>values</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;high&#34;</span>]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>ResourceQuota<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>pods-medium<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>hard</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>cpu</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;10&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>memory</span>:<span style=color:#bbb> </span>20Gi<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>pods</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;10&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>scopeSelector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>matchExpressions</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>operator </span>:<span style=color:#bbb> </span>In<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>scopeName</span>:<span style=color:#bbb> </span>PriorityClass<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>values</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;medium&#34;</span>]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>ResourceQuota<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>pods-low<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>hard</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>cpu</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;5&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>memory</span>:<span style=color:#bbb> </span>10Gi<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>pods</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;10&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>scopeSelector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>matchExpressions</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>operator </span>:<span style=color:#bbb> </span>In<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>scopeName</span>:<span style=color:#bbb> </span>PriorityClass<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>values</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;low&#34;</span>]<span style=color:#bbb>
+</span></span></span></code></pre></div><p><code>kubectl create</code>를 사용하여 YAML을 적용한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create -f ./quota.yml
+</span></span></code></pre></div><pre tabindex=0><code>resourcequota/pods-high created
+resourcequota/pods-medium created
+resourcequota/pods-low created
+</code></pre><p><code>kubectl describe quota</code>를 사용하여 <code>Used</code> 쿼터가 <code>0</code>인지 확인하자.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl describe quota
+</span></span></code></pre></div><pre tabindex=0><code>Name:       pods-high
+Namespace:  default
+Resource    Used  Hard
+--------    ----  ----
+cpu         0     1k
+memory      0     200Gi
+pods        0     10
+
+
+Name:       pods-low
+Namespace:  default
+Resource    Used  Hard
+--------    ----  ----
+cpu         0     5
+memory      0     10Gi
+pods        0     10
+
+
+Name:       pods-medium
+Namespace:  default
+Resource    Used  Hard
+--------    ----  ----
+cpu         0     10
+memory      0     20Gi
+pods        0     10
+</code></pre><p>우선 순위가 "high"인 파드를 생성한다. 다음 YAML을
+<code>high-priority-pod.yml</code> 파일에 저장한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>high-priority<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>high-priority<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>ubuntu<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>command</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;/bin/sh&#34;</span>]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>args</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;-c&#34;</span>,<span style=color:#bbb> </span><span style=color:#b44>&#34;while true; do echo hello; sleep 10;done&#34;</span>]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>resources</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>requests</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>memory</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;10Gi&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>cpu</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;500m&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>limits</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>memory</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;10Gi&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>cpu</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;500m&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>priorityClassName</span>:<span style=color:#bbb> </span>high<span style=color:#bbb>
+</span></span></span></code></pre></div><p><code>kubectl create</code>로 적용하자.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create -f ./high-priority-pod.yml
+</span></span></code></pre></div><p>"high" 우선 순위 쿼터가 적용된 <code>pods-high</code>에 대한 "Used" 통계가 변경되었고
+다른 두 쿼터는 변경되지 않았는지 확인한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl describe quota
+</span></span></code></pre></div><pre tabindex=0><code>Name:       pods-high
+Namespace:  default
+Resource    Used  Hard
+--------    ----  ----
+cpu         500m  1k
+memory      10Gi  200Gi
+pods        1     10
+
+
+Name:       pods-low
+Namespace:  default
+Resource    Used  Hard
+--------    ----  ----
+cpu         0     5
+memory      0     10Gi
+pods        0     10
+
+
+Name:       pods-medium
+Namespace:  default
+Resource    Used  Hard
+--------    ----  ----
+cpu         0     10
+memory      0     20Gi
+pods        0     10
+</code></pre><h3 id=네임스페이스-간-파드-어피니티-쿼터>네임스페이스 간 파드 어피니티 쿼터</h3><div style=margin-top:10px;margin-bottom:10px><b>기능 상태:</b> <code>Kubernetes v1.24 [stable]</code></div><p>오퍼레이터는 네임스페이스를 교차하는 어피니티가 있는 파드를 가질 수 있는 네임스페이스를
+제한하기 위해 <code>CrossNamespacePodAffinity</code> 쿼터 범위를 사용할 수 있다. 특히, 파드 어피니티 용어의
+<code>namespaces</code> 또는 <code>namespaceSelector</code> 필드를 설정할 수 있는 파드를 제어한다.</p><p>안티-어피니티 제약 조건이 있는 파드는 장애 도메인에서 다른 모든 네임스페이스의 파드가 예약되지 않도록
+차단할 수 있으므로 사용자가 네임스페이스 간 어피니티 용어를
+사용하지 못하도록 하는 것이 바람직할 수 있다.</p><p>이 범위 오퍼레이터를 사용하면 <code>CrossNamespaceAffinity</code> 범위와 하드(hard) 제한이 0인
+네임스페이스에 리소스 쿼터 오브젝트를 생성하여 특정 네임스페이스(아래 예에서 <code>foo-ns</code>)가 네임스페이스 간 파드 어피니티를
+사용하는 파드를 사용하지 못하도록 방지할 수 있다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>ResourceQuota<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>disable-cross-namespace-affinity<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>namespace</span>:<span style=color:#bbb> </span>foo-ns<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>hard</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>pods</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;0&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>scopeSelector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>matchExpressions</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>scopeName</span>:<span style=color:#bbb> </span>CrossNamespaceAffinity<span style=color:#bbb>
+</span></span></span></code></pre></div><p>오퍼레이터가 기본적으로 <code>namespaces</code> 및 <code>namespaceSelector</code> 사용을 허용하지 않고,
+특정 네임스페이스에만 허용하려는 경우, kube-apiserver 플래그 --admission-control-config-file를
+다음의 구성 파일의 경로로 설정하여 <code>CrossNamespaceAffinity</code> 를
+제한된 리소스로 구성할 수 있다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>apiserver.config.k8s.io/v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>AdmissionConfiguration<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>plugins</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;ResourceQuota&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>configuration</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>apiserver.config.k8s.io/v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>ResourceQuotaConfiguration<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>limitedResources</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>resource</span>:<span style=color:#bbb> </span>pods<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>matchScopes</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>scopeName</span>:<span style=color:#bbb> </span>CrossNamespaceAffinity<span style=color:#bbb>
+</span></span></span></code></pre></div><p>위의 구성을 사용하면, 파드는 생성된 네임스페이스에 <code>CrossNamespaceAffinity</code> 범위가 있는 리소스 쿼터 오브젝트가 있고,
+해당 필드를 사용하는 파드 수보다 크거나 같은 하드 제한이 있는 경우에만
+파드 어피니티에서 <code>namespaces</code> 및 <code>namespaceSelector</code> 를 사용할 수 있다.</p><h2 id=requests-vs-limits>요청과 제한의 비교</h2><p>컴퓨트 리소스를 할당할 때 각 컨테이너는 CPU 또는 메모리에 대한 요청과 제한값을 지정할 수 있다.
+쿼터는 값에 대한 쿼터를 지정하도록 구성할 수 있다.</p><p>쿼터에 <code>requests.cpu</code>나 <code>requests.memory</code>에 지정된 값이 있으면 들어오는 모든
+컨테이너가 해당 리소스에 대한 명시적인 요청을 지정해야 한다. 쿼터에 <code>limits.cpu</code>나
+<code>limits.memory</code>에 지정된 값이 있으면 들어오는 모든 컨테이너가 해당 리소스에 대한 명시적인 제한을 지정해야 한다.</p><h2 id=쿼터-보기-및-설정>쿼터 보기 및 설정</h2><p>Kubectl은 쿼터 생성, 업데이트 및 보기를 지원한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create namespace myspace
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>cat <span style=color:#b44>&lt;&lt;EOF &gt; compute-resources.yaml
+</span></span></span><span style=display:flex><span><span style=color:#b44>apiVersion: v1
+</span></span></span><span style=display:flex><span><span style=color:#b44>kind: ResourceQuota
+</span></span></span><span style=display:flex><span><span style=color:#b44>metadata:
+</span></span></span><span style=display:flex><span><span style=color:#b44>  name: compute-resources
+</span></span></span><span style=display:flex><span><span style=color:#b44>spec:
+</span></span></span><span style=display:flex><span><span style=color:#b44>  hard:
+</span></span></span><span style=display:flex><span><span style=color:#b44>    requests.cpu: &#34;1&#34;
+</span></span></span><span style=display:flex><span><span style=color:#b44>    requests.memory: 1Gi
+</span></span></span><span style=display:flex><span><span style=color:#b44>    limits.cpu: &#34;2&#34;
+</span></span></span><span style=display:flex><span><span style=color:#b44>    limits.memory: 2Gi
+</span></span></span><span style=display:flex><span><span style=color:#b44>    requests.nvidia.com/gpu: 4
+</span></span></span><span style=display:flex><span><span style=color:#b44>EOF</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create -f ./compute-resources.yaml --namespace<span style=color:#666>=</span>myspace
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>cat <span style=color:#b44>&lt;&lt;EOF &gt; object-counts.yaml
+</span></span></span><span style=display:flex><span><span style=color:#b44>apiVersion: v1
+</span></span></span><span style=display:flex><span><span style=color:#b44>kind: ResourceQuota
+</span></span></span><span style=display:flex><span><span style=color:#b44>metadata:
+</span></span></span><span style=display:flex><span><span style=color:#b44>  name: object-counts
+</span></span></span><span style=display:flex><span><span style=color:#b44>spec:
+</span></span></span><span style=display:flex><span><span style=color:#b44>  hard:
+</span></span></span><span style=display:flex><span><span style=color:#b44>    configmaps: &#34;10&#34;
+</span></span></span><span style=display:flex><span><span style=color:#b44>    persistentvolumeclaims: &#34;4&#34;
+</span></span></span><span style=display:flex><span><span style=color:#b44>    pods: &#34;4&#34;
+</span></span></span><span style=display:flex><span><span style=color:#b44>    replicationcontrollers: &#34;20&#34;
+</span></span></span><span style=display:flex><span><span style=color:#b44>    secrets: &#34;10&#34;
+</span></span></span><span style=display:flex><span><span style=color:#b44>    services: &#34;10&#34;
+</span></span></span><span style=display:flex><span><span style=color:#b44>    services.loadbalancers: &#34;2&#34;
+</span></span></span><span style=display:flex><span><span style=color:#b44>EOF</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create -f ./object-counts.yaml --namespace<span style=color:#666>=</span>myspace
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get quota --namespace<span style=color:#666>=</span>myspace
+</span></span></code></pre></div><pre tabindex=0><code class=language-none data-lang=none>NAME                    AGE
+compute-resources       30s
+object-counts           32s
+</code></pre><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl describe quota compute-resources --namespace<span style=color:#666>=</span>myspace
+</span></span></code></pre></div><pre tabindex=0><code class=language-none data-lang=none>Name:                    compute-resources
+Namespace:               myspace
+Resource                 Used  Hard
+--------                 ----  ----
+limits.cpu               0     2
+limits.memory            0     2Gi
+requests.cpu             0     1
+requests.memory          0     1Gi
+requests.nvidia.com/gpu  0     4
+</code></pre><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl describe quota object-counts --namespace<span style=color:#666>=</span>myspace
+</span></span></code></pre></div><pre tabindex=0><code class=language-none data-lang=none>Name:                   object-counts
+Namespace:              myspace
+Resource                Used    Hard
+--------                ----    ----
+configmaps              0       10
+persistentvolumeclaims  0       4
+pods                    0       4
+replicationcontrollers  0       20
+secrets                 1       10
+services                0       10
+services.loadbalancers  0       2
+</code></pre><p>Kubectl은 <code>count/&lt;resource>.&lt;group></code> 구문을 사용하여 모든 표준 네임스페이스 리소스에 대한
+오브젝트 수 쿼터를 지원한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create namespace myspace
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create quota <span style=color:#a2f>test</span> --hard<span style=color:#666>=</span>count/deployments.apps<span style=color:#666>=</span>2,count/replicasets.apps<span style=color:#666>=</span>4,count/pods<span style=color:#666>=</span>3,count/secrets<span style=color:#666>=</span><span style=color:#666>4</span> --namespace<span style=color:#666>=</span>myspace
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create deployment nginx --image<span style=color:#666>=</span>nginx --namespace<span style=color:#666>=</span>myspace --replicas<span style=color:#666>=</span><span style=color:#666>2</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl describe quota --namespace<span style=color:#666>=</span>myspace
+</span></span></code></pre></div><pre tabindex=0><code>Name:                         test
+Namespace:                    myspace
+Resource                      Used  Hard
+--------                      ----  ----
+count/deployments.apps        1     2
+count/pods                    2     3
+count/replicasets.apps        1     4
+count/secrets                 1     4
+</code></pre><h2 id=쿼터-및-클러스터-용량>쿼터 및 클러스터 용량</h2><p>리소스쿼터는 클러스터 용량과 무관하다. 그것들은 절대 단위로 표현된다.
+따라서 클러스터에 노드를 추가해도 각 네임스페이스에 더 많은 리소스를
+사용할 수 있는 기능이 자동으로 부여되지는 <em>않는다</em>.</p><p>가끔 다음과 같은 보다 복잡한 정책이 필요할 수 있다.</p><ul><li>여러 팀으로 전체 클러스터 리소스를 비례적으로 나눈다.</li><li>각 테넌트가 필요에 따라 리소스 사용량을 늘릴 수 있지만, 실수로 리소스가 고갈되는 것을
+막기 위한 충분한 제한이 있다.</li><li>하나의 네임스페이스에서 요구를 감지하고 노드를 추가하며 쿼터를 늘린다.</li></ul><p>이러한 정책은 쿼터 사용을 감시하고 다른 신호에 따라 각 네임스페이스의 쿼터 하드 제한을
+조정하는 "컨트롤러"를 작성하여 <code>ResourceQuotas</code>를 구성 요소로
+사용하여 구현할 수 있다.</p><p>리소스 쿼터는 통합된 클러스터 리소스를 분할하지만 노드에 대한 제한은 없다.
+여러 네임스페이스의 파드가 동일한 노드에서 실행될 수 있다.</p><h2 id=기본적으로-우선-순위-클래스-소비-제한>기본적으로 우선 순위 클래스 소비 제한</h2><p>파드가 특정 우선 순위, 예를 들어 일치하는 쿼터 오브젝트가 존재하는
+경우에만 "cluster-services"가 네임스페이스에 허용되어야 한다.</p><p>이 메커니즘을 통해 운영자는 특정 우선 순위가 높은 클래스의 사용을
+제한된 수의 네임스페이스로 제한할 수 있으며 모든 네임스페이스가
+기본적으로 이러한 우선 순위 클래스를 사용할 수 있는 것은 아니다.</p><p>이를 적용하려면 kube-apiserver 플래그 <code>--admission-control-config-file</code> 을
+사용하여 다음 구성 파일의 경로를 전달해야 한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>apiserver.config.k8s.io/v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>AdmissionConfiguration<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>plugins</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;ResourceQuota&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>configuration</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>apiserver.config.k8s.io/v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>ResourceQuotaConfiguration<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>limitedResources</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>resource</span>:<span style=color:#bbb> </span>pods<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>matchScopes</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>scopeName</span>:<span style=color:#bbb> </span>PriorityClass<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>operator</span>:<span style=color:#bbb> </span>In<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>values</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;cluster-services&#34;</span>]<span style=color:#bbb>
+</span></span></span></code></pre></div><p>그리고, <code>kube-system</code> 네임스페이스에 리소스 쿼터 오브젝트를 생성한다.</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/ko/examples/policy/priority-class-resourcequota.yaml download=policy/priority-class-resourcequota.yaml><code>policy/priority-class-resourcequota.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("policy-priority-class-resourcequota-yaml")' title="Copy policy/priority-class-resourcequota.yaml to clipboard"></img></div><div class=includecode id=policy-priority-class-resourcequota-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>ResourceQuota<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>pods-cluster-services<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>scopeSelector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>matchExpressions</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>operator </span>:<span style=color:#bbb> </span>In<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>scopeName</span>:<span style=color:#bbb> </span>PriorityClass<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>values</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;cluster-services&#34;</span>]</span></span></code></pre></div></div></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -f https://k8s.io/examples/policy/priority-class-resourcequota.yaml -n kube-system
+</span></span></code></pre></div><pre tabindex=0><code class=language-none data-lang=none>resourcequota/pods-cluster-services created
+</code></pre><p>이 경우, 파드 생성은 다음의 조건을 만족해야 허용될 것이다.</p><ol><li>파드의 <code>priorityClassName</code> 가 명시되지 않음.</li><li>파드의 <code>priorityClassName</code> 가 <code>cluster-services</code> 이외의 다른 값으로 명시됨.</li><li>파드의 <code>priorityClassName</code> 가 <code>cluster-services</code> 로 설정되고, 파드가 <code>kube-system</code>
+네임스페이스에 생성되었으며 리소스 쿼터 검증을 통과함.</li></ol><p>파드 생성 요청은 <code>priorityClassName</code> 가 <code>cluster-services</code> 로 명시되고
+<code>kube-system</code> 이외의 다른 네임스페이스에 생성되는 경우, 거절된다.</p><h2 id=다음-내용>다음 내용</h2><ul><li>자세한 내용은 <a href=https://git.k8s.io/design-proposals-archive/resource-management/admission_control_resource_quota.md>리소스쿼터 디자인 문서</a>를 참고한다.</li><li><a href=/docs/tasks/administer-cluster/quota-api-object/>리소스 쿼터를 사용하는 방법에 대한 자세한 예</a>를 참고한다.</li><li><a href=https://git.k8s.io/design-proposals-archive/scheduling/pod-priority-resourcequota.md>우선 순위 클래스에 대한 쿼터 지원 디자인 문서</a>를 읽는다.</li><li><a href=https://github.com/kubernetes/kubernetes/pull/36765>제한된 자원</a>을 참고한다.</li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-7352434db5f5954d2f7656b46fe5a324>3 - 프로세스 ID 제한 및 예약</h1><div style=margin-top:10px;margin-bottom:10px><b>기능 상태:</b> <code>Kubernetes v1.20 [stable]</code></div><p>쿠버네티스에서 <a class=glossary-tooltip title='파드는 클러스터에서 실행 중인 컨테이너의 집합을 나타낸다.' data-toggle=tooltip data-placement=top href=/ko/docs/concepts/workloads/pods/ target=_blank aria-label=파드>파드</a>가 사용할 수 있는 프로세스 ID(PID)의 수를
+제한할 수 있다.
+또한 (파드가 아닌) 운영체제와 데몬이 사용할 용도로 각 <a class=glossary-tooltip title='노드는 쿠버네티스의 작업 장비(worker machine)이다.' data-toggle=tooltip data-placement=top href=/ko/docs/concepts/architecture/nodes/ target=_blank aria-label=노드>노드</a>에 대해 할당 가능한
+PID의 수를 미리 예약할 수 있다.</p><p>프로세스 ID(PID)는 노드에서 기본이 되는 리소스이다. 다른 종류의 리소스 상한(limit)을 초과하지 않고도,
+태스크의 상한을 초과하게 되는 상황은 일상적이며 사소해 보일 수 있다. 그러나, 이러한 상황은 호스트 머신의
+불안정성을 야기할 수 있다.</p><p>클러스터 관리자는 클러스터에서 실행 중인 파드가
+호스트 데몬(예를 들어, <a class=glossary-tooltip title='클러스터의 각 노드에서 실행되는 에이전트. Kubelet은 파드에서 컨테이너가 확실하게 동작하도록 관리한다.' data-toggle=tooltip data-placement=top href=/docs/reference/generated/kubelet target=_blank aria-label=kubelet>kubelet</a> 또는
+<a class=glossary-tooltip title='kube-proxy는 클러스터의 각 노드에서 실행되는 네트워크 프록시이다.' data-toggle=tooltip data-placement=top href=/ko/docs/reference/command-line-tools-reference/kube-proxy/ target=_blank aria-label=kube-proxy>kube-proxy</a> 그리고
+잠재적 컨테이너 런타임)이 실행되는 것을 방해하는 PID 소진이
+발생하지 않도록 하는 메커니즘이 필요하다.
+추가적으로, PID가 동일한 노드의 다른 워크로드에 미치는 영향을 제한하려면
+파드 간에 PID를 제한하는 것이 중요하다.</p><div class="alert alert-info note callout" role=alert><strong>참고:</strong> 특정 리눅스 설치에서는, 운영 체제가 PID 제한을 '32768'과 같은
+낮은 기본값으로 설정한다. <code>/proc/sys/kernel/pid_max</code>의 값을 높이는 것을 고려하길 바란다.</div><p>지정된 파드가 사용할 수 있는 PID 수를 제한하도록 kubelet을 구성할 수 있다.
+예를 들어, 노드의 호스트 OS가 최대 '262144' PID를 사용하도록 설정되어 있고
+'250' 미만의 파드를 호스팅할 것으로 예상되는 경우, 각 파드에 '1000' PID의 양을 할당하여
+해당 노드의 가용 PID의 수를 전부 소비해버리지 않도록 방지할 수 있다. 관리자는
+몇 가지 추가 위험을 감수하여 CPU 또는 메모리와 유사한 PID를 오버 커밋할 수 있다.
+어느 쪽이든 간에, 하나의 파드가 전체 시스템을 중단시키지는 않을 것이다.
+이러한 종류의 리소스 제한은 단순 포크 폭탄(fork bomb)이 전체 클러스터의 작동에 영향을
+미치는 것을 방지하는 데 도움이 된다.</p><p>관리자는 파드별 PID 제한을 통해 각 파드를 서로에게서 보호할 수 있지만,
+해당 호스트에 배정된 모든 파드가 노드 전체에 영향을 미치지 못함을 보장하진 않는다.
+또한 파드별 제한은 노드 에이전트 자체를 PID 고갈로부터 보호하지 않는다.</p><p>또한 파드에 대한 할당과는 별도로, 노드 오버헤드를 위해 일정량의 PID를
+예약할 수 있다. 이는 파드와 해당 컨테이너 외부의 운영 체제 및 기타 장비에서
+사용하기 위해 CPU, 메모리 또는 기타 리소스를 예약하는 방식과
+유사하다.</p><p>PID 제한은 <a href=/ko/docs/concepts/configuration/manage-resources-containers/>컴퓨팅 리소스</a>
+요청 및 제한에서 중요한 개념이다.
+하지만 다른 방식으로 명시한다. 파드의 '.spec'에
+파드 리소스 제한을 정의하는 대신, kubelet 설정에서
+제한을 구성한다. 파드에서 정의하는 PID 제한은 현재 지원되지 않는다.</p><div class="alert alert-warning caution callout" role=alert><strong>주의:</strong> 파드가 배포된 위치에 따라 파드에 적용되는 제한이
+다를 수 있다. 간단히 하자면, 모든 노드에서 동일한 PID 리소스 제한 및 예약을
+사용하는 것이 가장 쉽다.</div><h2 id=노드-pid-제한>노드 PID 제한</h2><p>쿠버네티스를 사용하면 시스템 사용을 위해 여러 프로세스 ID를 예약할 수 있다.
+예약을 구성하려면 <code>--system-reserved</code> 및 <code>--kube-reserved</code> 명령줄 옵션에서
+<code>pid=&lt;number></code> 매개변수를 kubelet에 사용하면 된다.
+지정한 값은 지정된 수의 프로세스 ID가
+시스템 전체와 Kubernetes 시스템 데몬에 각각 예약됨을
+선언한다.</p><div class="alert alert-info note callout" role=alert><strong>참고:</strong> 쿠버네티스 1.20 버전 이전에서 노드 단위로
+PID 리소스 제한을 예약하려면 'SupportNodePidsLimit'
+<a href=/ko/docs/reference/command-line-tools-reference/feature-gates/>기능 게이트</a>가 작동하도록
+설정해야 한다.</div><h2 id=파드-pid-제한>파드 PID 제한</h2><p>쿠버네티스를 사용하면 파드에서 실행되는 프로세스 수를 제한할 수 있다.
+이 제한을 특정 파드에 대한 리소스 제한으로 구성하는 대신 노드 수준에서 지정한다.
+각각의 노드는 다른 PID 제한을 가질 수 있다.
+제한을 구성하려면 kubelet에 커맨드라인 매개변수 <code>--pod-max-pids</code>를
+지정하거나, kubelet <a href=/docs/tasks/administer-cluster/kubelet-config-file/>구성 파일</a>에서
+<code>PodPidsLimit</code>을 설정하면 된다.</p><div class="alert alert-info note callout" role=alert><strong>참고:</strong> 쿠버네티스 1.20 버전 이전에서 파드에 대한 PID 리소스를 제한하려면
+<a href=/ko/docs/reference/command-line-tools-reference/feature-gates/>기능 게이트</a> 'SupportPodPidsLimit'이
+작동하도록 설정해야 한다.</div><h2 id=pid-기반-축출-eviction>PID 기반 축출(eviction)</h2><p>파드가 오작동하고 비정상적인 양의 리소스를 사용할 때 파드를 종료하게끔 kubelet을 구성할 수 있다.
+이 기능을 축출(eviction)이라고 한다. 다양한
+축출 신호에 대한 <a href=/ko/docs/concepts/scheduling-eviction/node-pressure-eviction/>리소스 부족 처리를 구성</a>할
+수 있다.
+<code>pid.available</code> 축출 신호를 사용하여 파드에서 사용하는 PID 수에 대한 임계값을 구성한다.
+소프트(soft) 및 하드(hard) 축출 정책을 설정할 수 있다.
+그러나 하드 축출 정책을 사용하더라도 PID 수가 매우 빠르게 증가하면,
+노드 PID 제한에 도달하여 노드가 여전히 불안정한 상태가 될 수 있다.
+축출 신호 값은 주기적으로 계산되는 것이며 제한을 강제하지는 않는다.</p><p>PID 제한 - 각 파드와 각 노드는 하드 제한을 설정한다.
+제한에 도달하게 되면, 새로운 PID를 가져오려고 할 때 워크로드에 오류가 발생할 것이다.
+워크로드가 이러한 장애에 대응하는 방식과 파드에 대한 활성 및 준비성 프로브가
+어떻게 구성되었는지에 따라,
+파드가 재배포(rescheduling)될 수도 있고 그렇지 않을 수도 있다. 그러나 제한이 올바르게 설정되었다면,
+하나의 파드가 오작동할 때 다른 파드 워크로드 및 시스템 프로세스에 PID가 부족하지 않도록
+보장할 수 있다.</p><h2 id=다음-내용>다음 내용</h2><ul><li>자세한 내용은 <a href=https://github.com/kubernetes/enhancements/blob/097b4d8276bc9564e56adf72505d43ce9bc5e9e8/keps/sig-node/20190129-pid-limiting.md>PID 제한 개선 문서</a>를 참고한다.</li><li>역사적인 맥락을 원한다면,
+<a href=/blog/2019/04/15/process-id-limiting-for-stability-improvements-in-kubernetes-1.14/>Kubernetes 1.14의 안정성 향상을 위한 프로세스 ID 제한</a>을 참고한다.</li><li><a href=/ko/docs/concepts/configuration/manage-resources-containers/>컨테이너에 대한 리소스 관리</a>를 읽는다.</li><li><a href=/ko/docs/concepts/scheduling-eviction/node-pressure-eviction/>리소스 부족 처리 구성</a>을 배운다.</li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-b528c4464c030f3f044124b38d778f04>4 - 노드 리소스 매니저</h1><p>쿠버네티스는 지연 시간에 민감하고 처리량이 많은 워크로드를 지원하기 위해 리소스 매니저 세트를 제공한다. 매니저는 CPU, 장치 및 메모리 (hugepages) 리소스와 같은 특정한 요구 사항으로 구성된 파드를 위해 노드의 리소스 할당을 조정하고 최적화하는 것을 목표로 한다.</p><p>주 매니저인 토폴로지 매니저는 <a href=/docs/tasks/administer-cluster/topology-manager/>정책</a>을 통해 전체 리소스 관리 프로세스를 조정하는 Kubelet 컴포넌트이다.</p><p>개별 매니저의 구성은 다음의 문서에 자세히 기술되어 있다.</p><ul><li><a href=/docs/tasks/administer-cluster/cpu-management-policies/>CPU 관리 정책</a></li><li><a href=/ko/docs/concepts/extend-kubernetes/compute-storage-net/device-plugins/#%ED%86%A0%ED%8F%B4%EB%A1%9C%EC%A7%80-%EA%B4%80%EB%A6%AC%EC%9E%90%EC%99%80-%EC%9E%A5%EC%B9%98-%ED%94%8C%EB%9F%AC%EA%B7%B8%EC%9D%B8-%ED%86%B5%ED%95%A9>장치 매니저</a></li><li><a href=/docs/tasks/administer-cluster/memory-manager/>메모리 관리 정책</a></li></ul></div></main></div></div><footer class=d-print-none><div class=footer__links><nav><a class=text-white href=/ko/docs/home/>홈</a>
+<a class=text-white href=/ko/blog/>블로그</a>
+<a class=text-white href=/ko/training/>교육</a>
+<a class=text-white href=/ko/partners/>파트너</a>
+<a class=text-white href=/ko/community/>Community</a>
+<a class=text-white href=/ko/case-studies/>사례 연구</a></nav></div><div class=container-fluid><div class=row><div class="col-6 col-sm-2 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="User mailing list" aria-label="User mailing list"><a class=text-white target=_blank href=https://discuss.kubernetes.io><i class="fa fa-envelope"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank href=https://twitter.com/kubernetesio><i class="fab fa-twitter"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Calendar aria-label=Calendar><a class=text-white target=_blank href="https://calendar.google.com/calendar/embed?src=calendar%40kubernetes.io"><i class="fas fa-calendar-alt"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Youtube aria-label=Youtube><a class=text-white target=_blank href=https://youtube.com/kubernetescommunity><i class="fab fa-youtube"></i></a></li></ul></div><div class="col-6 col-sm-2 text-right text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank href=https://github.com/kubernetes/kubernetes><i class="fab fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Slack aria-label=Slack><a class=text-white target=_blank href=https://slack.k8s.io><i class="fab fa-slack"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Contribute aria-label=Contribute><a class=text-white target=_blank href=https://git.k8s.io/community/contributors/guide><i class="fas fa-edit"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="Stack Overflow" aria-label="Stack Overflow"><a class=text-white target=_blank href=https://stackoverflow.com/questions/tagged/kubernetes><i class="fab fa-stack-overflow"></i></a></li></ul></div><div class="col-12 col-sm-8 text-center order-sm-2"><small class=text-white>&copy; 2023 The Kubernetes Authors | Documentation Distributed under <a href=https://git.k8s.io/website/LICENSE class=light-text>CC BY 4.0</a></small><br><small class=text-white>Copyright &copy; 2023 The Linux Foundation &reg;. All rights reserved. The Linux Foundation has registered trademarks and uses trademarks. For a list of trademarks of The Linux Foundation, please see our <a href=https://www.linuxfoundation.org/trademark-usage class=light-text>Trademark Usage page</a></small><br><small class=text-white>ICP license: 京ICP备17074266号-3</small></div></div></div></footer></div><script src=/js/jquery-3.6.0.min.js integrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script>
+<script src=/js/popper-1.16.1.min.js intregrity=sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN crossorigin=anonymous></script>
+<script src=/js/bootstrap-4.6.1.min.js integrity=sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2 crossorigin=anonymous></script>
+<script src=/js/script.js></script>
+<script async src=/js/mermaid-8.13.4.min.js integrity=sha384-5hHNvPeMrNH14oM3IcQofDoBhiclNK3g2+hnEinKzQ07C4AliMeVpnvxuiwEGpaO crossorigin=anonymous></script>
+<script src=/js/main.min.5c0bf7f21dc4f66485f74efbbeeff28a7e4f8cddaac1bae47043159c922ff3a3.js integrity="sha256-XAv38h3E9mSF9077vu/yin5PjN2qwbrkcEMVnJIv86M=" crossorigin=anonymous></script></body></html>

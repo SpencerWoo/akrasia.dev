@@ -1,0 +1,236 @@
+<!doctype html><html lang=en class=no-js><head><meta name=robots content="noindex, nofollow"><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.110.0"><link rel=canonical type=text/html href=https://kubernetes.io/docs/reference/networking/><link rel="shortcut icon" type=image/png href=/images/favicon.png><link rel=apple-touch-icon href=/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=manifest href=/manifest.webmanifest><link rel=apple-touch-icon href=/images/kubernetes-192x192.png><title>Networking Reference | Kubernetes</title><meta property="og:title" content="Networking Reference"><meta property="og:description" content="Production-Grade Container Orchestration"><meta property="og:type" content="website"><meta property="og:url" content="https://kubernetes.io/docs/reference/networking/"><meta property="og:site_name" content="Kubernetes"><meta itemprop=name content="Networking Reference"><meta itemprop=description content="Production-Grade Container Orchestration"><meta name=twitter:card content="summary"><meta name=twitter:title content="Networking Reference"><meta name=twitter:description content="Production-Grade Container Orchestration"><link href=/scss/main.css rel=stylesheet><script type=application/ld+json>{"@context":"https://schema.org","@type":"Organization","url":"https://kubernetes.io","logo":"https://kubernetes.io/images/favicon.png","potentialAction":{"@type":"SearchAction","target":"https://kubernetes.io/search/?q={search_term_string}","query-input":"required name=search_term_string"}}</script><meta name=theme-color content="#326ce5"><link rel=stylesheet href=/css/feature-states.css><meta name=description content="This section of the Kubernetes documentation provides reference details of Kubernetes networking."><meta property="og:description" content="This section of the Kubernetes documentation provides reference details of Kubernetes networking."><meta name=twitter:description content="This section of the Kubernetes documentation provides reference details of Kubernetes networking."><meta property="og:url" content="https://kubernetes.io/docs/reference/networking/"><meta property="og:title" content="Networking Reference"><meta name=twitter:title content="Networking Reference"><meta name=twitter:image content="https://kubernetes.io/images/favicon.png"><meta name=twitter:image:alt content="Kubernetes"><meta property="og:image" content="/images/kubernetes-horizontal-color.png"><meta property="og:type" content="article"><script src=/js/jquery-3.6.0.min.js intregrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script></head><body class=td-section><header><nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar" data-auto-burger=primary><a class=navbar-brand href=/></a><div class="td-navbar-nav-scroll ml-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0"><li class="nav-item mr-2 mb-lg-0"><a class="nav-link active" href=/docs/>Documentation</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/blog/>Kubernetes Blog</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/training/>Training</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/partners/>Partners</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/community/>Community</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/case-studies/>Case Studies</a></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>Versions</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/releases>Release Information</a>
+<a class=dropdown-item href=https://kubernetes.io/docs/reference/networking/>v1.25</a>
+<a class=dropdown-item href=https://v1-24.docs.kubernetes.io/docs/reference/networking/>v1.24</a>
+<a class=dropdown-item href=https://v1-23.docs.kubernetes.io/docs/reference/networking/>v1.23</a>
+<a class=dropdown-item href=https://v1-22.docs.kubernetes.io/docs/reference/networking/>v1.22</a>
+<a class=dropdown-item href=https://v1-21.docs.kubernetes.io/docs/reference/networking/>v1.21</a></div></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdownMenuLink role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>English</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/zh-cn/>中文 (Chinese)</a>
+<a class=dropdown-item href=/ko/>한국어 (Korean)</a>
+<a class=dropdown-item href=/ja/>日本語 (Japanese)</a>
+<a class=dropdown-item href=/fr/>Français (French)</a>
+<a class=dropdown-item href=/it/>Italiano (Italian)</a>
+<a class=dropdown-item href=/de/>Deutsch (German)</a>
+<a class=dropdown-item href=/es/>Español (Spanish)</a>
+<a class=dropdown-item href=/pt-br/>Português (Portuguese)</a>
+<a class=dropdown-item href=/id/>Bahasa Indonesia</a>
+<a class=dropdown-item href=/hi/>हिन्दी (Hindi)</a>
+<a class=dropdown-item href=/vi/>Tiếng Việt (Vietnamese)</a>
+<a class=dropdown-item href=/ru/>Русский (Russian)</a>
+<a class=dropdown-item href=/pl/>Polski (Polish)</a>
+<a class=dropdown-item href=/uk/>Українська (Ukrainian)</a></div></li></ul></div><button id=hamburger onclick=kub.toggleMenu() data-auto-burger-exclude><div></div></button></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><div class=td-content><div class="pageinfo pageinfo-primary d-print-none"><p>This is the multi-page printable view of this section.
+<a href=# onclick="return print(),!1">Click here to print</a>.</p><p><a href=/docs/reference/networking/>Return to the regular view of this page</a>.</p></div><h1 class=title>Networking Reference</h1><ul><li>1: <a href=#pg-a097017db59d2768c0422adcd3f79efd>Protocols for Services</a></li><li>2: <a href=#pg-5927c7cb60e78293efad3e86e45df77f>Ports and Protocols</a></li><li>3: <a href=#pg-d59bf31808ffbe549a5b9ecfc354cfad>Virtual IPs and Service Proxies</a></li></ul><div class=content><p>This section of the Kubernetes documentation provides reference details
+of Kubernetes networking.</p></div></div><div class=td-content><h1 id=pg-a097017db59d2768c0422adcd3f79efd>1 - Protocols for Services</h1><p>If you configure a <a class=glossary-tooltip title='A way to expose an application running on a set of Pods as a network service.' data-toggle=tooltip data-placement=top href=/docs/concepts/services-networking/service/ target=_blank aria-label=Service>Service</a>,
+you can select from any network protocol that Kubernetes supports.</p><p>Kubernetes supports the following protocols with Services:</p><ul><li><a href=#protocol-sctp><code>SCTP</code></a></li><li><a href=#protocol-tcp><code>TCP</code></a> <em>(the default)</em></li><li><a href=#protocol-udp><code>UDP</code></a></li></ul><p>When you define a Service, you can also specify the
+<a href=/docs/concepts/services-networking/service/#application-protocol>application protocol</a>
+that it uses.</p><p>This document details some special cases, all of them typically using TCP
+as a transport protocol:</p><ul><li><a href=#protocol-http-special>HTTP</a> and <a href=#protocol-http-special>HTTPS</a></li><li><a href=#protocol-proxy-special>PROXY protocol</a></li><li><a href=#protocol-tls-special>TLS</a> termination at the load balancer</li></ul><h2 id=protocol-support>Supported protocols</h2><p>There are 3 valid values for the <code>protocol</code> of a port for a Service:</p><h3 id=protocol-sctp><code>SCTP</code></h3><div style=margin-top:10px;margin-bottom:10px><b>FEATURE STATE:</b> <code>Kubernetes v1.20 [stable]</code></div><p>When using a network plugin that supports SCTP traffic, you can use SCTP for
+most Services. For <code>type: LoadBalancer</code> Services, SCTP support depends on the cloud
+provider offering this facility. (Most do not).</p><p>SCTP is not supported on nodes that run Windows.</p><h4 id=caveat-sctp-multihomed>Support for multihomed SCTP associations</h4><p>The support of multihomed SCTP associations requires that the CNI plugin can support the assignment of multiple interfaces and IP addresses to a Pod.</p><p>NAT for multihomed SCTP associations requires special logic in the corresponding kernel modules.</p><div class="alert alert-info note callout" role=alert><strong>Note:</strong> The kube-proxy does not support the management of SCTP associations when it is in userspace mode.</div><h3 id=protocol-tcp><code>TCP</code></h3><p>You can use TCP for any kind of Service, and it's the default network protocol.</p><h3 id=protocol-udp><code>UDP</code></h3><p>You can use UDP for most Services. For <code>type: LoadBalancer</code> Services,
+UDP support depends on the cloud provider offering this facility.</p><h2 id=special-cases>Special cases</h2><h3 id=protocol-http-special>HTTP</h3><p>If your cloud provider supports it, you can use a Service in LoadBalancer mode to
+configure a load balancer outside of your Kubernetes cluster, in a special mode
+where your cloud provider's load balancer implements HTTP / HTTPS reverse proxying,
+with traffic forwarded to the backend endpoints for that Service.</p><p>Typically, you set the protocol for the Service to <code>TCP</code> and add an
+<a class=glossary-tooltip title='A key-value pair that is used to attach arbitrary non-identifying metadata to objects.' data-toggle=tooltip data-placement=top href=/docs/concepts/overview/working-with-objects/annotations target=_blank aria-label=annotation>annotation</a>
+(usually specific to your cloud provider) that configures the load balancer
+to handle traffic at the HTTP level.
+This configuration might also include serving HTTPS (HTTP over TLS) and
+reverse-proxying plain HTTP to your workload.</p><div class="alert alert-info note callout" role=alert><strong>Note:</strong> You can also use an <a class=glossary-tooltip title='An API object that manages external access to the services in a cluster, typically HTTP.' data-toggle=tooltip data-placement=top href=/docs/concepts/services-networking/ingress/ target=_blank aria-label=Ingress>Ingress</a> to expose
+HTTP/HTTPS Services.</div><p>You might additionally want to specify that the
+<a href=/docs/concepts/services-networking/service/#application-protocol>application protocol</a>
+of the connection is <code>http</code> or <code>https</code>. Use <code>http</code> if the session from the
+load balancer to your workload is HTTP without TLS, and use <code>https</code> if the
+session from the load balancer to your workload uses TLS encryption.</p><h3 id=protocol-proxy-special>PROXY protocol</h3><p>If your cloud provider supports it, you can use a Service set to <code>type: LoadBalancer</code>
+to configure a load balancer outside of Kubernetes itself, that will forward connections
+wrapped with the
+<a href=https://www.haproxy.org/download/2.5/doc/proxy-protocol.txt>PROXY protocol</a>.</p><p>The load balancer then sends an initial series of octets describing the
+incoming connection, similar to this example (PROXY protocol v1):</p><pre tabindex=0><code>PROXY TCP4 192.0.2.202 10.0.42.7 12345 7\r\n
+</code></pre><p>The data after the proxy protocol preamble are the original
+data from the client. When either side closes the connection,
+the load balancer also triggers a connection close and sends
+any remaining data where feasible.</p><p>Typically, you define a Service with the protocol to <code>TCP</code>.
+You also set an annotation, specific to your
+cloud provider, that configures the load balancer to wrap each incoming connection in the PROXY protocol.</p><h3 id=protocol-tls-special>TLS</h3><p>If your cloud provider supports it, you can use a Service set to <code>type: LoadBalancer</code> as
+a way to set up external reverse proxying, where the connection from client to load
+balancer is TLS encrypted and the load balancer is the TLS server peer.
+The connection from the load balancer to your workload can also be TLS,
+or might be plain text. The exact options available to you depend on your
+cloud provider or custom Service implementation.</p><p>Typically, you set the protocol to <code>TCP</code> and set an annotation
+(usually specific to your cloud provider) that configures the load balancer
+to act as a TLS server. You would configure the TLS identity (as server,
+and possibly also as a client that connects to your workload) using
+mechanisms that are specific to your cloud provider.</p></div><div class=td-content style=page-break-before:always><h1 id=pg-5927c7cb60e78293efad3e86e45df77f>2 - Ports and Protocols</h1><p>When running Kubernetes in an environment with strict network boundaries, such
+as on-premises datacenter with physical network firewalls or Virtual
+Networks in Public Cloud, it is useful to be aware of the ports and protocols
+used by Kubernetes components.</p><h2 id=control-plane>Control plane</h2><table><thead><tr><th>Protocol</th><th>Direction</th><th>Port Range</th><th>Purpose</th><th>Used By</th></tr></thead><tbody><tr><td>TCP</td><td>Inbound</td><td>6443</td><td>Kubernetes API server</td><td>All</td></tr><tr><td>TCP</td><td>Inbound</td><td>2379-2380</td><td>etcd server client API</td><td>kube-apiserver, etcd</td></tr><tr><td>TCP</td><td>Inbound</td><td>10250</td><td>Kubelet API</td><td>Self, Control plane</td></tr><tr><td>TCP</td><td>Inbound</td><td>10259</td><td>kube-scheduler</td><td>Self</td></tr><tr><td>TCP</td><td>Inbound</td><td>10257</td><td>kube-controller-manager</td><td>Self</td></tr></tbody></table><p>Although etcd ports are included in control plane section, you can also host your own
+etcd cluster externally or on custom ports.</p><h2 id=node>Worker node(s)</h2><table><thead><tr><th>Protocol</th><th>Direction</th><th>Port Range</th><th>Purpose</th><th>Used By</th></tr></thead><tbody><tr><td>TCP</td><td>Inbound</td><td>10250</td><td>Kubelet API</td><td>Self, Control plane</td></tr><tr><td>TCP</td><td>Inbound</td><td>30000-32767</td><td>NodePort Services†</td><td>All</td></tr></tbody></table><p>† Default port range for <a href=/docs/concepts/services-networking/service/>NodePort Services</a>.</p><p>All default port numbers can be overridden. When custom ports are used those
+ports need to be open instead of defaults mentioned here.</p><p>One common example is API server port that is sometimes switched
+to 443. Alternatively, the default port is kept as is and API server is put
+behind a load balancer that listens on 443 and routes the requests to API server
+on the default port.</p></div><div class=td-content style=page-break-before:always><h1 id=pg-d59bf31808ffbe549a5b9ecfc354cfad>3 - Virtual IPs and Service Proxies</h1><p>Every <a class=glossary-tooltip title='A node is a worker machine in Kubernetes.' data-toggle=tooltip data-placement=top href=/docs/concepts/architecture/nodes/ target=_blank aria-label=node>node</a> in a Kubernetes
+cluster runs a <a href=/docs/reference/command-line-tools-reference/kube-proxy/>kube-proxy</a>
+(unless you have deployed your own alternative component in place of <code>kube-proxy</code>).</p><p>The <code>kube-proxy</code> component is responsible for implementing a <em>virtual IP</em>
+mechanism for <a class=glossary-tooltip title='A way to expose an application running on a set of Pods as a network service.' data-toggle=tooltip data-placement=top href=/docs/concepts/services-networking/service/ target=_blank aria-label=Services>Services</a>
+of <code>type</code> other than
+<a href=/docs/concepts/services-networking/service/#externalname><code>ExternalName</code></a>.</p><p>A question that pops up every now and then is why Kubernetes relies on
+proxying to forward inbound traffic to backends. What about other
+approaches? For example, would it be possible to configure DNS records that
+have multiple A values (or AAAA for IPv6), and rely on round-robin name
+resolution?</p><p>There are a few reasons for using proxying for Services:</p><ul><li>There is a long history of DNS implementations not respecting record TTLs,
+and caching the results of name lookups after they should have expired.</li><li>Some apps do DNS lookups only once and cache the results indefinitely.</li><li>Even if apps and libraries did proper re-resolution, the low or zero TTLs
+on the DNS records could impose a high load on DNS that then becomes
+difficult to manage.</li></ul><p>Later in this page you can read about how various kube-proxy implementations work.
+Overall, you should note that, when running <code>kube-proxy</code>, kernel level rules may be modified
+(for example, iptables rules might get created), which won't get cleaned up, in some
+cases until you reboot. Thus, running kube-proxy is something that should only be done
+by an administrator which understands the consequences of having a low level, privileged
+network proxying service on a computer. Although the <code>kube-proxy</code> executable supports a
+<code>cleanup</code> function, this function is not an official feature and thus is only available
+to use as-is.</p><p><a id=example></a>
+Some of the details in this reference refer to an example: the back end Pods for a stateless
+image-processing workload, running with three replicas. Those replicas are
+fungible—frontends do not care which backend they use. While the actual Pods that
+compose the backend set may change, the frontend clients should not need to be aware of that,
+nor should they need to keep track of the set of backends themselves.</p><h2 id=proxy-modes>Proxy modes</h2><p>Note that the kube-proxy starts up in different modes, which are determined by its configuration.</p><ul><li>The kube-proxy's configuration is done via a ConfigMap, and the ConfigMap for
+kube-proxy effectively deprecates the behavior for almost all of the flags for
+the kube-proxy.</li><li>The ConfigMap for the kube-proxy does not support live reloading of configuration.</li><li>The ConfigMap parameters for the kube-proxy cannot all be validated and verified on startup.
+For example, if your operating system doesn't allow you to run iptables commands,
+the standard kernel kube-proxy implementation will not work.
+Likewise, if you have an operating system which doesn't support <code>netsh</code>,
+it will not run in Windows userspace mode.</li></ul><h3 id=proxy-mode-userspace>User space proxy mode</h3><div style=margin-top:10px;margin-bottom:10px><b>FEATURE STATE:</b> <code>Kubernetes v1.23 [deprecated]</code></div><p>This (legacy) mode uses iptables to install interception rules, and then performs
+traffic forwarding with the assistance of the kube-proxy tool.
+The kube-procy watches the Kubernetes control plane for the addition, modification
+and removal of Service and EndpointSlice objects. For each Service, the kube-proxy
+opens a port (randomly chosen) on the local node. Any connections to this <em>proxy port</em>
+are proxied to one of the Service's backend Pods (as reported via
+EndpointSlices). The kube-proxy takes the <code>sessionAffinity</code> setting of the Service into
+account when deciding which backend Pod to use.</p><p>The user-space proxy installs iptables rules which capture traffic to the
+Service's <code>clusterIP</code> (which is virtual) and <code>port</code>. Those rules redirect that traffic
+to the proxy port which proxies the backend Pod.</p><p>By default, kube-proxy in userspace mode chooses a backend via a round-robin algorithm.</p><figure class=diagram-medium><img src=/images/docs/services-userspace-overview.svg><figcaption><h4>Services overview diagram for userspace proxy</h4></figcaption></figure><h4 id=packet-processing-userspace>Example</h4><p>As an example, consider the image processing application described <a href=#example>earlier</a>
+in the page.
+When the backend Service is created, the Kubernetes control plane assigns a virtual
+IP address, for example 10.0.0.1. Assuming the Service port is 1234, the
+Service is observed by all of the kube-proxy instances in the cluster.
+When a proxy sees a new Service, it opens a new random port, establishes an
+iptables redirect from the virtual IP address to this new port, and starts accepting
+connections on it.</p><p>When a client connects to the Service's virtual IP address, the iptables
+rule kicks in, and redirects the packets to the proxy's own port.
+The "Service proxy" chooses a backend, and starts proxying traffic from the client to the backend.</p><p>This means that Service owners can choose any port they want without risk of
+collision. Clients can connect to an IP and port, without being aware
+of which Pods they are actually accessing.</p><h4 id=scaling-challenges-userspace>Scaling challenges</h4><p>Using the userspace proxy for VIPs works at small to medium scale, but will
+not scale to very large clusters with thousands of Services. The
+<a href=https://github.com/kubernetes/kubernetes/issues/1107>original design proposal for portals</a>
+has more details on this.</p><p>Using the userspace proxy obscures the source IP address of a packet accessing
+a Service.
+This makes some kinds of network filtering (firewalling) impossible. The iptables
+proxy mode does not
+obscure in-cluster source IPs, but it does still impact clients coming through
+a load balancer or node-port.</p><h3 id=proxy-mode-iptables><code>iptables</code> proxy mode</h3><p>In this mode, kube-proxy watches the Kubernetes control plane for the addition and
+removal of Service and EndpointSlice objects. For each Service, it installs
+iptables rules, which capture traffic to the Service's <code>clusterIP</code> and <code>port</code>,
+and redirect that traffic to one of the Service's
+backend sets. For each endpoint, it installs iptables rules which
+select a backend Pod.</p><p>By default, kube-proxy in iptables mode chooses a backend at random.</p><p>Using iptables to handle traffic has a lower system overhead, because traffic
+is handled by Linux netfilter without the need to switch between userspace and the
+kernel space. This approach is also likely to be more reliable.</p><p>If kube-proxy is running in iptables mode and the first Pod that's selected
+does not respond, the connection fails. This is different from userspace
+mode: in that scenario, kube-proxy would detect that the connection to the first
+Pod had failed and would automatically retry with a different backend Pod.</p><p>You can use Pod <a href=/docs/concepts/workloads/pods/pod-lifecycle/#container-probes>readiness probes</a>
+to verify that backend Pods are working OK, so that kube-proxy in iptables mode
+only sees backends that test out as healthy. Doing this means you avoid
+having traffic sent via kube-proxy to a Pod that's known to have failed.</p><figure class=diagram-medium><img src=/images/docs/services-iptables-overview.svg><figcaption><h4>Services overview diagram for iptables proxy</h4></figcaption></figure><h4 id=packet-processing-iptables>Example</h4><p>Again, consider the image processing application described <a href=#example>earlier</a>.
+When the backend Service is created, the Kubernetes control plane assigns a virtual
+IP address, for example 10.0.0.1. For this example, assume that the
+Service port is 1234.
+All of the kube-proxy instances in the cluster observe the creation of the new
+Service.</p><p>When kube-proxy on a node sees a new Service, it installs a series of iptables rules
+which redirect from the virtual IP address to more iptables rules, defined per Service.
+The per-Service rules link to further rules for each backend endpoint, and the per-
+endpoint rules redirect traffic (using destination NAT) to the backends.</p><p>When a client connects to the Service's virtual IP address the iptables rule kicks in.
+A backend is chosen (either based on session affinity or randomly) and packets are
+redirected to the backend. Unlike the userspace proxy, packets are never
+copied to userspace, the kube-proxy does not have to be running for the virtual
+IP address to work, and Nodes see traffic arriving from the unaltered client IP
+address.</p><p>This same basic flow executes when traffic comes in through a node-port or
+through a load-balancer, though in those cases the client IP address does get altered.</p><h3 id=proxy-mode-ipvs>IPVS proxy mode</h3><p>In <code>ipvs</code> mode, kube-proxy watches Kubernetes Services and EndpointSlices,
+calls <code>netlink</code> interface to create IPVS rules accordingly and synchronizes
+IPVS rules with Kubernetes Services and EndpointSlices periodically.
+This control loop ensures that IPVS status matches the desired
+state.
+When accessing a Service, IPVS directs traffic to one of the backend Pods.</p><p>The IPVS proxy mode is based on netfilter hook function that is similar to
+iptables mode, but uses a hash table as the underlying data structure and works
+in the kernel space.
+That means kube-proxy in IPVS mode redirects traffic with lower latency than
+kube-proxy in iptables mode, with much better performance when synchronizing
+proxy rules. Compared to the other proxy modes, IPVS mode also supports a
+higher throughput of network traffic.</p><p>IPVS provides more options for balancing traffic to backend Pods;
+these are:</p><ul><li><code>rr</code>: round-robin</li><li><code>lc</code>: least connection (smallest number of open connections)</li><li><code>dh</code>: destination hashing</li><li><code>sh</code>: source hashing</li><li><code>sed</code>: shortest expected delay</li><li><code>nq</code>: never queue</li></ul><div class="alert alert-info note callout" role=alert><strong>Note:</strong><p>To run kube-proxy in IPVS mode, you must make IPVS available on
+the node before starting kube-proxy.</p><p>When kube-proxy starts in IPVS proxy mode, it verifies whether IPVS
+kernel modules are available. If the IPVS kernel modules are not detected, then kube-proxy
+falls back to running in iptables proxy mode.</p></div><figure class=diagram-medium><img src=/images/docs/services-ipvs-overview.svg><figcaption><h4>Services overview diagram for IPVS proxy</h4></figcaption></figure><h2 id=session-affinity>Session affinity</h2><p>In these proxy models, the traffic bound for the Service's IP:Port is
+proxied to an appropriate backend without the clients knowing anything
+about Kubernetes or Services or Pods.</p><p>If you want to make sure that connections from a particular client
+are passed to the same Pod each time, you can select the session affinity based
+on the client's IP addresses by setting <code>.spec.sessionAffinity</code> to <code>ClientIP</code>
+for a Service (the default is <code>None</code>).</p><h3 id=session-stickiness-timeout>Session stickiness timeout</h3><p>You can also set the maximum session sticky time by setting
+<code>.spec.sessionAffinityConfig.clientIP.timeoutSeconds</code> appropriately for a Service.
+(the default value is 10800, which works out to be 3 hours).</p><div class="alert alert-info note callout" role=alert><strong>Note:</strong> On Windows, setting the maximum session sticky time for Services is not supported.</div><h2 id=ip-address-assignment-to-services>IP address assignment to Services</h2><p>Unlike Pod IP addresses, which actually route to a fixed destination,
+Service IPs are not actually answered by a single host. Instead, kube-proxy
+uses packet processing logic (such as Linux iptables) to define <em>virtual</em> IP
+addresses which are transparently redirected as needed.</p><p>When clients connect to the VIP, their traffic is automatically transported to an
+appropriate endpoint. The environment variables and DNS for Services are actually
+populated in terms of the Service's virtual IP address (and port).</p><h3 id=avoiding-collisions>Avoiding collisions</h3><p>One of the primary philosophies of Kubernetes is that you should not be
+exposed to situations that could cause your actions to fail through no fault
+of your own. For the design of the Service resource, this means not making
+you choose your own port number if that choice might collide with
+someone else's choice. That is an isolation failure.</p><p>In order to allow you to choose a port number for your Services, we must
+ensure that no two Services can collide. Kubernetes does that by allocating each
+Service its own IP address from within the <code>service-cluster-ip-range</code>
+CIDR range that is configured for the API server.</p><p>To ensure each Service receives a unique IP, an internal allocator atomically
+updates a global allocation map in <a class=glossary-tooltip title='Consistent and highly-available key value store used as backing store of Kubernetes for all cluster data.' data-toggle=tooltip data-placement=top href=/docs/tasks/administer-cluster/configure-upgrade-etcd/ target=_blank aria-label=etcd>etcd</a>
+prior to creating each Service. The map object must exist in the registry for
+Services to get IP address assignments, otherwise creations will
+fail with a message indicating an IP address could not be allocated.</p><p>In the control plane, a background controller is responsible for creating that
+map (needed to support migrating from older versions of Kubernetes that used
+in-memory locking). Kubernetes also uses controllers to check for invalid
+assignments (e.g. due to administrator intervention) and for cleaning up allocated
+IP addresses that are no longer used by any Services.</p><h4 id=service-ip-static-sub-range>IP address ranges for Service virtual IP addresses</h4><div style=margin-top:10px;margin-bottom:10px><b>FEATURE STATE:</b> <code>Kubernetes v1.25 [beta]</code></div><p>Kubernetes divides the <code>ClusterIP</code> range into two bands, based on
+the size of the configured <code>service-cluster-ip-range</code> by using the following formula
+<code>min(max(16, cidrSize / 16), 256)</code>. That formula paraphrases as <em>never less than 16 or
+more than 256, with a graduated step function between them</em>.</p><p>Kubernetes prefers to allocate dynamic IP addresses to Services by choosing from the upper band,
+which means that if you want to assign a specific IP address to a <code>type: ClusterIP</code>
+Service, you should manually assign an IP address from the <strong>lower</strong> band. That approach
+reduces the risk of a conflict over allocation.</p><p>If you disable the <code>ServiceIPStaticSubrange</code>
+<a href=/docs/reference/command-line-tools-reference/feature-gates/>feature gate</a> then Kubernetes
+uses a single shared pool for both manually and dynamically assigned IP addresses,
+that are used for <code>type: ClusterIP</code> Services.</p><h2 id=traffic-policies>Traffic policies</h2><p>You can set the <code>.spec.internalTrafficPolicy</code> and <code>.spec.externalTrafficPolicy</code> fields
+to control how Kubernetes routes traffic to healthy (“ready”) backends.</p><h3 id=external-traffic-policy>External traffic policy</h3><p>You can set the <code>.spec.externalTrafficPolicy</code> field to control how traffic from
+external sources is routed. Valid values are <code>Cluster</code> and <code>Local</code>. Set the field
+to <code>Cluster</code> to route external traffic to all ready endpoints and <code>Local</code> to only
+route to ready node-local endpoints. If the traffic policy is <code>Local</code> and there are
+are no node-local endpoints, the kube-proxy does not forward any traffic for the
+relevant Service.</p><div class="alert alert-info note callout" role=alert><strong>Note:</strong><div style=margin-top:10px;margin-bottom:10px><b>FEATURE STATE:</b> <code>Kubernetes v1.22 [alpha]</code></div><p>If you enable the <code>ProxyTerminatingEndpoints</code>
+<a href=/docs/reference/command-line-tools-reference/feature-gates/>feature gate</a>
+for the kube-proxy, the kube-proxy checks if the node
+has local endpoints and whether or not all the local endpoints are marked as terminating.
+If there are local endpoints and <strong>all</strong> of those are terminating, then the kube-proxy ignores
+any external traffic policy of <code>Local</code>. Instead, whilst the node-local endpoints remain as all
+terminating, the kube-proxy forwards traffic for that Service to healthy endpoints elsewhere,
+as if the external traffic policy were set to <code>Cluster</code>.</p><p>This forwarding behavior for terminating endpoints exists to allow external load balancers to
+gracefully drain connections that are backed by <code>NodePort</code> Services, even when the health check
+node port starts to fail. Otherwise, traffic can be lost between the time a node is
+still in the node pool of a load balancer and traffic is being dropped during the
+termination period of a pod.</p></div><h3 id=internal-traffic-policy>Internal traffic policy</h3><div style=margin-top:10px;margin-bottom:10px><b>FEATURE STATE:</b> <code>Kubernetes v1.22 [beta]</code></div><p>You can set the <code>.spec.internalTrafficPolicy</code> field to control how traffic from
+internal sources is routed. Valid values are <code>Cluster</code> and <code>Local</code>. Set the field to
+<code>Cluster</code> to route internal traffic to all ready endpoints and <code>Local</code> to only route
+to ready node-local endpoints. If the traffic policy is <code>Local</code> and there are no
+node-local endpoints, traffic is dropped by kube-proxy.</p><h2 id=what-s-next>What's next</h2><p>To learn more about Services,
+read <a href=/docs/concepts/services-networking/connect-applications-service/>Connecting Applications with Services</a>.</p><p>You can also:</p><ul><li>Read about <a href=/docs/concepts/services-networking/service/>Services</a></li><li>Read the <a href=/docs/reference/kubernetes-api/service-resources/service-v1/>API reference</a> for the Service API</li></ul></div></main></div></div><footer class=d-print-none><div class=footer__links><nav><a class=text-white href=/docs/home/>Home</a>
+<a class=text-white href=/blog/>Blog</a>
+<a class=text-white href=/training/>Training</a>
+<a class=text-white href=/partners/>Partners</a>
+<a class=text-white href=/community/>Community</a>
+<a class=text-white href=/case-studies/>Case Studies</a></nav></div><div class=container-fluid><div class=row><div class="col-6 col-sm-2 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="User mailing list" aria-label="User mailing list"><a class=text-white target=_blank href=https://discuss.kubernetes.io><i class="fa fa-envelope"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank href=https://twitter.com/kubernetesio><i class="fab fa-twitter"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Calendar aria-label=Calendar><a class=text-white target=_blank href="https://calendar.google.com/calendar/embed?src=calendar%40kubernetes.io"><i class="fas fa-calendar-alt"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Youtube aria-label=Youtube><a class=text-white target=_blank href=https://youtube.com/kubernetescommunity><i class="fab fa-youtube"></i></a></li></ul></div><div class="col-6 col-sm-2 text-right text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank href=https://github.com/kubernetes/kubernetes><i class="fab fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Slack aria-label=Slack><a class=text-white target=_blank href=https://slack.k8s.io><i class="fab fa-slack"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Contribute aria-label=Contribute><a class=text-white target=_blank href=https://git.k8s.io/community/contributors/guide><i class="fas fa-edit"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="Stack Overflow" aria-label="Stack Overflow"><a class=text-white target=_blank href=https://stackoverflow.com/questions/tagged/kubernetes><i class="fab fa-stack-overflow"></i></a></li></ul></div><div class="col-12 col-sm-8 text-center order-sm-2"><small class=text-white>&copy; 2023 The Kubernetes Authors | Documentation Distributed under <a href=https://git.k8s.io/website/LICENSE class=light-text>CC BY 4.0</a></small><br><small class=text-white>Copyright &copy; 2023 The Linux Foundation &reg;. All rights reserved. The Linux Foundation has registered trademarks and uses trademarks. For a list of trademarks of The Linux Foundation, please see our <a href=https://www.linuxfoundation.org/trademark-usage class=light-text>Trademark Usage page</a></small><br><small class=text-white>ICP license: 京ICP备17074266号-3</small></div></div></div></footer></div><script src=/js/jquery-3.6.0.min.js integrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script>
+<script src=/js/popper-1.16.1.min.js intregrity=sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN crossorigin=anonymous></script>
+<script src=/js/bootstrap-4.6.1.min.js integrity=sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2 crossorigin=anonymous></script>
+<script src=/js/script.js></script>
+<script async src=/js/mermaid-8.13.4.min.js integrity=sha384-5hHNvPeMrNH14oM3IcQofDoBhiclNK3g2+hnEinKzQ07C4AliMeVpnvxuiwEGpaO crossorigin=anonymous></script>
+<script src=/js/main.min.5c0bf7f21dc4f66485f74efbbeeff28a7e4f8cddaac1bae47043159c922ff3a3.js integrity="sha256-XAv38h3E9mSF9077vu/yin5PjN2qwbrkcEMVnJIv86M=" crossorigin=anonymous></script></body></html>

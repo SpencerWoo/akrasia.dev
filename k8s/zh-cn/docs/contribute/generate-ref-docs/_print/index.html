@@ -1,0 +1,326 @@
+<!doctype html><html lang=zh-cn class=no-js><head><meta name=robots content="noindex, nofollow"><link rel=alternate hreflang=en href=https://kubernetes.io/docs/contribute/generate-ref-docs/><link rel=alternate hreflang=ko href=https://kubernetes.io/ko/docs/contribute/generate-ref-docs/><link rel=alternate hreflang=fr href=https://kubernetes.io/fr/docs/contribute/generate-ref-docs/><link rel=alternate hreflang=es href=https://kubernetes.io/es/docs/contribute/generate-ref-docs/><link rel=alternate hreflang=ru href=https://kubernetes.io/ru/docs/contribute/generate-ref-docs/><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.110.0"><link rel=canonical type=text/html href=https://kubernetes.io/zh-cn/docs/contribute/generate-ref-docs/><link rel="shortcut icon" type=image/png href=/images/favicon.png><link rel=apple-touch-icon href=/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=manifest href=/manifest.webmanifest><link rel=apple-touch-icon href=/images/kubernetes-192x192.png><title>参考文档概述 | Kubernetes</title><meta property="og:title" content="参考文档概述"><meta property="og:description" content="生产级别的容器编排系统"><meta property="og:type" content="website"><meta property="og:url" content="https://kubernetes.io/zh-cn/docs/contribute/generate-ref-docs/"><meta property="og:site_name" content="Kubernetes"><meta itemprop=name content="参考文档概述"><meta itemprop=description content="生产级别的容器编排系统"><meta name=twitter:card content="summary"><meta name=twitter:title content="参考文档概述"><meta name=twitter:description content="生产级别的容器编排系统"><link href=/scss/main.css rel=stylesheet><script type=application/ld+json>{"@context":"https://schema.org","@type":"Organization","url":"https://kubernetes.io","logo":"https://kubernetes.io/images/favicon.png","potentialAction":{"@type":"SearchAction","target":"https://kubernetes.io/search/?q={search_term_string}","query-input":"required name=search_term_string"}}</script><meta name=theme-color content="#326ce5"><link rel=stylesheet href=/css/feature-states.css><meta name=description content=" 本节的主题是描述如何生成 Kubernetes 参考指南。 要生成参考文档，请参考下面的指南：
+生成参考文档快速入门 "><meta property="og:description" content=" 本节的主题是描述如何生成 Kubernetes 参考指南。 要生成参考文档，请参考下面的指南：
+生成参考文档快速入门 "><meta name=twitter:description content=" 本节的主题是描述如何生成 Kubernetes 参考指南。 要生成参考文档，请参考下面的指南：
+生成参考文档快速入门 "><meta property="og:url" content="https://kubernetes.io/zh-cn/docs/contribute/generate-ref-docs/"><meta property="og:title" content="参考文档概述"><meta name=twitter:title content="参考文档概述"><meta name=twitter:image content="https://kubernetes.io/images/favicon.png"><meta name=twitter:image:alt content="Kubernetes"><meta property="og:image" content="/images/kubernetes-horizontal-color.png"><meta property="og:type" content="article"><script src=/js/jquery-3.6.0.min.js intregrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script></head><body class=td-section><header><nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar" data-auto-burger=primary><a class=navbar-brand href=/zh-cn/></a><div class="td-navbar-nav-scroll ml-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0"><li class="nav-item mr-2 mb-lg-0"><a class="nav-link active" href=/zh-cn/docs/>文档</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/blog/>Kubernetes 博客</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/training/>培训</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/partners/>合作伙伴</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/community/>社区</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/case-studies/>案例分析</a></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>版本列表</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/zh-cn/releases>Release Information</a>
+<a class=dropdown-item href=https://kubernetes.io/zh-cn/docs/contribute/generate-ref-docs/>v1.25</a>
+<a class=dropdown-item href=https://v1-24.docs.kubernetes.io/zh-cn/docs/contribute/generate-ref-docs/>v1.24</a>
+<a class=dropdown-item href=https://v1-23.docs.kubernetes.io/zh-cn/docs/contribute/generate-ref-docs/>v1.23</a>
+<a class=dropdown-item href=https://v1-22.docs.kubernetes.io/zh-cn/docs/contribute/generate-ref-docs/>v1.22</a>
+<a class=dropdown-item href=https://v1-21.docs.kubernetes.io/zh-cn/docs/contribute/generate-ref-docs/>v1.21</a></div></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdownMenuLink role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>中文 (Chinese)</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/docs/contribute/generate-ref-docs/>English</a>
+<a class=dropdown-item href=/ko/docs/contribute/generate-ref-docs/>한국어 (Korean)</a>
+<a class=dropdown-item href=/fr/docs/contribute/generate-ref-docs/>Français (French)</a>
+<a class=dropdown-item href=/es/docs/contribute/generate-ref-docs/>Español (Spanish)</a>
+<a class=dropdown-item href=/ru/docs/contribute/generate-ref-docs/>Русский (Russian)</a></div></li></ul></div><button id=hamburger onclick=kub.toggleMenu() data-auto-burger-exclude><div></div></button></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><div class=td-content><div class="pageinfo pageinfo-primary d-print-none"><p>这是本节的多页打印视图。
+<a href=# onclick="return print(),!1">点击此处打印</a>.</p><p><a href=/zh-cn/docs/contribute/generate-ref-docs/>返回本页常规视图</a>.</p></div><h1 class=title>参考文档概述</h1><ul><li>1: <a href=#pg-f4f605fa4c2e23622d56b067ef56c239>参考文档快速入门</a></li><li>2: <a href=#pg-a5eac5b2b794f16aa703a2fa212d7c39>为上游 Kubernetes 代码库做出贡献</a></li><li>3: <a href=#pg-6e4e78f20e40bac9bcad59941e974af6>为 Kubernetes API 生成参考文档</a></li><li>4: <a href=#pg-03de26b330a5cfdb26672f6bc75dcc04>为 kubectl 命令集生成参考文档</a></li><li>5: <a href=#pg-28fc50a0072b0b2b444aa24e552d2e60>为 Kubernetes 组件和工具生成参考文档</a></li><li>6: <a href=#pg-eabe0c0c6b0046c51d7fdf5e8450a5b5></a></li></ul><div class=content><p>本节的主题是描述如何生成 Kubernetes 参考指南。
+要生成参考文档，请参考下面的指南：</p><ul><li><a href=/zh-cn/docs/contribute/generate-ref-docs/quickstart/>生成参考文档快速入门</a></li></ul></div></div><div class=td-content><h1 id=pg-f4f605fa4c2e23622d56b067ef56c239>1 - 参考文档快速入门</h1><p>本页讨论如何使用 <code>update-imported-docs.py</code> 脚本来生成 Kubernetes 参考文档。
+此脚本将构建的配置过程自动化，并为某个发行版本生成参考文档。</p><h2 id=准备开始>准备开始</h2><h3 id=requirements>需求</h3><ul><li><p>你需要一台 Linux 或 macOS 机器。</p></li><li><p>你需要安装以下工具：</p><ul><li><a href=https://www.python.org/downloads/>Python</a> v3.7.x</li><li><a href=https://git-scm.com/book/en/v2/Getting-Started-Installing-Git>Git</a></li><li><a href=https://golang.org/doc/install>Golang</a> 1.13+ 版本</li><li>用来安装 PyYAML 的 <a href=https://pypi.org/project/pip/>Pip</a></li><li><a href=https://pyyaml.org/>PyYAML</a> v5.1.2</li><li><a href=https://www.gnu.org/software/make/>make</a></li><li><a href=https://gcc.gnu.org/>gcc compiler/linker</a></li><li><a href=https://docs.docker.com/engine/installation/>Docker</a> （仅用于 <code>kubectl</code> 命令参考）</li></ul></li></ul><ul><li><p>你的 <code>PATH</code> 环境变量必须包含所需要的构建工具，例如 <code>Go</code> 程序和 <code>python</code>。</p></li><li><p>你需要知道如何为一个 GitHub 仓库创建拉取请求（PR）。
+这牵涉到创建仓库的派生（fork）副本。
+有关信息可进一步查看<a href=/zh-cn/docs/contribute/new-content/open-a-pr/#fork-the-repo>基于本地副本开展工作</a>。</p></li></ul><h2 id=getting-the-docs-repository>获取文档仓库</h2><p>确保你的 <code>website</code> 派生仓库与 GitHub 上的 <code>kubernetes/website</code> 远程仓库（<code>main</code> 分支）保持同步，
+并克隆你的派生仓库。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>mkdir github.com
+</span></span><span style=display:flex><span><span style=color:#a2f>cd</span> github.com
+</span></span><span style=display:flex><span>git clone git@github.com:&lt;your_github_username&gt;/website.git
+</span></span></code></pre></div><p>确定你的克隆副本的根目录。例如，如果你按照前面的步骤获取了仓库，你的根目录
+会是 <code>github.com/website</code>。接下来的步骤中，<code>&lt;web-base></code> 用来指代你的根目录。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>如果你希望更改构建工具和 API 参考资料，
+可以阅读<a href=/zh-cn/docs/contribute/generate-ref-docs/contribute-upstream>上游贡献指南</a>。</div><h2 id=overview-of-update-imported-docs>update-imported-docs 的概述</h2><p>脚本 <code>update-imported-docs.py</code> 位于 <code>&lt;web-base>/update-imported-docs/</code> 目录下，
+能够生成以下参考文档：</p><ul><li>Kubernetes 组件和工具的参考页面</li><li><code>kubectl</code> 命令参考文档</li><li>Kubernetes API 参考文档</li></ul><p>脚本 <code>update-imported-docs.py</code> 基于 Kubernetes 源代码生成参考文档。
+过程中会在你的机器的 <code>/tmp</code> 目录下创建临时目录，克隆所需要的仓库
+<code>kubernetes/kubernetes</code> 和 <code>kubernetes-sigs/reference-docs</code> 到此临时目录。
+脚本会将 <code>GOPATH</code> 环境变量设置为指向此临时目录。
+此外，脚本会设置三个环境变量：</p><ul><li><code>K8S_RELEASE</code></li><li><code>K8S_ROOT</code></li><li><code>K8S_WEBROOT</code></li></ul><p>脚本需要两个参数才能成功运行：</p><ul><li>一个 YAML 配置文件（<code>reference.yml</code>）</li><li>一个发行版本字符串，例如：<code>1.17</code></li></ul><p>配置文件中包含 <code>generate-command</code> 字段，其中定义了一系列来自于
+<code>kubernetes-sigs/reference-docs/Makefile</code> 的构建指令。
+变量 <code>K8S_RELEASE</code> 用来确定所针对的发行版本。</p><p>脚本 <code>update-imported-docs.py</code> 执行以下步骤：</p><ol><li>克隆配置文件中所指定的相关仓库。就生成参考文档这一目的而言，要克隆的仓库默认为
+<code>kubernetes-sigs/reference-docs</code>。</li><li>在所克隆的仓库下运行命令，准备文档生成器，之后生成 HTML 和 Markdown 文件。</li><li>将所生成的 HTML 和 Markdown 文件复制到 <code>&lt;web-base></code> 本地克隆副本中，
+放在配置文件中所指定的目录下。</li><li>更新 <code>kubectl.md</code> 文件中对 <code>kubectl</code> 命令文档的链接，使之指向 <code>kubectl</code>
+命令参考中对应的节区。</li></ol><p>当所生成的文件已经被放到 <code>&lt;web-base></code> 目录下，你就可以将其提交到你的派生副本中，
+并基于所作提交发起<a href=/docs/contribute/start/>拉取请求（PR）</a>到 k/website 仓库。</p><h2 id=configuration-file-format>配置文件格式</h2><p>每个配置文件可以包含多个被导入的仓库。当必要时，你可以通过手工编辑此文件进行定制。
+你也可以通过创建新的配置文件来导入其他文档集合。
+下面是 YAML 配置文件的一个例子：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>repos</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>community<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>remote</span>:<span style=color:#bbb> </span>https://github.com/kubernetes/community.git<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>branch</span>:<span style=color:#bbb> </span>master<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>files</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>src</span>:<span style=color:#bbb> </span>contributors/devel/README.md<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>dst</span>:<span style=color:#bbb> </span>docs/imported/community/devel.md<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>src</span>:<span style=color:#bbb> </span>contributors/guide/README.md<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>dst</span>:<span style=color:#bbb> </span>docs/imported/community/guide.md<span style=color:#bbb>
+</span></span></span></code></pre></div><p>通过工具导入的单页面的 Markdown
+文档必须遵从<a href=/zh-cn/docs/contribute/style/style-guide/>文档样式指南</a>。</p><h2 id=customizing-reference-yml>定制 reference.yml</h2><p>打开 <code>&lt;web-base>/update-imported-docs/reference.yml</code> 文件进行编辑。
+在不了解参考文档构造命令的情况下，不要更改 <code>generate-command</code> 字段的内容。
+你一般不需要更新 <code>reference.yml</code> 文件。不过也有时候上游的源代码发生变化，
+导致需要对配置文件进行更改（例如：Golang 版本依赖或者第三方库发生变化）。
+如果你遇到类似问题，请在 <a href=https://kubernetes.slack.com>Kubernetes Slack 的 #sig-docs 频道</a>
+联系 SIG-Docs 团队。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>注意，<code>generate-command</code> 是一个可选项，用来运行指定命令或者短脚本以在仓库内生成文档。</div><p>在 <code>reference.yml</code> 文件中，<code>files</code> 属性包含了一组 <code>src</code> 和 <code>dst</code> 字段。
+<code>src</code> 字段给出在所克隆的 <code>kubernetes-sigs/reference-docs</code> 构造目录中生成的
+Markdown 文件的位置，而 <code>dst</code> 字段则给出了对应文件要复制到的、所克隆的
+<code>kubernetes/website</code> 仓库中的位置。例如：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>repos</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>reference-docs<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>remote</span>:<span style=color:#bbb> </span>https://github.com/kubernetes-sigs/reference-docs.git<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>files</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>src</span>:<span style=color:#bbb> </span>gen-compdocs/build/kube-apiserver.md<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>dst</span>:<span style=color:#bbb> </span>content/en/docs/reference/command-line-tools-reference/kube-apiserver.md<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>...<span style=color:#bbb>
+</span></span></span></code></pre></div><p>注意，如果从同一源目录中有很多文件要复制到目标目录，你可以在为 <code>src</code>
+所设置的值中使用通配符。这时，为 <code>dst</code> 所设置的值必须是目录名称。例如：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>files</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>src</span>:<span style=color:#bbb> </span>gen-compdocs/build/kubeadm*.md<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>dst</span>:<span style=color:#bbb> </span>content/en/docs/reference/setup-tools/kubeadm/generated/<span style=color:#bbb>
+</span></span></span></code></pre></div><h2 id=running-the-update-imported-docs-tool>运行 update-imported-docs 工具</h2><p>你可以用如下方式运行 <code>update-imported-docs.py</code> 工具：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f>cd</span> &lt;web-base&gt;/update-imported-docs
+</span></span><span style=display:flex><span>./update-imported-docs.py &lt;configuration-file.yml&gt; &lt;release-version&gt;
+</span></span></code></pre></div><p>例如：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>./update-imported-docs.py reference.yml 1.17
+</span></span></code></pre></div><h2 id=fixing-links>修复链接</h2><p>配置文件 <code>release.yml</code> 中包含用来修复相对链接的指令。
+若要修复导入文件中的相对链接，将 <code>gen-absolute-links</code> 属性设置为 <code>true</code>。你可以在
+<a href=https://github.com/kubernetes/website/blob/main/update-imported-docs/release.yml><code>release.yml</code></a>
+文件中找到示例。</p><h2 id=adding-and-committing-changes-in-k8s-website>添加并提交 kubernetes/website 中的变更</h2><p>枚举新生成并复制到 <code>&lt;web-base></code> 的文件：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f>cd</span> &lt;web-base&gt;
+</span></span><span style=display:flex><span>git status
+</span></span></code></pre></div><p>输出显示新生成和已修改的文件。取决于上游源代码的修改多少，
+所生成的输出也会不同。</p><h3 id=生成的-kubernetes-组件文档>生成的 Kubernetes 组件文档</h3><pre tabindex=0><code>content/en/docs/reference/command-line-tools-reference/cloud-controller-manager.md
+content/en/docs/reference/command-line-tools-reference/kube-apiserver.md
+content/en/docs/reference/command-line-tools-reference/kube-controller-manager.md
+content/en/docs/reference/command-line-tools-reference/kube-proxy.md
+content/en/docs/reference/command-line-tools-reference/kube-scheduler.md
+content/en/docs/reference/setup-tools/kubeadm/generated/kubeadm.md
+content/en/docs/reference/kubectl/kubectl.md
+</code></pre><h3 id=生成的-kubectl-命令参考文件>生成的 kubectl 命令参考文件</h3><pre tabindex=0><code>static/docs/reference/generated/kubectl/kubectl-commands.html
+static/docs/reference/generated/kubectl/navData.js
+static/docs/reference/generated/kubectl/scroll.js
+static/docs/reference/generated/kubectl/stylesheet.css
+static/docs/reference/generated/kubectl/tabvisibility.js
+static/docs/reference/generated/kubectl/node_modules/bootstrap/dist/css/bootstrap.min.css
+static/docs/reference/generated/kubectl/node_modules/highlight.js/styles/default.css
+static/docs/reference/generated/kubectl/node_modules/jquery.scrollto/jquery.scrollTo.min.js
+static/docs/reference/generated/kubectl/node_modules/jquery/dist/jquery.min.js
+static/docs/reference/generated/kubectl/css/font-awesome.min.css
+</code></pre><h3 id=生成的-kubernetes-api-参考目录与文件>生成的 Kubernetes API 参考目录与文件</h3><pre tabindex=0><code>static/docs/reference/generated/kubernetes-api/v1.25/index.html
+static/docs/reference/generated/kubernetes-api/v1.25/js/navData.js
+static/docs/reference/generated/kubernetes-api/v1.25/js/scroll.js
+static/docs/reference/generated/kubernetes-api/v1.25/js/query.scrollTo.min.js
+static/docs/reference/generated/kubernetes-api/v1.25/css/font-awesome.min.css
+static/docs/reference/generated/kubernetes-api/v1.25/css/bootstrap.min.css
+static/docs/reference/generated/kubernetes-api/v1.25/css/stylesheet.css
+static/docs/reference/generated/kubernetes-api/v1.25/fonts/FontAwesome.otf
+static/docs/reference/generated/kubernetes-api/v1.25/fonts/fontawesome-webfont.eot
+static/docs/reference/generated/kubernetes-api/v1.25/fonts/fontawesome-webfont.svg
+static/docs/reference/generated/kubernetes-api/v1.25/fonts/fontawesome-webfont.ttf
+static/docs/reference/generated/kubernetes-api/v1.25/fonts/fontawesome-webfont.woff
+static/docs/reference/generated/kubernetes-api/v1.25/fonts/fontawesome-webfont.woff2
+</code></pre><p>运行 <code>git add</code> 和 <code>git commit</code> 提交文件。</p><h2 id=creating-a-pull-request>创建拉取请求</h2><p>接下来创建一个对 <code>kubernetes/website</code> 仓库的拉取请求（PR）。
+监视所创建的 PR，并根据需要对评阅意见给出反馈。
+继续监视该 PR 直到其被合并为止。</p><p>当你的 PR 被合并几分钟之后，你所做的对参考文档的变更就会出现
+<a href=/zh-cn/docs/home/>发布的文档</a>上。</p><h2 id=接下来>接下来</h2><p>要手动设置所需的构造仓库，执行构建目标，以生成各个参考文档，可参考下面的指南：</p><ul><li><a href=/zh-cn/docs/contribute/generate-ref-docs/kubernetes-components/>为 Kubernetes 组件和工具生成参考文档</a></li><li><a href=/zh-cn/docs/contribute/generate-ref-docs/kubectl/>为 kubectl 命令生成参考文档</a></li><li><a href=/zh-cn/docs/contribute/generate-ref-docs/kubernetes-api/>为 Kubernetes API 生成参考文档</a></li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-a5eac5b2b794f16aa703a2fa212d7c39>2 - 为上游 Kubernetes 代码库做出贡献</h1><p>此页面描述如何为上游 <code>kubernetes/kubernetes</code> 项目做出贡献，如修复 Kubernetes API
+文档或 Kubernetes 组件（例如 <code>kubeadm</code>、<code>kube-apiserver</code>、<code>kube-controller-manager</code> 等）
+中发现的错误。</p><p>如果你仅想从上游代码重新生成 Kubernetes API 或 <code>kube-*</code> 组件的参考文档。请参考以下说明：</p><ul><li><a href=/zh-cn/docs/contribute/generate-ref-docs/kubernetes-api/>生成 Kubernetes API 的参考文档</a></li><li><a href=/zh-cn/docs/contribute/generate-ref-docs/kubernetes-components/>生成 Kubernetes 组件和工具的参考文档</a></li></ul><h2 id=准备开始>准备开始</h2><ul><li><p>你需要安装以下工具：</p><ul><li><a href=https://git-scm.com/book/en/v2/Getting-Started-Installing-Git>Git</a></li><li><a href=https://golang.org/doc/install>Golang</a> 的 1.13 版本或更高</li><li><a href=https://docs.docker.com/engine/installation/>Docker</a></li><li><a href=https://github.com/coreos/etcd/>etcd</a></li><li><a href=https://www.gnu.org/software/make/>make</a></li><li><a href=https://gcc.gnu.org/>gcc compiler/linker</a></li></ul></li></ul><ul><li>你必须设置 <code>GOPATH</code> 环境变量，并且 <code>etcd</code> 的位置必须在 <code>PATH</code> 环境变量中。</li></ul><ul><li>你需要知道如何创建对 GitHub 代码仓库的拉取请求（Pull Request）。
+通常，这涉及创建代码仓库的派生副本。
+要获取更多的信息请参考<a href=https://help.github.com/articles/creating-a-pull-request/>创建 PR</a> 和
+<a href=https://gist.github.com/Chaser324/ce0505fbed06b947d962>GitHub 标准派生和 PR 工作流程</a>。</li></ul><h2 id=基本说明>基本说明</h2><p>Kubernetes API 和 <code>kube-*</code> 组件（例如 <code>kube-apiserver</code>、<code>kube-controller-manager</code>）的参考文档
+是根据<a href=https://github.com/kubernetes/kubernetes/>上游 Kubernetes</a> 中的源代码自动生成的。</p><p>当你在生成的文档中看到错误时，你可能需要考虑创建一个 PR 用来在上游项目中对其进行修复。</p><h2 id=克隆-kubernetes-代码仓库>克隆 Kubernetes 代码仓库</h2><p>如果你还没有 kubernetes/kubernetes 代码仓库，请参照下列命令获取：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>mkdir <span style=color:#b8860b>$GOPATH</span>/src
+</span></span><span style=display:flex><span><span style=color:#a2f>cd</span> <span style=color:#b8860b>$GOPATH</span>/src
+</span></span><span style=display:flex><span>go get github.com/kubernetes/kubernetes
+</span></span></code></pre></div><p>确定你的 <a href=https://github.com/kubernetes/kubernetes>kubernetes/kubernetes</a> 代码仓库克隆的根目录。
+例如，如果按照前面的步骤获取代码仓库，则你的根目录为 <code>$GOPATH/src/github.com/kubernetes/kubernetes</code>。
+接下来其余步骤将你的根目录称为 <code>&lt;k8s-base></code>。</p><p>确定你的 <a href=https://github.com/kubernetes-sigs/reference-docs>kubernetes-sigs/reference-docs</a>
+代码仓库克隆的根目录。
+例如，如果按照前面的步骤获取代码仓库，则你的根目录为
+<code>$GOPATH/src/github.com/kubernetes-sigs/reference-docs</code>。
+接下来其余步骤将你的根目录称为 <code>&lt;rdocs-base></code>。</p><h2 id=编辑-kubernetes-源代码>编辑 Kubernetes 源代码</h2><p>Kubernetes API 参考文档是根据 OpenAPI 规范自动生成的，该规范是从 Kubernetes 源代码生成的。
+如果要更改 API 参考文档，第一步是更改 Kubernetes 源代码中的一个或多个注释。</p><p><code>kube-*</code> 组件的文档也是从上游源代码生成的。你必须更改与要修复的组件相关的代码，才能修复生成的文档。</p><h3 id=更改上游-kubernetes-源代码>更改上游 Kubernetes 源代码</h3><div class="alert alert-info note callout" role=alert><strong>说明：</strong> 以下步骤仅作为示例，不是通用步骤，具体情况因环境而异。</div><p>以下在 Kubernetes 源代码中编辑注释的示例。</p><p>在你本地的 kubernetes/kubernetes 代码仓库中，检出默认分支，并确保它是最新的：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f>cd</span> &lt;k8s-base&gt;
+</span></span><span style=display:flex><span>git checkout master
+</span></span><span style=display:flex><span>git pull https://github.com/kubernetes/kubernetes master
+</span></span></code></pre></div><p>假设默认分支中的下面源文件中包含拼写错误 "atmost"：</p><p><a href=https://github.com/kubernetes/kubernetes/blob/master/staging/src/k8s.io/api/apps/v1/types.go>kubernetes/kubernetes/staging/src/k8s.io/api/apps/v1/types.go</a></p><p>在你的本地环境中，打开 <code>types.go</code> 文件，然后将 "atmost" 更改为 "at most"。</p><p>以下命令验证你已经更改了文件：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git status
+</span></span></code></pre></div><p>输出显示你在 master 分支上，<code>types.go</code> 源文件已被修改：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>On branch master
+</span></span><span style=display:flex><span>...
+</span></span><span style=display:flex><span>    modified:   staging/src/k8s.io/api/apps/v1/types.go
+</span></span></code></pre></div><h3 id=提交已编辑的文件>提交已编辑的文件</h3><p>运行 <code>git add</code> 和 <code>git commit</code> 命令提交到目前为止所做的更改。
+在下一步中，你将进行第二次提交，将更改分成两个提交很重要。</p><h3 id=生成-openapi-规范和相关文件>生成 OpenAPI 规范和相关文件</h3><p>进入 <code>&lt;k8s-base></code> 目录并运行以下脚本：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>hack/update-generated-swagger-docs.sh
+</span></span><span style=display:flex><span>hack/update-openapi-spec.sh
+</span></span><span style=display:flex><span>hack/update-generated-protobuf.sh
+</span></span></code></pre></div><p>运行 <code>git status</code> 命令查看生成的文件。</p><pre tabindex=0><code class=language-none data-lang=none>On branch master
+...
+    modified:   api/openapi-spec/swagger.json
+    modified:   api/openapi-spec/v3/apis__apps__v1_openapi.json
+    modified:   pkg/generated/openapi/zz_generated.openapi.go
+    modified:   staging/src/k8s.io/api/apps/v1/generated.proto
+    modified:   staging/src/k8s.io/api/apps/v1/types_swagger_doc_generated.go
+</code></pre><p>查看 <code>api/openapi-spec/swagger.json</code> 的内容，以确保拼写错误已经被修正。
+例如，你可以运行 <code>git diff -a api/openapi-spec/swagger.json</code> 命令。
+这很重要，因为 <code>swagger.json</code> 是文档生成过程中第二阶段的输入。</p><p>运行 <code>git add</code> 和 <code>git commit</code> 命令来提交你的更改。现在你有两个提交（commits）：
+一种包含编辑的 <code>types.go</code> 文件，另一种包含生成的 OpenAPI 规范和相关文件。
+将这两个提交分开独立。也就是说，不要 squash 你的提交。</p><p>将你的更改作为 <a href=https://help.github.com/articles/creating-a-pull-request/>PR</a>
+提交到 <a href=https://github.com/kubernetes/kubernetes>kubernetes/kubernetes</a> 代码仓库的 master 分支。
+关注你的 PR，并根据需要回复 reviewer 的评论。继续关注你的 PR，直到 PR 被合并为止。</p><p><a href=https://github.com/kubernetes/kubernetes/pull/57758>PR 57758</a> 是修复 Kubernetes
+源代码中的拼写错误的拉取请求的示例。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong> 确定要更改的正确源文件可能很棘手。在前面的示例中，官方的源文件位于 <code>kubernetes/kubernetes</code>
+代码仓库的 <code>staging</code> 目录中。但是根据你的情况，<code>staging</code> 目录可能不是找到官方源文件的地方。
+如果需要帮助，请阅读
+<a href=https://github.com/kubernetes/kubernetes/tree/master/staging>kubernetes/kubernetes</a>
+代码仓库和相关代码仓库
+（例如 <a href=https://github.com/kubernetes/apiserver/blob/master/README.md>kubernetes/apiserver</a>）
+中的 <code>README</code> 文件。</div><h3 id=将你的提交-cherrypick-到发布分支>将你的提交 Cherrypick 到发布分支</h3><p>在上一节中，你在 master 分支中编辑了一个文件，然后运行了脚本用来生成 OpenAPI 规范和相关文件。
+然后用 PR 将你的更改提交到 kubernetes/kubernetes 代码仓库的 master 分支中。
+现在，需要将你的更改反向移植到已经发布的分支。
+例如，假设 master 分支被用来开发 Kubernetes 1.25 版，
+并且你想将更改反向移植到 release-1.24 分支。</p><p>回想一下，你的 PR 有两个提交：一个用于编辑 <code>types.go</code>，一个用于由脚本生成的文件。
+下一步是将你的第一次提交 cherrypick 到 release-1.24 分支。
+这样做的原因是仅 cherrypick 编辑了 types.go 的提交，
+而不是具有脚本运行结果的提交。
+有关说明，请参见<a href=https://git.k8s.io/community/contributors/devel/sig-release/cherry-picks.md>提出 Cherry Pick</a>。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong> 提出 Cherry Pick 要求你有权在 PR 中设置标签和里程碑。如果你没有这些权限，
+则需要与可以为你设置标签和里程碑的人员合作。</div><p>当你发起 PR 将你的一个提交 cherry pick 到 release-1.24 分支中时，
+下一步是在本地环境的 release-1.24 分支中运行如下脚本。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>hack/update-generated-swagger-docs.sh
+</span></span><span style=display:flex><span>hack/update-openapi-spec.sh
+</span></span><span style=display:flex><span>hack/update-generated-protobuf.sh
+</span></span><span style=display:flex><span>hack/update-api-reference-docs.sh
+</span></span></code></pre></div><p>现在将提交添加到你的 Cherry-Pick PR 中，该 PR 中包含最新生成的 OpenAPI 规范和相关文件。
+关注你的 PR，直到其合并到 release-1.24 分支中为止。</p><p>此时，master 分支和 release-1.24
+分支都具有更新的 <code>types.go</code> 文件和一组生成的文件，
+这些文件反映了对 <code>types.go</code> 所做的更改。
+请注意，生成的 OpenAPI 规范和其他 release-1.24
+分支中生成的文件不一定与 master 分支中生成的文件相同。
+release-1.24 分支中生成的文件仅包含来自
+Kubernetes 1.24 的 API 元素。
+master 分支中生成的文件可能包含不在 1.24
+中但正在为 1.25 开发的 API 元素。</p><h2 id=生成已发布的参考文档>生成已发布的参考文档</h2><p>上一节显示了如何编辑源文件然后生成多个文件，包括在 <code>kubernetes/kubernetes</code> 代码仓库中的
+<code>api/openapi-spec/swagger.json</code>。<code>swagger.json</code> 文件是 OpenAPI 定义文件，可用于生成 API 参考文档。</p><p>现在，你可以按照
+<a href=/zh-cn/docs/contribute/generate-ref-docs/kubernetes-api/>生成 Kubernetes API 的参考文档</a>
+指南来生成
+<a href=/docs/reference/generated/kubernetes-api/v1.25/>已发布的 Kubernetes API 参考文档</a>。</p><h2 id=接下来>接下来</h2><ul><li><a href=/zh-cn/docs/contribute/generate-ref-docs/kubernetes-api/>生成 Kubernetes API 的参考文档</a></li><li><a href=/zh-cn/docs/contribute/generate-ref-docs/kubernetes-components/>为 Kubernetes 组件和工具生成参考文档</a></li><li><a href=/zh-cn/docs/contribute/generate-ref-docs/kubectl/>生成 kubectl 命令的参考文档</a></li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-6e4e78f20e40bac9bcad59941e974af6>3 - 为 Kubernetes API 生成参考文档</h1><p>本页面显示了如何更新 Kubernetes API 参考文档。</p><p>Kubernetes API 参考文档是从
+<a href=https://github.com/kubernetes/kubernetes/blob/master/api/openapi-spec/swagger.json>Kubernetes OpenAPI 规范</a>
+构建的，
+且使用<a href=https://github.com/kubernetes-sigs/reference-docs>kubernetes-sigs/reference-docs</a> 生成代码。</p><p>如果你在生成的文档中发现错误，则需要<a href=/zh-cn/docs/contribute/generate-ref-docs/contribute-upstream/>在上游修复</a>。</p><p>如果你只需要从 <a href=https://github.com/OAI/OpenAPI-Specification>OpenAPI</a> 规范中重新生成参考文档，请继续阅读此页。</p><h2 id=准备开始>准备开始</h2><h3 id=requirements>需求</h3><ul><li><p>你需要一台 Linux 或 macOS 机器。</p></li><li><p>你需要安装以下工具：</p><ul><li><a href=https://www.python.org/downloads/>Python</a> v3.7.x</li><li><a href=https://git-scm.com/book/en/v2/Getting-Started-Installing-Git>Git</a></li><li><a href=https://golang.org/doc/install>Golang</a> 1.13+ 版本</li><li>用来安装 PyYAML 的 <a href=https://pypi.org/project/pip/>Pip</a></li><li><a href=https://pyyaml.org/>PyYAML</a> v5.1.2</li><li><a href=https://www.gnu.org/software/make/>make</a></li><li><a href=https://gcc.gnu.org/>gcc compiler/linker</a></li><li><a href=https://docs.docker.com/engine/installation/>Docker</a> （仅用于 <code>kubectl</code> 命令参考）</li></ul></li></ul><ul><li><p>你的 <code>PATH</code> 环境变量必须包含所需要的构建工具，例如 <code>Go</code> 程序和 <code>python</code>。</p></li><li><p>你需要知道如何为一个 GitHub 仓库创建拉取请求（PR）。
+这牵涉到创建仓库的派生（fork）副本。
+有关信息可进一步查看<a href=/zh-cn/docs/contribute/new-content/open-a-pr/#fork-the-repo>基于本地副本开展工作</a>。</p></li></ul><h2 id=配置本地仓库>配置本地仓库</h2><p>创建本地工作区并设置你的 <code>GOPATH</code>。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>mkdir -p <span style=color:#b8860b>$HOME</span>/&lt;workspace&gt;
+</span></span><span style=display:flex><span><span style=color:#a2f>export</span> <span style=color:#b8860b>GOPATH</span><span style=color:#666>=</span><span style=color:#b8860b>$HOME</span>/&lt;workspace&gt;
+</span></span></code></pre></div><p>获取以下仓库的本地克隆：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>go get -u github.com/kubernetes-sigs/reference-docs
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>go get -u github.com/go-openapi/loads
+</span></span><span style=display:flex><span>go get -u github.com/go-openapi/spec
+</span></span></code></pre></div><p>如果你还没有下载过 <code>kubernetes/website</code> 仓库，现在下载：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git clone https://github.com/&lt;your-username&gt;/website <span style=color:#b8860b>$GOPATH</span>/src/github.com/&lt;your-username&gt;/website
+</span></span></code></pre></div><p>克隆 kubernetes/kubernetes 仓库作为 k8s.io/kubernetes：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git clone https://github.com/kubernetes/kubernetes <span style=color:#b8860b>$GOPATH</span>/src/k8s.io/kubernetes
+</span></span></code></pre></div><ul><li><a href=https://github.com/kubernetes/kubernetes>kubernetes/kubernetes</a> 仓库克隆后的根目录为
+<code>$GOPATH/src/k8s.io/kubernetes</code>。 后续步骤将此目录称为 <code>&lt;k8s-base></code>。</li><li><a href=https://github.com/kubernetes/website>kubernetes/website</a> 仓库克隆后的根目录为
+<code>$GOPATH/src/github.com/&lt;your username>/website</code>。后续步骤将此目录称为 <code>&lt;web-base></code>。</li><li><a href=https://github.com/kubernetes-sigs/reference-docs>kubernetes-sigs/reference-docs</a>
+仓库克隆后的基本目录为 <code>$GOPATH/src/github.com/kubernetes-sigs/reference-docs.</code>。
+后续步骤将此目录称为 <code>&lt;rdocs-base></code>。</li></ul><h2 id=生成-api-参考文档>生成 API 参考文档</h2><p>本节说明如何生成<a href=/docs/reference/generated/kubernetes-api/v1.25/>已发布的 Kubernetes API 参考文档</a>。</p><h3 id=setting-build-variables>设置构建变量</h3><ul><li>设置 <code>K8S_ROOT</code> 为 <code>&lt;k8s-base></code>.</li><li>设置 <code>K8S_WEBROOT</code> 为 <code>&lt;web-base></code>.</li><li>设置 <code>K8S_RELEASE</code> 为要构建的文档的版本。
+例如，如果你想为 Kubernetes 1.17.0 构建文档，请将 <code>K8S_RELEASE</code> 设置为 1.17.0。</li></ul><p>例如：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f>export</span> <span style=color:#b8860b>K8S_WEBROOT</span><span style=color:#666>=</span><span style=color:#b68;font-weight:700>${</span><span style=color:#b8860b>GOPATH</span><span style=color:#b68;font-weight:700>}</span>/src/github.com/&lt;your-username&gt;/website
+</span></span><span style=display:flex><span><span style=color:#a2f>export</span> <span style=color:#b8860b>K8S_ROOT</span><span style=color:#666>=</span><span style=color:#b68;font-weight:700>${</span><span style=color:#b8860b>GOPATH</span><span style=color:#b68;font-weight:700>}</span>/src/k8s.io/kubernetes
+</span></span><span style=display:flex><span><span style=color:#a2f>export</span> <span style=color:#b8860b>K8S_RELEASE</span><span style=color:#666>=</span>1.17.0
+</span></span></code></pre></div><h3 id=创建版本目录并复制-openapi-规范>创建版本目录并复制 OpenAPI 规范</h3><p>构建目标 <code>updateapispec</code> 负责创建版本化的构建目录。
+目录创建了之后，从 <code>&lt;k8s-base></code> 仓库取回 OpenAPI 规范文件。
+这些步骤确保配置文件的版本和 Kubernetes OpenAPI 规范的版本与发行版本匹配。
+版本化目录的名称形式为 <code>v&lt;major>_&lt;minor></code>。</p><p>在 <code>&lt;rdocs-base></code> 目录中，运行以下命令来构建：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f>cd</span> &lt;rdocs-base&gt;
+</span></span><span style=display:flex><span>make updateapispec
+</span></span></code></pre></div><h3 id=构建-api-参考文档>构建 API 参考文档</h3><p>构建目标 <code>copyapi</code> 会生成 API 参考文档并将所生成文件复制到
+<code>&lt;web-base</code> 中的目录下。
+在 <code>&lt;rdocs-base></code> 目录中运行以下命令：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f>cd</span> &lt;rdocs-base&gt;
+</span></span><span style=display:flex><span>make copyapi
+</span></span></code></pre></div><p>验证是否已生成这两个文件：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#666>[</span> -e <span style=color:#b44>&#34;&lt;rdocs-base&gt;/gen-apidocs/build/index.html&#34;</span> <span style=color:#666>]</span> <span style=color:#666>&amp;&amp;</span> <span style=color:#a2f>echo</span> <span style=color:#b44>&#34;index.html built&#34;</span> <span style=color:#666>||</span> <span style=color:#a2f>echo</span> <span style=color:#b44>&#34;no index.html&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#666>[</span> -e <span style=color:#b44>&#34;&lt;rdocs-base&gt;/gen-apidocs/build/navData.js&#34;</span> <span style=color:#666>]</span> <span style=color:#666>&amp;&amp;</span> <span style=color:#a2f>echo</span> <span style=color:#b44>&#34;navData.js built&#34;</span> <span style=color:#666>||</span> <span style=color:#a2f>echo</span> <span style=color:#b44>&#34;no navData.js&#34;</span>
+</span></span></code></pre></div><p>进入本地 <code>&lt;web-base></code> 目录，检查哪些文件被更改：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f>cd</span> &lt;web-base&gt;
+</span></span><span style=display:flex><span>git status
+</span></span></code></pre></div><p>输出类似于：</p><pre tabindex=0><code>static/docs/reference/generated/kubernetes-api/v1.25/css/bootstrap.min.css
+static/docs/reference/generated/kubernetes-api/v1.25/css/font-awesome.min.css
+static/docs/reference/generated/kubernetes-api/v1.25/css/stylesheet.css
+static/docs/reference/generated/kubernetes-api/v1.25/fonts/FontAwesome.otf
+static/docs/reference/generated/kubernetes-api/v1.25/fonts/fontawesome-webfont.eot
+static/docs/reference/generated/kubernetes-api/v1.25/fonts/fontawesome-webfont.svg
+static/docs/reference/generated/kubernetes-api/v1.25/fonts/fontawesome-webfont.ttf
+static/docs/reference/generated/kubernetes-api/v1.25/fonts/fontawesome-webfont.woff
+static/docs/reference/generated/kubernetes-api/v1.25/fonts/fontawesome-webfont.woff2
+static/docs/reference/generated/kubernetes-api/v1.25/index.html
+static/docs/reference/generated/kubernetes-api/v1.25/js/jquery.scrollTo.min.js
+static/docs/reference/generated/kubernetes-api/v1.25/js/navData.js
+static/docs/reference/generated/kubernetes-api/v1.25/js/scroll.js
+</code></pre><h2 id=更新-api-参考索引页面>更新 API 参考索引页面</h2><p>在为新发行版本生成参考文档时，需要更新下面的文件，使之包含新的版本号：
+<code>&lt;web-base>/content/en/docs/reference/kubernetes-api/api-index.md</code>。</p><ul><li><p>打开并编辑 <code>&lt;web-base>/content/en/docs/reference/kubernetes-api/api-index.md</code>，
+API 参考的版本号。例如：</p><pre tabindex=0><code>title: v1.17
+[Kubernetes API v1.17](/docs/reference/generated/kubernetes-api/v1.17/)
+</code></pre></li></ul><ul><li>打开编辑 <code>&lt;web-base>/content/en/docs/reference/_index.md</code>，添加指向最新 API 参考
+的链接，删除最老的 API 版本。
+通常保留最近的五个版本的 API 参考的链接。</li></ul><h2 id=在本地测试-api-参考>在本地测试 API 参考</h2><p>发布 API 参考的本地版本。
+检查<a href=http://localhost:1313/docs/reference/generated/kubernetes-api/v1.25/>本地预览</a>。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f>cd</span> &lt;web-base&gt;
+</span></span><span style=display:flex><span>git submodule update --init --recursive --depth <span style=color:#666>1</span> <span style=color:#080;font-style:italic># if not already done</span>
+</span></span><span style=display:flex><span>make container-serve
+</span></span></code></pre></div><h2 id=提交更改>提交更改</h2><p>在 <code>&lt;web-base></code> 中运行 <code>git add</code> 和 <code>git commit</code> 来提交更改。</p><p>基于你所生成的更改<a href=/zh-cn/docs/contribute/new-content/open-a-pr/>创建 PR</a>，
+提交到 <a href=https://github.com/kubernetes/website>kubernetes/website</a> 仓库。
+监视你提交的 PR，并根据需要回复 reviewer 的评论。继续监视你的 PR，直到合并为止。</p><h2 id=接下来>接下来</h2><ul><li><a href=/zh-cn/docs/contribute/generate-ref-docs/quickstart/>生成参考文档快速入门</a></li><li><a href=/zh-cn/docs/contribute/generate-ref-docs/kubernetes-components/>为 Kubernetes 组件和工具生成参考文档</a></li><li><a href=/zh-cn/docs/contribute/generate-ref-docs/kubectl/>为 kubectl 命令集生成参考文档</a></li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-03de26b330a5cfdb26672f6bc75dcc04>4 - 为 kubectl 命令集生成参考文档</h1><p>本页面描述了如何生成 <code>kubectl</code> 命令参考。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong> 本主题描述了如何为 <a href=/docs/reference/generated/kubectl/kubectl-commands>kubectl 命令</a>
+生成参考文档，如 <a href=/docs/reference/generated/kubectl/kubectl-commands#apply>kubectl apply</a> 和
+<a href=/docs/reference/generated/kubectl/kubectl-commands#taint>kubectl taint</a>。
+本主题没有讨论如何生成 <a href=/docs/reference/generated/kubectl/kubectl-commands/>kubectl</a> 组件选项的参考页面。
+相关说明请参见<a href=/zh-cn/docs/contribute/generate-ref-docs/kubernetes-components/>为 Kubernetes 组件和工具生成参考页面</a>。</div><h2 id=准备开始>准备开始</h2><h3 id=requirements>需求</h3><ul><li><p>你需要一台 Linux 或 macOS 机器。</p></li><li><p>你需要安装以下工具：</p><ul><li><a href=https://www.python.org/downloads/>Python</a> v3.7.x</li><li><a href=https://git-scm.com/book/en/v2/Getting-Started-Installing-Git>Git</a></li><li><a href=https://golang.org/doc/install>Golang</a> 1.13+ 版本</li><li>用来安装 PyYAML 的 <a href=https://pypi.org/project/pip/>Pip</a></li><li><a href=https://pyyaml.org/>PyYAML</a> v5.1.2</li><li><a href=https://www.gnu.org/software/make/>make</a></li><li><a href=https://gcc.gnu.org/>gcc compiler/linker</a></li><li><a href=https://docs.docker.com/engine/installation/>Docker</a> （仅用于 <code>kubectl</code> 命令参考）</li></ul></li></ul><ul><li><p>你的 <code>PATH</code> 环境变量必须包含所需要的构建工具，例如 <code>Go</code> 程序和 <code>python</code>。</p></li><li><p>你需要知道如何为一个 GitHub 仓库创建拉取请求（PR）。
+这牵涉到创建仓库的派生（fork）副本。
+有关信息可进一步查看<a href=/zh-cn/docs/contribute/new-content/open-a-pr/#fork-the-repo>基于本地副本开展工作</a>。</p></li></ul><h2 id=配置本地仓库>配置本地仓库</h2><p>创建本地工作区并设置你的 <code>GOPATH</code>。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>mkdir -p <span style=color:#b8860b>$HOME</span>/&lt;workspace&gt;
+</span></span><span style=display:flex><span><span style=color:#a2f>export</span> <span style=color:#b8860b>GOPATH</span><span style=color:#666>=</span><span style=color:#b8860b>$HOME</span>/&lt;workspace&gt;
+</span></span></code></pre></div><p>获取以下仓库的本地克隆：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>go get -u github.com/spf13/pflag
+</span></span><span style=display:flex><span>go get -u github.com/spf13/cobra
+</span></span><span style=display:flex><span>go get -u gopkg.in/yaml.v2
+</span></span><span style=display:flex><span>go get -u kubernetes-incubator/reference-docs
+</span></span></code></pre></div><p>如果你还没有获取过 <code>kubernetes/website</code> 仓库，现在获取之：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git clone https://github.com/&lt;your-username&gt;/website <span style=color:#b8860b>$GOPATH</span>/src/github.com/&lt;your-username&gt;/website
+</span></span></code></pre></div><p>克隆 kubernetes/kubernetes 仓库作为 k8s.io/kubernetes：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git clone https://github.com/kubernetes/kubernetes <span style=color:#b8860b>$GOPATH</span>/src/k8s.io/kubernetes
+</span></span></code></pre></div><p>从 <code>$GOPATH/src/k8s.io/kubernetes/vendor/github.com</code> 中移除 spf13 软件包。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>rm -rf <span style=color:#b8860b>$GOPATH</span>/src/k8s.io/kubernetes/vendor/github.com/spf13
+</span></span></code></pre></div><p>kubernetes/kubernetes 仓库提供对 kubectl 和 kustomize 源代码的访问。</p><ul><li>确定 <a href=https://github.com/kubernetes/kubernetes>kubernetes/kubernetes</a> 仓库的本地主目录。
+例如，如果按照前面的步骤来获取该仓库，则主目录是 <code>$GOPATH/src/k8s.io/kubernetes.</code>。
+下文将该目录称为 <code>&lt;k8s-base></code>。</li></ul><ul><li>确定 <a href=https://github.com/kubernetes/website>kubernetes/website</a> 仓库的本地主目录。
+例如，如果按照前面的步骤来获取该仓库，则主目录是 <code>$GOPATH/src/github.com/&lt;your-username>/website</code>。
+下文将该目录称为 <code>&lt;web-base></code>。</li></ul><ul><li>确定 <a href=https://github.com/kubernetes-sigs/reference-docs>kubernetes-sigs/reference-docs</a>
+仓库的本地主目录。例如，如果按照前面的步骤来获取该仓库，则主目录是
+<code>$GOPATH/src/github.com/kubernetes-sigs/reference-docs</code>。
+下文将该目录称为 <code>&lt;rdocs-base></code>。</li></ul><p>在本地的 k8s.io/kubernetes 仓库中，检出感兴趣的分支并确保它是最新的。例如，
+如果你想要生成 Kubernetes 1.24.0 的文档，可以使用以下命令：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f>cd</span> &lt;k8s-base&gt;
+</span></span><span style=display:flex><span>git checkout v1.24.0
+</span></span><span style=display:flex><span>git pull https://github.com/kubernetes/kubernetes 1.24.0
+</span></span></code></pre></div><p>如果不需要编辑 <code>kubectl</code>
+源码，请按照说明<a href=#setting-build-variables>配置构建变量</a>。</p><h2 id=编辑-kubectl-源码>编辑 kubectl 源码</h2><p>kubectl 命令的参考文档是基于 kubectl 源码自动生成的。如果想要修改参考文档，可以从修改
+kubectl 源码中的一个或多个注释开始。在本地 kubernetes/kubernetes 仓库中进行修改，然后向
+<a href=https://github.com/kubernetes/kubernetes>github.com/kubernetes/kubernetes</a> 的 master
+分支提交 PR。</p><p><a href=https://github.com/kubernetes/kubernetes/pull/56673/files>PR 56673</a> 是一个对 kubectl
+源码中的笔误进行修复的 PR 示例。</p><p>跟踪你的 PR，并回应评审人的评论。继续跟踪你的 PR，直到它合入到 kubernetes/kubernetes 仓库的目标分支中。</p><h2 id=以-cherry-pick-方式将你的修改合入已发布分支>以 cherry-pick 方式将你的修改合入已发布分支</h2><p>你的修改已合入 master 分支中，该分支用于开发下一个 Kubernetes 版本。
+如果你希望修改部分出现在已发布的 Kubernetes 版本文档中，则需要提议将它们以
+cherry-pick 方式合入已发布分支。</p><p>例如，假设 master 分支正用于开发 Kubernetes 1.25 版本，
+而你希望将修改合入到 release-1.24 版本分支。
+相关的操作指南，请参见
+<a href=https://git.k8s.io/community/contributors/devel/sig-release/cherry-picks.md>提议一个 cherry-pick</a>。</p><p>跟踪你的 cherry-pick PR，直到它合入到已发布分支中。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong> 提议一个 cherry-pick 需要你有在 PR 中设置标签和里程碑的权限。
+如果你没有，你需要与有权限为你设置标签和里程碑的人合作完成。</div><h2 id=setting-build-variables>设置构建变量</h2><p>进入 <code>&lt;rdocs-base></code> 目录, 打开 <code>Makefile</code> 进行编辑：</p><ul><li>设置 <code>K8S_ROOT</code> 为 <code>&lt;k8s-base></code>。</li><li>设置 <code>K8S_WEBROOT</code> 为 <code>&lt;web-base></code>。</li><li>设置 <code>K8S_RELEASE</code> 为要构建文档的版本。
+例如，如果你想为 Kubernetes 1.24 构建文档，
+请将 <code>K8S_RELEASE</code> 设置为 1.24。</li></ul><p>例如：</p><pre tabindex=0><code>export K8S_WEBROOT=$(GOPATH)/src/github.com/&lt;your-username&gt;/website
+export K8S_ROOT=$(GOPATH)/src/k8s.io/kubernetes
+export K8S_RELEASE=1.24
+</code></pre><h2 id=创建版本目录>创建版本目录</h2><p>构建目标 <code>createversiondirs</code> 会生成一个版本目录并将 kubectl 参考配置文件复制到该目录中。
+版本目录的名字模式为 <code>v&lt;major>_&lt;minor></code>。</p><p>在 <code>&lt;rdocs-base></code> 目录下，执行下面的命令：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f>cd</span> &lt;rdocs-base&gt;
+</span></span><span style=display:flex><span>make createversiondirs
+</span></span></code></pre></div><h2 id=从-kubernetes-kubernetes-检出一个分支>从 kubernetes/kubernetes 检出一个分支</h2><p>在本地 <code>&lt;k8s-base></code> 仓库中，检出你想要生成文档的、包含 Kubernetes 版本的分支。
+例如，如果希望为 Kubernetes 1.24.0 版本生成文档，
+请检出 <code>v1.24</code> 标记。
+确保本地分支是最新的。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f>cd</span> &lt;k8s-base&gt;
+</span></span><span style=display:flex><span>git checkout v1.24.0
+</span></span><span style=display:flex><span>git pull https://github.com/kubernetes/kubernetes v1.24.0
+</span></span></code></pre></div><h2 id=运行文档生成代码>运行文档生成代码</h2><p>在本地的 <code>&lt;rdocs-base></code> 目录下，运行 <code>copycli</code> 构建目标。此命令以 <code>root</code> 账号运行：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f>cd</span> &lt;rdocs-base&gt;
+</span></span><span style=display:flex><span>make copycli
+</span></span></code></pre></div><p><code>copycli</code> 命令将清理暂存目录，生成 kubectl 命令文件，并将整理后的 kubectl 参考 HTML 页面和
+文件复制到 <code>&lt;web-base></code>。</p><h2 id=找到生成的文件>找到生成的文件</h2><p>验证是否已生成以下两个文件：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#666>[</span> -e <span style=color:#b44>&#34;&lt;rdocs-base&gt;/gen-kubectldocs/generators/build/index.html&#34;</span> <span style=color:#666>]</span> <span style=color:#666>&amp;&amp;</span> <span style=color:#a2f>echo</span> <span style=color:#b44>&#34;index.html built&#34;</span> <span style=color:#666>||</span> <span style=color:#a2f>echo</span> <span style=color:#b44>&#34;no index.html&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#666>[</span> -e <span style=color:#b44>&#34;&lt;rdocs-base&gt;/gen-kubectldocs/generators/build/navData.js&#34;</span> <span style=color:#666>]</span> <span style=color:#666>&amp;&amp;</span> <span style=color:#a2f>echo</span> <span style=color:#b44>&#34;navData.js built&#34;</span> <span style=color:#666>||</span> <span style=color:#a2f>echo</span> <span style=color:#b44>&#34;no navData.js&#34;</span>
+</span></span></code></pre></div><h2 id=找到复制的文件>找到复制的文件</h2><p>确认所有生成的文件都已复制到你的 <code>&lt;web-base></code>：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f>cd</span> &lt;web-base&gt;
+</span></span><span style=display:flex><span>git status
+</span></span></code></pre></div><p>输出应包括修改后的文件：</p><pre tabindex=0><code>static/docs/reference/generated/kubectl/kubectl-commands.html
+static/docs/reference/generated/kubectl/navData.js
+</code></pre><p>此外，输出可能还包含：</p><pre tabindex=0><code>static/docs/reference/generated/kubectl/scroll.js
+static/docs/reference/generated/kubectl/stylesheet.css
+static/docs/reference/generated/kubectl/tabvisibility.js
+static/docs/reference/generated/kubectl/node_modules/bootstrap/dist/css/bootstrap.min.css
+static/docs/reference/generated/kubectl/node_modules/highlight.js/styles/default.css
+static/docs/reference/generated/kubectl/node_modules/jquery.scrollto/jquery.scrollTo.min.js
+static/docs/reference/generated/kubectl/node_modules/jquery/dist/jquery.min.js
+static/docs/reference/generated/kubectl/node_modules/font-awesome/css/font-awesome.min.css
+</code></pre><h2 id=在本地测试文档>在本地测试文档</h2><p>在本地 <code>&lt;web-base></code> 中构建 Kubernetes 文档。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f>cd</span> &lt;web-base&gt;
+</span></span><span style=display:flex><span>git submodule update --init --recursive --depth <span style=color:#666>1</span> <span style=color:#080;font-style:italic># if not already done</span>
+</span></span><span style=display:flex><span>make container-serve
+</span></span></code></pre></div><p>查看<a href=https://localhost:1313/docs/reference/generated/kubectl/kubectl-commands/>本地预览</a>。</p><h2 id=在-kubernetes-website-中添加和提交更改>在 kubernetes/website 中添加和提交更改</h2><p>运行 <code>git add</code> 和 <code>git commit</code> 提交修改文件。</p><h2 id=创建-pr>创建 PR</h2><p>对 <code>kubernetes/website</code> 仓库创建 PR。跟踪你的 PR，并根据需要回应评审人的评论。
+继续跟踪你的 PR，直到它被合入。</p><p>在 PR 合入的几分钟后，你更新的参考主题将出现在<a href=/zh-cn/docs/home/>已发布文档</a>中。</p><h2 id=接下来>接下来</h2><ul><li><a href=/zh-cn/docs/contribute/generate-ref-docs/quickstart/>生成参考文档快速入门</a></li><li><a href=/zh-cn/docs/contribute/generate-ref-docs/kubernetes-components/>为 Kubernetes 组件和工具生成参考文档</a></li><li><a href=/zh-cn/docs/contribute/generate-ref-docs/kubernetes-api/>为 Kubernetes API 生成参考文档</a></li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-28fc50a0072b0b2b444aa24e552d2e60>5 - 为 Kubernetes 组件和工具生成参考文档</h1><p>本页面描述如何构造 Kubernetes 组件和工具的参考文档。</p><h2 id=准备开始>准备开始</h2><p>阅读参考文档快速入门指南中的<a href=/zh-cn/docs/contribute/generate-ref-docs/quickstart/#before-you-begin>准备工作</a>节。</p><p>按照<a href=/zh-cn/docs/contribute/generate-ref-docs/quickstart/>参考文档快速入门</a>
+指引，生成 Kubernetes 组件和工具的参考文档。</p><h2 id=接下来>接下来</h2><ul><li><a href=/zh-cn/docs/contribute/generate-ref-docs/quickstart/>生成参考文档快速入门</a></li><li><a href=/zh-cn/docs/contribute/generate-ref-docs/kubectl/>为 kubectll 命令生成参考文档</a></li><li><a href=/zh-cn/docs/contribute/generate-ref-docs/kubernetes-api/>为 Kubernetes API 生成参考文档</a></li><li><a href=/zh-cn/docs/contribute/generate-ref-docs/contribute-upstream/>为上游 Kubernetes 项目做贡献以改进文档</a></li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-eabe0c0c6b0046c51d7fdf5e8450a5b5>6 -</h1><h3 id=requirements>需求</h3><ul><li><p>你需要一台 Linux 或 macOS 机器。</p></li><li><p>你需要安装以下工具：</p><ul><li><a href=https://www.python.org/downloads/>Python</a> v3.7.x</li><li><a href=https://git-scm.com/book/en/v2/Getting-Started-Installing-Git>Git</a></li><li><a href=https://golang.org/doc/install>Golang</a> 1.13+ 版本</li><li>用来安装 PyYAML 的 <a href=https://pypi.org/project/pip/>Pip</a></li><li><a href=https://pyyaml.org/>PyYAML</a> v5.1.2</li><li><a href=https://www.gnu.org/software/make/>make</a></li><li><a href=https://gcc.gnu.org/>gcc compiler/linker</a></li><li><a href=https://docs.docker.com/engine/installation/>Docker</a> （仅用于 <code>kubectl</code> 命令参考）</li></ul></li></ul><ul><li><p>你的 <code>PATH</code> 环境变量必须包含所需要的构建工具，例如 <code>Go</code> 程序和 <code>python</code>。</p></li><li><p>你需要知道如何为一个 GitHub 仓库创建拉取请求（PR）。
+这牵涉到创建仓库的派生（fork）副本。
+有关信息可进一步查看<a href=/zh-cn/docs/contribute/new-content/open-a-pr/#fork-the-repo>基于本地副本开展工作</a>。</p></li></ul></div></main></div></div><footer class=d-print-none><div class=footer__links><nav><a class=text-white href=/zh-cn/docs/home/>主页</a>
+<a class=text-white href=/zh-cn/blog/>博客</a>
+<a class=text-white href=/zh-cn/training/>培训</a>
+<a class=text-white href=/zh-cn/partners/>合作伙伴</a>
+<a class=text-white href=/zh-cn/community/>社区</a>
+<a class=text-white href=/zh-cn/case-studies/>案例分析</a></nav></div><div class=container-fluid><div class=row><div class="col-6 col-sm-2 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="User mailing list" aria-label="User mailing list"><a class=text-white target=_blank href=https://discuss.kubernetes.io><i class="fa fa-envelope"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank href=https://twitter.com/kubernetesio><i class="fab fa-twitter"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Calendar aria-label=Calendar><a class=text-white target=_blank href="https://calendar.google.com/calendar/embed?src=calendar%40kubernetes.io"><i class="fas fa-calendar-alt"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Youtube aria-label=Youtube><a class=text-white target=_blank href=https://youtube.com/kubernetescommunity><i class="fab fa-youtube"></i></a></li></ul></div><div class="col-6 col-sm-2 text-right text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank href=https://github.com/kubernetes/kubernetes><i class="fab fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Slack aria-label=Slack><a class=text-white target=_blank href=https://slack.k8s.io><i class="fab fa-slack"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Contribute aria-label=Contribute><a class=text-white target=_blank href=https://git.k8s.io/community/contributors/guide><i class="fas fa-edit"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="Stack Overflow" aria-label="Stack Overflow"><a class=text-white target=_blank href=https://stackoverflow.com/questions/tagged/kubernetes><i class="fab fa-stack-overflow"></i></a></li></ul></div><div class="col-12 col-sm-8 text-center order-sm-2"><small class=text-white>&copy; 2023 The Kubernetes 作者 | 文档发布基于 <a href=https://git.k8s.io/website/LICENSE class=light-text>CC BY 4.0</a> 授权许可</small><br><small class=text-white>Copyright &copy; 2023 Linux 基金会&reg;。保留所有权利。Linux 基金会已注册并使用商标。如需了解 Linux 基金会的商标列表，请访问<a href=https://www.linuxfoundation.org/trademark-usage class=light-text>商标使用页面</a></small><br><small class=text-white>ICP license: 京ICP备17074266号-3</small></div></div></div></footer></div><script src=/js/jquery-3.6.0.min.js integrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script>
+<script src=/js/popper-1.16.1.min.js intregrity=sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN crossorigin=anonymous></script>
+<script src=/js/bootstrap-4.6.1.min.js integrity=sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2 crossorigin=anonymous></script>
+<script src=/js/script.js></script>
+<script async src=/js/mermaid-8.13.4.min.js integrity=sha384-5hHNvPeMrNH14oM3IcQofDoBhiclNK3g2+hnEinKzQ07C4AliMeVpnvxuiwEGpaO crossorigin=anonymous></script>
+<script src=/js/main.min.5c0bf7f21dc4f66485f74efbbeeff28a7e4f8cddaac1bae47043159c922ff3a3.js integrity="sha256-XAv38h3E9mSF9077vu/yin5PjN2qwbrkcEMVnJIv86M=" crossorigin=anonymous></script></body></html>

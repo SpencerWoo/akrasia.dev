@@ -1,0 +1,443 @@
+<!doctype html><html lang=zh-cn class=no-js><head><meta name=robots content="noindex, nofollow"><link rel=alternate hreflang=en href=https://kubernetes.io/docs/tutorials/services/><link rel=alternate hreflang=ko href=https://kubernetes.io/ko/docs/tutorials/services/><link rel=alternate hreflang=ja href=https://kubernetes.io/ja/docs/tutorials/services/><link rel=alternate hreflang=fr href=https://kubernetes.io/fr/docs/tutorials/services/><link rel=alternate hreflang=es href=https://kubernetes.io/es/docs/tutorials/services/><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.110.0"><link rel=canonical type=text/html href=https://kubernetes.io/zh-cn/docs/tutorials/services/><link rel="shortcut icon" type=image/png href=/images/favicon.png><link rel=apple-touch-icon href=/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=manifest href=/manifest.webmanifest><link rel=apple-touch-icon href=/images/kubernetes-192x192.png><title>Services | Kubernetes</title><meta property="og:title" content="Services"><meta property="og:description" content="生产级别的容器编排系统"><meta property="og:type" content="website"><meta property="og:url" content="https://kubernetes.io/zh-cn/docs/tutorials/services/"><meta property="og:site_name" content="Kubernetes"><meta itemprop=name content="Services"><meta itemprop=description content="生产级别的容器编排系统"><meta name=twitter:card content="summary"><meta name=twitter:title content="Services"><meta name=twitter:description content="生产级别的容器编排系统"><link href=/scss/main.css rel=stylesheet><script type=application/ld+json>{"@context":"https://schema.org","@type":"Organization","url":"https://kubernetes.io","logo":"https://kubernetes.io/images/favicon.png","potentialAction":{"@type":"SearchAction","target":"https://kubernetes.io/search/?q={search_term_string}","query-input":"required name=search_term_string"}}</script><meta name=theme-color content="#326ce5"><link rel=stylesheet href=/css/feature-states.css><meta name=description content><meta property="og:description" content><meta name=twitter:description content><meta property="og:url" content="https://kubernetes.io/zh-cn/docs/tutorials/services/"><meta property="og:title" content="Services"><meta name=twitter:title content="Services"><meta name=twitter:image content="https://kubernetes.io/images/favicon.png"><meta name=twitter:image:alt content="Kubernetes"><meta property="og:image" content="/images/kubernetes-horizontal-color.png"><meta property="og:type" content="article"><script src=/js/jquery-3.6.0.min.js intregrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script></head><body class=td-section><header><nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar" data-auto-burger=primary><a class=navbar-brand href=/zh-cn/></a><div class="td-navbar-nav-scroll ml-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0"><li class="nav-item mr-2 mb-lg-0"><a class="nav-link active" href=/zh-cn/docs/>文档</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/blog/>Kubernetes 博客</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/training/>培训</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/partners/>合作伙伴</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/community/>社区</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/case-studies/>案例分析</a></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>版本列表</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/zh-cn/releases>Release Information</a>
+<a class=dropdown-item href=https://kubernetes.io/zh-cn/docs/tutorials/services/>v1.25</a>
+<a class=dropdown-item href=https://v1-24.docs.kubernetes.io/zh-cn/docs/tutorials/services/>v1.24</a>
+<a class=dropdown-item href=https://v1-23.docs.kubernetes.io/zh-cn/docs/tutorials/services/>v1.23</a>
+<a class=dropdown-item href=https://v1-22.docs.kubernetes.io/zh-cn/docs/tutorials/services/>v1.22</a>
+<a class=dropdown-item href=https://v1-21.docs.kubernetes.io/zh-cn/docs/tutorials/services/>v1.21</a></div></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdownMenuLink role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>中文 (Chinese)</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/docs/tutorials/services/>English</a>
+<a class=dropdown-item href=/ko/docs/tutorials/services/>한국어 (Korean)</a>
+<a class=dropdown-item href=/ja/docs/tutorials/services/>日本語 (Japanese)</a>
+<a class=dropdown-item href=/fr/docs/tutorials/services/>Français (French)</a>
+<a class=dropdown-item href=/es/docs/tutorials/services/>Español (Spanish)</a></div></li></ul></div><button id=hamburger onclick=kub.toggleMenu() data-auto-burger-exclude><div></div></button></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><div class=td-content><div class="pageinfo pageinfo-primary d-print-none"><p>这是本节的多页打印视图。
+<a href=# onclick="return print(),!1">点击此处打印</a>.</p><p><a href=/zh-cn/docs/tutorials/services/>返回本页常规视图</a>.</p></div><h1 class=title>Services</h1><ul><li>1: <a href=#pg-5642e8c51749e4fe2e6a2ccc207f1fab>使用源 IP</a></li><li>2: <a href=#pg-bc0a2760d2865e91c501bc2467cd1a4b>使用 Service 连接到应用</a></li></ul><div class=content></div></div><div class=td-content><h1 id=pg-5642e8c51749e4fe2e6a2ccc207f1fab>1 - 使用源 IP</h1><p>运行在 Kubernetes 集群中的应用程序通过 Service 抽象发现彼此并相互通信，它们也用 Service 与外部世界通信。
+本文解释了发送到不同类型 Service 的数据包的源 IP 会发生什么情况，以及如何根据需要切换此行为。</p><h2 id=准备开始>准备开始</h2><h2 id=terminology>术语表</h2><p>本文使用了下列术语：</p><dl><dt><a href=https://zh.wikipedia.org/wiki/%E7%BD%91%E7%BB%9C%E5%9C%B0%E5%9D%80%E8%BD%AC%E6%8D%A2>NAT</a></dt><dd>网络地址转换</dd><dt><a href=https://en.wikipedia.org/wiki/Network_address_translation#SNAT>Source NAT</a></dt><dd>替换数据包上的源 IP；在本页面中，这通常意味着替换为节点的 IP 地址</dd><dt><a href=https://en.wikipedia.org/wiki/Network_address_translation#DNAT>Destination NAT</a></dt><dd>替换数据包上的目标 IP；在本页面中，这通常意味着替换为 <a class=glossary-tooltip title='Pod 表示你的集群上一组正在运行的容器。' data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/workloads/pods/ target=_blank aria-label=Pod>Pod</a> 的 IP 地址</dd><dt><a href=/zh-cn/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies>VIP</a></dt><dd>一个虚拟 IP 地址，例如分配给 Kubernetes 中每个 <a class=glossary-tooltip title='将运行在一组 Pods 上的应用程序公开为网络服务的抽象方法。' data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/services-networking/service/ target=_blank aria-label=Service>Service</a> 的 IP 地址</dd><dt><a href=/zh-cn/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies>Kube-proxy</a></dt><dd>一个网络守护程序，在每个节点上协调 Service VIP 管理</dd></dl><h2 id=prerequisites>先决条件</h2><p>你必须拥有一个 Kubernetes 的集群，同时你的 Kubernetes 集群必须带有 kubectl 命令行工具。
+建议在至少有两个节点的集群上运行本教程，且这些节点不作为控制平面主机。
+如果你还没有集群，你可以通过 <a href=https://minikube.sigs.k8s.io/docs/tutorials/multi_node/>Minikube</a>
+构建一个你自己的集群，或者你可以使用下面任意一个 Kubernetes 工具构建：</p><ul><li><a href=https://killercoda.com/playgrounds/scenario/kubernetes>Killercoda</a></li><li><a href=http://labs.play-with-k8s.com/>玩转 Kubernetes</a></li></ul><p>示例使用一个小型 nginx Web 服务器，服务器通过 HTTP 标头返回它接收到的请求的源 IP。
+你可以按如下方式创建它：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create deployment source-ip-app --image<span style=color:#666>=</span>registry.k8s.io/echoserver:1.4
+</span></span></code></pre></div><p>输出为：</p><pre tabindex=0><code>deployment.apps/source-ip-app created
+</code></pre><h2 id=教程目标>教程目标</h2><ul><li>通过多种类型的 Service 暴露一个简单应用</li><li>了解每种 Service 类型如何处理源 IP NAT</li><li>了解保留源 IP 所涉及的权衡</li></ul><h2 id=source-ip-for-services-with-type-clusterip><code>Type=ClusterIP</code> 类型 Service 的源 IP</h2><p>如果你在 <a href=/zh-cn/docs/concepts/services-networking/service/#proxy-mode-iptables>iptables 模式</a>（默认）下运行
+kube-proxy，则从集群内发送到 ClusterIP 的数据包永远不会进行源 NAT。
+你可以通过在运行 kube-proxy 的节点上获取 <code>http://localhost:10249/proxyMode</code> 来查询 kube-proxy 模式。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console><span style=display:flex><span><span style=color:#888>kubectl get nodes
+</span></span></span></code></pre></div><p>输出类似于：</p><pre tabindex=0><code>NAME                           STATUS     ROLES    AGE     VERSION
+kubernetes-node-6jst   Ready      &lt;none&gt;   2h      v1.13.0
+kubernetes-node-cx31   Ready      &lt;none&gt;   2h      v1.13.0
+kubernetes-node-jj1t   Ready      &lt;none&gt;   2h      v1.13.0
+</code></pre><p>在其中一个节点上获取代理模式（kube-proxy 监听 10249 端口）：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#080;font-style:italic># 在要查询的节点上的 shell 中运行</span>
+</span></span><span style=display:flex><span>curl http://localhost:10249/proxyMode
+</span></span></code></pre></div><p>输出为：</p><pre tabindex=0><code>iptables
+</code></pre><p>你可以通过在源 IP 应用程序上创建 Service 来测试源 IP 保留：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl expose deployment source-ip-app --name<span style=color:#666>=</span>clusterip --port<span style=color:#666>=</span><span style=color:#666>80</span> --target-port<span style=color:#666>=</span><span style=color:#666>8080</span>
+</span></span></code></pre></div><p>输出为：</p><pre tabindex=0><code>service/clusterip exposed
+</code></pre><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get svc clusterip
+</span></span></code></pre></div><p>输出类似于：</p><pre tabindex=0><code>NAME         TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)   AGE
+clusterip    ClusterIP   10.0.170.92   &lt;none&gt;        80/TCP    51s
+</code></pre><p>并从同一集群中的 Pod 中访问 <code>ClusterIP</code>：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl run busybox -it --image<span style=color:#666>=</span>busybox:1.28 --restart<span style=color:#666>=</span>Never --rm
+</span></span></code></pre></div><p>输出类似于：</p><pre tabindex=0><code>Waiting for pod default/busybox to be running, status is Pending, pod ready: false
+If you don&#39;t see a command prompt, try pressing enter.
+</code></pre><p>然后，你可以在该 Pod 中运行命令：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#080;font-style:italic># 从 “kubectl run” 的终端中运行</span>
+</span></span><span style=display:flex><span>ip addr
+</span></span></code></pre></div><pre tabindex=0><code>1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+3: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1460 qdisc noqueue
+    link/ether 0a:58:0a:f4:03:08 brd ff:ff:ff:ff:ff:ff
+    inet 10.244.3.8/24 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::188a:84ff:feb0:26a5/64 scope link
+       valid_lft forever preferred_lft forever
+</code></pre><p>然后使用 <code>wget</code> 查询本地 Web 服务器：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#080;font-style:italic># 将 “10.0.170.92” 替换为 Service 中名为 “clusterip” 的 IPv4 地址</span>
+</span></span><span style=display:flex><span>wget -qO - 10.0.170.92
+</span></span></code></pre></div><pre tabindex=0><code>CLIENT VALUES:
+client_address=10.244.3.8
+command=GET
+...
+</code></pre><p>不管客户端 Pod 和服务器 Pod 位于同一节点还是不同节点，<code>client_address</code> 始终是客户端 Pod 的 IP 地址。</p><h2 id=source-ip-for-services-with-type-nodeport><code>Type=NodePort</code> 类型 Service 的源 IP</h2><p>默认情况下，发送到 <a href=/zh-cn/docs/concepts/services-networking/service/#type-nodeport><code>Type=NodePort</code></a>
+的 Service 的数据包会经过源 NAT 处理。你可以通过创建一个 <code>NodePort</code> 的 Service 来测试这点：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl expose deployment source-ip-app --name<span style=color:#666>=</span>nodeport --port<span style=color:#666>=</span><span style=color:#666>80</span> --target-port<span style=color:#666>=</span><span style=color:#666>8080</span> --type<span style=color:#666>=</span>NodePort
+</span></span></code></pre></div><p>输出为：</p><pre tabindex=0><code>service/nodeport exposed
+</code></pre><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#b8860b>NODEPORT</span><span style=color:#666>=</span><span style=color:#a2f;font-weight:700>$(</span>kubectl get -o <span style=color:#b8860b>jsonpath</span><span style=color:#666>=</span><span style=color:#b44>&#34;{.spec.ports[0].nodePort}&#34;</span> services nodeport<span style=color:#a2f;font-weight:700>)</span>
+</span></span><span style=display:flex><span><span style=color:#b8860b>NODES</span><span style=color:#666>=</span><span style=color:#a2f;font-weight:700>$(</span>kubectl get nodes -o <span style=color:#b8860b>jsonpath</span><span style=color:#666>=</span><span style=color:#b44>&#39;{ $.items[*].status.addresses[?(@.type==&#34;InternalIP&#34;)].address }&#39;</span><span style=color:#a2f;font-weight:700>)</span>
+</span></span></code></pre></div><p>如果你在云供应商上运行，你可能需要为上面报告的 <code>nodes:nodeport</code> 打开防火墙规则。
+现在你可以尝试通过上面分配的节点端口从集群外部访问 Service。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f;font-weight:700>for</span> node in <span style=color:#b8860b>$NODES</span>; <span style=color:#a2f;font-weight:700>do</span> curl -s <span style=color:#b8860b>$node</span>:<span style=color:#b8860b>$NODEPORT</span> | grep -i client_address; <span style=color:#a2f;font-weight:700>done</span>
+</span></span></code></pre></div><p>输出类似于：</p><pre tabindex=0><code>client_address=10.180.1.1
+client_address=10.240.0.5
+client_address=10.240.0.3
+</code></pre><p>请注意，这些并不是正确的客户端 IP，它们是集群的内部 IP。这是所发生的事情：</p><ul><li>客户端发送数据包到 <code>node2:nodePort</code></li><li><code>node2</code> 使用它自己的 IP 地址替换数据包的源 IP 地址（SNAT）</li><li><code>node2</code> 将数据包上的目标 IP 替换为 Pod IP</li><li>数据包被路由到 node1，然后到端点</li><li>Pod 的回复被路由回 node2</li><li>Pod 的回复被发送回给客户端</li></ul><p>用图表示：<figure class=diagram-large><a href=https://mermaid.live/edit#pako:eNqNkV9rwyAUxb-K3LysYEqS_WFYKAzat9GHdW9zDxKvi9RoMIZtlH732ZjSbE970cu5v3s86hFqJxEYfHjRNeT5ZcUtIbXRaMNN2hZ5vrYRqt52cSXV-4iMSuwkZiYtyX739EqWaahMQ-V1qPxDVLNOvkYrO6fj2dupWMR2iiT6foOKdEZoS5Q2hmVSStoH7w7IMqXUVOefWoaG3XVftHbGeZYVRbH6ZXJ47CeL2-qhxvt_ucTe1SUlpuMN6CX12XeGpLdJiaMMFFr0rdAyvvfxjHEIDbbIgcVSohKDCRy4PUV06KQIuJU6OA9MCdMjBTEEt_-2NbDgB7xAGy3i97VJPP0ABRmcqg><img src=/zh-cn/docs/images/tutor-service-nodePort-fig01.svg alt="图 1：源 IP NodePort"></a><figcaption><p>如图。使用 SNAT 的源 IP（Type=NodePort）</p></figcaption></figure></p><p>为避免这种情况，Kubernetes 有一个特性可以<a href=/zh-cn/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip>保留客户端源 IP</a>。
+如果将 <code>service.spec.externalTrafficPolicy</code> 设置为 <code>Local</code>，
+kube-proxy 只会将代理请求代理到本地端点，而不会将流量转发到其他节点。
+这种方法保留了原始源 IP 地址。如果没有本地端点，则发送到该节点的数据包将被丢弃，
+因此你可以在任何数据包处理规则中依赖正确的源 IP，你可能会应用一个数据包使其通过该端点。</p><p>设置 <code>service.spec.externalTrafficPolicy</code> 字段如下：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl patch svc nodeport -p <span style=color:#b44>&#39;{&#34;spec&#34;:{&#34;externalTrafficPolicy&#34;:&#34;Local&#34;}}&#39;</span>
+</span></span></code></pre></div><p>输出为：</p><pre tabindex=0><code>service/nodeport patched
+</code></pre><p>现在，重新运行测试：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f;font-weight:700>for</span> node in <span style=color:#b8860b>$NODES</span>; <span style=color:#a2f;font-weight:700>do</span> curl --connect-timeout <span style=color:#666>1</span> -s <span style=color:#b8860b>$node</span>:<span style=color:#b8860b>$NODEPORT</span> | grep -i client_address; <span style=color:#a2f;font-weight:700>done</span>
+</span></span></code></pre></div><p>输出类似于：</p><pre tabindex=0><code>client_address=198.51.100.79
+</code></pre><p>请注意，你只从运行端点 Pod 的节点得到了回复，这个回复有<strong>正确的</strong>客户端 IP。</p><p>这是发生的事情：</p><ul><li>客户端将数据包发送到没有任何端点的 <code>node2:nodePort</code></li><li>数据包被丢弃</li><li>客户端发送数据包到<strong>必有</strong>端点的 <code>node1:nodePort</code></li><li>node1 使用正确的源 IP 地址将数据包路由到端点</li></ul><p>用图表示：<figure class=diagram-large><img src=/zh-cn/docs/images/tutor-service-nodePort-fig02.svg alt="图 2：源 IP NodePort"><figcaption><p>如图。源 IP（Type=NodePort）保存客户端源 IP 地址</p></figcaption></figure></p><h2 id=source-ip-for-services-with-type-loadbalancer><code>Type=LoadBalancer</code> 类型 Service 的源 IP</h2><p>默认情况下，发送到 <a href=/zh-cn/docs/concepts/services-networking/service/#loadbalancer><code>Type=LoadBalancer</code></a>
+的 Service 的数据包经过源 NAT处理，因为所有处于 <code>Ready</code> 状态的可调度 Kubernetes
+节点对于负载均衡的流量都是符合条件的。
+因此，如果数据包到达一个没有端点的节点，系统会将其代理到一个<strong>带有</strong>端点的节点，用该节点的 IP 替换数据包上的源 IP（如上一节所述）。</p><p>你可以通过负载均衡器上暴露 source-ip-app 进行测试：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl expose deployment source-ip-app --name<span style=color:#666>=</span>loadbalancer --port<span style=color:#666>=</span><span style=color:#666>80</span> --target-port<span style=color:#666>=</span><span style=color:#666>8080</span> --type<span style=color:#666>=</span>LoadBalancer
+</span></span></code></pre></div><p>输出为：</p><pre tabindex=0><code>service/loadbalancer exposed
+</code></pre><p>打印 Service 的 IP 地址：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console><span style=display:flex><span><span style=color:#888>kubectl get svc loadbalancer
+</span></span></span></code></pre></div><p>输出类似于：</p><pre tabindex=0><code>NAME           TYPE           CLUSTER-IP    EXTERNAL-IP       PORT(S)   AGE
+loadbalancer   LoadBalancer   10.0.65.118   203.0.113.140     80/TCP    5m
+</code></pre><p>接下来，发送请求到 Service 的 的外部 IP（External-IP）：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>curl 203.0.113.140
+</span></span></code></pre></div><p>输出类似于：</p><pre tabindex=0><code>CLIENT VALUES:
+client_address=10.240.0.5
+...
+</code></pre><p>然而，如果你在 Google Kubernetes Engine/GCE 上运行，
+将相同的 <code>service.spec.externalTrafficPolicy</code> 字段设置为 <code>Local</code>，
+故意导致健康检查失败，从而强制没有端点的节点把自己从负载均衡流量的可选节点列表中删除。</p><p>用图表示：</p><p><img src=/images/docs/sourceip-externaltrafficpolicy.svg alt="具有 externalTrafficPolicy 的源 IP"></p><p>你可以通过设置注解进行测试：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl patch svc loadbalancer -p <span style=color:#b44>&#39;{&#34;spec&#34;:{&#34;externalTrafficPolicy&#34;:&#34;Local&#34;}}&#39;</span>
+</span></span></code></pre></div><p>你应该能够立即看到 Kubernetes 分配的 <code>service.spec.healthCheckNodePort</code> 字段：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get svc loadbalancer -o yaml | grep -i healthCheckNodePort
+</span></span></code></pre></div><p>输出类似于：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>healthCheckNodePort</span>:<span style=color:#bbb> </span><span style=color:#666>32122</span><span style=color:#bbb>
+</span></span></span></code></pre></div><p><code>service.spec.healthCheckNodePort</code> 字段指向每个在 <code>/healthz</code>
+路径上提供健康检查的节点的端口。你可以这样测试：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pod -o wide -l <span style=color:#b8860b>app</span><span style=color:#666>=</span>source-ip-app
+</span></span></code></pre></div><p>输出类似于：</p><pre tabindex=0><code>NAME                            READY     STATUS    RESTARTS   AGE       IP             NODE
+source-ip-app-826191075-qehz4   1/1       Running   0          20h       10.180.1.136   kubernetes-node-6jst
+</code></pre><p>使用 <code>curl</code> 获取各个节点上的 <code>/healthz</code> 端点：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#080;font-style:italic># 在你选择的节点上本地运行</span>
+</span></span><span style=display:flex><span>curl localhost:32122/healthz
+</span></span></code></pre></div><pre tabindex=0><code>1 Service Endpoints found
+</code></pre><p>在不同的节点上，你可能会得到不同的结果：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#080;font-style:italic># 在你选择的节点上本地运行</span>
+</span></span><span style=display:flex><span>curl localhost:32122/healthz
+</span></span></code></pre></div><pre tabindex=0><code>No Service Endpoints Found
+</code></pre><p>在<a class=glossary-tooltip title='控制平面是指容器编排层，它暴露 API 和接口来定义、部署容器和管理容器的生命周期。' data-toggle=tooltip data-placement=top href='/zh-cn/docs/reference/glossary/?all=true#term-control-plane' target=_blank aria-label=控制平面>控制平面</a>上运行的控制器负责分配云负载均衡器。
+同一个控制器还在每个节点上分配指向此端口/路径的 HTTP 健康检查。
+等待大约 10 秒，让 2 个没有端点的节点健康检查失败，然后使用 <code>curl</code> 查询负载均衡器的 IPv4 地址：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>curl 203.0.113.140
+</span></span></code></pre></div><p>输出类似于：</p><pre tabindex=0><code>CLIENT VALUES:
+client_address=198.51.100.79
+...
+</code></pre><h2 id=cross-platform-support>跨平台支持</h2><p>只有部分云提供商为 <code>Type=LoadBalancer</code> 的 Service 提供保存源 IP 的支持。
+你正在运行的云提供商可能会以几种不同的方式满足对负载均衡器的请求：</p><ol><li><p>使用终止客户端连接并打开到你的节点/端点的新连接的代理。
+在这种情况下，源 IP 将始终是云 LB 的源 IP，而不是客户端的源 IP。</p></li><li><p>使用数据包转发器，这样客户端发送到负载均衡器 VIP
+的请求最终会到达具有客户端源 IP 的节点，而不是中间代理。</p></li></ol><p>第一类负载均衡器必须使用负载均衡器和后端之间商定的协议来传达真实的客户端 IP，
+例如 HTTP <a href=https://tools.ietf.org/html/rfc7239#section-5.2>转发</a>或
+<a href=https://zh.wikipedia.org/wiki/X-Forwarded-For>X-FORWARDED-FOR</a>
+标头，或<a href=https://www.haproxy.org/download/1.8/doc/proxy-protocol.txt>代理协议</a>。
+第二类负载均衡器可以通过创建指向存储在 Service 上的 <code>service.spec.healthCheckNodePort</code>
+字段中的端口的 HTTP 健康检查来利用上述功能。</p><h2 id=清理现场>清理现场</h2><p>删除 Service：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl delete svc -l <span style=color:#b8860b>app</span><span style=color:#666>=</span>source-ip-app
+</span></span></code></pre></div><p>删除 Deployment、ReplicaSet 和 Pod：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl delete deployment source-ip-app
+</span></span></code></pre></div><h2 id=接下来>接下来</h2><ul><li>详细了解<a href=/zh-cn/docs/tutorials/services/connect-applications-service/>通过 Service 连接应用程序</a></li><li>阅读如何<a href=/zh-cn/docs/tasks/access-application-cluster/create-external-load-balancer/>创建外部负载均衡器</a></li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-bc0a2760d2865e91c501bc2467cd1a4b>2 - 使用 Service 连接到应用</h1><h2 id=the-kubernetes-model-for-connecting-containers>Kubernetes 连接容器的模型</h2><p>既然有了一个持续运行、可复制的应用，我们就能够将它暴露到网络上。</p><p>Kubernetes 假设 Pod 可与其它 Pod 通信，不管它们在哪个主机上。
+Kubernetes 给每一个 Pod 分配一个集群私有 IP 地址，所以没必要在
+Pod 与 Pod 之间创建连接或将容器的端口映射到主机端口。
+这意味着同一个 Pod 内的所有容器能通过 localhost 上的端口互相连通，集群中的所有 Pod
+也不需要通过 NAT 转换就能够互相看到。
+本文档的剩余部分详述如何在上述网络模型之上运行可靠的服务。</p><p>本教程使用一个简单的 Nginx 服务器来演示概念验证原型。</p><h2 id=exposing-pods-to-the-cluster>在集群中暴露 Pod</h2><p>我们在之前的示例中已经做过，然而让我们以网络连接的视角再重做一遍。
+创建一个 Nginx Pod，注意其中包含一个容器端口的规约：</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/zh-cn/examples/service/networking/run-my-nginx.yaml download=service/networking/run-my-nginx.yaml><code>service/networking/run-my-nginx.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("service-networking-run-my-nginx-yaml")' title="Copy service/networking/run-my-nginx.yaml to clipboard"></img></div><div class=includecode id=service-networking-run-my-nginx-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>apps/v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Deployment<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>my-nginx<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>selector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>matchLabels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>run</span>:<span style=color:#bbb> </span>my-nginx<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>replicas</span>:<span style=color:#bbb> </span><span style=color:#666>2</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>template</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>run</span>:<span style=color:#bbb> </span>my-nginx<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>my-nginx<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>nginx<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>ports</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span>- <span style=color:green;font-weight:700>containerPort</span>:<span style=color:#bbb> </span><span style=color:#666>80</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>
+</span></span></span></code></pre></div></div></div><p>这使得可以从集群中任何一个节点来访问它。检查节点，该 Pod 正在运行：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -f ./run-my-nginx.yaml
+</span></span><span style=display:flex><span>kubectl get pods -l <span style=color:#b8860b>run</span><span style=color:#666>=</span>my-nginx -o wide
+</span></span></code></pre></div><pre tabindex=0><code>NAME                        READY     STATUS    RESTARTS   AGE       IP            NODE
+my-nginx-3800858182-jr4a2   1/1       Running   0          13s       10.244.3.4    kubernetes-minion-905m
+my-nginx-3800858182-kna2y   1/1       Running   0          13s       10.244.2.5    kubernetes-minion-ljyd
+</code></pre><p>检查 Pod 的 IP 地址：</p><pre tabindex=0><code>kubectl get pods -l run=my-nginx -o custom-columns=POD_IP:.status.podIPs
+    POD_IP
+    [map[ip:10.244.3.4]]
+    [map[ip:10.244.2.5]]
+</code></pre><p>你应该能够通过 ssh 登录到集群中的任何一个节点上，并使用诸如 <code>curl</code> 之类的工具向这两个 IP 地址发出查询请求。
+需要注意的是，容器 <strong>不会</strong> 使用该节点上的 80 端口，也不会使用任何特定的 NAT 规则去路由流量到 Pod 上。
+这意味着可以在同一个节点上运行多个 Nginx Pod，使用相同的 <code>containerPort</code>，并且可以从集群中任何其他的
+Pod 或节点上使用 IP 的方式访问到它们。
+如果你想的话，你依然可以将宿主节点的某个端口的流量转发到 Pod 中，但是出于网络模型的原因，你不必这么做。</p><p>如果对此好奇，请参考 <a href=/zh-cn/docs/concepts/cluster-administration/networking/#the-kubernetes-network-model>Kubernetes 网络模型</a>。</p><h2 id=creating-a-service>创建 Service</h2><p>我们有一组在一个扁平的、集群范围的地址空间中运行 Nginx 服务的 Pod。
+理论上，你可以直接连接到这些 Pod，但如果某个节点死掉了会发生什么呢？
+Pod 会终止，Deployment 将创建新的 Pod，且使用不同的 IP。这正是 Service 要解决的问题。</p><p>Kubernetes Service 是集群中提供相同功能的一组 Pod 的抽象表达。
+当每个 Service 创建时，会被分配一个唯一的 IP 地址（也称为 clusterIP）。
+这个 IP 地址与 Service 的生命周期绑定在一起，只要 Service 存在，它就不会改变。
+可以配置 Pod 使它与 Service 进行通信，Pod 知道与 Service 通信将被自动地负载均衡到该
+Service 中的某些 Pod 上。</p><p>可以使用 <code>kubectl expose</code> 命令为 2个 Nginx 副本创建一个 Service：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl expose deployment/my-nginx
+</span></span></code></pre></div><pre tabindex=0><code>service/my-nginx exposed
+</code></pre><p>这等价于使用 <code>kubectl create -f</code> 命令及如下的 yaml 文件创建：</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/zh-cn/examples/service/networking/nginx-svc.yaml download=service/networking/nginx-svc.yaml><code>service/networking/nginx-svc.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("service-networking-nginx-svc-yaml")' title="Copy service/networking/nginx-svc.yaml to clipboard"></img></div><div class=includecode id=service-networking-nginx-svc-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Service<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>my-nginx<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>run</span>:<span style=color:#bbb> </span>my-nginx<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>ports</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>port</span>:<span style=color:#bbb> </span><span style=color:#666>80</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>protocol</span>:<span style=color:#bbb> </span>TCP<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>selector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>run</span>:<span style=color:#bbb> </span>my-nginx<span style=color:#bbb>
+</span></span></span></code></pre></div></div></div><p>上述规约将创建一个 Service，该 Service 会将所有具有标签 <code>run: my-nginx</code> 的 Pod 的 TCP
+80 端口暴露到一个抽象的 Service 端口上（<code>targetPort</code>：容器接收流量的端口；<code>port</code>：
+可任意取值的抽象的 Service 端口，其他 Pod 通过该端口访问 Service）。
+查看 <a href=/docs/reference/generated/kubernetes-api/v1.25/#service-v1-core>Service</a>
+API 对象以了解 Service 所能接受的字段列表。
+查看你的 Service 资源:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get svc my-nginx
+</span></span></code></pre></div><pre tabindex=0><code>NAME       TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
+my-nginx   ClusterIP   10.0.162.149   &lt;none&gt;        80/TCP    21s
+</code></pre><p>正如前面所提到的，一个 Service 由一组 Pod 提供支撑。这些 Pod 通过
+<a class=glossary-tooltip title='一种将网络端点与 Kubernetes 资源组合在一起的方法。' data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/services-networking/endpoint-slices/ target=_blank aria-label=EndpointSlices>EndpointSlices</a> 暴露出来。
+Service Selector 将持续评估，结果被 POST
+到使用<a class=glossary-tooltip title=用来为对象设置可标识的属性标记；这些标记对用户而言是有意义且重要的。 data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/overview/working-with-objects/labels/ target=_blank aria-label=标签>标签</a>与该 Service 连接的一个 EndpointSlice。
+当 Pod 终止后，它会自动从包含该 Pod 的 EndpointSlices 中移除。
+新的能够匹配上 Service Selector 的 Pod 将自动地被为该 Service 添加到 EndpointSlice 中。
+检查 Endpoint，注意到 IP 地址与在第一步创建的 Pod 是相同的。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl describe svc my-nginx
+</span></span></code></pre></div><pre tabindex=0><code>Name:                my-nginx
+Namespace:           default
+Labels:              run=my-nginx
+Annotations:         &lt;none&gt;
+Selector:            run=my-nginx
+Type:                ClusterIP
+IP:                  10.0.162.149
+Port:                &lt;unset&gt; 80/TCP
+Endpoints:           10.244.2.5:80,10.244.3.4:80
+Session Affinity:    None
+Events:              &lt;none&gt;
+</code></pre><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get endpointslices -l kubernetes.io/service-name<span style=color:#666>=</span>my-nginx
+</span></span></code></pre></div><pre tabindex=0><code>NAME             ADDRESSTYPE   PORTS   ENDPOINTS               AGE
+my-nginx-7vzhx   IPv4          80      10.244.2.5,10.244.3.4   21s
+</code></pre><p>现在，你应该能够从集群中任意节点上使用 curl 命令向 <code>&lt;CLUSTER-IP>:&lt;PORT></code> 发送请求以访问 Nginx Service。
+注意 Service IP 完全是虚拟的，它从来没有走过网络，如果对它如何工作的原理感到好奇，
+可以进一步阅读<a href=/zh-cn/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies>服务代理</a>的内容。</p><h2 id=accessing-the-service>访问 Service</h2><p>Kubernetes 支持两种查找服务的主要模式：环境变量和 DNS。前者开箱即用，而后者则需要
+<a href=https://releases.k8s.io/v1.25.0/cluster/addons/dns/coredns>CoreDNS 集群插件</a>。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>如果不需要服务环境变量（因为可能与预期的程序冲突，可能要处理的变量太多，或者仅使用DNS等），则可以通过在
+<a href=/docs/reference/generated/kubernetes-api/v1.25/#pod-v1-core>pod spec</a>
+上将 <code>enableServiceLinks</code> 标志设置为 <code>false</code> 来禁用此模式。</div><h3 id=environment-variables>环境变量</h3><p>当 Pod 在节点上运行时，kubelet 会针对每个活跃的 Service 为 Pod 添加一组环境变量。
+这就引入了一个顺序的问题。为解释这个问题，让我们先检查正在运行的 Nginx Pod
+的环境变量（你的环境中的 Pod 名称将会与下面示例命令中的不同）：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl <span style=color:#a2f>exec</span> my-nginx-3800858182-jr4a2 -- printenv | grep SERVICE
+</span></span></code></pre></div><pre tabindex=0><code>KUBERNETES_SERVICE_HOST=10.0.0.1
+KUBERNETES_SERVICE_PORT=443
+KUBERNETES_SERVICE_PORT_HTTPS=443
+</code></pre><p>能看到环境变量中并没有你创建的 Service 相关的值。这是因为副本的创建先于 Service。
+这样做的另一个缺点是，调度器可能会将所有 Pod 部署到同一台机器上，如果该机器宕机则整个 Service 都会离线。
+要改正的话，我们可以先终止这 2 个 Pod，然后等待 Deployment 去重新创建它们。
+这次 Service 会 <strong>先于</strong> 副本存在。这将实现调度器级别的 Pod 按 Service
+分布（假定所有的节点都具有同样的容量），并提供正确的环境变量：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl scale deployment my-nginx --replicas<span style=color:#666>=</span>0; kubectl scale deployment my-nginx --replicas<span style=color:#666>=</span>2;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>kubectl get pods -l <span style=color:#b8860b>run</span><span style=color:#666>=</span>my-nginx -o wide
+</span></span></code></pre></div><pre tabindex=0><code>NAME                        READY     STATUS    RESTARTS   AGE     IP            NODE
+my-nginx-3800858182-e9ihh   1/1       Running   0          5s      10.244.2.7    kubernetes-minion-ljyd
+my-nginx-3800858182-j4rm4   1/1       Running   0          5s      10.244.3.8    kubernetes-minion-905m
+</code></pre><p>你可能注意到，Pod 具有不同的名称，这是因为它们是被重新创建的。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl <span style=color:#a2f>exec</span> my-nginx-3800858182-e9ihh -- printenv | grep SERVICE
+</span></span></code></pre></div><pre tabindex=0><code>KUBERNETES_SERVICE_PORT=443
+MY_NGINX_SERVICE_HOST=10.0.162.149
+KUBERNETES_SERVICE_HOST=10.0.0.1
+MY_NGINX_SERVICE_PORT=80
+KUBERNETES_SERVICE_PORT_HTTPS=443
+</code></pre><h3 id=dns>DNS</h3><p>Kubernetes 提供了一个自动为其它 Service 分配 DNS 名字的 DNS 插件 Service。
+你可以通过如下命令检查它是否在工作：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get services kube-dns --namespace<span style=color:#666>=</span>kube-system
+</span></span></code></pre></div><pre tabindex=0><code>NAME       TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)         AGE
+kube-dns   ClusterIP   10.0.0.10    &lt;none&gt;        53/UDP,53/TCP   8m
+</code></pre><p>本段剩余的内容假设你已经有一个拥有持久 IP 地址的 Service（my-nginx），以及一个为其
+IP 分配名称的 DNS 服务器。 这里我们使用 CoreDNS 集群插件（应用名为 <code>kube-dns</code>），
+所以在集群中的任何 Pod 中，你都可以使用标准方法（例如：<code>gethostbyname()</code>）与该 Service 通信。
+如果 CoreDNS 没有在运行，你可以参照
+<a href=https://github.com/coredns/deployment/tree/master/kubernetes>CoreDNS README</a>
+或者<a href=/zh-cn/docs/tasks/administer-cluster/coredns/#installing-coredns>安装 CoreDNS</a> 来启用它。
+让我们运行另一个 curl 应用来进行测试：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl run curl --image<span style=color:#666>=</span>radial/busyboxplus:curl -i --tty
+</span></span></code></pre></div><pre tabindex=0><code>Waiting for pod default/curl-131556218-9fnch to be running, status is Pending, pod ready: false
+Hit enter for command prompt
+</code></pre><p>然后，按回车并执行命令 <code>nslookup my-nginx</code>：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#666>[</span> root@curl-131556218-9fnch:/ <span style=color:#666>]</span>$ nslookup my-nginx
+</span></span><span style=display:flex><span>Server:    10.0.0.10
+</span></span><span style=display:flex><span>Address 1: 10.0.0.10
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Name:      my-nginx
+</span></span><span style=display:flex><span>Address 1: 10.0.162.149
+</span></span></code></pre></div><h2 id=securing-the-service>保护 Service</h2><p>到现在为止，我们只在集群内部访问了 Nginx 服务器。在将 Service 暴露到因特网之前，我们希望确保通信信道是安全的。
+为实现这一目的，需要：</p><ul><li>用于 HTTPS 的自签名证书（除非已经有了一个身份证书）</li><li>使用证书配置的 Nginx 服务器</li><li>使 Pod 可以访问证书的 <a href=/zh-cn/docs/concepts/configuration/secret/>Secret</a></li></ul><p>你可以从
+<a href=https://github.com/kubernetes/examples/tree/master/staging/https-nginx/>Nginx https 示例</a>获取所有上述内容。
+你需要安装 go 和 make 工具。如果你不想安装这些软件，可以按照后文所述的手动执行步骤执行操作。简要过程如下：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>make keys <span style=color:#b8860b>KEY</span><span style=color:#666>=</span>/tmp/nginx.key <span style=color:#b8860b>CERT</span><span style=color:#666>=</span>/tmp/nginx.crt
+</span></span><span style=display:flex><span>kubectl create secret tls nginxsecret --key /tmp/nginx.key --cert /tmp/nginx.crt
+</span></span></code></pre></div><pre tabindex=0><code>secret/nginxsecret created
+</code></pre><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get secrets
+</span></span></code></pre></div><pre tabindex=0><code>NAME                  TYPE                                  DATA      AGE
+nginxsecret           kubernetes.io/tls                     2         1m
+</code></pre><p>以下是 configmap：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create configmap nginxconfigmap --from-file<span style=color:#666>=</span>default.conf
+</span></span></code></pre></div><pre tabindex=0><code>configmap/nginxconfigmap created
+</code></pre><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get configmaps
+</span></span></code></pre></div><pre tabindex=0><code>NAME             DATA   AGE
+nginxconfigmap   1      114s
+</code></pre><p>以下是你在运行 make 时遇到问题时要遵循的手动步骤（例如，在 Windows 上）：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#080;font-style:italic># 创建公钥和相对应的私钥</span>
+</span></span><span style=display:flex><span>openssl req -x509 -nodes -days <span style=color:#666>365</span> -newkey rsa:2048 -keyout /d/tmp/nginx.key -out /d/tmp/nginx.crt -subj <span style=color:#b44>&#34;/CN=my-nginx/O=my-nginx&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#080;font-style:italic># 对密钥实施 base64 编码</span>
+</span></span><span style=display:flex><span>cat /d/tmp/nginx.crt | base64
+</span></span><span style=display:flex><span>cat /d/tmp/nginx.key | base64
+</span></span></code></pre></div><p>使用前面命令的输出来创建 yaml 文件，如下所示。 base64 编码的值应全部放在一行上。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;v1&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;Secret&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;nginxsecret&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>namespace</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;default&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>type</span>:<span style=color:#bbb> </span>kubernetes.io/tls<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>data</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>tls.crt</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURIekNDQWdlZ0F3SUJBZ0lKQUp5M3lQK0pzMlpJTUEwR0NTcUdTSWIzRFFFQkJRVUFNQ1l4RVRBUEJnTlYKQkFNVENHNW5hVzU0YzNaak1SRXdEd1lEVlFRS0V3aHVaMmx1ZUhOMll6QWVGdzB4TnpFd01qWXdOekEzTVRKYQpGdzB4T0RFd01qWXdOekEzTVRKYU1DWXhFVEFQQmdOVkJBTVRDRzVuYVc1NGMzWmpNUkV3RHdZRFZRUUtFd2h1CloybHVlSE4yWXpDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBSjFxSU1SOVdWM0IKMlZIQlRMRmtobDRONXljMEJxYUhIQktMSnJMcy8vdzZhU3hRS29GbHlJSU94NGUrMlN5ajBFcndCLzlYTnBwbQppeW1CL3JkRldkOXg5UWhBQUxCZkVaTmNiV3NsTVFVcnhBZW50VWt1dk1vLzgvMHRpbGhjc3paenJEYVJ4NEo5Ci82UVRtVVI3a0ZTWUpOWTVQZkR3cGc3dlVvaDZmZ1Voam92VG42eHNVR0M2QURVODBpNXFlZWhNeVI1N2lmU2YKNHZpaXdIY3hnL3lZR1JBRS9mRTRqakxCdmdONjc2SU90S01rZXV3R0ljNDFhd05tNnNTSzRqYUNGeGpYSnZaZQp2by9kTlEybHhHWCtKT2l3SEhXbXNhdGp4WTRaNVk3R1ZoK0QrWnYvcW1mMFgvbVY0Rmo1NzV3ajFMWVBocWtsCmdhSXZYRyt4U1FVQ0F3RUFBYU5RTUU0d0hRWURWUjBPQkJZRUZPNG9OWkI3YXc1OUlsYkROMzhIYkduYnhFVjcKTUI4R0ExVWRJd1FZTUJhQUZPNG9OWkI3YXc1OUlsYkROMzhIYkduYnhFVjdNQXdHQTFVZEV3UUZNQU1CQWY4dwpEUVlKS29aSWh2Y05BUUVGQlFBRGdnRUJBRVhTMW9FU0lFaXdyMDhWcVA0K2NwTHI3TW5FMTducDBvMm14alFvCjRGb0RvRjdRZnZqeE04Tzd2TjB0clcxb2pGSW0vWDE4ZnZaL3k4ZzVaWG40Vm8zc3hKVmRBcStNZC9jTStzUGEKNmJjTkNUekZqeFpUV0UrKzE5NS9zb2dmOUZ3VDVDK3U2Q3B5N0M3MTZvUXRUakViV05VdEt4cXI0Nk1OZWNCMApwRFhWZmdWQTRadkR4NFo3S2RiZDY5eXM3OVFHYmg5ZW1PZ05NZFlsSUswSGt0ejF5WU4vbVpmK3FqTkJqbWZjCkNnMnlwbGQ0Wi8rUUNQZjl3SkoybFIrY2FnT0R4elBWcGxNSEcybzgvTHFDdnh6elZPUDUxeXdLZEtxaUMwSVEKQ0I5T2wwWW5scE9UNEh1b2hSUzBPOStlMm9KdFZsNUIyczRpbDlhZ3RTVXFxUlU9Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>tls.key</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUV2UUlCQURBTkJna3Foa2lHOXcwQkFRRUZBQVNDQktjd2dnU2pBZ0VBQW9JQkFRQ2RhaURFZlZsZHdkbFIKd1V5eFpJWmVEZWNuTkFhbWh4d1NpeWF5N1AvOE9ta3NVQ3FCWmNpQ0RzZUh2dGtzbzlCSzhBZi9WemFhWm9zcApnZjYzUlZuZmNmVUlRQUN3WHhHVFhHMXJKVEVGSzhRSHA3VkpMcnpLUC9QOUxZcFlYTE0yYzZ3MmtjZUNmZitrCkU1bEVlNUJVbUNUV09UM3c4S1lPNzFLSWVuNEZJWTZMMDUrc2JGQmd1Z0ExUE5JdWFubm9UTWtlZTRuMG4rTDQKb3NCM01ZUDhtQmtRQlAzeE9JNHl3YjREZXUraURyU2pKSHJzQmlIT05Xc0RadXJFaXVJMmdoY1kxeWIyWHI2UAozVFVOcGNSbC9pVG9zQngxcHJHclk4V09HZVdPeGxZZmcvbWIvNnBuOUYvNWxlQlkrZStjSTlTMkQ0YXBKWUdpCkwxeHZzVWtGQWdNQkFBRUNnZ0VBZFhCK0xkbk8ySElOTGo5bWRsb25IUGlHWWVzZ294RGQwci9hQ1Zkank4dlEKTjIwL3FQWkUxek1yall6Ry9kVGhTMmMwc0QxaTBXSjdwR1lGb0xtdXlWTjltY0FXUTM5SjM0VHZaU2FFSWZWNgo5TE1jUHhNTmFsNjRLMFRVbUFQZytGam9QSFlhUUxLOERLOUtnNXNrSE5pOWNzMlY5ckd6VWlVZWtBL0RBUlBTClI3L2ZjUFBacDRuRWVBZmI3WTk1R1llb1p5V21SU3VKdlNyblBESGtUdW1vVlVWdkxMRHRzaG9reUxiTWVtN3oKMmJzVmpwSW1GTHJqbGtmQXlpNHg0WjJrV3YyMFRrdWtsZU1jaVlMbjk4QWxiRi9DSmRLM3QraTRoMTVlR2ZQegpoTnh3bk9QdlVTaDR2Q0o3c2Q5TmtEUGJvS2JneVVHOXBYamZhRGR2UVFLQmdRRFFLM01nUkhkQ1pKNVFqZWFKClFGdXF4cHdnNzhZTjQyL1NwenlUYmtGcVFoQWtyczJxWGx1MDZBRzhrZzIzQkswaHkzaE9zSGgxcXRVK3NHZVAKOWRERHBsUWV0ODZsY2FlR3hoc0V0L1R6cEdtNGFKSm5oNzVVaTVGZk9QTDhPTm1FZ3MxMVRhUldhNzZxelRyMgphRlpjQ2pWV1g0YnRSTHVwSkgrMjZnY0FhUUtCZ1FEQmxVSUUzTnNVOFBBZEYvL25sQVB5VWs1T3lDdWc3dmVyClUycXlrdXFzYnBkSi9hODViT1JhM05IVmpVM25uRGpHVHBWaE9JeXg5TEFrc2RwZEFjVmxvcG9HODhXYk9lMTAKMUdqbnkySmdDK3JVWUZiRGtpUGx1K09IYnRnOXFYcGJMSHBzUVpsMGhucDBYSFNYVm9CMUliQndnMGEyOFVadApCbFBtWmc2d1BRS0JnRHVIUVV2SDZHYTNDVUsxNFdmOFhIcFFnMU16M2VvWTBPQm5iSDRvZUZKZmcraEppSXlnCm9RN3hqWldVR3BIc3AyblRtcHErQWlSNzdyRVhsdlhtOElVU2FsbkNiRGlKY01Pc29RdFBZNS9NczJMRm5LQTQKaENmL0pWb2FtZm1nZEN0ZGtFMXNINE9MR2lJVHdEbTRpb0dWZGIwMllnbzFyb2htNUpLMUI3MkpBb0dBUW01UQpHNDhXOTVhL0w1eSt5dCsyZ3YvUHM2VnBvMjZlTzRNQ3lJazJVem9ZWE9IYnNkODJkaC8xT2sybGdHZlI2K3VuCnc1YytZUXRSTHlhQmd3MUtpbGhFZDBKTWU3cGpUSVpnQWJ0LzVPbnlDak9OVXN2aDJjS2lrQ1Z2dTZsZlBjNkQKckliT2ZIaHhxV0RZK2Q1TGN1YSt2NzJ0RkxhenJsSlBsRzlOZHhrQ2dZRUF5elIzT3UyMDNRVVV6bUlCRkwzZAp4Wm5XZ0JLSEo3TnNxcGFWb2RjL0d5aGVycjFDZzE2MmJaSjJDV2RsZkI0VEdtUjZZdmxTZEFOOFRwUWhFbUtKCnFBLzVzdHdxNWd0WGVLOVJmMWxXK29xNThRNTBxMmk1NVdUTThoSDZhTjlaMTltZ0FGdE5VdGNqQUx2dFYxdEYKWSs4WFJkSHJaRnBIWll2NWkwVW1VbGc9Ci0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0K&#34;</span><span style=color:#bbb>
+</span></span></span></code></pre></div><p>现在使用文件创建 Secret：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -f nginxsecrets.yaml
+</span></span><span style=display:flex><span>kubectl get secrets
+</span></span></code></pre></div><pre tabindex=0><code>NAME                  TYPE                                  DATA      AGE
+nginxsecret           kubernetes.io/tls                     2         1m
+</code></pre><p>现在修改 Nginx 副本以启动一个使用 Secret 中的证书的 HTTPS 服务器以及相应的用于暴露其端口（80 和 443）的 Service：</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/zh-cn/examples/service/networking/nginx-secure-app.yaml download=service/networking/nginx-secure-app.yaml><code>service/networking/nginx-secure-app.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("service-networking-nginx-secure-app-yaml")' title="Copy service/networking/nginx-secure-app.yaml to clipboard"></img></div><div class=includecode id=service-networking-nginx-secure-app-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Service<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>my-nginx<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>run</span>:<span style=color:#bbb> </span>my-nginx<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>type</span>:<span style=color:#bbb> </span>NodePort<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>ports</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>port</span>:<span style=color:#bbb> </span><span style=color:#666>8080</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>targetPort</span>:<span style=color:#bbb> </span><span style=color:#666>80</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>protocol</span>:<span style=color:#bbb> </span>TCP<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>http<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>port</span>:<span style=color:#bbb> </span><span style=color:#666>443</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>protocol</span>:<span style=color:#bbb> </span>TCP<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>https<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>selector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>run</span>:<span style=color:#bbb> </span>my-nginx<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#00f;font-weight:700>---</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>apps/v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Deployment<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>my-nginx<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>selector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>matchLabels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>run</span>:<span style=color:#bbb> </span>my-nginx<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>replicas</span>:<span style=color:#bbb> </span><span style=color:#666>1</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>template</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>run</span>:<span style=color:#bbb> </span>my-nginx<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>volumes</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>secret-volume<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>secret</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>secretName</span>:<span style=color:#bbb> </span>nginxsecret<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>configmap-volume<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>configMap</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>nginxconfigmap<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>nginxhttps<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>bprashanth/nginxhttps:1.0<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>ports</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span>- <span style=color:green;font-weight:700>containerPort</span>:<span style=color:#bbb> </span><span style=color:#666>443</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span>- <span style=color:green;font-weight:700>containerPort</span>:<span style=color:#bbb> </span><span style=color:#666>80</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>volumeMounts</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span>- <span style=color:green;font-weight:700>mountPath</span>:<span style=color:#bbb> </span>/etc/nginx/ssl<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>secret-volume<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span>- <span style=color:green;font-weight:700>mountPath</span>:<span style=color:#bbb> </span>/etc/nginx/conf.d<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>configmap-volume<span style=color:#bbb>
+</span></span></span></code></pre></div></div></div><p>关于 nginx-secure-app 清单，值得注意的几点如下：</p><ul><li>它将 Deployment 和 Service 的规约放在了同一个文件中。</li><li><a href=https://github.com/kubernetes/examples/tree/master/staging/https-nginx/default.conf>Nginx 服务器</a>通过
+80 端口处理 HTTP 流量，通过 443 端口处理 HTTPS 流量，而 Nginx Service 则暴露了这两个端口。</li><li>每个容器能通过挂载在 <code>/etc/nginx/ssl</code> 的卷访问秘钥。卷和密钥需要在 Nginx 服务器启动 <strong>之前</strong> 配置好。</li></ul><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl delete deployments,svc my-nginx; kubectl create -f ./nginx-secure-app.yaml
+</span></span></code></pre></div><p>这时，你可以从任何节点访问到 Nginx 服务器。</p><pre tabindex=0><code>kubectl get pods -l run=my-nginx -o custom-columns=POD_IP:.status.podIPs
+    POD_IP
+    [map[ip:10.244.3.5]]
+</code></pre><pre tabindex=0><code>node $ curl -k https://10.244.3.5
+...
+&lt;h1&gt;Welcome to nginx!&lt;/h1&gt;
+</code></pre><p>注意最后一步我们是如何提供 <code>-k</code> 参数执行 curl 命令的，这是因为在证书生成时，
+我们不知道任何关于运行 nginx 的 Pod 的信息，所以不得不在执行 curl 命令时忽略 CName 不匹配的情况。
+通过创建 Service，我们连接了在证书中的 CName 与在 Service 查询时被 Pod 使用的实际 DNS 名字。
+让我们从一个 Pod 来测试（为了方便，这里使用同一个 Secret，Pod 仅需要使用 nginx.crt 去访问 Service）：</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/zh-cn/examples/service/networking/curlpod.yaml download=service/networking/curlpod.yaml><code>service/networking/curlpod.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("service-networking-curlpod-yaml")' title="Copy service/networking/curlpod.yaml to clipboard"></img></div><div class=includecode id=service-networking-curlpod-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>apps/v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Deployment<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>curl-deployment<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>selector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>matchLabels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>app</span>:<span style=color:#bbb> </span>curlpod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>replicas</span>:<span style=color:#bbb> </span><span style=color:#666>1</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>template</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>app</span>:<span style=color:#bbb> </span>curlpod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>volumes</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>secret-volume<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>secret</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>secretName</span>:<span style=color:#bbb> </span>nginxsecret<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>curlpod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>command</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span>- sh<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span>- -c<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span>- while true; do sleep 1; done<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>radial/busyboxplus:curl<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>volumeMounts</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span>- <span style=color:green;font-weight:700>mountPath</span>:<span style=color:#bbb> </span>/etc/nginx/ssl<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>secret-volume<span style=color:#bbb>
+</span></span></span></code></pre></div></div></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -f ./curlpod.yaml
+</span></span><span style=display:flex><span>kubectl get pods -l <span style=color:#b8860b>app</span><span style=color:#666>=</span>curlpod
+</span></span></code></pre></div><pre tabindex=0><code>NAME                               READY     STATUS    RESTARTS   AGE
+curl-deployment-1515033274-1410r   1/1       Running   0          1m
+</code></pre><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl <span style=color:#a2f>exec</span> curl-deployment-1515033274-1410r -- curl https://my-nginx --cacert /etc/nginx/ssl/tls.crt
+</span></span><span style=display:flex><span>...
+</span></span><span style=display:flex><span>&lt;title&gt;Welcome to nginx!&lt;/title&gt;
+</span></span><span style=display:flex><span>...
+</span></span></code></pre></div><h2 id=exposing-the-service>暴露 Service</h2><p>对应用的某些部分，你可能希望将 Service 暴露在一个外部 IP 地址上。
+Kubernetes 支持两种实现方式：NodePort 和 LoadBalancer。
+在上一段创建的 Service 使用了 <code>NodePort</code>，因此，如果你的节点有一个公网
+IP，那么 Nginx HTTPS 副本已经能够处理因特网上的流量。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get svc my-nginx -o yaml | grep nodePort -C <span style=color:#666>5</span>
+</span></span></code></pre></div><pre tabindex=0><code>  uid: 07191fb3-f61a-11e5-8ae5-42010af00002
+spec:
+  clusterIP: 10.0.162.149
+  ports:
+  - name: http
+    nodePort: 31704
+    port: 8080
+    protocol: TCP
+    targetPort: 80
+  - name: https
+    nodePort: 32453
+    port: 443
+    protocol: TCP
+    targetPort: 443
+  selector:
+    run: my-nginx
+</code></pre><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get nodes -o yaml | grep ExternalIP -C <span style=color:#666>1</span>
+</span></span></code></pre></div><pre tabindex=0><code>    - address: 104.197.41.11
+      type: ExternalIP
+    allocatable:
+--
+    - address: 23.251.152.56
+      type: ExternalIP
+    allocatable:
+...
+
+$ curl https://&lt;EXTERNAL-IP&gt;:&lt;NODE-PORT&gt; -k
+...
+&lt;h1&gt;Welcome to nginx!&lt;/h1&gt;
+</code></pre><p>让我们重新创建一个 Service 以使用云负载均衡器。
+将 <code>my-nginx</code> Service 的 <code>Type</code> 由 <code>NodePort</code> 改成 <code>LoadBalancer</code>：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl edit svc my-nginx
+</span></span><span style=display:flex><span>kubectl get svc my-nginx
+</span></span></code></pre></div><pre tabindex=0><code>NAME       TYPE           CLUSTER-IP     EXTERNAL-IP        PORT(S)               AGE
+my-nginx   LoadBalancer   10.0.162.149   xx.xxx.xxx.xxx     8080:30163/TCP        21s
+</code></pre><pre tabindex=0><code>curl https://&lt;EXTERNAL-IP&gt; -k
+...
+&lt;title&gt;Welcome to nginx!&lt;/title&gt;
+</code></pre><p>在 <code>EXTERNAL-IP</code> 列中的 IP 地址能在公网上被访问到。<code>CLUSTER-IP</code> 只能从集群/私有云网络中访问。</p><p>注意，在 AWS 上，类型 <code>LoadBalancer</code> 的服务会创建一个 ELB，且 ELB 使用主机名（比较长），而不是 IP。
+ELB 的主机名太长以至于不能适配标准 <code>kubectl get svc</code> 的输出，所以需要通过执行
+<code>kubectl describe service my-nginx</code> 命令来查看它。
+可以看到类似如下内容：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl describe service my-nginx
+</span></span><span style=display:flex><span>...
+</span></span><span style=display:flex><span>LoadBalancer Ingress:   a320587ffd19711e5a37606cf4a74574-1142138393.us-east-1.elb.amazonaws.com
+</span></span><span style=display:flex><span>...
+</span></span></code></pre></div><h2 id=接下来>接下来</h2><ul><li>进一步了解如何<a href=/zh-cn/docs/tasks/access-application-cluster/service-access-application-cluster/>使用 Service 访问集群中的应用</a></li><li>进一步了解如何<a href=/zh-cn/docs/tasks/access-application-cluster/connecting-frontend-backend/>使用 Service 将前端连接到后端</a></li><li>进一步了解如何<a href=/zh-cn/docs/tasks/access-application-cluster/create-external-load-balancer/>创建外部负载均衡器</a></li></ul></div></main></div></div><footer class=d-print-none><div class=footer__links><nav><a class=text-white href=/zh-cn/docs/home/>主页</a>
+<a class=text-white href=/zh-cn/blog/>博客</a>
+<a class=text-white href=/zh-cn/training/>培训</a>
+<a class=text-white href=/zh-cn/partners/>合作伙伴</a>
+<a class=text-white href=/zh-cn/community/>社区</a>
+<a class=text-white href=/zh-cn/case-studies/>案例分析</a></nav></div><div class=container-fluid><div class=row><div class="col-6 col-sm-2 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="User mailing list" aria-label="User mailing list"><a class=text-white target=_blank href=https://discuss.kubernetes.io><i class="fa fa-envelope"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank href=https://twitter.com/kubernetesio><i class="fab fa-twitter"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Calendar aria-label=Calendar><a class=text-white target=_blank href="https://calendar.google.com/calendar/embed?src=calendar%40kubernetes.io"><i class="fas fa-calendar-alt"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Youtube aria-label=Youtube><a class=text-white target=_blank href=https://youtube.com/kubernetescommunity><i class="fab fa-youtube"></i></a></li></ul></div><div class="col-6 col-sm-2 text-right text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank href=https://github.com/kubernetes/kubernetes><i class="fab fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Slack aria-label=Slack><a class=text-white target=_blank href=https://slack.k8s.io><i class="fab fa-slack"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Contribute aria-label=Contribute><a class=text-white target=_blank href=https://git.k8s.io/community/contributors/guide><i class="fas fa-edit"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="Stack Overflow" aria-label="Stack Overflow"><a class=text-white target=_blank href=https://stackoverflow.com/questions/tagged/kubernetes><i class="fab fa-stack-overflow"></i></a></li></ul></div><div class="col-12 col-sm-8 text-center order-sm-2"><small class=text-white>&copy; 2023 The Kubernetes 作者 | 文档发布基于 <a href=https://git.k8s.io/website/LICENSE class=light-text>CC BY 4.0</a> 授权许可</small><br><small class=text-white>Copyright &copy; 2023 Linux 基金会&reg;。保留所有权利。Linux 基金会已注册并使用商标。如需了解 Linux 基金会的商标列表，请访问<a href=https://www.linuxfoundation.org/trademark-usage class=light-text>商标使用页面</a></small><br><small class=text-white>ICP license: 京ICP备17074266号-3</small></div></div></div></footer></div><script src=/js/jquery-3.6.0.min.js integrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script>
+<script src=/js/popper-1.16.1.min.js intregrity=sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN crossorigin=anonymous></script>
+<script src=/js/bootstrap-4.6.1.min.js integrity=sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2 crossorigin=anonymous></script>
+<script src=/js/script.js></script>
+<script async src=/js/mermaid-8.13.4.min.js integrity=sha384-5hHNvPeMrNH14oM3IcQofDoBhiclNK3g2+hnEinKzQ07C4AliMeVpnvxuiwEGpaO crossorigin=anonymous></script>
+<script src=/js/main.min.5c0bf7f21dc4f66485f74efbbeeff28a7e4f8cddaac1bae47043159c922ff3a3.js integrity="sha256-XAv38h3E9mSF9077vu/yin5PjN2qwbrkcEMVnJIv86M=" crossorigin=anonymous></script></body></html>

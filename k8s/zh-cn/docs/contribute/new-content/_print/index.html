@@ -1,0 +1,363 @@
+<!doctype html><html lang=zh-cn class=no-js><head><meta name=robots content="noindex, nofollow"><link rel=alternate hreflang=en href=https://kubernetes.io/docs/contribute/new-content/><link rel=alternate hreflang=ko href=https://kubernetes.io/ko/docs/contribute/new-content/><link rel=alternate hreflang=ja href=https://kubernetes.io/ja/docs/contribute/new-content/><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.110.0"><link rel=canonical type=text/html href=https://kubernetes.io/zh-cn/docs/contribute/new-content/><link rel="shortcut icon" type=image/png href=/images/favicon.png><link rel=apple-touch-icon href=/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=manifest href=/manifest.webmanifest><link rel=apple-touch-icon href=/images/kubernetes-192x192.png><title>贡献新内容 | Kubernetes</title><meta property="og:title" content="贡献新内容"><meta property="og:description" content="生产级别的容器编排系统"><meta property="og:type" content="website"><meta property="og:url" content="https://kubernetes.io/zh-cn/docs/contribute/new-content/"><meta property="og:site_name" content="Kubernetes"><meta itemprop=name content="贡献新内容"><meta itemprop=description content="生产级别的容器编排系统"><meta name=twitter:card content="summary"><meta name=twitter:title content="贡献新内容"><meta name=twitter:description content="生产级别的容器编排系统"><link href=/scss/main.css rel=stylesheet><script type=application/ld+json>{"@context":"https://schema.org","@type":"Organization","url":"https://kubernetes.io","logo":"https://kubernetes.io/images/favicon.png","potentialAction":{"@type":"SearchAction","target":"https://kubernetes.io/search/?q={search_term_string}","query-input":"required name=search_term_string"}}</script><meta name=theme-color content="#326ce5"><link rel=stylesheet href=/css/feature-states.css><meta name=description content="本节包含你在贡献新内容之前需要知晓的信息。
+flowchart LR subgraph second[开始之前] direction TB S[ ] -.- A[签署 CNCF CLA] --> B[选择 Git 分支] B --> C[每个 PR 一种语言] C --> F[检查贡献者工具] end subgraph first[基本知识] direction TB T[ ] -.- D[用 markdown 编写文档
+并用 Hugo 构建网站] --- E[GitHub 源代码] E --- G['/content/../docs' 文件夹包含
+多语言文档] G --- H[评审 Hugo 页面内容
+类型和短代码] end first ----> second classDef grey fill:#dddddd,stroke:#ffffff,stroke-width:px,color:#000000, font-size:15px; classDef white fill:#ffffff,stroke:#000,stroke-width:px,color:#000,font-weight:bold classDef spacewhite fill:#ffffff,stroke:#fff,stroke-width:0px,color:#000 class A,B,C,D,E,F,G,H grey class S,T spacewhite class first,second white 必须启用 JavaScript 才能查看此页内容 插图 - 贡献新内容准备工作"><meta property="og:description" content="本节包含你在贡献新内容之前需要知晓的信息。
+flowchart LR subgraph second[开始之前] direction TB S[ ] -.- A[签署 CNCF CLA] --> B[选择 Git 分支] B --> C[每个 PR 一种语言] C --> F[检查贡献者工具] end subgraph first[基本知识] direction TB T[ ] -.- D[用 markdown 编写文档
+并用 Hugo 构建网站] --- E[GitHub 源代码] E --- G['/content/../docs' 文件夹包含
+多语言文档] G --- H[评审 Hugo 页面内容
+类型和短代码] end first ----> second classDef grey fill:#dddddd,stroke:#ffffff,stroke-width:px,color:#000000, font-size:15px; classDef white fill:#ffffff,stroke:#000,stroke-width:px,color:#000,font-weight:bold classDef spacewhite fill:#ffffff,stroke:#fff,stroke-width:0px,color:#000 class A,B,C,D,E,F,G,H grey class S,T spacewhite class first,second white 必须启用 JavaScript 才能查看此页内容 插图 - 贡献新内容准备工作"><meta name=twitter:description content="本节包含你在贡献新内容之前需要知晓的信息。
+flowchart LR subgraph second[开始之前] direction TB S[ ] -.- A[签署 CNCF CLA] --> B[选择 Git 分支] B --> C[每个 PR 一种语言] C --> F[检查贡献者工具] end subgraph first[基本知识] direction TB T[ ] -.- D[用 markdown 编写文档
+并用 Hugo 构建网站] --- E[GitHub 源代码] E --- G['/content/../docs' 文件夹包含
+多语言文档] G --- H[评审 Hugo 页面内容
+类型和短代码] end first ----> second classDef grey fill:#dddddd,stroke:#ffffff,stroke-width:px,color:#000000, font-size:15px; classDef white fill:#ffffff,stroke:#000,stroke-width:px,color:#000,font-weight:bold classDef spacewhite fill:#ffffff,stroke:#fff,stroke-width:0px,color:#000 class A,B,C,D,E,F,G,H grey class S,T spacewhite class first,second white 必须启用 JavaScript 才能查看此页内容 插图 - 贡献新内容准备工作"><meta property="og:url" content="https://kubernetes.io/zh-cn/docs/contribute/new-content/"><meta property="og:title" content="贡献新内容"><meta name=twitter:title content="贡献新内容"><meta name=twitter:image content="https://kubernetes.io/images/favicon.png"><meta name=twitter:image:alt content="Kubernetes"><meta property="og:image" content="/images/kubernetes-horizontal-color.png"><meta property="og:type" content="article"><script async src=/js/mermaid-8.13.4.min.js></script>
+<script src=/js/jquery-3.6.0.min.js intregrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script></head><body class=td-section><header><nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar" data-auto-burger=primary><a class=navbar-brand href=/zh-cn/></a><div class="td-navbar-nav-scroll ml-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0"><li class="nav-item mr-2 mb-lg-0"><a class="nav-link active" href=/zh-cn/docs/>文档</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/blog/>Kubernetes 博客</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/training/>培训</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/partners/>合作伙伴</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/community/>社区</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/case-studies/>案例分析</a></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>版本列表</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/zh-cn/releases>Release Information</a>
+<a class=dropdown-item href=https://kubernetes.io/zh-cn/docs/contribute/new-content/>v1.25</a>
+<a class=dropdown-item href=https://v1-24.docs.kubernetes.io/zh-cn/docs/contribute/new-content/>v1.24</a>
+<a class=dropdown-item href=https://v1-23.docs.kubernetes.io/zh-cn/docs/contribute/new-content/>v1.23</a>
+<a class=dropdown-item href=https://v1-22.docs.kubernetes.io/zh-cn/docs/contribute/new-content/>v1.22</a>
+<a class=dropdown-item href=https://v1-21.docs.kubernetes.io/zh-cn/docs/contribute/new-content/>v1.21</a></div></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdownMenuLink role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>中文 (Chinese)</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/docs/contribute/new-content/>English</a>
+<a class=dropdown-item href=/ko/docs/contribute/new-content/>한국어 (Korean)</a>
+<a class=dropdown-item href=/ja/docs/contribute/new-content/>日本語 (Japanese)</a></div></li></ul></div><button id=hamburger onclick=kub.toggleMenu() data-auto-burger-exclude><div></div></button></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><div class=td-content><div class="pageinfo pageinfo-primary d-print-none"><p>这是本节的多页打印视图。
+<a href=# onclick="return print(),!1">点击此处打印</a>.</p><p><a href=/zh-cn/docs/contribute/new-content/>返回本页常规视图</a>.</p></div><h1 class=title>贡献新内容</h1><ul><li>1: <a href=#pg-553b51f3b1991ff428a01644a7c20d90>发起拉取请求（PR）</a></li><li>2: <a href=#pg-10ed45584b496b99003f299b4614ff78>为发行版本撰写功能特性文档</a></li><li>3: <a href=#pg-563096c308e08ee8545a117b10f2254a>提交博客和案例分析</a></li></ul><div class=content><p>本节包含你在贡献新内容之前需要知晓的信息。</p><figure><div class=mermaid>flowchart LR
+subgraph second[开始之前]
+direction TB
+S[ ] -.-
+A[签署 CNCF CLA] --> B[选择 Git 分支]
+B --> C[每个 PR 一种语言]
+C --> F[检查贡献者工具]
+end
+subgraph first[基本知识]
+direction TB
+T[ ] -.-
+D[用 markdown 编写文档<br>并用 Hugo 构建网站] --- E[GitHub 源代码]
+E --- G['/content/../docs' 文件夹包含<br>多语言文档]
+G --- H[评审 Hugo 页面内容<br>类型和短代码]
+end
+first ----> second
+classDef grey fill:#dddddd,stroke:#ffffff,stroke-width:px,color:#000000, font-size:15px;
+classDef white fill:#ffffff,stroke:#000,stroke-width:px,color:#000,font-weight:bold
+classDef spacewhite fill:#ffffff,stroke:#fff,stroke-width:0px,color:#000
+class A,B,C,D,E,F,G,H grey
+class S,T spacewhite
+class first,second white</div></figure><noscript><div class="alert alert-secondary callout" role=alert><em class=javascript-required>必须<a href=https://www.enable-javascript.com/>启用</a> JavaScript 才能查看此页内容</em></div></noscript><p><em><strong>插图 - 贡献新内容准备工作</strong></em></p><p>上图描述了你在提交新内容之前需要知晓的信息。
+详细信息见下文。</p><h2 id=基本知识>基本知识</h2><ul><li>使用 Markdown 编写 Kubernetes 文档并使用 <a href=https://gohugo.io/>Hugo</a> 构建网站。</li><li>Kubernetes 文档使用 <a href=https://commonmark.org/>CommonMark</a> 作为 Markdown 的风格。</li><li>源代码位于 <a href=https://github.com/kubernetes/website>GitHub</a> 仓库中。
+你可以在 <code>/content/zh-cn/docs/</code> 目录下找到 Kubernetes 文档。
+某些参考文档是使用位于 <code>update-imported-docs/</code> 目录下的脚本自动生成的。</li><li><a href=/zh-cn/docs/contribute/style/page-content-types/>页面内容类型</a>使用 Hugo 描述文档内容的呈现。</li></ul><ul><li>你可以使用 <a href=https://www.docsy.dev/docs/adding-content/shortcodes/>Docsy 短代码</a>
+或<a href=/zh-cn/docs/contribute/style/hugo-shortcodes/>定制的 Hugo 短代码</a>贡献 Kubernetes 文档。</li><li>除了标准的 Hugo 短代码外，
+我们还在文档中使用一些<a href=/zh-cn/docs/contribute/style/hugo-shortcodes/>定制的 Hugo 短代码</a>来控制内容的呈现。</li><li>文档的源代码有多种语言形式，位于 <code>/content/</code> 目录下。
+每种语言都有一个自己的目录，用两个字母表示，这两个字母是基于
+<a href=https://www.loc.gov/standards/iso639-2/php/code_list.php>ISO 639-1 标准</a>来确定的。
+例如，英语文档的源代码位于 <code>/content/en/docs/</code> 目录下。</li><li>关于为多语言文档做贡献以及如何开始新翻译的详细信息，
+可参考<a href=/zh-cn/docs/contribute/localization>本地化文档</a>。</li></ul><h2 id=before-you-begin>开始之前</h2><h3 id=sign-the-cla>签署 CNCF CLA</h3><p>所有 Kubernetes 贡献者<strong>必须</strong>阅读<a href=https://github.com/kubernetes/community/blob/master/contributors/guide/README.md>贡献者指南</a>
+并<a href=https://github.com/kubernetes/community/blob/master/CLA.md>签署贡献者授权同意书 (Contributor License Agreement, CLA)</a>。</p><p>若贡献者尚未签署 CLA，其发起的 PR 将无法通过自动化测试。
+你所提供的姓名和邮件地址必须与 <code>git config</code> 中配置的完全相同，
+而且你的 git 用户名和邮件地址必须与用来签署 CNCF CLA 的信息一致。</p><h3 id=选择要使用的-git-分支>选择要使用的 Git 分支</h3><p>在发起 PR 时，你需要预先知道基于哪个分支来开展工作。</p><table><thead><tr><th style=text-align:left>场景</th><th style=text-align:left>分支</th></tr></thead><tbody><tr><td style=text-align:left>针对当前发行版本的，对现有英文内容的修改或新的英文内容</td><td style=text-align:left><code>main</code></td></tr><tr><td style=text-align:left>针对功能特性变更的内容</td><td style=text-align:left>分支对应于功能特性变更的主要和次要版本，分支名称采用 <code>dev-&lt;version></code> 的模式。例如，如果某功能特性在 <code>v1.26</code> 版本发生变化，则对应的文档变化要添加到 <code>dev-1.26</code> 分支。</td></tr><tr><td style=text-align:left>其他语言的内容（本地化）</td><td style=text-align:left>基于本地化团队的约定。参见<a href=/zh-cn/docs/contribute/localization/#branching-strategy>本地化分支策略</a>了解更多信息。</td></tr></tbody></table><p>如果你仍不能确定要选择哪个分支，请在 Slack 的 <code>#sig-docs</code> 频道上提出问题。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong> 如果你已经提交了 PR，并且发现所针对的分支选错了，你（且只有作为提交人的你）可以更改分支。</div><h3 id=每个-pr-牵涉的语言>每个 PR 牵涉的语言</h3><p>请确保每个 PR 仅涉及一种语言。
+如果你需要对多种语言下的同一代码示例进行相同的修改，也请为每种语言发起一个独立的 PR。</p><h2 id=为贡献者提供的工具>为贡献者提供的工具</h2><p><code>kubernetes/website</code> 仓库的<a href=https://github.com/kubernetes/website/tree/main/content/zh-cn/docs/doc-contributor-tools>文档贡献者工具</a>目录中包含了一些工具，
+有助于使你的贡献过程更为顺畅。</p></div></div><div class=td-content style=page-break-before:always><h1 id=pg-553b51f3b1991ff428a01644a7c20d90>1 - 发起拉取请求（PR）</h1><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p><strong>代码开发者们</strong>：如果你在为下一个 Kubernetes 发行版本中的某功能特性撰写文档，
+请参考<a href=/zh-cn/docs/contribute/new-content/new-features/>为发行版本撰写功能特性文档</a>。</div><p>要贡献新的内容页面或者改进已有内容页面，请发起拉取请求（PR）。
+请确保你满足了<a href=/zh-cn/docs/contribute/new-content/>开始之前</a>一节中所列举的所有要求。</p><p>如果你所提交的变更足够小，或者你对 git 工具不熟悉，
+可以阅读<a href=#changes-using-github>使用 GitHub 提交变更</a>以了解如何编辑页面。</p><p>如果所提交的变更较大，
+请阅读<a href=#fork-the-repo>基于本地克隆副本开展工作</a>以学习如何在你本地计算机上进行修改。</p><h2 id=changes-using-github>使用 GitHub 提交变更</h2><p>如果你在 git 工作流方面欠缺经验，这里有一种发起拉取请求的更为简单的方法。
+图 1 勾勒了后续的步骤和细节。</p><figure><div class=mermaid>flowchart LR
+A([fa:fa-user 新的<br>贡献者]) --- id1[(K8s/Website<br>GitHub)]
+subgraph tasks[使用 GitHub 提交变更]
+direction TB
+0[ ] -.-
+1[1. 编辑此页] --> 2[2. 使用 GitHub markdown<br>编辑器进行修改]
+2 --> 3[3. 填写 Propose file change]
+end
+subgraph tasks2[ ]
+direction TB
+4[4. 选择 Propose file change] --> 5[5. 选择 Create pull request] --> 6[6. 填写 Open a pull request]
+6 --> 7[7. 选择 Create pull request]
+end
+id1 --> tasks --> tasks2
+classDef grey fill:#dddddd,stroke:#ffffff,stroke-width:px,color:#000000, font-size:15px;
+classDef white fill:#ffffff,stroke:#000,stroke-width:px,color:#000,font-weight:bold
+classDef k8s fill:#326ce5,stroke:#fff,stroke-width:1px,color:#fff;
+classDef spacewhite fill:#ffffff,stroke:#fff,stroke-width:0px,color:#000
+class A,1,2,3,4,5,6,7 grey
+class 0 spacewhite
+class tasks,tasks2 white
+class id1 k8s</div></figure><noscript><div class="alert alert-secondary callout" role=alert><em class=javascript-required>必须<a href=https://www.enable-javascript.com/>启用</a> JavaScript 才能查看此页内容</em></div></noscript><p>图 1. 使用 GitHub 发起一个 PR 的步骤。</p><ol><li><p>在你发现问题的网页，选择右上角的铅笔图标。
+你也可以滚动到页面底端，选择<strong>编辑此页</strong>。</p></li><li><p>在 GitHub 的 Markdown 编辑器中修改内容。</p></li><li><p>在编辑器的下方，填写 <strong>Propose file change</strong> 表单。
+在第一个字段中，为你的提交消息取一个标题。
+在第二个字段中，为你的提交写一些描述文字。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>不要在提交消息中使用 <a href=https://help.github.com/en/github/managing-your-work-on-github/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword>GitHub 关键词</a>。
+你可以在后续的 PR 描述中使用这些关键词。</div></li></ol><ol start=4><li><p>选择 <strong>Propose File Change</strong>。</p></li><li><p>选择 <strong>Create pull request</strong>。</p></li><li><p>出现 <strong>Open a pull request</strong> 界面。填写表单：</p><ul><li><strong>Subject</strong> 字段默认为提交的概要信息，你可以根据需要进行修改。</li><li><strong>Body</strong> 字段包含更为详细的提交消息（如果你之前有填写过的话）和一些模板文字。
+填写模板所要求的详细信息，之后删除多余的模板文字。</li><li>确保 <strong>Allow edits from maintainers</strong> 复选框被勾选。</li></ul><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>PR 描述信息是帮助 PR 评阅人了解你所提议的变更的重要途径。
+更多信息请参考<a href=#open-a-pr>发起一个 PR</a>。</div></li></ol><ol start=7><li>选择 <strong>Create pull request</strong>。</li></ol><h3 id=addressing-feedback-in-github>在 GitHub 上处理反馈意见</h3><p>在合并 PR 之前，Kubernetes 社区成员会评阅并批准它。
+<code>k8s-ci-robot</code> 会基于页面中最近提及的属主来建议评阅人（reviewers）。
+如果你希望特定某人来评阅，可以留下评论，提及该用户的 GitHub 用户名。</p><p>如果某个评阅人请你修改 PR：</p><ol><li>前往 <strong>Files changed</strong> Tab 页面；</li><li>选择 PR 所修改的任何文件所对应的铅笔（edit）图标；</li><li>根据建议作出修改；</li><li>提交所作修改。</li></ol><p>如果你希望等待评阅人的反馈，可以每 7 天左右联系一次。
+你也可以在 <code>#sig-docs</code> Slack 频道发送消息。</p><p>当评阅过程结束，某个评阅人会合并你的 PR。
+几分钟之后，你所做的变更就会上线了。</p><h2 id=fork-the-repo>基于本地克隆副本开展工作</h2><p>如果你有 git 的使用经验，或者你要提议的修改不仅仅几行，请使用本地克隆副本来开展工作。</p><p>首先要确保你在本地计算机上安装了 <a href=https://git-scm.com/book/en/v2/Getting-Started-Installing-Git>git</a>。
+你也可以使用 git 的带用户界面的应用。</p><p>图 2 显示了基于本地克隆副本开展工作的步骤。每个步骤的细节如下。</p><figure><div class=mermaid>flowchart LR
+1[派生 K8s/website<br>仓库] --> 2[创建本地克隆副本<br>并指定 upstream 仓库]
+subgraph changes[你的变更]
+direction TB
+S[ ] -.-
+3[创建一个分支<br>例如: my_new_branch] --> 3a[使用文本编辑器<br>进行修改] --> 4["使用 Hugo 在本地<br>预览你的变更<br>(localhost:1313)<br>或构建容器镜像"]
+end
+subgraph changes2[提交 / 推送]
+direction TB
+T[ ] -.-
+5[提交你的变更] --> 6[将提交推送到<br>origin/my_new_branch]
+end
+2 --> changes --> changes2
+classDef grey fill:#dddddd,stroke:#ffffff,stroke-width:px,color:#000000, font-size:15px;
+classDef white fill:#ffffff,stroke:#000,stroke-width:px,color:#000,font-weight:bold
+classDef k8s fill:#326ce5,stroke:#fff,stroke-width:1px,color:#fff;
+classDef spacewhite fill:#ffffff,stroke:#fff,stroke-width:0px,color:#000
+class 1,2,3,3a,4,5,6 grey
+class S,T spacewhite
+class changes,changes2 white</div></figure><noscript><div class="alert alert-secondary callout" role=alert><em class=javascript-required>必须<a href=https://www.enable-javascript.com/>启用</a> JavaScript 才能查看此页内容</em></div></noscript><p>图 2. 使用本地克隆副本进行修改。</p><h3 id=fork-the-kubernetes-website-repository>派生 kubernetes/website 仓库</h3><ol><li>前往 <a href=https://github.com/kubernetes/website/><code>kubernetes/website</code></a> 仓库；</li><li>选择 <strong>Fork</strong>.</li></ol><h3 id=create-a-local-clone-and-set-the-upstream>创建一个本地克隆副本并指定 upstream 仓库</h3><ol><li><p>打开终端窗口，克隆你所派生的副本，并更新 <a href=https://github.com/google/docsy#readme>Docsy Hugo 主题</a>：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git clone git@github.com/&lt;github_username&gt;/website
+</span></span><span style=display:flex><span><span style=color:#a2f>cd</span> website
+</span></span><span style=display:flex><span>git submodule update --init --recursive --depth <span style=color:#666>1</span>
+</span></span></code></pre></div></li></ol><ol start=2><li><p>前往新的 <code>website</code> 目录，将 <code>kubernetes/website</code> 仓库设置为 <code>upstream</code>
+远端：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f>cd</span> website
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>git remote add upstream https://github.com/kubernetes/website.git
+</span></span></code></pre></div></li></ol><ol start=3><li><p>确认你现在有两个仓库 <code>origin</code> 和 <code>upstream</code>：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git remote -v
+</span></span></code></pre></div><p>输出类似于：</p><pre tabindex=0><code class=language-none data-lang=none>origin	git@github.com:&lt;github_username&gt;/website.git (fetch)
+origin	git@github.com:&lt;github_username&gt;/website.git (push)
+upstream	https://github.com/kubernetes/website.git (fetch)
+upstream	https://github.com/kubernetes/website.git (push)
+</code></pre></li></ol><ol start=4><li><p>从你的克隆副本取回 <code>origin/main</code> 分支，从 <code>kubernetes/website</code> 取回 <code>upstream/main</code>：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git fetch origin
+</span></span><span style=display:flex><span>git fetch upstream
+</span></span></code></pre></div><p>这样可以确保你本地的仓库在开始工作前是最新的。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>此工作流程与 <a href=https://github.com/kubernetes/community/blob/master/contributors/guide/github-workflow.md>Kubernetes 社区 GitHub 工作流</a>有所不同。
+在推送你的变更到你的远程派生副本库之前，你不需要将你本地的 <code>main</code> 与 <code>upstream/main</code> 合并。</div></li></ol><h3 id=create-a-branch>创建一个分支</h3><ol><li><p>决定你要基于哪个分支来开展工作：</p><ul><li>针对已有内容的改进，请使用 <code>upstream/main</code>。</li><li>针对已有功能特性的新文档内容，请使用 <code>upstream/main</code>。</li><li>对于本地化内容，请基于本地化的约定。
+可参考<a href=/zh-cn/docs/contribute/localization/>本地化 Kubernetes 文档</a>了解详细信息。</li><li>对于在下一个 Kubernetes 版本中新功能特性的文档，使用独立的功能特性分支。
+参考<a href=/zh-cn/docs/contribute/new-content/new-features/>为发行版本撰写功能特性文档</a>了解更多信息。</li><li>对于很多 SIG Docs 共同参与的，需较长时间才完成的任务，例如内容的重构，
+请使用为该任务创建的特性分支。</li></ul><p>如果你在选择分支上需要帮助，请在 <code>#sig-docs</code> Slack 频道提问。</p></li></ol><ol start=2><li><p>基于第 1 步中选定的分支，创建新分支。
+下面的例子假定基础分支是 <code>upstream/main</code>：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git checkout -b &lt;my_new_branch&gt; upstream/main
+</span></span></code></pre></div></li></ol><ol start=3><li>使用文本编辑器进行修改。</li></ol><p>在任何时候，都可以使用 <code>git status</code> 命令查看你所改变了的文件列表。</p><h3 id=commit-your-changes>提交你的变更</h3><p>当你准备好发起拉取请求（PR）时，提交你所做的变更。</p><ol><li><p>在你的本地仓库中，检查你要提交的文件：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git status
+</span></span></code></pre></div><p>输出类似于：</p><pre tabindex=0><code class=language-none data-lang=none>On branch &lt;my_new_branch&gt;
+Your branch is up to date with &#39;origin/&lt;my_new_branch&gt;&#39;.
+
+Changes not staged for commit:
+(use &#34;git add &lt;file&gt;...&#34; to update what will be committed)
+(use &#34;git checkout -- &lt;file&gt;...&#34; to discard changes in working directory)
+
+modified:   content/en/docs/contribute/new-content/contributing-content.md
+
+no changes added to commit (use &#34;git add&#34; and/or &#34;git commit -a&#34;)
+</code></pre></li></ol><ol start=2><li><p>将 <strong>Changes not staged for commit</strong> 下列举的文件添加到提交中：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git add &lt;your_file_name&gt;
+</span></span></code></pre></div><p>针对每个文件重复此操作。</p></li></ol><ol start=3><li><p>添加完所有文件之后，创建一个提交（commit）：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git commit -m <span style=color:#b44>&#34;Your commit message&#34;</span>
+</span></span></code></pre></div><div class="alert alert-info note callout" role=alert><strong>说明：</strong> 不要在提交消息中使用任何 <a href=https://help.github.com/en/github/managing-your-work-on-github/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword>GitHub 关键词</a>。
+你可以在后续的 PR 描述中使用这些关键词。</div></li></ol><ol start=4><li><p>推送你本地分支及其中的新提交到你的远程派生副本库：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git push origin &lt;my_new_branch&gt;
+</span></span></code></pre></div></li></ol><h3 id=preview-locally>在本地预览你的变更</h3><p>在推送变更或者发起 PR 之前在本地查看一下预览是个不错的主意。
+通过预览你可以发现构建错误或者 Markdown 格式问题。</p><p>你可以构建网站的容器镜像或者在本地运行 Hugo。
+构建容器镜像的方式比较慢，不过能够显示 <a href=/zh-cn/docs/contribute/style/hugo-shortcodes/>Hugo 短代码（shortcodes）</a>，
+因此对于调试是很有用的。</p><ul class="nav nav-tabs" id=tab-with-hugo role=tablist><li class=nav-item><a data-toggle=tab class="nav-link active" href=#tab-with-hugo-0 role=tab aria-controls=tab-with-hugo-0 aria-selected=true>在容器内执行 Hugo</a></li><li class=nav-item><a data-toggle=tab class=nav-link href=#tab-with-hugo-1 role=tab aria-controls=tab-with-hugo-1>在命令行执行 Hugo</a></li></ul><div class=tab-content id=tab-with-hugo><div id=tab-with-hugo-0 class="tab-pane show active" role=tabpanel aria-labelledby=tab-with-hugo-0><p><div class="alert alert-info note callout" role=alert><strong>说明：</strong> 下面的命令中使用 Docker 作为默认的容器引擎。
+如果需要重载这一行为，可以设置 <code>CONTAINER_ENGINE</code> 环境变量。</div><ol><li><p>在本地构建容器镜像
+<em>如果你正在测试对 Hugo 工具本身的更改，则仅需要此步骤</em></p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#080;font-style:italic># 在终端窗口中执行（如果有需要）</span>
+</span></span><span style=display:flex><span>make container-image
+</span></span></code></pre></div></li></ol><ol start=2><li><p>在容器中启动 Hugo：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#080;font-style:italic># 在终端窗口中执行</span>
+</span></span><span style=display:flex><span>make container-serve
+</span></span></code></pre></div></li></ol><ol start=3><li><p>启动浏览器，浏览 <code>https://localhost:1313</code>。
+Hugo 会监测文件的变更并根据需要重新构建网站。</p></li><li><p>要停止本地 Hugo 实例，可返回到终端并输入 <code>Ctrl+C</code>，或者关闭终端窗口。</p></li></ol></div><div id=tab-with-hugo-1 class=tab-pane role=tabpanel aria-labelledby=tab-with-hugo-1><p><p>另一种方式是，在你的本地计算机上安装并使用 <code>hugo</code> 命令：</p><ol><li><p>安装 <a href=https://raw.githubusercontent.com/kubernetes/website/main/netlify.toml><code>website/netlify.toml</code></a>
+文件中指定的 <a href=https://gohugo.io/getting-started/installing/>Hugo</a> 版本。</p></li><li><p>如果你尚未更新你的网站仓库，则 <code>website/themes/docsy</code> 目录是空的。
+如果本地缺少主题的副本，则该站点无法构建。
+要更新网站主题，运行以下命令：</p></li></ol><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git submodule update --init --recursive --depth <span style=color:#666>1</span>
+</span></span></code></pre></div><ol start=3><li><p>启动一个终端窗口，进入 Kubernetes 网站仓库目录，启动 Hugo 服务器：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f>cd</span> &lt;path_to_your_repo&gt;/website
+</span></span><span style=display:flex><span>hugo server --buildFuture
+</span></span></code></pre></div></li></ol><ol start=4><li><p>在浏览器的地址栏输入： <code>https://localhost:1313</code>。
+Hugo 会监测文件的变更并根据需要重新构建网站。</p></li><li><p>要停止本地 Hugo 实例，返回到终端窗口并输入 <code>Ctrl+C</code> 或者关闭终端窗口。</p></li></ol></div></div><h3 id=open-a-pr>从你的克隆副本向 kubernetes/website 发起拉取请求（PR）</h3><p>图 3 显示了从你的克隆副本向 K8s/website 发起 PR 的步骤。
+详细信息如下。</p><figure><div class=mermaid>flowchart LR
+subgraph first[ ]
+direction TB
+1[1. 前往 K8s/website 仓库] --> 2[2. 选择 New Pull Request]
+2 --> 3[3. 选择 compare across forks]
+3 --> 4[4. 从 head repository 下拉菜单<br>选择你的克隆副本]
+end
+subgraph second [ ]
+direction TB
+5[5. 从 compare 下拉菜单<br>选择你的分支] --> 6[6. 选择 Create Pull Request]
+6 --> 7[7. 为你的 PR<br>添加一个描述]
+7 --> 8[8. 选择 Create pull request]
+end
+first --> second
+classDef grey fill:#dddddd,stroke:#ffffff,stroke-width:px,color:#000000, font-size:15px;
+classDef white fill:#ffffff,stroke:#000,stroke-width:px,color:#000,font-weight:bold
+class 1,2,3,4,5,6,7,8 grey
+class first,second white</div></figure><noscript><div class="alert alert-secondary callout" role=alert><em class=javascript-required>必须<a href=https://www.enable-javascript.com/>启用</a> JavaScript 才能查看此页内容</em></div></noscript><p>图 3. 从你的克隆副本向 K8s/website 发起一个 PR 的步骤。</p><ol><li><p>在 Web 浏览器中，前往 <a href=https://github.com/kubernetes/website/><code>kubernetes/website</code></a> 仓库；</p></li><li><p>点击 <strong>New Pull Request</strong>；</p></li><li><p>选择 <strong>compare across forks</strong>；</p></li><li><p>从 <strong>head repository</strong> 下拉菜单中，选取你的派生仓库；</p></li><li><p>从 <strong>compare</strong> 下拉菜单中，选择你的分支；</p></li><li><p>点击 <strong>Create Pull Request</strong>；</p></li><li><p>为你的拉取请求添加一个描述：</p><ul><li><p><strong>Title</strong> （不超过 50 个字符）：总结变更的目的；</p></li><li><p><strong>Description</strong>：给出变更的详细信息；</p><ul><li>如果存在一个相关联的 GitHub Issue，可以在描述中包含 <code>Fixes #12345</code> 或
+<code>Closes #12345</code>。GitHub 的自动化设施能够在当前 PR 被合并时自动关闭所提及
+的 Issue。如果有其他相关联的 PR，也可以添加对它们的链接。</li><li>如果你特别希望获得某方面的建议，可以在描述中包含你希望评阅人思考的问题。</li></ul></li></ul></li><li><p>点击 <strong>Create pull request</strong> 按钮。</p></li></ol><p>祝贺你！你的拉取请求现在出现在 <a href=https://github.com/kubernetes/website/pulls>Pull Requests</a> 列表中了！</p><p>在发起 PR 之后，GitHub 会执行一些自动化的测试，并尝试使用
+<a href=https://www.netlify.com/>Netlify</a> 部署一个预览版本。</p><ul><li>如果 Netlify 构建操作失败，可选择 <strong>Details</strong> 了解详细信息。</li><li>如果 Netlify 构建操作成功，选择 <strong>Details</strong> 会打开 Kubernetes 的一个预览版本，
+其中包含了你所作的变更。评阅人也使用这一功能来检查你的变更。</li></ul><p>GitHub 也会自动为 PR 分派一些标签，以帮助评阅人。
+如果有需要，你也可以向 PR 添加标签。
+欲了解相关详细信息，可以参考
+<a href=/zh-cn/docs/contribute/review/for-approvers/#adding-and-removing-issue-labels>添加和删除 Issue 标签</a>。</p><h3 id=addressing-feedback-locally>在本地处理反馈</h3><ol><li><p>在本地完成修改之后，可以修补（amend）你之前的提交：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git commit -a --amend
+</span></span></code></pre></div><ul><li><code>-a</code>：提交所有修改</li><li><code>--amend</code>：对前一次提交进行增补，而不是创建新的提交</li></ul></li></ol><ol start=2><li><p>如果有必要，更新你的提交消息；</p></li><li><p>使用 <code>git push origin &lt;my_new_branch></code> 来推送你的变更，重新触发 Netlify 测试。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong> 如果你使用 <code>git commit -m</code> 而不是增补参数，在 PR 最终合并之前你必须
+<a href=#squashing-commits>squash 你的提交</a>。</div></li></ol><h4 id=changes-from-reviewers>来自评阅人的修改</h4><p>有时评阅人会向你的 PR 中提交修改。在作出其他修改之前，请先取回这些提交。</p><ol><li><p>从你的远程派生副本仓库取回提交，让你的工作分支基于所取回的分支：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git fetch origin
+</span></span><span style=display:flex><span>git rebase origin/&lt;your-branch-name&gt;
+</span></span></code></pre></div></li></ol><ol start=2><li><p>变更基线（rebase）操作完成之后，强制推送本地的新改动到你的派生仓库：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git push --force-with-lease origin &lt;your-branch-name&gt;
+</span></span></code></pre></div></li></ol><h4 id=merge-conflicts-and-rebasing>合并冲突和重设基线</h4><div class="alert alert-info note callout" role=alert><strong>说明：</strong> 要了解更多信息，可参考
+<a href=https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging#_basic_merge_conflicts>Git Branching - Basic Branching and Merging</a>、
+<a href=https://git-scm.com/book/en/v2/Git-Tools-Advanced-Merging>Advanced Merging</a>，
+或者在 <code>#sig-docs</code> Slack 频道寻求帮助。</div><p>如果另一个贡献者在别的 PR 中提交了对同一文件的修改，这可能会造成合并冲突。
+你必须在你的 PR 中解决所有合并冲突。</p><ol><li><p>更新你的派生副本，重设本地分支的基线：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git fetch origin
+</span></span><span style=display:flex><span>git rebase origin/&lt;your-branch-name&gt;
+</span></span></code></pre></div><p>之后强制推送修改到你的派生副本仓库：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git push --force-with-lease origin &lt;your-branch-name&gt;
+</span></span></code></pre></div></li></ol><ol start=2><li><p>从 <code>kubernetes/website</code> 的 <code>upstream/main</code> 分支取回更改，然后重设本地分支的基线：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git fetch upstream
+</span></span><span style=display:flex><span>git rebase upstream/main
+</span></span></code></pre></div></li></ol><ol start=3><li><p>检查重设基线操作之后的状态：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git status
+</span></span></code></pre></div><p>你会看到一组存在冲突的文件。</p></li></ol><ol start=4><li><p>打开每个存在冲突的文件，查找冲突标记：<code>>>></code>、<code>&lt;&lt;&lt;</code> 和 <code>===</code>。
+解决完冲突之后删除冲突标记。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>进一步的详细信息可参见
+<a href=https://git-scm.com/docs/git-merge#_how_conflicts_are_presented>冲突是怎样表示的</a>.</div></li></ol><ol start=5><li><p>添加文件到变更集合：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git add &lt;filename&gt;
+</span></span></code></pre></div></li></ol><ol start=6><li><p>继续执行基线变更（rebase）操作：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git rebase --continue
+</span></span></code></pre></div></li></ol><ol start=7><li><p>根据需要重复步骤 2 到 5。</p><p>在应用完所有提交之后，<code>git status</code> 命令会显示 rebase 操作完成。</p></li></ol><ol start=8><li><p>将分支强制推送到你的派生仓库：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git push --force-with-lease origin &lt;your-branch-name&gt;
+</span></span></code></pre></div><p>PR 不再显示存在冲突。</p></li></ol><h3 id=squashing-commits>压缩（Squashing）提交</h3><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>要了解更多信息，可参看
+<a href=https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History>Git Tools - Rewriting History</a>，
+或者在 <code>#sig-docs</code> Slack 频道寻求帮助。</div><p>如果你的 PR 包含多个提交（commits），你必须将其压缩成一个提交才能被合并。
+你可以在 PR 的 <strong>Commits</strong> Tab 页面查看提交个数，也可以在本地通过
+<code>git log</code> 命令查看提交个数。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>本主题假定使用 <code>vim</code> 作为命令行文本编辑器。</div><ol><li><p>启动一个交互式的 rebase 操作：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git rebase -i HEAD~&lt;number_of_commits_in_branch&gt;
+</span></span></code></pre></div><p>压缩提交的过程也是一种重设基线的过程。
+这里的 <code>-i</code> 开关告诉 git 你希望交互式地执行重设基线操作。
+<code>HEAD~&lt;number_of_commits_in_branch</code> 表明在 rebase 操作中查看多少个提交。</p><p>输出类似于；</p><pre tabindex=0><code class=language-none data-lang=none>pick d875112ca Original commit
+pick 4fa167b80 Address feedback 1
+pick 7d54e15ee Address feedback 2
+
+# Rebase 3d18sf680..7d54e15ee onto 3d183f680 (3 commands)
+
+...
+
+# These lines can be re-ordered; they are executed from top to bottom.
+</code></pre><p>输出的第一部分列举了重设基线操作中的提交。
+第二部分给出每个提交的选项。
+改变单词 <code>pick</code> 就可以改变重设基线操作之后提交的状态。</p><p>就重设基线操作本身，我们关注 <code>squash</code> 和 <code>pick</code> 选项。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>进一步的详细信息可参考 <a href=https://git-scm.com/docs/git-rebase#_interactive_mode>Interactive Mode</a>。</div></li></ol><ol start=2><li><p>开始编辑文件。</p><p>修改原来的文本：</p><pre tabindex=0><code class=language-none data-lang=none>pick d875112ca Original commit
+pick 4fa167b80 Address feedback 1
+pick 7d54e15ee Address feedback 2
+</code></pre><p>使之成为：</p><pre tabindex=0><code class=language-none data-lang=none>pick d875112ca Original commit
+squash 4fa167b80 Address feedback 1
+squash 7d54e15ee Address feedback 2
+</code></pre><p>以上编辑操作会压缩提交 <code>4fa167b80 Address feedback 1</code> 和 <code>7d54e15ee Address feedback 2</code>
+到 <code>d875112ca Original commit</code> 中，只留下 <code>d875112ca Original commit</code> 成为时间线中的一部分。</p></li></ol><ol start=3><li><p>保存文件并退出编辑器。</p></li><li><p>推送压缩后的提交：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git push --force-with-lease origin &lt;branch_name&gt;
+</span></span></code></pre></div></li></ol><h2 id=contribute-to-other-repos>贡献到其他仓库</h2><p><a href=https://github.com/kubernetes>Kubernetes 项目</a>包含大约 50 多个仓库。
+这些仓库中很多都有文档：提供给最终用户的帮助文本、错误信息、API 参考或者代码注释等。</p><p>如果你发现有些文本需要改进，可以使用 GitHub 来搜索 Kubernetes 组织下的所有仓库。
+这样有助于发现要在哪里提交 Issue 或 PR。</p><p>每个仓库有其自己的流程和过程。在登记 Issue 或者发起 PR 之前，
+记得阅读仓库可能存在的 <code>README.md</code>、<code>CONTRIBUTING.md</code> 和
+<code>code-of-conduct.md</code> 文件。</p><p>大多数仓库都有自己的 Issue 和 PR 模板。
+通过查看一些待解决的 Issue 和 PR，
+你可以大致了解协作的流程。
+在登记 Issue 或提出 PR 时，务必尽量填充所给的模板，多提供详细信息。</p><h2 id=接下来>接下来</h2><ul><li>阅读<a href=/zh-cn/docs/contribute/review/reviewing-prs>评阅</a>节，学习评阅过程。</li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-10ed45584b496b99003f299b4614ff78>2 - 为发行版本撰写功能特性文档</h1><p>Kubernetes 的每个主要版本发布都会包含一些需要文档说明的新功能。
+新的发行版本也会对已有功能特性和文档（例如将某功能特性从 Alpha 升级为
+Beta）进行更新。</p><p>通常，负责某功能特性的 SIG 要为功能特性的文档草拟文档，并针对 <code>kubernetes/website</code>
+仓库的合适的开发分支发起拉取请求。
+SIG Docs 团队会提供文字方面的反馈意见，或者直接编辑文档草稿。
+本节讨论两个小组在分支方面和发行期间所遵从的流程方面的约定。</p><h2 id=for-documentation-contributors>对于文档贡献者</h2><p>一般而言，文档贡献者不会为某个发行版本从头撰写文档。
+相反，他们会与开发该功能特性的 SIG 团队一起，对文档草稿进行润色，
+使之符合发布条件。</p><p>在你选定了某个功能特性，为其撰写文档（主笔或辅助），请在 <code>#sig-docs</code> Slack 频道、SIG Docs 的每周例会上，
+或者在功能特性对应的 PR 上提出咨询。如果继续工作是没有问题的，
+你可以使用<a href=/zh-cn/docs/contribute/review/for-approvers/#commit-into-another-person-s-pr>提交到他人的 PR</a>
+所述的某个技巧参与 PR 的编辑工作。</p><h3 id=find-out-about-upcoming-features>了解即将发布的功能特性</h3><p>要了解即将发布的功能特性，可以参加每周的 SIG Release 例会
+（参考<a href=/zh-cn/community/>社区</a>页面，了解即将召开的会议），
+监视 <a href=https://github.com/kubernetes/sig-release/>kubernetes/sig-release</a>
+中与发行相关的文档。
+每个发行版本在
+<a href=https://github.com/kubernetes/sig-release/tree/master/releases>/sig-release/tree/master/releases/</a>
+下都有一个对应的子目录。
+该子目录包含了发行版本的时间计划、发行公告的草稿以及列举发行团队名单的文档。</p><p>发行时间计划文件中包含到所有其他文档、会议、会议记录及发行相关的里程碑的链接。
+其中也包含关于发行版本的目标列表、时间线，以及当前发行版本中就绪的特殊流程的信息。
+文档末尾附近定义了若干与该发行版本有关的术语。</p><p>此文档也包含到 <strong>功能特性跟踪清单</strong> 的链接。
+这一清单是了解哪些功能特性计划进入某发行版本的正式途径。</p><p>发行团队文档列举了哪些人扮演着各个发行版本的不同角色。
+如果不清楚要联系谁来讨论特定的功能特性或者回答你的问题，
+你可以参加发行团队的会议，提出你的问题，或者联系发行团队的牵头人，
+这样他们就可以帮你找到正确的联系人。</p><p>发行说明草稿是用来发现与特定发行版本相关的功能特性、变更、废弃以及其他信息的好来源。
+由于在发行周期的后段该文档的内容才会最终定稿，参考其中的信息时请谨慎。</p><h3 id=feature-tracking-sheet>特性跟踪清单</h3><p>针对<a href=https://github.com/kubernetes/sig-release/tree/master/releases>给定 Kubernetes 发行版本</a>
+特性跟踪清单中列举的是计划包含于该版本中的每个功能特性。
+每一行中都包含特性的名称、特性对应的主要 GitHub Issue，其稳定性级别（ALpha、
+Beta 或 Stable）、负责实现该特性的 SIG 和个人、是否该特性需要文档、
+该特性的发行说明草稿以及该特性是否已经被合并等等。阅读此清单时请注意：</p><ul><li>Beta 和 Stable 功能特性通常比 Alpha 特性更为需要文档支持。</li><li>如果某功能特性尚未被合并，就很难测试或者为其撰写文档。
+对于对应的 PR 而言，也很难讲特性是否完全实现。</li><li>确定某个功能特性是否需要文档的过程是一个手动的过程。
+即使某个功能特性没有标记需要文档，你仍可能需要为其提供文档。</li></ul><h2 id=for-developers-or-other-sig-members>针对开发人员或其他 SIG 成员</h2><p>本节中的信息是针对为发行版本中新功能特性撰写文档的来自其他 Kubernetes SIG 的成员。</p><p>如果你是某个 SIG 的成员，负责为 Kubernetes 开发某一项新的功能特性，你需要与
+SIG Docs 一起工作，确保这一新功能在发行之前已经为之撰写文档。
+请参考<a href=https://github.com/kubernetes/sig-release/tree/master/releases>特性跟踪清单</a>或者
+Kubernetes Slack 上的 <code>#sig-release</code> 频道，检查时间安排的细节以及截止日期。</p><h3 id=open-a-placeholder-pr>提交占位 PR</h3><ol><li>在 <code>kubernetes/website</code> 仓库上针对 <code>dev-1.26</code>
+分支提交一个<strong>draft</strong> PR，其中包含较少的、待以后慢慢补齐的提交内容。
+要创建一个草案（draft）状态的 PR，可以在 Create Pull Request 下拉菜单中选择
+<strong>Create Draft Pull Request</strong>，然后点击 <strong>Draft Pull Request</strong>。</li><li>编辑拉取请求描述以包括指向 <a href=https://github.com/kubernetes/kubernetes>kubernetes/kubernetes</a> PR
+和 <a href=https://github.com/kubernetes/enhancements>kubernetes/enhancements</a> 问题的链接。</li><li>在对应的 <a href=https://github.com/kubernetes/enhancements>kubernetes/enhancements</a>
+issue 上添加评论，附上新 PR 的链接以便管理此发行版本的人员能够得到通知，
+了解特性的文档正在被撰写，在新的发行版本中要跟踪其进展。</li></ol><p>如果对应的功能特性不需要任何类型的文档变更，请通过在 <code>#sig-release</code> Slack
+频道声明这一点以确保 sig-release 团队了解。
+如果功能特性确实需要文档，而没有对应的 PR
+提交，该功能特性可能会被从里程碑中移除。</p><h3 id=pr-ready-for-review>PR 准备好评阅</h3><p>时机成熟时，你可以在你的占位 PR 中完成功能特性文档，并将 PR 的状态从草案状态更改为
+<strong>Ready for Review</strong>。要将一个拉取请求标记为已准备好评阅，
+转到页面的 merge 框，点击 <strong>Ready for review</strong>。</p><p>尽可能为功能特性提供详尽文档以及使用说明。如果你需要文档组织方面的帮助，
+请在 <code>#sig-docs</code> Slack 频道中提问。</p><p>当你已经完成内容撰写，指派给你的功能特性的文档贡献者会去评阅文档。
+为了确保技术准确性，内容可能还需要相应 SIG 的技术审核。
+尽量利用他们所给出的建议，改进文档内容以达到发布就绪状态。</p><p>如果你在处理的功能特性处于 Alpha 或 Beta 阶段并由某特性门控控制，
+请确保在你的 PR 中，该特性门控被添加到
+<a href=/zh-cn/docs/reference/command-line-tools-reference/feature-gates/#feature-gates-for-alpha-or-beta-features>Alpha/Beta 特性门控</a>表格中。
+对于新的特性门控选项，需要为该特性门控提供一段描述。
+如果所处理的功能特性已经进入正式发布（GA）状态或者被废弃，
+请确保将其从
+<a href=/zh-cn/docs/reference/command-line-tools-reference/feature-gates/#feature-gates-for-alpha-or-beta-features>Alpha 和 Beta 状态的特性门控</a>表格迁移到
+<a href=/zh-cn/docs/reference/command-line-tools-reference/feature-gates-removed/#feature-gates-that-are-removed>已毕业和已废弃的特性门控</a>，
+并确保迁移后保留其 Alpha、Beta 版本变迁历史。</p><p>如果你的功能特性需要文档，而你未提交初版文档，该特性可能会被从里程碑中删除。</p><h3 id=all-prs-reviewd-and-ready-to-merge>所有 PR 均经过评审且合并就绪</h3><p>如果你的 PR 在发行截止日期之前尚未合并到 <code>dev-1.26</code> 分支，
+请与负责管理该发行版本的文档团队成员一起合作，在截止期限之前将其合并。
+如果功能特性需要文档，而文档并未就绪，该特性可能会被从里程碑中去除。</p></div><div class=td-content style=page-break-before:always><h1 id=pg-563096c308e08ee8545a117b10f2254a>3 - 提交博客和案例分析</h1><p>任何人都可以撰写博客并提交评阅。
+案例分析则在被批准之前需要更多的评阅。</p><h2 id=the-kubernetes-blog>Kubernetes 博客</h2><p>Kubernetes 博客用于项目发布新功能特性、
+社区报告以及其他一些可能对整个社区很重要的新闻。
+其读者包括最终用户和开发人员。
+大多数博客的内容是关于核心项目中正在发生的事情，
+不过我们也鼓励你提交一些有关生态系统中其他时事的博客。</p><p>任何人都可以撰写博客并提交评阅。</p><h3 id=submit-a-post>提交博文</h3><p>博文不应该是商业性质的，应该包含广泛适用于 Kubernetes 社区的原创内容。
+合适的博客内容包括：</p><ul><li>Kubernetes 新能力</li><li>Kubernetes 项目更新信息</li><li>来自特别兴趣小组（Special Interest Groups, SIG）的更新信息</li><li>教程和演练</li><li>有关 Kubernetes 的纲领性理念</li><li>Kubernetes 合作伙伴 OSS 集成信息</li><li><strong>仅限原创内容</strong></li></ul><p>不合适的博客内容包括：</p><ul><li>供应商产品推介</li><li>不含集成信息和客户故事的合作伙伴更新信息</li><li>已发表的博文（可刊登博文译稿）</li></ul><p>要提交博文，你可以遵从以下步骤：</p><ol><li>如果你还未签署 CLA，请先<a href=https://kubernetes.io/docs/contribute/start/#sign-the-cla>签署 CLA</a>。</li><li>查阅<a href=https://github.com/kubernetes/website/tree/master/content/en/blog/_posts>网站仓库</a>中现有博文的 Markdown 格式。</li><li>在你所选的文本编辑器中撰写你的博文。</li><li>在第 2 步的同一链接上，点击 <strong>Create new file</strong> 按钮。
+将你的内容粘贴到编辑器中。为文件命名，使其与提议的博文标题一致，
+但不要在文件名中写日期。
+博客评阅者将与你一起确定最终的文件名和发表博客的日期。</li><li>保存文件时，GitHub 将引导你完成 PR 流程。</li><li>博客评阅者将评阅你提交的内容，并与你一起处理反馈和最终细节。
+当博文被批准后，博客将排期发表。</li></ol><h3 id=guidelines-and-expectations>指导原则和期望</h3><ul><li>博客内容不可以是销售用语。<ul><li>文章内容必须是对整个 Kubernetes 社区中很多人都有参考意义。
+例如，所提交的文章应该关注上游的 Kubernetes 项目本身，而不是某个厂商特定的配置。
+请参阅<a href=/zh-cn/docs/contribute/style/content-guide/#what-s-allowed>文档风格指南</a>
+以了解哪些内容是 Kubernetes 所允许的。</li><li>链接应该主要指向官方的 Kubernetes 文档。
+当引用外部信息时，链接应该是多样的。
+例如，所提交的博客文章中不可以只包含指向某个公司的博客的链接。</li><li>有些时候，这是一个比较棘手的权衡过程。
+<a href=https://kubernetes.slack.com/messages/sig-docs-blog/>博客团队</a>的存在目的即是为
+Kubernetes 博客提供文章是否合适的指导意见。
+所以，需要帮助的时候不要犹豫。</li></ul></li></ul><ul><li>博客内容并非在某特定日期发表。<ul><li>文章会交由社区自愿者评阅。我们会尽力满足特定的时限要求，只是无法就此作出承诺。</li><li>Kubernetes 项目的很多核心组件会在发布窗口期内提交博客文章，导致发表时间被推迟。
+因此，请考虑在发布周期内较为平静的时间段提交博客文章。</li><li>如果你希望就博文发表日期上进行较大范围的协调，请联系
+<a href=https://www.cncf.io/about/contact/>CNCF 推广团队</a>。
+这也许是比提交博客文章更合适的一种选择。</li><li>有时，博客的评审可能会堆积起来。如果你觉得你的文章没有引起该有的重视，你可以通过
+<a href=https://kubernetes.slack.com/messages/sig-docs-blog/><code>#sig-docs-blog</code> Slack 频道</a>联系博客团队，
+以获得实时反馈。</li></ul></li></ul><ul><li>博客内容应该对 Kubernetes 用户有用。<ul><li>与参与 Kubernetes SIG 活动相关，或者与这类活动的结果相关的主题通常是切题的。
+请参考 <a href=https://github.com/kubernetes/community/blob/master/communication/contributor-comms/storytelling-resources/blog-guidelines.md#upstream-marketing-blog-guidelines>贡献者沟通（Contributor Comms）团队</a>的工作以获得对此类博文的支持。</li><li>Kubernetes 的组件都有意设计得模块化，因此使用类似 CNI、CSI 等集成点的工具通常都是切题的。</li><li>关于其他 CNCF 项目的博客可能切题也可能不切题。
+我们建议你在提交草稿之前与博客团队联系。<ul><li>很多 CNCF 项目有自己的博客。这些博客通常是更好的选择。
+有些时候，某个 CNCF 项目的主要功能特性或者里程碑的变化可能是用户有兴趣在
+Kubernetes 博客上阅读的内容。</li></ul></li><li>关于为 Kubernetes 项目做贡献的博客内容应该放在 <a href=https://kubernetes.dev>Kubernetes 贡献者站点</a>上。</li></ul></li></ul><ul><li>博客文章应该是原创内容。<ul><li>官方博客的目的不是将某第三方已发表的内容重新作为新内容发表。</li><li>博客的<a href=https://github.com/kubernetes/website/blob/main/LICENSE>授权协议</a>
+的确允许出于商业目的来使用博客内容；但并不是所有可以商用的内容都适合在这里发表。</li></ul></li><li>博客文章的内容应该在一段时间内不过期。<ul><li>考虑到项目的开发速度，我们希望读者看到的是不必更新就能保持长期准确的内容。</li><li>有时候，在官方文档中添加一个教程或者进行内容更新都是比博客更好的选择。<ul><li>可以考虑在博客文章中将较长技术内容的重点放在鼓励读者自行尝试上，
+或者放在问题域本身或者为什么读者应该关注某个话题上。</li></ul></li></ul></li></ul><h3 id=technical-consideration-for-submitting-a-blog-post>提交博客的技术考虑</h3><p>所提交的内容应该是 Markdown 格式的，以便能够被 <a href=https://gohugo.io/>Hugo</a> 生成器来处理。
+关于如何使用相关技术，有<a href=https://gohugo.io/documentation/>很多可用的资源</a>。</p><p>我们知道这一需求可能给那些对此过程不熟悉的朋友们带来不便，
+我们也一直在寻找降低难度的解决方案。
+如果你有降低难度的好主意，请自荐帮忙。</p><p>SIG Docs
+<a href=https://github.com/kubernetes/community/tree/master/sig-docs/blog-subproject>博客子项目</a>负责管博客的评阅过程。
+更多信息可参考<a href=https://github.com/kubernetes/community/tree/master/sig-docs/blog-subproject#submit-a-post>提交博文</a>。</p><p>要提交博文，你可以遵从以下指南：</p><ul><li><p><a href=/zh-cn/docs/contribute/new-content/open-a-pr/#fork-the-repo>发起一个包含新博文的 PR</a>。
+新博文要创建于 <a href=https://github.com/kubernetes/website/tree/main/content/en/blog/_posts><code>content/en/blog/_posts</code></a> 目录下。</p></li><li><p>确保你的博文遵从合适的命名规范，并带有下面的引言（元数据）信息：</p><ul><li><p>Markdown 文件名必须符合格式 <code>YYYY-MM-DD-Your-Title-Here.md</code>。
+例如，<code>2020-02-07-Deploying-External-OpenStack-Cloud-Provider-With-Kubeadm.md</code>。</p></li><li><p><strong>不要</strong>在文件名中包含多余的句点。类似 <code>2020-01-01-whats-new-in-1.19.md</code>
+这类文件名会导致文件无法正确打开。</p></li><li><p>引言部分必须包含以下内容：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#00f;font-weight:700>---</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>layout</span>:<span style=color:#bbb> </span>blog<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>title</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;Your Title Here&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>date</span>:<span style=color:#bbb> </span>YYYY-MM-DD<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>slug</span>:<span style=color:#bbb> </span>text-for-URL-link-here-no-spaces<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#00f;font-weight:700>---</span><span style=color:#bbb>
+</span></span></span></code></pre></div></li></ul><ul><li>第一个或者最初的提交的描述信息中应该包含一个所作工作的简单摘要，
+并作为整个博文的一个独立描述。
+请注意，对博文的后续修改编辑都会最终合并到此主提交中，所以此提交的描述信息
+应该尽量有用。<ul><li>较好的提交消息（Commit Message）示例：<ul><li><em>Add blog post on the foo kubernetes feature</em></li><li><em>blog: foobar announcement</em></li></ul></li><li>较差的提交消息示例：<ul><li><em>Add blog post</em></li><li><em>.</em></li><li><em>initial commit</em></li><li><em>draft post</em></li></ul></li></ul></li><li>博客团队会对 PR 内容进行评阅，为你提供一些评语以便修订。
+之后，机器人会将你的博文合并并发表。</li></ul><ul><li>如果博文的内容仅包含预期无需更新就能对读者保持精准的内容，
+则可以将这篇博文标记为长期有效（evergreen），
+且免除添加博文发表一年后内容过期的自动警告。<ul><li><p>要将一篇博文标记为长期有效，请在引言部分添加以下标记：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>evergreen</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>true</span><span style=color:#bbb>
+</span></span></span></code></pre></div></li><li><p>不应标记为长期有效的内容示例：</p><ul><li>仅适用于特定发行版或版本而不是所有未来版本的<strong>教程</strong></li><li>对非正式发行（Pre-GA）API 或功能特性的引用</li></ul></li></ul></li></ul></li></ul><h2 id=submit-a-case-study>提交案例分析</h2><p>案例分析用来概述组织如何使用 Kubernetes 解决现实世界的问题。
+Kubernetes 市场化团队和 <a class=glossary-tooltip title='云原生计算基金会（Cloud Native Computing Foundation）' data-toggle=tooltip data-placement=top href=https://cncf.io/ target=_blank aria-label=CNCF>CNCF</a> 成员会与你一起工作，
+撰写所有的案例分析。</p><p>请查看<a href=https://github.com/kubernetes/website/tree/main/content/zh-cn/case-studies>现有案例分析</a>的源码。</p><p>参考<a href=https://github.com/cncf/foundation/blob/master/case-study-guidelines.md>案例分析指南</a>，
+根据指南中的注意事项提交你的 PR 请求。</p></div></main></div></div><footer class=d-print-none><div class=footer__links><nav><a class=text-white href=/zh-cn/docs/home/>主页</a>
+<a class=text-white href=/zh-cn/blog/>博客</a>
+<a class=text-white href=/zh-cn/training/>培训</a>
+<a class=text-white href=/zh-cn/partners/>合作伙伴</a>
+<a class=text-white href=/zh-cn/community/>社区</a>
+<a class=text-white href=/zh-cn/case-studies/>案例分析</a></nav></div><div class=container-fluid><div class=row><div class="col-6 col-sm-2 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="User mailing list" aria-label="User mailing list"><a class=text-white target=_blank href=https://discuss.kubernetes.io><i class="fa fa-envelope"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank href=https://twitter.com/kubernetesio><i class="fab fa-twitter"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Calendar aria-label=Calendar><a class=text-white target=_blank href="https://calendar.google.com/calendar/embed?src=calendar%40kubernetes.io"><i class="fas fa-calendar-alt"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Youtube aria-label=Youtube><a class=text-white target=_blank href=https://youtube.com/kubernetescommunity><i class="fab fa-youtube"></i></a></li></ul></div><div class="col-6 col-sm-2 text-right text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank href=https://github.com/kubernetes/kubernetes><i class="fab fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Slack aria-label=Slack><a class=text-white target=_blank href=https://slack.k8s.io><i class="fab fa-slack"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Contribute aria-label=Contribute><a class=text-white target=_blank href=https://git.k8s.io/community/contributors/guide><i class="fas fa-edit"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="Stack Overflow" aria-label="Stack Overflow"><a class=text-white target=_blank href=https://stackoverflow.com/questions/tagged/kubernetes><i class="fab fa-stack-overflow"></i></a></li></ul></div><div class="col-12 col-sm-8 text-center order-sm-2"><small class=text-white>&copy; 2023 The Kubernetes 作者 | 文档发布基于 <a href=https://git.k8s.io/website/LICENSE class=light-text>CC BY 4.0</a> 授权许可</small><br><small class=text-white>Copyright &copy; 2023 Linux 基金会&reg;。保留所有权利。Linux 基金会已注册并使用商标。如需了解 Linux 基金会的商标列表，请访问<a href=https://www.linuxfoundation.org/trademark-usage class=light-text>商标使用页面</a></small><br><small class=text-white>ICP license: 京ICP备17074266号-3</small></div></div></div></footer></div><script src=/js/jquery-3.6.0.min.js integrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script>
+<script src=/js/popper-1.16.1.min.js intregrity=sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN crossorigin=anonymous></script>
+<script src=/js/bootstrap-4.6.1.min.js integrity=sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2 crossorigin=anonymous></script>
+<script src=/js/script.js></script>
+<script async src=/js/mermaid-8.13.4.min.js integrity=sha384-5hHNvPeMrNH14oM3IcQofDoBhiclNK3g2+hnEinKzQ07C4AliMeVpnvxuiwEGpaO crossorigin=anonymous></script>
+<script src=/js/main.min.5c0bf7f21dc4f66485f74efbbeeff28a7e4f8cddaac1bae47043159c922ff3a3.js integrity="sha256-XAv38h3E9mSF9077vu/yin5PjN2qwbrkcEMVnJIv86M=" crossorigin=anonymous></script></body></html>

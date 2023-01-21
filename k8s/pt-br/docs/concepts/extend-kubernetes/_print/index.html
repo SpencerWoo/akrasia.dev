@@ -1,0 +1,216 @@
+<!doctype html><html lang=pt-br class=no-js><head><meta name=robots content="noindex, nofollow"><link rel=alternate hreflang=en href=https://kubernetes.io/docs/concepts/extend-kubernetes/><link rel=alternate hreflang=zh-cn href=https://kubernetes.io/zh-cn/docs/concepts/extend-kubernetes/><link rel=alternate hreflang=ko href=https://kubernetes.io/ko/docs/concepts/extend-kubernetes/><link rel=alternate hreflang=ja href=https://kubernetes.io/ja/docs/concepts/extend-kubernetes/><link rel=alternate hreflang=fr href=https://kubernetes.io/fr/docs/concepts/extend-kubernetes/><link rel=alternate hreflang=de href=https://kubernetes.io/de/docs/concepts/extend-kubernetes/><link rel=alternate hreflang=es href=https://kubernetes.io/es/docs/concepts/extend-kubernetes/><link rel=alternate hreflang=id href=https://kubernetes.io/id/docs/concepts/extend-kubernetes/><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.110.0"><link rel=canonical type=text/html href=https://kubernetes.io/pt-br/docs/concepts/extend-kubernetes/><link rel="shortcut icon" type=image/png href=/images/favicon.png><link rel=apple-touch-icon href=/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=manifest href=/manifest.webmanifest><link rel=apple-touch-icon href=/images/kubernetes-192x192.png><title>Extendendo o Kubernetes | Kubernetes</title><meta property="og:title" content="Extendendo o Kubernetes"><meta property="og:description" content="Orquestração de contêineres em nível de produção"><meta property="og:type" content="website"><meta property="og:url" content="https://kubernetes.io/pt-br/docs/concepts/extend-kubernetes/"><meta property="og:site_name" content="Kubernetes"><meta itemprop=name content="Extendendo o Kubernetes"><meta itemprop=description content="Orquestração de contêineres em nível de produção"><meta name=twitter:card content="summary"><meta name=twitter:title content="Extendendo o Kubernetes"><meta name=twitter:description content="Orquestração de contêineres em nível de produção"><link href=/scss/main.css rel=stylesheet><script type=application/ld+json>{"@context":"https://schema.org","@type":"Organization","url":"https://kubernetes.io","logo":"https://kubernetes.io/images/favicon.png","potentialAction":{"@type":"SearchAction","target":"https://kubernetes.io/search/?q={search_term_string}","query-input":"required name=search_term_string"}}</script><meta name=theme-color content="#326ce5"><link rel=stylesheet href=/css/feature-states.css><meta name=description content><meta property="og:description" content><meta name=twitter:description content><meta property="og:url" content="https://kubernetes.io/pt-br/docs/concepts/extend-kubernetes/"><meta property="og:title" content="Extendendo o Kubernetes"><meta name=twitter:title content="Extendendo o Kubernetes"><meta name=twitter:image content="https://kubernetes.io/images/favicon.png"><meta name=twitter:image:alt content="Kubernetes"><meta property="og:image" content="/images/kubernetes-horizontal-color.png"><meta property="og:type" content="article"><script src=/js/jquery-3.6.0.min.js intregrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script></head><body class=td-section><header><nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar" data-auto-burger=primary><a class=navbar-brand href=/pt-br/></a><div class="td-navbar-nav-scroll ml-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0"><li class="nav-item mr-2 mb-lg-0"><a class="nav-link active" href=/pt-br/docs/>Documentação</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/pt-br/blog/>Kubernetes Blog</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/pt-br/partners/>Parceiros</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/pt-br/community/>Comunidade</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/pt-br/case-studies/>Casos de estudo</a></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>Versões</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/pt-br/releases>Release Information</a>
+<a class=dropdown-item href=https://kubernetes.io/pt-br/docs/concepts/extend-kubernetes/>v1.25</a>
+<a class=dropdown-item href=https://v1-24.docs.kubernetes.io/pt-br/docs/concepts/extend-kubernetes/>v1.24</a>
+<a class=dropdown-item href=https://v1-23.docs.kubernetes.io/pt-br/docs/concepts/extend-kubernetes/>v1.23</a>
+<a class=dropdown-item href=https://v1-22.docs.kubernetes.io/pt-br/docs/concepts/extend-kubernetes/>v1.22</a>
+<a class=dropdown-item href=https://v1-21.docs.kubernetes.io/pt-br/docs/concepts/extend-kubernetes/>v1.21</a></div></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdownMenuLink role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>Português (Portuguese)</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/docs/concepts/extend-kubernetes/>English</a>
+<a class=dropdown-item href=/zh-cn/docs/concepts/extend-kubernetes/>中文 (Chinese)</a>
+<a class=dropdown-item href=/ko/docs/concepts/extend-kubernetes/>한국어 (Korean)</a>
+<a class=dropdown-item href=/ja/docs/concepts/extend-kubernetes/>日本語 (Japanese)</a>
+<a class=dropdown-item href=/fr/docs/concepts/extend-kubernetes/>Français (French)</a>
+<a class=dropdown-item href=/de/docs/concepts/extend-kubernetes/>Deutsch (German)</a>
+<a class=dropdown-item href=/es/docs/concepts/extend-kubernetes/>Español (Spanish)</a>
+<a class=dropdown-item href=/id/docs/concepts/extend-kubernetes/>Bahasa Indonesia</a></div></li></ul></div><button id=hamburger onclick=kub.toggleMenu() data-auto-burger-exclude><div></div></button></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><div class=td-content><div class="pageinfo pageinfo-primary d-print-none"><p>Essa é a versão completa de impressão dessa seção
+<a href=# onclick="return print(),!1">Clique aqui para imprimir</a>.</p><p><a href=/pt-br/docs/concepts/extend-kubernetes/>Retornar à visualização normal</a>.</p></div><h1 class=title>Extendendo o Kubernetes</h1><ul><li>1: <a href=#pg-0af41d3bd7c785621b58b7564793396a>Extendendo a API do Kubernetes</a></li><ul><li>1.1: <a href=#pg-1ea4977c0ebf97569bf54a477faa7fa5>Extendendo a API do Kubernetes com a camada de agregação</a></li></ul><li>2: <a href=#pg-c8937cdc9df96f3328becf04f8211292>Extensões de Computação, armazenamento e redes</a></li><ul><li>2.1: <a href=#pg-1ac2260db9ecccbf0303a899bc27ce6d>Plugins de rede</a></li></ul><li>3: <a href=#pg-3131452556176159fb269593c1a52012>Padrão Operador</a></li></ul><div class=content></div></div><div class=td-content><h1 id=pg-0af41d3bd7c785621b58b7564793396a>1 - Extendendo a API do Kubernetes</h1></div><div class=td-content><h1 id=pg-1ea4977c0ebf97569bf54a477faa7fa5>1.1 - Extendendo a API do Kubernetes com a camada de agregação</h1><p>A camada de agregação permite ao Kubernetes ser estendido com APIs adicionais,
+para além do que é oferecido pelas APIs centrais do Kubernetes.
+As APIs adicionais podem ser soluções prontas tal como o
+<a href=/docs/concepts/extend-kubernetes/service-catalog/>catálogo de serviços</a>,
+ou APIs que você mesmo desenvolva.</p><p>A camada de agregação é diferente dos <a href=/docs/concepts/extend-kubernetes/api-extension/custom-resources/>Recursos Personalizados</a>,
+que são uma forma de fazer o <a class=glossary-tooltip title='O componente da camada de gerenciamento que serve a API do Kubernetes.' data-toggle=tooltip data-placement=top href=/docs/concepts/overview/components/#kube-apiserver target=_blank aria-label=kube-apiserver>kube-apiserver</a>
+reconhecer novas espécies de objetos.</p><h2 id=camada-de-agregação>Camada de agregação</h2><p>A camada de agregação executa em processo com o kube-apiserver.
+Até que um recurso de extensão seja registado, a camada de agregação
+não fará nada. Para registar uma API, terá de adicionar um objeto <em>APIService</em>
+que irá "reclamar" o caminho URL na API do Kubernetes. Nesta altura, a camada
+de agregação procurará qualquer coisa enviada para esse caminho da API
+(e.g. <code>/apis/myextension.mycompany.io/v1/…</code>) para o <em>APIService</em> registado.</p><p>A maneira mais comum de implementar o <em>APIService</em> é executar uma
+<em>extensão do servidor API</em> em <em>Pods</em> que executam no seu cluster.
+Se estiver a usar o servidor de extensão da API para gerir recursos
+no seu cluster, o servidor de extensão da API (também escrito como "extension-apiserver")
+é tipicamente emparelhado com um ou mais <a class=glossary-tooltip title='Um ciclo de controle que observa o estado partilhado do cluster através do API Server e efetua mudanças tentando mover o estado atual em direção ao estado desejado.' data-toggle=tooltip data-placement=top href=/docs/concepts/architecture/controller/ target=_blank aria-label=controladores>controladores</a>.
+A biblioteca apiserver-builder providencia um esqueleto para ambos
+os servidores de extensão da API e controladores associados.</p><h3 id=latência-da-resposta>Latência da resposta</h3><p>Servidores de extensão de APIs devem ter baixa latência de rede de e para o kube-apiserver.
+Pedidos de descoberta são necessários que façam a ida e volta do kube-apiserver em 5
+segundos ou menos.</p><p>Se o seu servidor de extensão da API não puder cumprir com o requisito de latência,
+considere fazer alterações que permitam atingi-lo. Pode também definir
+<a href=/docs/reference/command-line-tools-reference/feature-gates/>portal de funcionalidade</a> <code>EnableAggregatedDiscoveryTimeout=false</code> no kube-apiserver para desativar
+a restrição de intervalo. Esta portal de funcionalidade deprecado será removido
+num lançamento futuro.</p><h2 id=próximos-passos>Próximos passos</h2><ul><li>Para pôr o agregador a funcionar no seu ambiente, <a href=/docs/tasks/access-kubernetes-api/configure-aggregation-layer/>configure a camada de agregação</a>.</li><li>De seguida, <a href=/docs/tasks/access-kubernetes-api/setup-extension-api-server/>configura um api-server de extensão</a> para funcionar com a camada de agregação.</li><li>Também, aprenda como pode <a href=/docs/tasks/access-kubernetes-api/extend-api-custom-resource-definitions/>estender a API do Kubernetes através do use de Definições de Recursos Personalizados</a>.</li><li>Leia a especificação do <a href=/docs/reference/generated/kubernetes-api/v1.25/#apiservice-v1-apiregistration-k8s-io>APIService</a></li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-c8937cdc9df96f3328becf04f8211292>2 - Extensões de Computação, armazenamento e redes</h1></div><div class=td-content><h1 id=pg-1ac2260db9ecccbf0303a899bc27ce6d>2.1 - Plugins de rede</h1><p>Plugins de redes no Kubernetes podem ser dos seguintes tipos:</p><ul><li>Plugins CNI: Aderentes à especificação <a href=https://github.com/containernetworking/cni>Container Network Interface</a> (CNI), desenhados para interoperabilidade.<ul><li>Kubernetes usa a versão <a href=https://github.com/containernetworking/cni/blob/spec-v0.4.0/SPEC.md>v0.4.0</a> da especificação CNI.</li></ul></li><li>Plugin kubenet: Implementa o <code>cbr0</code> básico usando os plugins CNI <code>bridge</code> e <code>host-local</code></li></ul><h2 id=instalação>Instalação</h2><p>O kubelet possui um plugin único padrão, e um plugin padrão comum para todo o cluster.
+Ele verifica o plugin quando inicia, se lembra o que encontrou, e executa o plugin selecionado
+em momentos oportunos dentro do ciclo de vida de um Pod (isso é verdadeiro apenas com o Docker,
+uma vez que o CRI gerencia seus próprios plugins de CNI). Existem dois parâmetros de linha de comando
+no Kubelet para se ter em mente quando usando plugins:</p><ul><li><code>cni-bin-dir</code>: O Kubelet verifica esse diretório por plugins na inicialização</li><li><code>network-plugin</code>: O plugin de rede que deve ser utilizado do diretório configurado em
+<code>cni-bin-dir</code>. Deve ser igual ao nome configurado por um plugin no diretório de plugins.
+Para plugins de CNI, isso equivale ao valor <code>cni</code>.</li></ul><h2 id=requisitos-de-plugins-de-rede>Requisitos de plugins de Rede</h2><p>Além de prover a <a href=https://github.com/kubernetes/kubernetes/tree/v1.25.0/pkg/kubelet/dockershim/network/plugins.go>interface <code>NetworkPlugin</code></a>
+para configuração da rede do pod, o plugin pode necessitar de suporte específico ao
+kube-proxy.
+O proxy iptables obviamente depende do iptables, e o plugin deve garantir que o
+tráfego do contêiner esteja disponível para o iptables. Por exemplo, se o plugin
+conecta os contêineres à <em>Linux bridge</em>, o plugin deve configurar a diretiva de
+<em>sysctl</em> <code>net/bridge/bridge-nf-call-iptables</code> com o valor <code>1</code> para garantir que o
+proxy iptables opere normalmente. Se o plugin não faz uso da <em>Linux Bridge</em> (mas outro
+mecanismo, como Open vSwitch) ele deve garantir que o tráfego do contêiner é roteado
+apropriadamente para o proxy.</p><p>Por padrão, se nenhum plugin de rede é configurado no kubelet, o plugin <code>noop</code> é utilizado,
+que configura <code>net/bridge/bridge-nf-call-iptables=1</code> para garantir que configurações simples
+(como Docker com <em>bridge Linux</em>) operem corretamente com o proxy iptables.</p><h3 id=cni>CNI</h3><p>O plugin de CNI é selecionado utilizando-se da opção <code>--network-plugin=cni</code> no início do Kubeket.
+O Kubelet lê um arquivo do diretório especificado em <code>--cni-conf-dir</code> (padrão <code>/etc/cni/net.d</code>)
+e usa a configuração de CNI desse arquivo para configurar a rede de cada Pod. O arquivo de
+configuração do CNI deve usar a <a href=https://github.com/containernetworking/cni/blob/master/SPEC.md#network-configuration>especificação de CNI</a>,
+e qualquer plugin referenciado nesse arquivo deve estar presente no diretório
+<code>--cni-bin-dir</code> (padrão <code>/opt/cni/bin</code>).</p><p>Se existirem múltiplos arquivos de configuração no diretório, o kubelet usa o arquivo de
+configuração que vier primeiro pelo nome, em ordem alfabética.</p><p>Adicionalmente ao plugin de CNI especificado no arquivo de configuração, o Kubernetes requer
+o plugin CNI padrão <a href=https://github.com/containernetworking/plugins/blob/master/plugins/main/loopback/loopback.go><code>lo</code></a> ao menos na versão 0.2.0.</p><h4 id=suporte-a-hostport>Suporte a hostPort</h4><p>O plugin de redes CNI suporta <code>hostPort</code>. Você pode utilizar o plugin oficial
+<a href=https://github.com/containernetworking/plugins/tree/master/plugins/meta/portmap>portmap</a>
+ou usar seu próprio plugin com a funcionalidade de <em>portMapping</em>.</p><p>Caso você deseje habilitar o suporte a <code>hostPort</code>, você deve especificar
+<code>portMappings capability</code> no seu <code>cni-conf-dir</code>.
+Por exemplo:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;name&#34;</span>: <span style=color:#b44>&#34;k8s-pod-network&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;cniVersion&#34;</span>: <span style=color:#b44>&#34;0.4.0&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;plugins&#34;</span>: [
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;type&#34;</span>: <span style=color:#b44>&#34;calico&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;log_level&#34;</span>: <span style=color:#b44>&#34;info&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;datastore_type&#34;</span>: <span style=color:#b44>&#34;kubernetes&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;nodename&#34;</span>: <span style=color:#b44>&#34;127.0.0.1&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;ipam&#34;</span>: {
+</span></span><span style=display:flex><span>        <span style=color:green;font-weight:700>&#34;type&#34;</span>: <span style=color:#b44>&#34;host-local&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:green;font-weight:700>&#34;subnet&#34;</span>: <span style=color:#b44>&#34;usePodCidr&#34;</span>
+</span></span><span style=display:flex><span>      },
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;policy&#34;</span>: {
+</span></span><span style=display:flex><span>        <span style=color:green;font-weight:700>&#34;type&#34;</span>: <span style=color:#b44>&#34;k8s&#34;</span>
+</span></span><span style=display:flex><span>      },
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;kubernetes&#34;</span>: {
+</span></span><span style=display:flex><span>        <span style=color:green;font-weight:700>&#34;kubeconfig&#34;</span>: <span style=color:#b44>&#34;/etc/cni/net.d/calico-kubeconfig&#34;</span>
+</span></span><span style=display:flex><span>      }
+</span></span><span style=display:flex><span>    },
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;type&#34;</span>: <span style=color:#b44>&#34;portmap&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;capabilities&#34;</span>: {<span style=color:green;font-weight:700>&#34;portMappings&#34;</span>: <span style=color:#a2f;font-weight:700>true</span>}
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>  ]
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h4 id=suporte-a-controle-de-banda>Suporte a controle de banda</h4><p><strong>Funcionalidade experimental</strong></p><p>O plugin de rede CNI também suporta o controle de banda de entrada e saída.
+Você pode utilizar o plugin oficial <a href=https://github.com/containernetworking/plugins/tree/master/plugins/meta/bandwidth>bandwidth</a>
+desenvolvido ou usar seu próprio plugin de controle de banda.</p><p>Se você habilitar o suporte ao controle de banda, você deve adicionar o plugin <code>bandwidth</code>
+no seu arquivo de configuração de CNI (padrão <code>/etc/cni/net.d</code>) e garantir que o programa
+exista no diretório de binários do CNI (padrão <code>/opt/cni/bin</code>).</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;name&#34;</span>: <span style=color:#b44>&#34;k8s-pod-network&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;cniVersion&#34;</span>: <span style=color:#b44>&#34;0.4.0&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;plugins&#34;</span>: [
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;type&#34;</span>: <span style=color:#b44>&#34;calico&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;log_level&#34;</span>: <span style=color:#b44>&#34;info&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;datastore_type&#34;</span>: <span style=color:#b44>&#34;kubernetes&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;nodename&#34;</span>: <span style=color:#b44>&#34;127.0.0.1&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;ipam&#34;</span>: {
+</span></span><span style=display:flex><span>        <span style=color:green;font-weight:700>&#34;type&#34;</span>: <span style=color:#b44>&#34;host-local&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:green;font-weight:700>&#34;subnet&#34;</span>: <span style=color:#b44>&#34;usePodCidr&#34;</span>
+</span></span><span style=display:flex><span>      },
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;policy&#34;</span>: {
+</span></span><span style=display:flex><span>        <span style=color:green;font-weight:700>&#34;type&#34;</span>: <span style=color:#b44>&#34;k8s&#34;</span>
+</span></span><span style=display:flex><span>      },
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;kubernetes&#34;</span>: {
+</span></span><span style=display:flex><span>        <span style=color:green;font-weight:700>&#34;kubeconfig&#34;</span>: <span style=color:#b44>&#34;/etc/cni/net.d/calico-kubeconfig&#34;</span>
+</span></span><span style=display:flex><span>      }
+</span></span><span style=display:flex><span>    },
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;type&#34;</span>: <span style=color:#b44>&#34;bandwidth&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;capabilities&#34;</span>: {<span style=color:green;font-weight:700>&#34;bandwidth&#34;</span>: <span style=color:#a2f;font-weight:700>true</span>}
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>  ]
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Agora você pode adicionar as anotações <code>kubernetes.io/ingress-bandwidth</code> e
+<code>kubernetes.io/egress-bandwidth</code> em seu pod.
+Por exemplo:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>annotations</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>kubernetes.io/ingress-bandwidth</span>:<span style=color:#bbb> </span>1M<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>kubernetes.io/egress-bandwidth</span>:<span style=color:#bbb> </span>1M<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#00f;font-weight:700>...</span><span style=color:#bbb>
+</span></span></span></code></pre></div><h3 id=kubenet>kubenet</h3><p>Kubenet é um plugin de rede muito simples, existente apenas no Linux. Ele não
+implementa funcionalidades mais avançadas, como rede entre nós ou políticas de rede.
+Ele é geralmente utilizado junto a um provedor de nuvem que configura as regras de
+roteamento para comunicação entre os nós, ou em ambientes com apenas um nó.</p><p>O Kubenet cria uma <em>interface bridge</em> no Linux chamada <code>cbr0</code> e cria um par <em>veth</em>
+para cada um dos pods com o host como a outra ponta desse par, conectado à <code>cbr0</code>.
+Na interface no lado do Pod um endereço IP é alocado de uma faixa associada ao nó,
+sendo parte de alguma configuração no nó ou pelo controller-manager. Na interface <code>cbr0</code>
+é associado o MTU equivalente ao menor MTU de uma interface de rede do host.</p><p>Esse plugin possui alguns requisitos:</p><ul><li>Os plugins CNI padrão <code>bridge</code>, <code>lo</code> e <code>host-local</code> são obrigatórios, ao menos na
+versão 0.2.0. O Kubenet buscará inicialmente esses plugins no diretório <code>/opt/cni/bin</code>.
+Especifique a opção <code>cni-bin-dir</code> no kubelet para fornecer um diretório adicional
+de busca. O primeiro local equivalente será o utilizado.</li><li>O kubelet deve ser executado com a opção <code>--network-plugin=kubenet</code> para habilitar esse plugin.</li><li>O Kubelet deve ainda ser executado com a opção <code>--non-masquerade-cidr=&lt;clusterCidr></code> para
+garantir que o tráfego de IPs para fora dessa faixa seja mascarado.</li><li>O nó deve possuir uma subrede associada, através da opção <code>--pod-cidr</code> configurada
+na inicialização do kubelet, ou as opções <code>--allocate-node-cidrs=true --cluster-cidr=&lt;cidr></code>
+utilizadas na inicialização do <em>controller-manager</em>.</li></ul><h3 id=customizando-o-mtu-com-kubenet>Customizando o MTU (com kubenet)</h3><p>O MTU deve sempre ser configurado corretamente para obter-se a melhor performance de
+rede. Os plugins de rede geralmente tentam detectar uma configuração correta de MTU,
+porém algumas vezes a lógica não irá resultar em uma configuração adequada. Por exemplo,
+se a <em>Docker bridge</em> ou alguma outra interface possuir um MTU pequeno, o kubenet irá
+selecionar aquela MTU. Ou caso você esteja utilizando encapsulamento IPSEC, o MTU deve
+ser reduzido, e esse cálculo não faz parte do escopo da maioria dos plugins de rede.</p><p>Sempre que necessário, você pode configurar explicitamente o MTU com a opção <code>network-plugin-mtu</code>
+no kubelet. Por exemplo, na AWS o MTU da <code>eth0</code> geralmente é 9001 então você deve
+especificar <code>--network-plugin-mtu=9001</code>. Se você estiver usando IPSEC você deve reduzir
+o MTU para permitir o encapsulamento excedente; por exemplo: <code>--network-plugin-mtu=8773</code>.</p><p>Essa opção faz parte do plugin de rede. Atualmente <strong>apenas o kubenet suporta a configuração
+<code>network-plugin-mtu</code></strong>.</p><h2 id=resumo-de-uso>Resumo de uso</h2><ul><li><code>--network-plugin=cni</code> especifica que devemos usar o plugin de redes <code>cni</code> com os
+binários do plugin localizados em <code>--cni-bin-dir</code> (padrão <code>/opt/cni/bin</code>) e as
+configurações do plugin localizadas em <code>--cni-conf-dir</code> (default <code>/etc/cni/net.d</code>).</li><li><code>--network-plugin=kubenet</code> especifica que iremos usar o plugin de rede <code>kubenet</code>
+com os plugins CNI <code>bridge</code>, <code>lo</code> e <code>host-local</code> localizados em <code>/opt/cni/bin</code> ou <code>cni-bin-dir</code>.</li><li><code>--network-plugin-mtu=9001</code> especifica o MTU a ser utilizado, atualmente apenas em uso
+pelo plugin de rede <code>kubenet</code></li></ul><h2 id=próximos-passos>Próximos passos</h2></div><div class=td-content style=page-break-before:always><h1 id=pg-3131452556176159fb269593c1a52012>3 - Padrão Operador</h1><p>Operadores são extensões de software para o Kubernetes que
+fazem uso de <a href=/docs/concepts/extend-kubernetes/api-extension/custom-resources/><em>recursos personalizados</em></a>
+para gerir aplicações e os seus componentes. Operadores seguem os<br>princípios do Kubernetes, notavelmente o <a href=/docs/concepts/#kubernetes-control-plane>ciclo de controle</a>.</p><h2 id=motivação>Motivação</h2><p>O padrão Operador tem como objetivo capturar o principal objetivo de um operador
+humano que gere um serviço ou um conjunto de serviços. Operadores humanos
+responsáveis por aplicações e serviços específicos têm um conhecimento
+profundo da forma como o sistema é suposto se comportar, como é instalado
+e como deve reagir na ocorrência de problemas.</p><p>As pessoas que executam cargas de trabalho no Kubernetes habitualmente gostam
+de usar automação para cuidar de tarefas repetitivas. O padrão Operador captura
+a forma como pode escrever código para automatizar uma tarefa para além do que
+o Kubernetes fornece.</p><h2 id=operadores-no-kubernetes>Operadores no Kubernetes</h2><p>O Kubernetes é desenhado para automação. <em>Out of the box</em>, você tem bastante
+automação embutida no núcleo do Kubernetes. Pode usar
+o Kubernetes para automatizar instalações e executar cargas de trabalho,
+e pode ainda automatizar a forma como o Kubernetes faz isso.</p><p>O conceito de <a class=glossary-tooltip title='Um ciclo de controle que observa o estado partilhado do cluster através do API Server e efetua mudanças tentando mover o estado atual em direção ao estado desejado.' data-toggle=tooltip data-placement=top href=/docs/concepts/architecture/controller/ target=_blank aria-label=controlador>controlador</a> no
+Kubernetes permite a extensão do comportamento sem modificar o código do próprio
+Kubernetes.
+Operadores são clientes da API do Kubernetes que atuam como controladores para
+um dado <a href=/docs/concepts/api-extension/custom-resources/><em>Custom Resource</em></a></p><h2 id=exemplo>Exemplo de um Operador</h2><p>Algumas das coisas que um operador pode ser usado para automatizar incluem:</p><ul><li>instalar uma aplicação a pedido</li><li>obter e restaurar backups do estado dessa aplicação</li><li>manipular atualizações do código da aplicação juntamente com alterações
+como esquemas de base de dados ou definições de configuração extra</li><li>publicar um <em>Service</em> para aplicações que não suportam a APIs do Kubernetes
+para as descobrir</li><li>simular uma falha em todo ou parte do cluster de forma a testar a resiliência</li><li>escolher um lider para uma aplicação distribuída sem um processo
+de eleição de membro interno</li></ul><p>Como deve um Operador parecer em mais detalhe? Aqui está um exemplo em mais
+detalhe:</p><ol><li>Um recurso personalizado (<em>custom resource</em>) chamado SampleDB, que você pode
+configurar para dentro do <em>cluster</em>.</li><li>Um <em>Deployment</em> que garante que um <em>Pod</em> está a executar que contém a
+parte controlador do operador.</li><li>Uma imagem do <em>container</em> do código do operador.</li><li>Código do controlador que consulta o plano de controle para descobrir quais
+recursos <em>SampleDB</em> estão configurados.</li><li>O núcleo do Operador é o código para informar ao servidor da API (<em>API server</em>) como fazer
+a realidade coincidir com os recursos configurados.<ul><li>Se você adicionar um novo <em>SampleDB</em>, o operador configurará <em>PersistentVolumeClaims</em>
+para fornecer armazenamento de base de dados durável, um <em>StatefulSet</em> para executar <em>SampleDB</em> e
+um <em>Job</em> para lidar com a configuração inicial.</li><li>Se você apagá-lo, o Operador tira um <em>snapshot</em> e então garante que
+o <em>StatefulSet</em> e <em>Volumes</em> também são removidos.</li></ul></li><li>O operador também gere backups regulares da base de dados. Para cada recurso <em>SampleDB</em>,
+o operador determina quando deve criar um <em>Pod</em> que possa se conectar
+à base de dados e faça backups. Esses <em>Pods</em> dependeriam de um <em>ConfigMap</em>
+e / ou um <em>Secret</em> que possui detalhes e credenciais de conexão com à base de dados.</li><li>Como o Operador tem como objetivo fornecer automação robusta para o recurso
+que gere, haveria código de suporte adicional. Para este exemplo,
+O código verifica se a base de dados está a executar uma versão antiga e, se estiver,
+cria objetos <em>Job</em> que o atualizam para si.</li></ol><h2 id=instalar-operadores>Instalar Operadores</h2><p>A forma mais comum de instalar um Operador é a de adicionar a
+definição personalizada de recurso (<em>Custom Resource Definition</em>) e
+o seu Controlador associado ao seu cluster.
+O Controlador vai normalmente executar fora do
+<a class=glossary-tooltip title='A camada de gerenciamento de contêiner que expõe a API e as interfaces para definir, implantar e gerenciar o ciclo de vida dos contêineres.' data-toggle=tooltip data-placement=top href='/pt-br/docs/reference/glossary/?all=true#term-control-plane' target=_blank aria-label='plano de controle'>plano de controle</a>,
+como você faria com qualquer aplicação containerizada.
+Por exemplo, você pode executar o controlador no seu cluster como um <em>Deployment</em>.</p><h2 id=usando-um-operador>Usando um Operador</h2><p>Uma vez que você tenha um Operador instalado, usaria-o adicionando, modificando
+ou apagando a espécie de recurso que o Operador usa. Seguindo o exemplo acima,
+você configuraria um <em>Deployment</em> para o próprio Operador, e depois:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get SampleDB                   <span style=color:#080;font-style:italic># encontra a base de dados configurada</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>kubectl edit SampleDB/example-database <span style=color:#080;font-style:italic># mudar manualmente algumas definições</span>
+</span></span></code></pre></div><p>…e é isso! O Operador vai tomar conta de aplicar
+as mudanças assim como manter o serviço existente em boa forma.</p><h2 id=escrevendo-operador>Escrevendo o seu próprio Operador</h2><p>Se não existir no ecosistema um Operador que implementa
+o comportamento que pretende, pode codificar o seu próprio.
+<a href=#qual-%C3%A9-o-pr%C3%B3ximo>Qual é o próximo</a> você vai encontrar
+alguns <em>links</em> para bibliotecas e ferramentas que pode usar
+para escrever o seu próprio Operador <em>cloud native</em>.</p><p>Pode também implementar um Operador (isto é, um Controlador) usando qualquer linguagem / <em>runtime</em>
+que pode atuar como um <a href=/docs/reference/using-api/client-libraries/>cliente da API do Kubernetes</a>.</p><h2 id=próximos-passos>Próximos passos</h2><ul><li>Aprenda mais sobre <a href=/docs/concepts/extend-kubernetes/api-extension/custom-resources/>Recursos Personalizados</a></li><li>Encontre operadores prontos em <a href=https://operatorhub.io/>OperatorHub.io</a> para o seu caso de uso</li><li>Use ferramentes existentes para escrever os seus Operadores:<ul><li>usando <a href=https://kudo.dev/>KUDO</a> (Kubernetes Universal Declarative Operator)</li><li>usando <a href=https://book.kubebuilder.io/>kubebuilder</a></li><li>usando <a href=https://metacontroller.github.io/metacontroller/intro.html>Metacontroller</a> juntamente com WebHooks que
+implementa você mesmo</li><li>usando o <a href=https://operatorframework.io/>Operator Framework</a></li></ul></li><li><a href=https://operatorhub.io/>Publique</a> o seu operador para que outras pessoas o possam usar</li><li>Leia o <a href=https://coreos.com/blog/introducing-operators.html>artigo original da CoreOS</a> que introduz o padrão Operador</li><li>Leia um <a href=https://cloud.google.com/blog/products/containers-kubernetes/best-practices-for-building-kubernetes-operators-and-stateful-apps>artigo</a> da Google Cloud sobre as melhores práticas para contruir Operadores</li></ul></div></main></div></div><footer class=d-print-none><div class=footer__links><nav><a class=text-white href=/pt-br/docs/home/>Home</a>
+<a class=text-white href=/pt-br/blog/>Blog</a>
+<a class=text-white href=/pt-br/partners/>Parceiros</a>
+<a class=text-white href=/pt-br/community/>Comunidade</a>
+<a class=text-white href=/pt-br/case-studies/>Casos de estudo</a></nav></div><div class=container-fluid><div class=row><div class="col-6 col-sm-2 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="User mailing list" aria-label="User mailing list"><a class=text-white target=_blank href=https://discuss.kubernetes.io><i class="fa fa-envelope"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank href=https://twitter.com/kubernetesio><i class="fab fa-twitter"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Calendar aria-label=Calendar><a class=text-white target=_blank href="https://calendar.google.com/calendar/embed?src=calendar%40kubernetes.io"><i class="fas fa-calendar-alt"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Youtube aria-label=Youtube><a class=text-white target=_blank href=https://youtube.com/kubernetescommunity><i class="fab fa-youtube"></i></a></li></ul></div><div class="col-6 col-sm-2 text-right text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank href=https://github.com/kubernetes/kubernetes><i class="fab fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Slack aria-label=Slack><a class=text-white target=_blank href=https://slack.k8s.io><i class="fab fa-slack"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Contribute aria-label=Contribute><a class=text-white target=_blank href=https://git.k8s.io/community/contributors/guide><i class="fas fa-edit"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="Stack Overflow" aria-label="Stack Overflow"><a class=text-white target=_blank href=https://stackoverflow.com/questions/tagged/kubernetes><i class="fab fa-stack-overflow"></i></a></li></ul></div><div class="col-12 col-sm-8 text-center order-sm-2"><small class=text-white>&copy; 2023 Os autores do Kubernetes | Documentação Distribuída sob <a href=https://git.k8s.io/website/LICENSE class=light-text>CC BY 4.0</a></small><br><small class=text-white>Copyright &copy; 2023 A Fundação Linux &reg;. Todos os direitos reservados. A Linux Foundation tem marcas registradas e usa marcas registradas. Para uma lista de marcas registradas da The Linux Foundation, por favor, veja nossa <a href=https://www.linuxfoundation.org/trademark-usage class=light-text>Página de uso de marca registrada</a></small><br><small class=text-white>ICP license: 京ICP备17074266号-3</small></div></div></div></footer></div><script src=/js/jquery-3.6.0.min.js integrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script>
+<script src=/js/popper-1.16.1.min.js intregrity=sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN crossorigin=anonymous></script>
+<script src=/js/bootstrap-4.6.1.min.js integrity=sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2 crossorigin=anonymous></script>
+<script src=/js/script.js></script>
+<script async src=/js/mermaid-8.13.4.min.js integrity=sha384-5hHNvPeMrNH14oM3IcQofDoBhiclNK3g2+hnEinKzQ07C4AliMeVpnvxuiwEGpaO crossorigin=anonymous></script>
+<script src=/js/main.min.5c0bf7f21dc4f66485f74efbbeeff28a7e4f8cddaac1bae47043159c922ff3a3.js integrity="sha256-XAv38h3E9mSF9077vu/yin5PjN2qwbrkcEMVnJIv86M=" crossorigin=anonymous></script></body></html>

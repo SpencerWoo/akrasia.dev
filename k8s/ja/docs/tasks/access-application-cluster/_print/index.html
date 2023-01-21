@@ -1,0 +1,606 @@
+<!doctype html><html lang=ja class=no-js><head><meta name=robots content="noindex, nofollow"><link rel=alternate hreflang=en href=https://kubernetes.io/docs/tasks/access-application-cluster/><link rel=alternate hreflang=zh-cn href=https://kubernetes.io/zh-cn/docs/tasks/access-application-cluster/><link rel=alternate hreflang=ko href=https://kubernetes.io/ko/docs/tasks/access-application-cluster/><link rel=alternate hreflang=fr href=https://kubernetes.io/fr/docs/tasks/access-application-cluster/><link rel=alternate hreflang=de href=https://kubernetes.io/de/docs/tasks/access-application-cluster/><link rel=alternate hreflang=es href=https://kubernetes.io/es/docs/tasks/access-application-cluster/><link rel=alternate hreflang=id href=https://kubernetes.io/id/docs/tasks/access-application-cluster/><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.110.0"><link rel=canonical type=text/html href=https://kubernetes.io/ja/docs/tasks/access-application-cluster/><link rel="shortcut icon" type=image/png href=/images/favicon.png><link rel=apple-touch-icon href=/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=manifest href=/manifest.webmanifest><link rel=apple-touch-icon href=/images/kubernetes-192x192.png><title>クラスター内アプリケーションへのアクセス | Kubernetes</title><meta property="og:title" content="クラスター内アプリケーションへのアクセス"><meta property="og:description" content="クラスター内アプリケーションへアクセスできるようにするために、ロードバランシングやポートフォワーディングの設定、ファイアウォールやDNS設定のセットアップを行います。"><meta property="og:type" content="website"><meta property="og:url" content="https://kubernetes.io/ja/docs/tasks/access-application-cluster/"><meta property="og:site_name" content="Kubernetes"><meta itemprop=name content="クラスター内アプリケーションへのアクセス"><meta itemprop=description content="クラスター内アプリケーションへアクセスできるようにするために、ロードバランシングやポートフォワーディングの設定、ファイアウォールやDNS設定のセットアップを行います。"><meta name=twitter:card content="summary"><meta name=twitter:title content="クラスター内アプリケーションへのアクセス"><meta name=twitter:description content="クラスター内アプリケーションへアクセスできるようにするために、ロードバランシングやポートフォワーディングの設定、ファイアウォールやDNS設定のセットアップを行います。"><link href=/scss/main.css rel=stylesheet><script type=application/ld+json>{"@context":"https://schema.org","@type":"Organization","url":"https://kubernetes.io","logo":"https://kubernetes.io/images/favicon.png","potentialAction":{"@type":"SearchAction","target":"https://kubernetes.io/search/?q={search_term_string}","query-input":"required name=search_term_string"}}</script><meta name=theme-color content="#326ce5"><link rel=stylesheet href=/css/feature-states.css><meta name=description content="クラスター内アプリケーションへアクセスできるようにするために、ロードバランシングやポートフォワーディングの設定、ファイアウォールやDNS設定のセットアップを行います。"><meta property="og:description" content="クラスター内アプリケーションへアクセスできるようにするために、ロードバランシングやポートフォワーディングの設定、ファイアウォールやDNS設定のセットアップを行います。"><meta name=twitter:description content="クラスター内アプリケーションへアクセスできるようにするために、ロードバランシングやポートフォワーディングの設定、ファイアウォールやDNS設定のセットアップを行います。"><meta property="og:url" content="https://kubernetes.io/ja/docs/tasks/access-application-cluster/"><meta property="og:title" content="クラスター内アプリケーションへのアクセス"><meta name=twitter:title content="クラスター内アプリケーションへのアクセス"><meta name=twitter:image content="https://kubernetes.io/images/favicon.png"><meta name=twitter:image:alt content="Kubernetes"><meta property="og:image" content="/images/kubernetes-horizontal-color.png"><meta property="og:type" content="article"><script src=/js/jquery-3.6.0.min.js intregrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script></head><body class=td-section><header><nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar" data-auto-burger=primary><a class=navbar-brand href=/ja/></a><div class="td-navbar-nav-scroll ml-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0"><li class="nav-item mr-2 mb-lg-0"><a class="nav-link active" href=/ja/docs/>ドキュメント</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ja/blog/>Blogs</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ja/training/>トレーニング</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ja/partners/>パートナー</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ja/community/>コミュニティ</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ja/case-studies/>ケーススタディ</a></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>バージョン</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/ja/releases>Release Information</a>
+<a class=dropdown-item href=https://kubernetes.io/ja/docs/tasks/access-application-cluster/>v1.25</a>
+<a class=dropdown-item href=https://v1-24.docs.kubernetes.io/ja/docs/tasks/access-application-cluster/>v1.24</a>
+<a class=dropdown-item href=https://v1-23.docs.kubernetes.io/ja/docs/tasks/access-application-cluster/>v1.23</a>
+<a class=dropdown-item href=https://v1-22.docs.kubernetes.io/ja/docs/tasks/access-application-cluster/>v1.22</a>
+<a class=dropdown-item href=https://v1-21.docs.kubernetes.io/ja/docs/tasks/access-application-cluster/>v1.21</a></div></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdownMenuLink role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>日本語 (Japanese)</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/docs/tasks/access-application-cluster/>English</a>
+<a class=dropdown-item href=/zh-cn/docs/tasks/access-application-cluster/>中文 (Chinese)</a>
+<a class=dropdown-item href=/ko/docs/tasks/access-application-cluster/>한국어 (Korean)</a>
+<a class=dropdown-item href=/fr/docs/tasks/access-application-cluster/>Français (French)</a>
+<a class=dropdown-item href=/de/docs/tasks/access-application-cluster/>Deutsch (German)</a>
+<a class=dropdown-item href=/es/docs/tasks/access-application-cluster/>Español (Spanish)</a>
+<a class=dropdown-item href=/id/docs/tasks/access-application-cluster/>Bahasa Indonesia</a></div></li></ul></div><button id=hamburger onclick=kub.toggleMenu() data-auto-burger-exclude><div></div></button></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><div class=td-content><div class="pageinfo pageinfo-primary d-print-none"><p>これは、このセクションの複数ページの印刷可能なビューです。
+<a href=# onclick="return print(),!1">印刷するには、ここをクリックしてください</a>.</p><p><a href=/ja/docs/tasks/access-application-cluster/>このページの通常のビューに戻る</a>.</p></div><h1 class=title>クラスター内アプリケーションへのアクセス</h1><div class=lead>クラスター内アプリケーションへアクセスできるようにするために、ロードバランシングやポートフォワーディングの設定、ファイアウォールやDNS設定のセットアップを行います。</div><ul><li>1: <a href=#pg-777447042cd4e81df3fa5beb3357a485>Web UI (Dashboard)</a></li><li>2: <a href=#pg-5a233e14205d77fe1294917d2da6f876>複数のクラスターへのアクセスを設定する</a></li><li>3: <a href=#pg-312f29f850826b74618634cd877aa065>Serviceを利用したクラスター内のアプリケーションへのアクセス</a></li><li>4: <a href=#pg-f3dac629bea950fc026d920306f09fb4>Serviceを使用してフロントエンドをバックエンドに接続する</a></li><li>5: <a href=#pg-1839d8468a083839ed1cc8d18fe1142e>Minikube上でNGINX Ingressコントローラーを使用してIngressをセットアップする</a></li><li>6: <a href=#pg-48e8f306f919c5b81265e265a2b76ab4>クラスターで実行されているすべてのコンテナイメージを一覧表示する</a></li><li>7: <a href=#pg-7c319a9981586e5fbcfa21b392720650>共有ボリュームを使用して同じPod内のコンテナ間で通信する</a></li></ul><div class=content></div></div><div class=td-content><h1 id=pg-777447042cd4e81df3fa5beb3357a485>1 - Web UI (Dashboard)</h1><p>ダッシュボードは、WebベースのKubernetesユーザーインターフェイスです。
+ダッシュボードを使用して、コンテナ化されたアプリケーションをKubernetesクラスターにデプロイしたり、
+コンテナ化されたアプリケーションをトラブルシューティングしたり、クラスターリソースを管理したりすることができます。
+ダッシュボードを使用して、クラスター上で実行されているアプリケーションの概要を把握したり、
+個々のKubernetesリソース(Deployments、Jobs、DaemonSetsなど)を作成または修正したりすることができます。
+たとえば、Deploymentのスケール、ローリングアップデートの開始、Podの再起動、
+デプロイウィザードを使用した新しいアプリケーションのデプロイなどが可能です。</p><p>ダッシュボードでは、クラスター内のKubernetesリソースの状態や、発生した可能性のあるエラーに関する情報も提供されます。</p><p><img src=/images/docs/ui-dashboard.png alt="Kubernetes Dashboard UI"></p><h2 id=ダッシュボードuiのデプロイ>ダッシュボードUIのデプロイ</h2><p>ダッシュボードUIはデフォルトではデプロイされていません。デプロイするには、以下のコマンドを実行します:</p><pre tabindex=0><code>kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml
+</code></pre><h2 id=ダッシュボードuiへのアクセス>ダッシュボードUIへのアクセス</h2><p>クラスターデータを保護するために、ダッシュボードはデフォルトで最小限のRBAC構成でデプロイします。
+現在、ダッシュボードはBearer Tokenによるログインのみをサポートしています。
+このデモ用のトークンを作成するには、
+<a href=https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md>サンプルユーザーの作成</a>ガイドに従ってください。</p><div class="alert alert-danger warning callout" role=alert><strong>警告:</strong> チュートリアルで作成されたサンプルユーザーには管理者権限が与えられ、教育目的のみに使用されます。</div><h3 id=コマンドラインプロキシー>コマンドラインプロキシー</h3><p>以下のコマンドを実行することで、kubectlコマンドラインツールを使ってダッシュボードにアクセスすることができます:</p><pre tabindex=0><code>kubectl proxy
+</code></pre><p>kubectlは、ダッシュボードを http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/ で利用できるようにします。</p><p>UIはコマンドを実行しているマシンから <em>のみ</em> アクセスできます。オプションについては<code>kubectl proxy --help</code>を参照してください。</p><div class="alert alert-info note callout" role=alert><strong>備考:</strong> Kubeconfigの認証方法は、外部IDプロバイダーやx509証明書ベースの認証には対応していません。</div><h2 id=ウェルカムビュー>ウェルカムビュー</h2><p>空のクラスターでダッシュボードにアクセスすると、ウェルカムページが表示されます。
+このページには、このドキュメントへのリンクと、最初のアプリケーションをデプロイするためのボタンが含まれています。
+さらに、クラスターの<code>kube-system</code><a href=/docs/tasks/administer-cluster/namespaces/>名前空間</a>でデフォルトで実行されているシステムアプリケーション、たとえばダッシュボード自体を見ることができます。</p><p><img src=/images/docs/ui-dashboard-zerostate.png alt="Kubernetes Dashboard welcome page"></p><h2 id=コンテナ化されたアプリケーションのデプロイ>コンテナ化されたアプリケーションのデプロイ</h2><p>ダッシュボードを使用すると、簡単なウィザードでコンテナ化されたアプリケーションをDeploymentとオプションのServiceとして作成してデプロイすることができます。
+アプリケーションの詳細を手動で指定するか、アプリケーションの設定を含むYAMLまたはJSONファイルをアップロードすることができます。</p><p>任意のページの右上にある<strong>CREATE</strong>ボタンをクリックして開始します。</p><h3 id=アプリケーションの詳細の指定>アプリケーションの詳細の指定</h3><p>デプロイウィザードでは、以下の情報を入力する必要があります:</p><ul><li><p><strong>App name</strong> (必須): アプリケーションの名前です。
+その名前の<a href=/ja/docs/concepts/overview/working-with-objects/labels/>label</a>は、デプロイされるDeploymentとServiceに追加されます。</p><p>アプリケーション名は、選択したKubernetes<a href=/docs/tasks/administer-cluster/namespaces/>名前空間</a>内で一意である必要があります。
+小文字で始まり、小文字または数字で終わり、小文字、数字、ダッシュ(-)のみを含む必要があります。文字数は24文字に制限されています。先頭と末尾のスペースは無視されます。</p></li><li><p><strong>Container image</strong> (必須): 任意のレジストリ上の公開Docker<a href=/docs/concepts/containers/images/>コンテナイメージ</a>、またはプライベートイメージ(一般的にはGoogle Container RegistryやDocker Hub上でホストされている)のURLです。
+コンテナイメージの指定はコロンで終わらせる必要があります。</p><p>クラスタ全体で必要な数のPodを維持するために、<a href=/ja/docs/concepts/workloads/controllers/deployment/>Deployment</a>が作成されます。</p></li><li><p><strong>Service</strong> (任意): アプリケーションのいくつかの部分(たとえばフロントエンド)では、
+<a href=/ja/docs/concepts/services-networking/service/>Service</a>をクラスター外の外部、おそらくパブリックIPアドレス(外部サービス)に公開したいと思うかもしれません。</p><div class="alert alert-info note callout" role=alert><strong>備考:</strong> 外部サービスの場合は、そのために1つ以上のポートを開放する必要があるでしょう。</div><p>クラスター内部からしか見えないその他のサービスは、内部サービスと呼ばれます。</p><p>サービスの種類にかかわらず、サービスを作成し、コンテナがポート(受信)をリッスンする場合は、
+2つのポートを指定する必要があります。
+サービスは、ポート(受信)をコンテナから見たターゲットポートにマッピングして作成されます。
+このサービスは、デプロイされたPodにルーティングされます。サポートされるプロトコルはTCPとUDPです。
+このサービスの内部DNS名は、上記のアプリケーション名として指定した値になります。</p></li></ul><p>必要に応じて、<strong>高度なオプション</strong>セクションを展開して、より多くの設定を指定することができます:</p><ul><li><p><strong>Description</strong>: ここで入力したテキストは、
+<a href=/ja/docs/concepts/overview/working-with-objects/annotations/>アノテーション</a>としてDeploymentに追加され、アプリケーションの詳細に表示されます。</p></li><li><p><strong>Labels</strong>: アプリケーションに使用するデフォルトの<a href=/ja/docs/concepts/overview/working-with-objects/labels/>ラベル</a>は、アプリケーション名とバージョンです。
+リリース、環境、ティア、パーティション、リリーストラックなど、Deployment、Service(存在する場合)、Podに適用する追加のラベルを指定できます。</p><p>例:</p><pre tabindex=0><code class=language-conf data-lang=conf>release=1.0
+tier=frontend
+environment=pod
+track=stable
+</code></pre></li><li><p><strong>Namespace</strong>: Kubernetesは、同じ物理クラスターを基盤とする複数の仮想クラスターをサポートしています。
+これらの仮想クラスタは<a href=/docs/tasks/administer-cluster/namespaces/>名前空間</a> と呼ばれます。
+これにより、リソースを論理的に名前のついたグループに分割することができます。</p><p>ダッシュボードでは、利用可能なすべての名前空間がドロップダウンリストに表示され、新しい名前空間を作成することができます。
+名前空間名には、最大63文字の英数字とダッシュ(-)を含めることができますが、大文字を含めることはできません。
+名前空間名は数字だけで構成されるべきではありません。
+名前が10などの数値として設定されている場合、Podはデフォルトの名前空間に配置されます。</p><p>名前空間の作成に成功した場合は、デフォルトで選択されます。
+作成に失敗した場合は、最初の名前空間が選択されます。</p></li><li><p><strong>Image Pull Secret</strong>:
+指定されたDockerコンテナイメージが非公開の場合、
+<a href=/ja/docs/concepts/configuration/secret/>pull secret</a>の認証情報が必要になる場合があります。</p><p>ダッシュボードでは、利用可能なすべてのSecretがドロップダウンリストに表示され、新しいSecretを作成できます。
+Secret名は DNSドメイン名の構文に従う必要があります。たとえば、<code>new.image-pull.secret</code>です。
+Secretの内容はbase64エンコードされ、<a href=/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod><code>.dockercfg</code></a>ファイルで指定されている必要があります。
+Secret名は最大253文字で構成されます。</p><p>イメージプルシークレットの作成に成功した場合は、デフォルトで選択されています。作成に失敗した場合は、シークレットは適用されません。</p></li><li><p><strong>CPU requirement (cores)<strong>と</strong>Memory requirement (MiB)</strong>:
+コンテナの最小<a href=/docs/tasks/administer-cluster/manage-resources/memory-default-namespace/>リソース制限</a>を指定することができます。デフォルトでは、PodはCPUとメモリの制限がない状態で実行されます。</p></li><li><p><strong>Run command</strong>と<strong>Run command arguments</strong>:
+デフォルトでは、コンテナは指定されたDockerイメージのデフォルトの<a href=/docs/tasks/inject-data-application/define-command-argument-container/>entrypointコマンド</a>を実行します。
+コマンドのオプションと引数を使ってデフォルトを上書きすることができます。</p></li><li><p><strong>Run as privileged</strong>: この設定は、<a href=/ja/docs/concepts/workloads/pods/pod/#privileged-mode-for-pod-containers>特権コンテナ</a>内のプロセスが、ホスト上でrootとして実行されているプロセスと同等であるかどうかを決定します。特権コンテナは、
+ネットワークスタックの操作やデバイスへのアクセスなどの機能を利用できます。</p></li><li><p><strong>Environment variables</strong>: Kubernetesは<a href=/ja/docs/tasks/inject-data-application/environment-variable-expose-pod-information/>環境変数</a>を介してServiceを公開しています。
+環境変数を作成したり、環境変数の値を使ってコマンドに引数を渡したりすることができます。
+環境変数の値はServiceを見つけるためにアプリケーションで利用できます。
+値は<code>$(VAR_NAME)</code>構文を使用して他の変数を参照できます。</p></li></ul><h3 id=yamlまたはjsonファイルのアップロード>YAMLまたはJSONファイルのアップロード</h3><p>Kubernetesは宣言的な設定をサポートしています。
+このスタイルでは、すべての設定は Kubernetes <a href=/ja/docs/concepts/overview/kubernetes-api/>API</a>リソーススキーマを使用してYAMLまたは JSON設定ファイルに格納されます。</p><p>デプロイウィザードでアプリケーションの詳細を指定する代わりに、
+YAMLまたはJSONファイルでアプリケーションを定義し、ダッシュボードを使用してファイルをアップロードできます。</p><h2 id=ダッシュボードの使用>ダッシュボードの使用</h2><p>以下のセクションでは、Kubernetes Dashboard UIのビュー、それらが提供するものとその使用方法について説明します。</p><h3 id=ナビゲーション>ナビゲーション</h3><p>クラスターにKubernetesオブジェクトが定義されている場合、ダッシュボードではそれらのオブジェクトが初期表示されます。
+デフォルトでは <em>default</em> 名前空間のオブジェクトのみが表示されますが、これはナビゲーションメニューにある名前空間セレクターで変更できます。</p><p>ダッシュボードにはほとんどのKubernetesオブジェクトの種類が表示され、いくつかのメニューカテゴリーにグループ化されています。</p><h4 id=管理者の概要>管理者の概要</h4><p>クラスターと名前空間の管理者向けに、ダッシュボードにはノード、名前空間、永続ボリュームが一覧表示され、それらの詳細ビューが用意されています。
+ノードリストビューには、すべてのノードにわたって集計されたCPUとメモリーのメトリクスが表示されます。
+詳細ビューには、ノードのメトリクス、仕様、ステータス、割り当てられたリソース、イベント、ノード上で実行されているPodが表示されます。</p><h4 id=ワークロード>ワークロード</h4><p>選択した名前空間で実行されているすべてのアプリケーションを表示します。
+このビューでは、アプリケーションがワークロードの種類(例：Deployment、ReplicaSet、StatefulSetなど)ごとに一覧表示され、各ワークロードの種類を個別に表示することができます。
+リストには、ReplicaSetの準備ができたPodの数やPodの現在のメモリ使用量など、ワークロードに関する実用的な情報がまとめられています。</p><p>ワークロードの詳細ビューには、ステータスや仕様情報、オブジェクト間の表面関係が表示されます。
+たとえば、ReplicaSetが制御しているPodや、新しいReplicaSet、DeploymentのためのHorizontal Pod Autoscalerなどです。</p><h4 id=service>Service</h4><p>外部の世界にサービスを公開し、クラスター内でサービスを発見できるようにするKubernetesリソースを表示します。
+そのため、ServiceとIngressのビューには、それらが対象とするPod、クラスター接続の内部エンドポイント、外部ユーザーの外部エンドポイントが表示されます。</p><h4 id=ストレージ>ストレージ</h4><p>ストレージビューには、アプリケーションがデータを保存するために使用するPersistentVolumeClaimリソースが表示されます。</p><h4 id=configmapとsecret>ConfigMapとSecret</h4><p>クラスターで実行されているアプリケーションのライブ設定に使用されているすべてのKubernetesリソースを表示します。
+このビューでは、設定オブジェクトの編集と管理が可能で、デフォルトで非表示になっているSecretを表示します。</p><h4 id=ログビューアー>ログビューアー</h4><p>Podのリストと詳細ページは、ダッシュボードに組み込まれたログビューアーにリンクしています。
+このビューアーでは、単一のPodに属するコンテナからログをドリルダウンすることができます。</p><p><img src=/images/docs/ui-dashboard-logs-view.png alt="Logs viewer"></p><h2 id=次の項目>次の項目</h2><p>詳細については<a href=https://github.com/kubernetes/dashboard>Kubernetes Dashboardプロジェクトページ</a>をご覧ください。</p></div><div class=td-content style=page-break-before:always><h1 id=pg-5a233e14205d77fe1294917d2da6f876>2 - 複数のクラスターへのアクセスを設定する</h1><p>ここでは、設定ファイルを使って複数のクラスターにアクセスする方法を紹介します。クラスター、ユーザー、コンテキストの情報を一つ以上の設定ファイルにまとめることで、<code>kubectl config use-context</code>のコマンドを使ってクラスターを素早く切り替えることができます。</p><div class="alert alert-info note callout" role=alert><strong>備考:</strong> クラスターへのアクセスを設定するファイルを、<em>kubeconfig</em> ファイルと呼ぶことがあります。これは設定ファイルの一般的な呼び方です。<code>kubeconfig</code>という名前のファイルが存在するわけではありません。</div><h2 id=始める前に>始める前に</h2><p>Kubernetesクラスターが必要、かつそのクラスターと通信するためにkubectlコマンドラインツールが設定されている必要があります。
+このチュートリアルは、コントロールプレーンのホストとして動作していない少なくとも2つのノードを持つクラスターで実行することをおすすめします。
+まだクラスターがない場合、<a href=https://minikube.sigs.k8s.io/docs/tutorials/multi_node/>minikube</a>を使って作成するか、
+以下のいずれかのKubernetesプレイグラウンドも使用できます:</p><ul><li><a href=https://killercoda.com/playgrounds/scenario/kubernetes>Killercoda</a></li><li><a href=http://labs.play-with-k8s.com/>Play with Kubernetes</a></li></ul><p><a class=glossary-tooltip title='A command line tool for communicating with a Kubernetes cluster.' data-toggle=tooltip data-placement=top href=/docs/user-guide/kubectl-overview/ target=_blank aria-label=kubectl>kubectl</a>がインストールされているか確認するため、<code>kubectl version --client</code>を実行してください。kubectlのバージョンは、クラスターのAPIサーバーの<a href=/ja/docs/setup/release/version-skew-policy/#kubectl>1つのマイナーバージョン内</a>である必要があります。</p><h2 id=クラスター-ユーザー-コンテキストを設定する>クラスター、ユーザー、コンテキストを設定する</h2><p>例として、開発用のクラスターが一つ、実験用のクラスターが一つ、計二つのクラスターが存在する場合を考えます。<code>development</code>と呼ばれる開発用のクラスター内では、フロントエンドの開発者は<code>frontend</code>というnamespace内で、ストレージの開発者は<code>storage</code>というnamespace内で作業をします。<code>scratch</code>と呼ばれる実験用のクラスター内では、開発者はデフォルトのnamespaceで作業をするか、状況に応じて追加のnamespaceを作成します。開発用のクラスターは証明書を通しての認証を必要とします。実験用のクラスターはユーザーネームとパスワードを通しての認証を必要とします。</p><p><code>config-exercise</code>というディレクトリを作成してください。<code>config-exercise</code>ディレクトリ内に、以下を含む<code>config-demo</code>というファイルを作成してください:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>apiVersion: v1
+</span></span><span style=display:flex><span>kind: Config
+</span></span><span style=display:flex><span>preferences: <span style=color:#666>{}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>clusters:
+</span></span><span style=display:flex><span>- cluster:
+</span></span><span style=display:flex><span>  name: development
+</span></span><span style=display:flex><span>- cluster:
+</span></span><span style=display:flex><span>  name: scratch
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>users:
+</span></span><span style=display:flex><span>- name: developer
+</span></span><span style=display:flex><span>- name: experimenter
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>contexts:
+</span></span><span style=display:flex><span>- context:
+</span></span><span style=display:flex><span>  name: dev-frontend
+</span></span><span style=display:flex><span>- context:
+</span></span><span style=display:flex><span>  name: dev-storage
+</span></span><span style=display:flex><span>- context:
+</span></span><span style=display:flex><span>  name: exp-scratch
+</span></span></code></pre></div><p>設定ファイルには、クラスター、ユーザー、コンテキストの情報が含まれています。上記の<code>config-demo</code>設定ファイルには、二つのクラスター、二人のユーザー、三つのコンテキストの情報が含まれています。</p><p><code>config-exercise</code>ディレクトリに移動してください。クラスター情報を設定ファイルに追加するために、以下のコマンドを実行してください:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl config --kubeconfig<span style=color:#666>=</span>config-demo set-cluster development --server<span style=color:#666>=</span>https://1.2.3.4 --certificate-authority<span style=color:#666>=</span>fake-ca-file
+</span></span><span style=display:flex><span>kubectl config --kubeconfig<span style=color:#666>=</span>config-demo set-cluster scratch --server<span style=color:#666>=</span>https://5.6.7.8 --insecure-skip-tls-verify
+</span></span></code></pre></div><p>ユーザー情報を設定ファイルに追加してください:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl config --kubeconfig<span style=color:#666>=</span>config-demo set-credentials developer --client-certificate<span style=color:#666>=</span>fake-cert-file --client-key<span style=color:#666>=</span>fake-key-seefile
+</span></span><span style=display:flex><span>kubectl config --kubeconfig<span style=color:#666>=</span>config-demo set-credentials experimenter --username<span style=color:#666>=</span>exp --password<span style=color:#666>=</span>some-password
+</span></span></code></pre></div><div class="alert alert-info note callout" role=alert><strong>備考:</strong> <code>kubectl --kubeconfig=config-demo config unset users.&lt;name></code>を実行すると、ユーザーを削除することができます。
+<code>kubectl --kubeconfig=config-demo config unset clusters.&lt;name></code>を実行すると、クラスターを除去することができます。
+<code>kubectl --kubeconfig=config-demo config unset contexts.&lt;name></code>を実行すると、コンテキスト情報を除去することができます。</div><p>コンテキスト情報を設定ファイルに追加してください:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl config --kubeconfig<span style=color:#666>=</span>config-demo set-context dev-frontend --cluster<span style=color:#666>=</span>development --namespace<span style=color:#666>=</span>frontend --user<span style=color:#666>=</span>developer
+</span></span><span style=display:flex><span>kubectl config --kubeconfig<span style=color:#666>=</span>config-demo set-context dev-storage --cluster<span style=color:#666>=</span>development --namespace<span style=color:#666>=</span>storage --user<span style=color:#666>=</span>developer
+</span></span><span style=display:flex><span>kubectl config --kubeconfig<span style=color:#666>=</span>config-demo set-context exp-scratch --cluster<span style=color:#666>=</span>scratch --namespace<span style=color:#666>=</span>default --user<span style=color:#666>=</span>experimenter
+</span></span></code></pre></div><p>追加した情報を確認するために、<code>config-demo</code>ファイルを開いてください。<code>config-demo</code>ファイルを開く代わりに、<code>config view</code>のコマンドを使うこともできます。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl config --kubeconfig<span style=color:#666>=</span>config-demo view
+</span></span></code></pre></div><p>出力には、二つのクラスター、二人のユーザー、三つのコンテキストが表示されます:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>apiVersion: v1
+</span></span><span style=display:flex><span>clusters:
+</span></span><span style=display:flex><span>- cluster:
+</span></span><span style=display:flex><span>    certificate-authority: fake-ca-file
+</span></span><span style=display:flex><span>    server: https://1.2.3.4
+</span></span><span style=display:flex><span>  name: development
+</span></span><span style=display:flex><span>- cluster:
+</span></span><span style=display:flex><span>    insecure-skip-tls-verify: <span style=color:#a2f>true</span>
+</span></span><span style=display:flex><span>    server: https://5.6.7.8
+</span></span><span style=display:flex><span>  name: scratch
+</span></span><span style=display:flex><span>contexts:
+</span></span><span style=display:flex><span>- context:
+</span></span><span style=display:flex><span>    cluster: development
+</span></span><span style=display:flex><span>    namespace: frontend
+</span></span><span style=display:flex><span>    user: developer
+</span></span><span style=display:flex><span>  name: dev-frontend
+</span></span><span style=display:flex><span>- context:
+</span></span><span style=display:flex><span>    cluster: development
+</span></span><span style=display:flex><span>    namespace: storage
+</span></span><span style=display:flex><span>    user: developer
+</span></span><span style=display:flex><span>  name: dev-storage
+</span></span><span style=display:flex><span>- context:
+</span></span><span style=display:flex><span>    cluster: scratch
+</span></span><span style=display:flex><span>    namespace: default
+</span></span><span style=display:flex><span>    user: experimenter
+</span></span><span style=display:flex><span>  name: exp-scratch
+</span></span><span style=display:flex><span>current-context: <span style=color:#b44>&#34;&#34;</span>
+</span></span><span style=display:flex><span>kind: Config
+</span></span><span style=display:flex><span>preferences: <span style=color:#666>{}</span>
+</span></span><span style=display:flex><span>users:
+</span></span><span style=display:flex><span>- name: developer
+</span></span><span style=display:flex><span>  user:
+</span></span><span style=display:flex><span>    client-certificate: fake-cert-file
+</span></span><span style=display:flex><span>    client-key: fake-key-file
+</span></span><span style=display:flex><span>- name: experimenter
+</span></span><span style=display:flex><span>  user:
+</span></span><span style=display:flex><span>    password: some-password
+</span></span><span style=display:flex><span>    username: exp
+</span></span></code></pre></div><p>上記の<code>fake-ca-file</code>、<code>fake-cert-file</code>、<code>fake-key-file</code>は、証明書ファイルの実際のパスのプレースホルダーです。環境内にある証明書ファイルの実際のパスに変更してください。</p><p>証明書ファイルのパスの代わりにbase64にエンコードされたデータを使用したい場合は、キーに<code>-data</code>の接尾辞を加えてください。例えば、<code>certificate-authority-data</code>、<code>client-certificate-data</code>、<code>client-key-data</code>とできます。</p><p>それぞれのコンテキストは、クラスター、ユーザー、namespaceの三つ組からなっています。例えば、<code>dev-frontend</code>は、<code>developer</code>ユーザーの認証情報を使って<code>development</code>クラスターの<code>frontend</code>namespaceへのアクセスを意味しています。</p><p>現在のコンテキストを設定してください:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl config --kubeconfig<span style=color:#666>=</span>config-demo use-context dev-frontend
+</span></span></code></pre></div><p>これ以降実行される<code>kubectl</code>コマンドは、<code>dev-frontend</code>に設定されたクラスターとnamespaceに適用されます。また、<code>dev-frontend</code>に設定されたユーザーの認証情報を使用します。</p><p>現在のコンテキストの設定情報のみを確認するには、<code>--minify</code>フラグを使用してください。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl config --kubeconfig<span style=color:#666>=</span>config-demo view --minify
+</span></span></code></pre></div><p>出力には、<code>dev-frontend</code>の設定情報が表示されます:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>apiVersion: v1
+</span></span><span style=display:flex><span>clusters:
+</span></span><span style=display:flex><span>- cluster:
+</span></span><span style=display:flex><span>    certificate-authority: fake-ca-file
+</span></span><span style=display:flex><span>    server: https://1.2.3.4
+</span></span><span style=display:flex><span>  name: development
+</span></span><span style=display:flex><span>contexts:
+</span></span><span style=display:flex><span>- context:
+</span></span><span style=display:flex><span>    cluster: development
+</span></span><span style=display:flex><span>    namespace: frontend
+</span></span><span style=display:flex><span>    user: developer
+</span></span><span style=display:flex><span>  name: dev-frontend
+</span></span><span style=display:flex><span>current-context: dev-frontend
+</span></span><span style=display:flex><span>kind: Config
+</span></span><span style=display:flex><span>preferences: <span style=color:#666>{}</span>
+</span></span><span style=display:flex><span>users:
+</span></span><span style=display:flex><span>- name: developer
+</span></span><span style=display:flex><span>  user:
+</span></span><span style=display:flex><span>    client-certificate: fake-cert-file
+</span></span><span style=display:flex><span>    client-key: fake-key-file
+</span></span></code></pre></div><p>今度は、実験用のクラスター内でしばらく作業する場合を考えます。</p><p>現在のコンテキストを<code>exp-scratch</code>に切り替えてください:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl config --kubeconfig<span style=color:#666>=</span>config-demo use-context exp-scratch
+</span></span></code></pre></div><p>これ以降実行される<code>kubectl</code>コマンドは、<code>scratch</code>クラスター内のデフォルトnamespaceに適用されます。また、<code>exp-scratch</code>に設定されたユーザーの認証情報を使用します。</p><p>新しく切り替えた<code>exp-scratch</code>の設定を確認してください。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl config --kubeconfig<span style=color:#666>=</span>config-demo view --minify
+</span></span></code></pre></div><p>最後に、<code>development</code>クラスター内の<code>storage</code>namespaceでしばらく作業する場合を考えます。</p><p>現在のコンテキストを<code>dev-storage</code>に切り替えてください:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl config --kubeconfig<span style=color:#666>=</span>config-demo use-context dev-storage
+</span></span></code></pre></div><p>新しく切り替えた<code>dev-storage</code>の設定を確認してください。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl config --kubeconfig<span style=color:#666>=</span>config-demo view --minify
+</span></span></code></pre></div><h2 id=二つ目の設定ファイルを作成する>二つ目の設定ファイルを作成する</h2><p><code>config-exercise</code>ディレクトリ内に、以下を含む<code>config-demo-2</code>というファイルを作成してください:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>apiVersion: v1
+</span></span><span style=display:flex><span>kind: Config
+</span></span><span style=display:flex><span>preferences: <span style=color:#666>{}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>contexts:
+</span></span><span style=display:flex><span>- context:
+</span></span><span style=display:flex><span>    cluster: development
+</span></span><span style=display:flex><span>    namespace: ramp
+</span></span><span style=display:flex><span>    user: developer
+</span></span><span style=display:flex><span>  name: dev-ramp-up
+</span></span></code></pre></div><p>上記の設定ファイルは、<code>dev-ramp-up</code>というコンテキストを表します。</p><h2 id=set-the-kubeconfig-environment-variable>KUBECONFIG環境変数を設定する</h2><p><code>KUBECONFIG</code>という環境変数が存在するかを確認してください。もし存在する場合は、後で復元できるようにバックアップしてください。例えば:</p><h3 id=linux>Linux</h3><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f>export</span> <span style=color:#b8860b>KUBECONFIG_SAVED</span><span style=color:#666>=</span><span style=color:#b8860b>$KUBECONFIG</span>
+</span></span></code></pre></div><h3 id=windows-powershell>Windows PowerShell</h3><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#b8860b>$Env</span>:KUBECONFIG_SAVED<span style=color:#666>=</span><span style=color:#b8860b>$ENV</span>:KUBECONFIG
+</span></span></code></pre></div><p><code>KUBECONFIG</code>環境変数は、設定ファイルのパスのリストです。リスト内のパスはLinuxとMacではコロンで区切られ、Windowsではセミコロンで区切られます。<code>KUBECONFIG</code>環境変数が存在する場合は、リスト内の設定ファイルの内容を確認してください。</p><p>一時的に<code>KUBECONFIG</code>環境変数に以下の二つのパスを追加してください。例えば:<br></p><h3 id=linux-1>Linux</h3><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f>export</span> <span style=color:#b8860b>KUBECONFIG</span><span style=color:#666>=</span><span style=color:#b8860b>$KUBECONFIG</span>:config-demo:config-demo-2
+</span></span></code></pre></div><h3 id=windows-powershell-1>Windows PowerShell</h3><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#b8860b>$Env</span>:KUBECONFIG<span style=color:#666>=(</span><span style=color:#b44>&#34;config-demo;config-demo-2&#34;</span><span style=color:#666>)</span>
+</span></span></code></pre></div><p><code>config-exercise</code>ディレクトリ内から、以下のコマンドを実行してください:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl config view
+</span></span></code></pre></div><p>出力には、<code>KUBECONFIG</code>環境変数に含まれる全てのファイルの情報がまとめて表示されます。<code>config-demo-2</code>ファイルに設定された<code>dev-ramp-up</code>の情報と、<code>config-demo</code>に設定された三つのコンテキストの情報がまとめてあることに注目してください:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>contexts:
+</span></span><span style=display:flex><span>- context:
+</span></span><span style=display:flex><span>    cluster: development
+</span></span><span style=display:flex><span>    namespace: frontend
+</span></span><span style=display:flex><span>    user: developer
+</span></span><span style=display:flex><span>  name: dev-frontend
+</span></span><span style=display:flex><span>- context:
+</span></span><span style=display:flex><span>    cluster: development
+</span></span><span style=display:flex><span>    namespace: ramp
+</span></span><span style=display:flex><span>    user: developer
+</span></span><span style=display:flex><span>  name: dev-ramp-up
+</span></span><span style=display:flex><span>- context:
+</span></span><span style=display:flex><span>    cluster: development
+</span></span><span style=display:flex><span>    namespace: storage
+</span></span><span style=display:flex><span>    user: developer
+</span></span><span style=display:flex><span>  name: dev-storage
+</span></span><span style=display:flex><span>- context:
+</span></span><span style=display:flex><span>    cluster: scratch
+</span></span><span style=display:flex><span>    namespace: default
+</span></span><span style=display:flex><span>    user: experimenter
+</span></span><span style=display:flex><span>  name: exp-scratch
+</span></span></code></pre></div><p>kubeconfigファイルに関するさらなる情報を参照するには、<a href=/ja/docs/concepts/configuration/organize-cluster-access-kubeconfig/>kubeconfigファイルを使ってクラスターへのアクセスを管理する</a>を参照してください。</p><h2 id=home-kubeディレクトリの内容を確認する>$HOME/.kubeディレクトリの内容を確認する</h2><p>既にクラスターを所持していて、<code>kubectl</code>を使ってクラスターを操作できる場合は、<code>$HOME/.kube</code>ディレクトリ内に<code>config</code>というファイルが存在する可能性が高いです。</p><p><code>$HOME/.kube</code>に移動して、そこに存在するファイルを確認してください。<code>config</code>という設定ファイルが存在するはずです。他の設定ファイルも存在する可能性があります。全てのファイルの中身を確認してください。</p><h2 id=home-kube-configをkubeconfig環境変数に追加する>$HOME/.kube/configをKUBECONFIG環境変数に追加する</h2><p>もし<code>$HOME/.kube/config</code>ファイルが存在していて、既に<code>KUBECONFIG</code>環境変数に追加されていない場合は、<code>KUBECONFIG</code>環境変数に追加してください。例えば:</p><h3 id=linux-2>Linux</h3><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f>export</span> <span style=color:#b8860b>KUBECONFIG</span><span style=color:#666>=</span><span style=color:#b8860b>$KUBECONFIG</span>:<span style=color:#b8860b>$HOME</span>/.kube/config
+</span></span></code></pre></div><h3 id=windows-powershell-2>Windows Powershell</h3><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#b8860b>$Env</span>:KUBECONFIG<span style=color:#666>=</span><span style=color:#b44>&#34;</span><span style=color:#b8860b>$Env</span><span style=color:#b44>:KUBECONFIG;</span><span style=color:#b8860b>$HOME</span><span style=color:#b44>/.kube/config&#34;</span>
+</span></span></code></pre></div><p><code>KUBECONFIG</code>環境変数内のファイルからまとめられた設定情報を確認してください。<code>config-exercise</code>ディレクトリ内から、以下のコマンドを実行してください:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl config view
+</span></span></code></pre></div><h2 id=クリーンアップ>クリーンアップ</h2><p><code>KUBECONFIG</code>環境変数を元に戻してください。例えば:</p><h3 id=linux-3>Linux:</h3><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f>export</span> <span style=color:#b8860b>KUBECONFIG</span><span style=color:#666>=</span><span style=color:#b8860b>$KUBECONFIG_SAVED</span>
+</span></span></code></pre></div><h3 id=windows-powershell-3>Windows PowerShell</h3><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#b8860b>$Env</span>:KUBECONFIG<span style=color:#666>=</span><span style=color:#b8860b>$ENV</span>:KUBECONFIG_SAVED
+</span></span></code></pre></div><h2 id=次の項目>次の項目</h2><ul><li><a href=/docs/concepts/configuration/organize-cluster-access-kubeconfig/>kubeconfigファイルを使ってクラスターへのアクセスを管理する</a></li><li><a href=/docs/reference/generated/kubectl/kubectl-commands#config>kubectl config</a></li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-312f29f850826b74618634cd877aa065>3 - Serviceを利用したクラスター内のアプリケーションへのアクセス</h1><p>ここでは、クラスター内で稼働しているアプリケーションに外部からアクセスするために、KubernetesのServiceオブジェクトを作成する方法を紹介します。
+例として、2つのインスタンスから成るアプリケーションへのロードバランシングを扱います。</p><h2 id=始める前に>始める前に</h2><p><p>Kubernetesクラスターが必要、かつそのクラスターと通信するためにkubectlコマンドラインツールが設定されている必要があります。
+このチュートリアルは、コントロールプレーンのホストとして動作していない少なくとも2つのノードを持つクラスターで実行することをおすすめします。
+まだクラスターがない場合、<a href=https://minikube.sigs.k8s.io/docs/tutorials/multi_node/>minikube</a>を使って作成するか、
+以下のいずれかのKubernetesプレイグラウンドも使用できます:</p><ul><li><a href=https://killercoda.com/playgrounds/scenario/kubernetes>Killercoda</a></li><li><a href=http://labs.play-with-k8s.com/>Play with Kubernetes</a></li></ul>バージョンを確認するには次のコマンドを実行してください: <code>kubectl version</code>.</p><h2 id=目標>目標</h2><ul><li>2つのHello Worldアプリケーションを稼働させる。</li><li>Nodeのポートを公開するServiceオブジェクトを作成する。</li><li>稼働しているアプリケーションにアクセスするためにServiceオブジェクトを使用する。</li></ul><h2 id=2つのpodから成るアプリケーションのserviceを作成>2つのPodから成るアプリケーションのServiceを作成</h2><p>アプリケーションDeploymentの設定ファイルは以下の通りです:</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/ja/examples/service/access/hello-application.yaml download=service/access/hello-application.yaml><code>service/access/hello-application.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("service-access-hello-application-yaml")' title="Copy service/access/hello-application.yaml to clipboard"></img></div><div class=includecode id=service-access-hello-application-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>apps/v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Deployment<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>hello-world<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>selector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>matchLabels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>run</span>:<span style=color:#bbb> </span>load-balancer-example<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>replicas</span>:<span style=color:#bbb> </span><span style=color:#666>2</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>template</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>run</span>:<span style=color:#bbb> </span>load-balancer-example<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>hello-world<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>gcr.io/google-samples/node-hello:1.0<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>ports</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span>- <span style=color:green;font-weight:700>containerPort</span>:<span style=color:#bbb> </span><span style=color:#666>8080</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>              </span><span style=color:green;font-weight:700>protocol</span>:<span style=color:#bbb> </span>TCP<span style=color:#bbb>
+</span></span></span></code></pre></div></div></div><ol><li><p>クラスタでHello Worldアプリケーションを稼働させます:
+上記のファイルを使用し、アプリケーションのDeploymentを作成します:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -f https://k8s.io/examples/service/access/hello-application.yaml
+</span></span></code></pre></div><p>このコマンドは<a class=glossary-tooltip title=クラスター上の複製されたアプリケーションを管理します。 data-toggle=tooltip data-placement=top href=/ja/docs/concepts/workloads/controllers/deployment/ target=_blank aria-label=Deployment>Deployment</a>オブジェクトとそれに紐付く<a class=glossary-tooltip title=ReplicaSetは、指定された数のPodレプリカが一度に動作するように保証します。 data-toggle=tooltip data-placement=top href=/ja/docs/concepts/workloads/controllers/replicaset/ target=_blank aria-label=ReplicaSet>ReplicaSet</a>オブジェクトを作成します。ReplicaSetは、Hello Worldアプリケーションが稼働している2つの<a class=glossary-tooltip title='一番小さく一番シンプルな Kubernetes のオブジェクト。Pod とはクラスターで動作しているいくつかのコンテナのまとまりです。' data-toggle=tooltip data-placement=top href=/ja/docs/concepts/workloads/pods/pod-overview/ target=_blank aria-label=Pod>Pod</a>から構成されます。</p></li><li><p>Deploymentの情報を表示します:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get deployments hello-world
+</span></span><span style=display:flex><span>kubectl describe deployments hello-world
+</span></span></code></pre></div></li><li><p>ReplicaSetオブジェクトの情報を表示します:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get replicasets
+</span></span><span style=display:flex><span>kubectl describe replicasets
+</span></span></code></pre></div></li><li><p>Deploymentを公開するServiceオブジェクトを作成します:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl expose deployment hello-world --type<span style=color:#666>=</span>NodePort --name<span style=color:#666>=</span>example-service
+</span></span></code></pre></div></li><li><p>Serviceに関する情報を表示します:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl describe services example-service
+</span></span></code></pre></div><p>出力例は以下の通りです:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>Name:                   example-service
+</span></span><span style=display:flex><span>Namespace:              default
+</span></span><span style=display:flex><span>Labels:                 <span style=color:#b8860b>run</span><span style=color:#666>=</span>load-balancer-example
+</span></span><span style=display:flex><span>Annotations:            &lt;none&gt;
+</span></span><span style=display:flex><span>Selector:               <span style=color:#b8860b>run</span><span style=color:#666>=</span>load-balancer-example
+</span></span><span style=display:flex><span>Type:                   NodePort
+</span></span><span style=display:flex><span>IP:                     10.32.0.16
+</span></span><span style=display:flex><span>Port:                   &lt;unset&gt; 8080/TCP
+</span></span><span style=display:flex><span>TargetPort:             8080/TCP
+</span></span><span style=display:flex><span>NodePort:               &lt;unset&gt; 31496/TCP
+</span></span><span style=display:flex><span>Endpoints:              10.200.1.4:8080,10.200.2.5:8080
+</span></span><span style=display:flex><span>Session Affinity:       None
+</span></span><span style=display:flex><span>Events:                 &lt;none&gt;
+</span></span></code></pre></div><p>NodePortの値を記録しておきます。上記の例では、31496です。</p></li><li><p>Hello Worldアプリーションが稼働しているPodを表示します:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pods --selector<span style=color:#666>=</span><span style=color:#b44>&#34;run=load-balancer-example&#34;</span> --output<span style=color:#666>=</span>wide
+</span></span></code></pre></div><p>出力例は以下の通りです:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>NAME                           READY   STATUS    ...  IP           NODE
+</span></span><span style=display:flex><span>hello-world-2895499144-bsbk5   1/1     Running   ...  10.200.1.4   worker1
+</span></span><span style=display:flex><span>hello-world-2895499144-m1pwt   1/1     Running   ...  10.200.2.5   worker2
+</span></span></code></pre></div></li><li><p>Hello World podが稼働するNodeのうち、いずれか1つのパブリックIPアドレスを確認します。
+確認方法は、使用している環境により異なります。
+例として、Minikubeの場合は<code>kubectl cluster-info</code>、Google Compute Engineの場合は<code>gcloud compute instances list</code>によって確認できます。</p></li><li><p>選択したノード上で、NodePortの値でのTCP通信を許可するファイヤーウォールを作成します。
+NodePortの値が31568の場合、31568番のポートを利用したTCP通信を許可するファイヤーウォールを作成します。
+クラウドプロバイダーによって設定方法が異なります。</p></li><li><p>Hello World applicationにアクセスするために、Nodeのアドレスとポート番号を使用します:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>curl http://&lt;public-node-ip&gt;:&lt;node-port&gt;
+</span></span></code></pre></div><p>ここで <code>&lt;public-node-ip></code> はNodeのパブリックIPアドレス、
+<code>&lt;node-port></code> はNodePort Serviceのポート番号の値を表しています。
+リクエストが成功すると、下記のメッセージが表示されます:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>Hello Kubernetes!
+</span></span></code></pre></div></li></ol><h2 id=service-configuration-fileの利用>service configuration fileの利用</h2><p><code>kubectl expose</code>コマンドの代わりに、
+<a href=/ja/docs/concepts/services-networking/service/>service configuration file</a>
+を使用してServiceを作成することもできます。</p><h2 id=クリーンアップ>クリーンアップ</h2><p>Serviceを削除するには、以下のコマンドを実行します:</p><pre><code>kubectl delete services example-service
+</code></pre><p>Hello Worldアプリケーションが稼働しているDeployment、ReplicaSet、Podを削除するには、以下のコマンドを実行します:</p><pre><code>kubectl delete deployment hello-world
+</code></pre><h2 id=次の項目>次の項目</h2><p>詳細は
+<a href=/ja/docs/concepts/services-networking/connect-applications-service/>serviceを利用してアプリケーションと接続する</a>
+を確認してください。</p></div><div class=td-content style=page-break-before:always><h1 id=pg-f3dac629bea950fc026d920306f09fb4>4 - Serviceを使用してフロントエンドをバックエンドに接続する</h1><p>このタスクでは、フロントエンドとバックエンドのマイクロサービスを作成する方法を示します。
+バックエンドのマイクロサービスは挨拶です。
+フロントエンドとバックエンドは、Kubernetes <a class=glossary-tooltip title=Podの集合で実行されているアプリケーションをネットワークサービスとして公開する方法。 data-toggle=tooltip data-placement=top href=/ja/docs/concepts/services-networking/service/ target=_blank aria-label=Service>Service</a>オブジェクトを使用して接続されます。</p><h2 id=目標>目標</h2><ul><li><a class=glossary-tooltip title=クラスター上の複製されたアプリケーションを管理します。 data-toggle=tooltip data-placement=top href=/ja/docs/concepts/workloads/controllers/deployment/ target=_blank aria-label=Deployment>Deployment</a>オブジェクトを使用してマイクロサービスを作成および実行します。</li><li>フロントエンドを経由してトラフィックをバックエンドにルーティングします。</li><li>Serviceオブジェクトを使用して、フロントエンドアプリケーションをバックエンドアプリケーションに接続します。</li></ul><h2 id=始める前に>始める前に</h2><p><p>Kubernetesクラスターが必要、かつそのクラスターと通信するためにkubectlコマンドラインツールが設定されている必要があります。
+このチュートリアルは、コントロールプレーンのホストとして動作していない少なくとも2つのノードを持つクラスターで実行することをおすすめします。
+まだクラスターがない場合、<a href=https://minikube.sigs.k8s.io/docs/tutorials/multi_node/>minikube</a>を使って作成するか、
+以下のいずれかのKubernetesプレイグラウンドも使用できます:</p><ul><li><a href=https://killercoda.com/playgrounds/scenario/kubernetes>Killercoda</a></li><li><a href=http://labs.play-with-k8s.com/>Play with Kubernetes</a></li></ul>バージョンを確認するには次のコマンドを実行してください: <code>kubectl version</code>.</p><p>このタスクでは<a href=/docs/tasks/access-application-cluster/create-external-load-balancer/>Serviceで外部ロードバランサー</a>を使用しますが、外部ロードバランサーの使用がサポートされている環境である必要があります。
+ご使用の環境がこれをサポートしていない場合は、代わりにタイプ<a href=/ja/docs/concepts/services-networking/service/#nodeport>NodePort</a>のServiceを使用できます。</p><h2 id=deploymentを使用したバックエンドの作成>Deploymentを使用したバックエンドの作成</h2><p>バックエンドは、単純な挨拶マイクロサービスです。
+バックエンドのDeploymentの構成ファイルは次のとおりです:</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/ja/examples/service/access/hello.yaml download=service/access/hello.yaml><code>service/access/hello.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("service-access-hello-yaml")' title="Copy service/access/hello.yaml to clipboard"></img></div><div class=includecode id=service-access-hello-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>apps/v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Deployment<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>hello<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>selector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>matchLabels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>app</span>:<span style=color:#bbb> </span>hello<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>tier</span>:<span style=color:#bbb> </span>backend<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>track</span>:<span style=color:#bbb> </span>stable<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>replicas</span>:<span style=color:#bbb> </span><span style=color:#666>7</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>template</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>app</span>:<span style=color:#bbb> </span>hello<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>tier</span>:<span style=color:#bbb> </span>backend<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>track</span>:<span style=color:#bbb> </span>stable<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>hello<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;gcr.io/google-samples/hello-go-gke:1.0&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>ports</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>http<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>              </span><span style=color:green;font-weight:700>containerPort</span>:<span style=color:#bbb> </span><span style=color:#666>80</span><span style=color:#bbb>
+</span></span></span></code></pre></div></div></div><p>バックエンドのDeploymentを作成します:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -f https://k8s.io/examples/service/access/hello.yaml
+</span></span></code></pre></div><p>バックエンドのDeploymentに関する情報を表示します:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl describe deployment hello
+</span></span></code></pre></div><p>出力はこのようになります:</p><pre tabindex=0><code>Name:                           hello
+Namespace:                      default
+CreationTimestamp:              Mon, 24 Oct 2016 14:21:02 -0700
+Labels:                         app=hello
+                                tier=backend
+                                track=stable
+Annotations:                    deployment.kubernetes.io/revision=1
+Selector:                       app=hello,tier=backend,track=stable
+Replicas:                       7 desired | 7 updated | 7 total | 7 available | 0 unavailable
+StrategyType:                   RollingUpdate
+MinReadySeconds:                0
+RollingUpdateStrategy:          1 max unavailable, 1 max surge
+Pod Template:
+  Labels:       app=hello
+                tier=backend
+                track=stable
+  Containers:
+   hello:
+    Image:              &#34;gcr.io/google-samples/hello-go-gke:1.0&#34;
+    Port:               80/TCP
+    Environment:        &lt;none&gt;
+    Mounts:             &lt;none&gt;
+  Volumes:              &lt;none&gt;
+Conditions:
+  Type          Status  Reason
+  ----          ------  ------
+  Available     True    MinimumReplicasAvailable
+  Progressing   True    NewReplicaSetAvailable
+OldReplicaSets:                 &lt;none&gt;
+NewReplicaSet:                  hello-3621623197 (7/7 replicas created)
+Events:
+...
+</code></pre><h2 id=バックエンドserviceオブジェクトの作成>バックエンドServiceオブジェクトの作成</h2><p>フロントエンドをバックエンドに接続する鍵は、バックエンドServiceです。
+Serviceは、バックエンドマイクロサービスに常に到達できるように、永続的なIPアドレスとDNS名のエントリを作成します。
+Serviceは<a class=glossary-tooltip title=セレクターを利用すると、ユーザーはラベルに基づいてリソースのリストをフィルタリングできます。 data-toggle=tooltip data-placement=top href=/docs/concepts/overview/working-with-objects/labels/ target=_blank aria-label=セレクター>セレクター</a>を使用して、トラフィックをルーティングするPodを見つけます。</p><p>まず、Service構成ファイルを調べます:</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/ja/examples/service/access/hello-service.yaml download=service/access/hello-service.yaml><code>service/access/hello-service.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("service-access-hello-service-yaml")' title="Copy service/access/hello-service.yaml to clipboard"></img></div><div class=includecode id=service-access-hello-service-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Service<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>hello<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>selector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>app</span>:<span style=color:#bbb> </span>hello<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>tier</span>:<span style=color:#bbb> </span>backend<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>ports</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>protocol</span>:<span style=color:#bbb> </span>TCP<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>port</span>:<span style=color:#bbb> </span><span style=color:#666>80</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>targetPort</span>:<span style=color:#bbb> </span>http<span style=color:#bbb>
+</span></span></span></code></pre></div></div></div><p>設定ファイルで、Serviceが<code>app：hello</code>および<code>tier：backend</code>というラベルを持つPodにトラフィックをルーティングしていることがわかります。</p><p><code>hello</code> Serviceを作成します:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -f https://k8s.io/examples/service/access/hello-service.yaml
+</span></span></code></pre></div><p>この時点で、バックエンドのDeploymentが実行され、そちらにトラフィックをルーティングできるServiceがあります。</p><h2 id=フロントエンドの作成>フロントエンドの作成</h2><p>バックエンドができたので、バックエンドに接続するフロントエンドを作成できます。
+フロントエンドは、バックエンドServiceに指定されたDNS名を使用して、バックエンドワーカーPodに接続します。
+DNS名は<code>hello</code>です。これは、前のサービス設定ファイルの<code>name</code>フィールドの値です。</p><p>フロントエンドDeploymentのPodは、helloバックエンドServiceを見つけるように構成されたnginxイメージを実行します。
+これはnginx設定ファイルです:</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/ja/examples/service/access/frontend.conf download=service/access/frontend.conf><code>service/access/frontend.conf</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("service-access-frontend-conf")' title="Copy service/access/frontend.conf to clipboard"></img></div><div class=includecode id=service-access-frontend-conf><pre tabindex=0><code class=language-conf data-lang=conf>upstream hello {
+    server hello;
+}
+
+server {
+    listen 80;
+
+    location / {
+        proxy_pass http://hello;
+    }
+}
+</code></pre></div></div><p>バックエンドと同様に、フロントエンドにはDeploymentとServiceがあります。
+Serviceの設定には<code>type：LoadBalancer</code>があります。これは、Serviceがクラウドプロバイダーのデフォルトのロードバランサーを使用することを意味します。</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/ja/examples/service/access/frontend.yaml download=service/access/frontend.yaml><code>service/access/frontend.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("service-access-frontend-yaml")' title="Copy service/access/frontend.yaml to clipboard"></img></div><div class=includecode id=service-access-frontend-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Service<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>frontend<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>selector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>app</span>:<span style=color:#bbb> </span>hello<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>tier</span>:<span style=color:#bbb> </span>frontend<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>ports</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>protocol</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;TCP&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>port</span>:<span style=color:#bbb> </span><span style=color:#666>80</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>targetPort</span>:<span style=color:#bbb> </span><span style=color:#666>80</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>type</span>:<span style=color:#bbb> </span>LoadBalancer<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#00f;font-weight:700>---</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>apps/v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Deployment<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>frontend<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>selector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>matchLabels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>app</span>:<span style=color:#bbb> </span>hello<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>tier</span>:<span style=color:#bbb> </span>frontend<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>track</span>:<span style=color:#bbb> </span>stable<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>replicas</span>:<span style=color:#bbb> </span><span style=color:#666>1</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>template</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>app</span>:<span style=color:#bbb> </span>hello<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>tier</span>:<span style=color:#bbb> </span>frontend<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>track</span>:<span style=color:#bbb> </span>stable<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>nginx<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;gcr.io/google-samples/hello-frontend:1.0&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>lifecycle</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>preStop</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>exec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>              </span><span style=color:green;font-weight:700>command</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;/usr/sbin/nginx&#34;</span>,<span style=color:#b44>&#34;-s&#34;</span>,<span style=color:#b44>&#34;quit&#34;</span>]<span style=color:#bbb>
+</span></span></span></code></pre></div></div></div><p>フロントエンドのDeploymentとServiceを作成します:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -f https://k8s.io/examples/service/access/frontend.yaml
+</span></span></code></pre></div><p>出力結果から両方のリソースが作成されたことを確認します:</p><pre tabindex=0><code>deployment.apps/frontend created
+service/frontend created
+</code></pre><div class="alert alert-info note callout" role=alert><strong>備考:</strong> nginxの構成は、<a href=/examples/service/access/Dockerfile>コンテナイメージ</a>に焼き付けられます。
+これを行うためのより良い方法は、<a href=/ja/docs/tasks/configure-pod-container/configure-pod-configmap/>ConfigMap</a>を使用して、構成をより簡単に変更できるようにすることです。</div><h2 id=フロントエンドserviceと対話>フロントエンドServiceと対話</h2><p>LoadBalancerタイプのServiceを作成したら、このコマンドを使用して外部IPを見つけることができます:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get service frontend --watch
+</span></span></code></pre></div><p>これにより<code>frontend</code> Serviceの設定が表示され、変更が監視されます。
+最初、外部IPは<code>&lt;pending></code>としてリストされます:</p><pre tabindex=0><code>NAME       TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)  AGE
+frontend   LoadBalancer   10.51.252.116   &lt;pending&gt;     80/TCP   10s
+</code></pre><p>ただし、外部IPがプロビジョニングされるとすぐに、<code>EXTERNAL-IP</code>という見出しの下に新しいIPが含まれるように構成が更新されます:</p><pre tabindex=0><code>NAME       TYPE           CLUSTER-IP      EXTERNAL-IP        PORT(S)  AGE
+frontend   LoadBalancer   10.51.252.116   XXX.XXX.XXX.XXX    80/TCP   1m
+</code></pre><p>このIPを使用して、クラスターの外部から<code>frontend</code> Serviceとやり取りできるようになりました。</p><h2 id=フロントエンドを介するトラフィック送信>フロントエンドを介するトラフィック送信</h2><p>フロントエンドとバックエンドが接続されました。
+フロントエンドServiceの外部IPに対してcurlコマンドを使用して、エンドポイントにアクセスできます。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>curl http://<span style=color:#b68;font-weight:700>${</span><span style=color:#b8860b>EXTERNAL_IP</span><span style=color:#b68;font-weight:700>}</span> <span style=color:#080;font-style:italic># これを前に見たEXTERNAL-IPに置き換えます</span>
+</span></span></code></pre></div><p>出力には、バックエンドによって生成されたメッセージが表示されます:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{<span style=color:green;font-weight:700>&#34;message&#34;</span>:<span style=color:#b44>&#34;Hello&#34;</span>}
+</span></span></code></pre></div><h2 id=クリーンアップ>クリーンアップ</h2><p>Serviceを削除するには、このコマンドを入力してください：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl delete services frontend hello
+</span></span></code></pre></div><p>バックエンドとフロントエンドアプリケーションを実行しているDeploymentとReplicaSetとPodを削除するために、このコマンドを入力してください：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl delete deployment frontend hello
+</span></span></code></pre></div><h2 id=次の項目>次の項目</h2><ul><li><a href=/ja/docs/concepts/services-networking/service/>Service</a>の詳細</li><li><a href=/docs/tasks/configure-pod-container/configure-pod-configmap/>ConfigMap</a>の詳細</li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-1839d8468a083839ed1cc8d18fe1142e>5 - Minikube上でNGINX Ingressコントローラーを使用してIngressをセットアップする</h1><p><a href=/ja/docs/concepts/services-networking/ingress/>Ingress</a>とは、クラスター内のServiceに外部からのアクセスを許可するルールを定義するAPIオブジェクトです。<a href=/ja/docs/concepts/services-networking/ingress-controllers/>Ingressコントローラー</a>はIngress内に設定されたルールを満たすように動作します。</p><p>このページでは、簡単なIngressをセットアップして、HTTPのURIに応じてwebまたはweb2というServiceにリクエストをルーティングする方法を説明します。</p><h2 id=始める前に>始める前に</h2><p><p>Kubernetesクラスターが必要、かつそのクラスターと通信するためにkubectlコマンドラインツールが設定されている必要があります。
+このチュートリアルは、コントロールプレーンのホストとして動作していない少なくとも2つのノードを持つクラスターで実行することをおすすめします。
+まだクラスターがない場合、<a href=https://minikube.sigs.k8s.io/docs/tutorials/multi_node/>minikube</a>を使って作成するか、
+以下のいずれかのKubernetesプレイグラウンドも使用できます:</p><ul><li><a href=https://killercoda.com/playgrounds/scenario/kubernetes>Killercoda</a></li><li><a href=http://labs.play-with-k8s.com/>Play with Kubernetes</a></li></ul>バージョンを確認するには次のコマンドを実行してください: <code>kubectl version</code>.</p><h2 id=minikubeクラスターを作成する>Minikubeクラスターを作成する</h2><ol><li><p><strong>Launch Terminal</strong>をクリックします。</p><script defer src=https://katacoda.com/embed.js></script>
+<button class=button onclick=window.katacoda.init()>Launch Terminal</button></li><li><p>(オプション) Minikubeをローカル環境にインストールした場合は、次のコマンドを実行します。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>minikube start
+</span></span></code></pre></div></li></ol><h2 id=ingressコントローラーを有効化する>Ingressコントローラーを有効化する</h2><ol><li><p>NGINX Ingressコントローラーを有効にするために、次のコマンドを実行します。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>minikube addons <span style=color:#a2f>enable</span> ingress
+</span></span></code></pre></div></li><li><p>NGINX Ingressコントローラーが起動したことを確認します。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pods -n kube-system
+</span></span></code></pre></div><div class="alert alert-info note callout" role=alert><strong>備考:</strong> このコマンドの実行には数分かかる場合があります。</div><p>出力は次のようになります。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>NAME                                        READY     STATUS    RESTARTS   AGE
+</span></span><span style=display:flex><span>default-http-backend-59868b7dd6-xb8tq       1/1       Running   <span style=color:#666>0</span>          1m
+</span></span><span style=display:flex><span>kube-addon-manager-minikube                 1/1       Running   <span style=color:#666>0</span>          3m
+</span></span><span style=display:flex><span>kube-dns-6dcb57bcc8-n4xd4                   3/3       Running   <span style=color:#666>0</span>          2m
+</span></span><span style=display:flex><span>kubernetes-dashboard-5498ccf677-b8p5h       1/1       Running   <span style=color:#666>0</span>          2m
+</span></span><span style=display:flex><span>nginx-ingress-controller-5984b97644-rnkrg   1/1       Running   <span style=color:#666>0</span>          1m
+</span></span><span style=display:flex><span>storage-provisioner                         1/1       Running   <span style=color:#666>0</span>          2m
+</span></span></code></pre></div></li></ol><h2 id=hello-worldアプリをデプロイする>Hello Worldアプリをデプロイする</h2><ol><li><p>次のコマンドを実行して、Deploymentを作成します。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create deployment web --image<span style=color:#666>=</span>gcr.io/google-samples/hello-app:1.0
+</span></span></code></pre></div><p>出力は次のようになります。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>deployment.apps/web created
+</span></span></code></pre></div></li><li><p>Deploymentを公開します。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl expose deployment web --type<span style=color:#666>=</span>NodePort --port<span style=color:#666>=</span><span style=color:#666>8080</span>
+</span></span></code></pre></div><p>出力は次のようになります。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>service/web exposed
+</span></span></code></pre></div></li><li><p>Serviceが作成され、NodePort上で利用できるようになったことを確認します。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get service web
+</span></span></code></pre></div><p>出力は次のようになります。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>NAME      TYPE       CLUSTER-IP       EXTERNAL-IP   PORT<span style=color:#666>(</span>S<span style=color:#666>)</span>          AGE
+</span></span><span style=display:flex><span>web       NodePort   10.104.133.249   &lt;none&gt;        8080:31637/TCP   12m
+</span></span></code></pre></div></li><li><p>NodePort経由でServiceを訪問します。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>minikube service web --url
+</span></span></code></pre></div><p>出力は次のようになります。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>http://172.17.0.15:31637
+</span></span></code></pre></div><div class="alert alert-info note callout" role=alert><strong>備考:</strong> Katacoda環境の場合のみ: 上部のterminalパネルでプラスのアイコンをクリックして、<strong>Select port to view on Host 1</strong>(Host 1を表示するポートを選択)をクリックします。NodePort(上の例では<code>31637</code>)を入力して、<strong>Display Port</strong>(ポートを表示)をクリックしてください。</div><p>出力は次のようになります。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>Hello, world!
+</span></span><span style=display:flex><span>Version: 1.0.0
+</span></span><span style=display:flex><span>Hostname: web-55b8c6998d-8k564
+</span></span></code></pre></div><p>これで、MinikubeのIPアドレスとNodePort経由で、サンプルアプリにアクセスできるようになりました。次のステップでは、Ingressリソースを使用してアプリにアクセスできるように設定します。</p></li></ol><h2 id=ingressリソースを作成する>Ingressリソースを作成する</h2><p>以下に示すファイルは、hello-world.info経由で送られたトラフィックをServiceに送信するIngressリソースです。</p><ol><li><p>以下の内容で<code>example-ingress.yaml</code>を作成します。</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/ja/examples/service/networking/example-ingress.yaml download=service/networking/example-ingress.yaml><code>service/networking/example-ingress.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("service-networking-example-ingress-yaml")' title="Copy service/networking/example-ingress.yaml to clipboard"></img></div><div class=includecode id=service-networking-example-ingress-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>networking.k8s.io/v1<span style=color:#bbb>
+    </span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Ingress<span style=color:#bbb>
+    </span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+    </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>example-ingress<span style=color:#bbb>
+    </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>annotations</span>:<span style=color:#bbb>
+    </span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>nginx.ingress.kubernetes.io/rewrite-target</span>:<span style=color:#bbb> </span>/$1<span style=color:#bbb>
+    </span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+    </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>rules</span>:<span style=color:#bbb>
+    </span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>host</span>:<span style=color:#bbb> </span>hello-world.info<span style=color:#bbb>
+    </span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>http</span>:<span style=color:#bbb>
+    </span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>paths</span>:<span style=color:#bbb>
+    </span></span></span><span style=display:flex><span><span style=color:#bbb>          </span>- <span style=color:green;font-weight:700>path</span>:<span style=color:#bbb> </span>/<span style=color:#bbb>
+    </span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>pathType</span>:<span style=color:#bbb> </span>Prefix<span style=color:#bbb>
+    </span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>backend</span>:<span style=color:#bbb>
+    </span></span></span><span style=display:flex><span><span style=color:#bbb>              </span><span style=color:green;font-weight:700>service</span>:<span style=color:#bbb>
+    </span></span></span><span style=display:flex><span><span style=color:#bbb>                </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>web<span style=color:#bbb>
+    </span></span></span><span style=display:flex><span><span style=color:#bbb>                </span><span style=color:green;font-weight:700>port</span>:<span style=color:#bbb>
+    </span></span></span><span style=display:flex><span><span style=color:#bbb>                  </span><span style=color:green;font-weight:700>number</span>:<span style=color:#bbb> </span><span style=color:#666>8080</span></span></span></code></pre></div></div></div></li><li><p>次のコマンドを実行して、Ingressリソースを作成します。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -f https://kubernetes.io/examples/service/networking/example-ingress.yaml
+</span></span></code></pre></div><p>出力は次のようになります。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>ingress.networking.k8s.io/example-ingress created
+</span></span></code></pre></div></li><li><p>次のコマンドで、IPアドレスが設定されていることを確認します。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get ingress
+</span></span></code></pre></div><div class="alert alert-info note callout" role=alert><strong>備考:</strong> このコマンドの実行には数分かかる場合があります。</div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>NAME              CLASS    HOSTS              ADDRESS        PORTS   AGE
+</span></span><span style=display:flex><span>example-ingress   &lt;none&gt;   hello-world.info   172.17.0.15    <span style=color:#666>80</span>      38s
+</span></span></code></pre></div></li><li><p>次の行を<code>/etc/hosts</code>ファイルの最後に書きます。</p><div class="alert alert-info note callout" role=alert><strong>備考:</strong> Minikubeをローカル環境で実行している場合、<code>minikube ip</code>コマンドを使用すると外部のIPが取得できます。Ingressのリスト内に表示されるIPアドレスは、内部のIPになるはずです。</div><pre tabindex=0><code>172.17.0.15 hello-world.info
+</code></pre><p>この設定により、リクエストがhello-world.infoからMinikubeに送信されるようになります。</p></li><li><p>Ingressコントローラーがトラフィックを制御していることを確認します。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>curl hello-world.info
+</span></span></code></pre></div><p>出力は次のようになります。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>Hello, world!
+</span></span><span style=display:flex><span>Version: 1.0.0
+</span></span><span style=display:flex><span>Hostname: web-55b8c6998d-8k564
+</span></span></code></pre></div><div class="alert alert-info note callout" role=alert><strong>備考:</strong> Minikubeをローカル環境で実行している場合、ブラウザからhello-world.infoにアクセスできます。</div></li></ol><h2 id=2番目のdeploymentを作成する>2番目のDeploymentを作成する</h2><ol><li><p>次のコマンドを実行して、v2のDeploymentを作成します。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create deployment web2 --image<span style=color:#666>=</span>gcr.io/google-samples/hello-app:2.0
+</span></span></code></pre></div><p>出力は次のようになります。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>deployment.apps/web2 created
+</span></span></code></pre></div></li><li><p>Deploymentを公開します。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl expose deployment web2 --port<span style=color:#666>=</span><span style=color:#666>8080</span> --type<span style=color:#666>=</span>NodePort
+</span></span></code></pre></div><p>出力は次のようになります。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>service/web2 exposed
+</span></span></code></pre></div></li></ol><h2 id=ingressを編集する>Ingressを編集する</h2><ol><li><p>既存の<code>example-ingress.yaml</code>を編集して、以下の行を追加します。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>path</span>:<span style=color:#bbb> </span>/v2<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>pathType</span>:<span style=color:#bbb> </span>Prefix<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>backend</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>service</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>web2<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>port</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>              </span><span style=color:green;font-weight:700>number</span>:<span style=color:#bbb> </span><span style=color:#666>8080</span><span style=color:#bbb>
+</span></span></span></code></pre></div></li><li><p>次のコマンドで変更を適用します。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -f example-ingress.yaml
+</span></span></code></pre></div><p>出力は次のようになります。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>ingress.networking/example-ingress configured
+</span></span></code></pre></div></li></ol><h2 id=ingressを試す>Ingressを試す</h2><ol><li><p>Hello Worldアプリの1番目のバージョンにアクセスします。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>curl hello-world.info
+</span></span></code></pre></div><p>出力は次のようになります。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>Hello, world!
+</span></span><span style=display:flex><span>Version: 1.0.0
+</span></span><span style=display:flex><span>Hostname: web-55b8c6998d-8k564
+</span></span></code></pre></div></li><li><p>Hello Worldアプリの2番目のバージョンにアクセスします。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>curl hello-world.info/v2
+</span></span></code></pre></div><p>出力は次のようになります。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>Hello, world!
+</span></span><span style=display:flex><span>Version: 2.0.0
+</span></span><span style=display:flex><span>Hostname: web2-75cd47646f-t8cjk
+</span></span></code></pre></div><div class="alert alert-info note callout" role=alert><strong>備考:</strong> Minikubeをローカル環境で実行している場合、ブラウザからhello-world.infoおよびhello-world.info/v2にアクセスできます。</div></li></ol><h2 id=次の項目>次の項目</h2><ul><li><a href=/ja/docs/concepts/services-networking/ingress/>Ingress</a>についてさらに学ぶ。</li><li><a href=/ja/docs/concepts/services-networking/ingress-controllers/>Ingressコントローラー</a>についてさらに学ぶ。</li><li><a href=/ja/docs/concepts/services-networking/service/>Service</a>についてさらに学ぶ。</li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-48e8f306f919c5b81265e265a2b76ab4>6 - クラスターで実行されているすべてのコンテナイメージを一覧表示する</h1><p>このページでは、kubectlを使用して、クラスターで実行されているPodのすべてのコンテナイメージを一覧表示する方法を説明します。</p><h2 id=始める前に>始める前に</h2><p><p>Kubernetesクラスターが必要、かつそのクラスターと通信するためにkubectlコマンドラインツールが設定されている必要があります。
+このチュートリアルは、コントロールプレーンのホストとして動作していない少なくとも2つのノードを持つクラスターで実行することをおすすめします。
+まだクラスターがない場合、<a href=https://minikube.sigs.k8s.io/docs/tutorials/multi_node/>minikube</a>を使って作成するか、
+以下のいずれかのKubernetesプレイグラウンドも使用できます:</p><ul><li><a href=https://killercoda.com/playgrounds/scenario/kubernetes>Killercoda</a></li><li><a href=http://labs.play-with-k8s.com/>Play with Kubernetes</a></li></ul>バージョンを確認するには次のコマンドを実行してください: <code>kubectl version</code>.</p><p>この演習では、kubectlを使用してクラスターで実行されているすべてのPodを取得し、出力をフォーマットしてそれぞれのコンテナの一覧を取得します。</p><h2 id=list-all-container-images-in-all-namespaces>すべての名前空間のコンテナイメージを一覧表示する</h2><ul><li><code>kubectl get pods --all-namespaces</code>を使用して、すべての名前空間のPodを取得します</li><li><code>-o jsonpath={.. image}</code>を使用して、コンテナイメージ名のリストのみが含まれるように出力をフォーマットします。これは、返されたjsonの<code>image</code>フィールドを再帰的に解析します。<ul><li>jsonpathの使い方については、<a href=/docs/reference/kubectl/jsonpath/>jsonpathリファレンス</a>を参照してください。</li></ul></li><li><code>tr</code>、<code>sort</code>、<code>uniq</code>などの標準ツールを使用して出力をフォーマットします。<ul><li><code>tr</code>を使用してスペースを改行に置換します。</li><li><code>sort</code>を使用して結果を並べ替えます。</li><li><code>uniq</code>を使用してイメージ数を集計します。</li></ul></li></ul><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pods --all-namespaces -o <span style=color:#b8860b>jsonpath</span><span style=color:#666>=</span><span style=color:#b44>&#34;{..image}&#34;</span> |<span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>tr -s <span style=color:#b44>&#39;[[:space:]]&#39;</span> <span style=color:#b44>&#39;\n&#39;</span> |<span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>sort |<span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>uniq -c
+</span></span></code></pre></div><p>上記のコマンドは、返されるすべてのアイテムについて、<code>image</code>という名前のすべてのフィールドを再帰的に返します。</p><p>別の方法として、Pod内のimageフィールドへの絶対パスを使用することができます。これにより、フィールド名が繰り返されている場合でも正しいフィールドが取得されます。多くのフィールドは与えられたアイテム内で<code>name</code>と呼ばれます:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pods --all-namespaces -o <span style=color:#b8860b>jsonpath</span><span style=color:#666>=</span><span style=color:#b44>&#34;{.items[*].spec.containers[*].image}&#34;</span>
+</span></span></code></pre></div><p>jsonpathは次のように解釈されます:</p><ul><li><code>.items[*]</code>: 各戻り値</li><li><code>.spec</code>: 仕様の取得</li><li><code>.containers[*]</code>: 各コンテナ</li><li><code>.image</code>: イメージの取得</li></ul><div class="alert alert-info note callout" role=alert><strong>備考:</strong> 例えば<code>kubectl get pod nginx</code>のように名前を指定して単一のPodを取得する場合、アイテムのリストではなく単一のPodが返されるので、パスの<code>.items[*]</code>部分は省略してください。</div><h2 id=list-container-images-by-pod>Podごとにコンテナイメージを一覧表示する</h2><p><code>range</code>を使用して要素を個別に繰り返し処理することにより、フォーマットをさらに制御できます。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pods --all-namespaces -o <span style=color:#b8860b>jsonpath</span><span style=color:#666>=</span><span style=color:#b44>&#39;{range .items[*]}{&#34;\n&#34;}{.metadata.name}{&#34;:\t&#34;}{range .spec.containers[*]}{.image}{&#34;, &#34;}{end}{end}&#39;</span> |<span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>sort
+</span></span></code></pre></div><h2 id=list-container-images-filtering-by-pod-namespace>Podのラベルを使用してコンテナイメージ一覧をフィルタリングする</h2><p>特定のラベルに一致するPodのみを対象とするには、-lフラグを使用します。以下は、<code>app=nginx</code>に一致するラベルを持つPodのみに一致します。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pods --all-namespaces -o <span style=color:#b8860b>jsonpath</span><span style=color:#666>=</span><span style=color:#b44>&#34;{..image}&#34;</span> -l <span style=color:#b8860b>app</span><span style=color:#666>=</span>nginx
+</span></span></code></pre></div><h2 id=list-container-images-filtering-by-pod-namespace>Podの名前空間でコンテナイメージ一覧をフィルタリングする</h2><p>特定の名前空間のPodのみを対象とするには、namespaceフラグを使用します。以下は<code>kube-system</code>名前空間のPodのみに一致します。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pods --namespace kube-system -o <span style=color:#b8860b>jsonpath</span><span style=color:#666>=</span><span style=color:#b44>&#34;{..image}&#34;</span>
+</span></span></code></pre></div><h2 id=list-container-images-using-a-go-template-instead-of-jsonpath>jsonpathの代わりにgo-templateを使用してコンテナイメージを一覧表示する</h2><p>jsonpathの代わりに、kubectlは<a href=https://golang.org/pkg/text/template/>go-templates</a>を使用した出力のフォーマットをサポートしています:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pods --all-namespaces -o go-template --template<span style=color:#666>=</span><span style=color:#b44>&#34;{{range .items}}{{range .spec.containers}}{{.image}} {{end}}{{end}}&#34;</span>
+</span></span></code></pre></div><h2 id=次の項目>次の項目</h2><h3 id=参照>参照</h3><ul><li><a href=/docs/reference/kubectl/jsonpath/>jsonpath</a>参照ガイド</li><li><a href=https://golang.org/pkg/text/template/>Go template</a>参照ガイド</li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-7c319a9981586e5fbcfa21b392720650>7 - 共有ボリュームを使用して同じPod内のコンテナ間で通信する</h1><p>このページでは、ボリュームを使用して、同じPodで実行されている2つのコンテナ間で通信する方法を示します。
+コンテナ間で<a href=/ja/docs/tasks/configure-pod-container/share-process-namespace/>プロセス名前空間を共有する</a>ことにより、プロセスが通信できるようにする方法も参照してください。</p><h2 id=始める前に>始める前に</h2><p><p>Kubernetesクラスターが必要、かつそのクラスターと通信するためにkubectlコマンドラインツールが設定されている必要があります。
+このチュートリアルは、コントロールプレーンのホストとして動作していない少なくとも2つのノードを持つクラスターで実行することをおすすめします。
+まだクラスターがない場合、<a href=https://minikube.sigs.k8s.io/docs/tutorials/multi_node/>minikube</a>を使って作成するか、
+以下のいずれかのKubernetesプレイグラウンドも使用できます:</p><ul><li><a href=https://killercoda.com/playgrounds/scenario/kubernetes>Killercoda</a></li><li><a href=http://labs.play-with-k8s.com/>Play with Kubernetes</a></li></ul>バージョンを確認するには次のコマンドを実行してください: <code>kubectl version</code>.</p><h2 id=2つのコンテナを実行するpodの作成>2つのコンテナを実行するPodの作成</h2><p>この演習では、2つのコンテナを実行するPodを作成します。
+2つのコンテナは、通信に使用できるボリュームを共有します。
+これがPodの設定ファイルです:</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/ja/examples/pods/two-container-pod.yaml download=pods/two-container-pod.yaml><code>pods/two-container-pod.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("pods-two-container-pod-yaml")' title="Copy pods/two-container-pod.yaml to clipboard"></img></div><div class=includecode id=pods-two-container-pod-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>two-containers<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>restartPolicy</span>:<span style=color:#bbb> </span>Never<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>volumes</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>shared-data<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>emptyDir</span>:<span style=color:#bbb> </span>{}<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>nginx-container<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>nginx<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>volumeMounts</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>shared-data<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>mountPath</span>:<span style=color:#bbb> </span>/usr/share/nginx/html<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>debian-container<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>debian<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>volumeMounts</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>shared-data<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>mountPath</span>:<span style=color:#bbb> </span>/pod-data<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>command</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;/bin/sh&#34;</span>]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>args</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;-c&#34;</span>,<span style=color:#bbb> </span><span style=color:#b44>&#34;echo Hello from the debian container &gt; /pod-data/index.html&#34;</span>]<span style=color:#bbb>
+</span></span></span></code></pre></div></div></div><p>設定ファイルで、Podに<code>shared-data</code>という名前のボリュームがあることがわかります。</p><p>設定ファイルにリストされている最初のコンテナは、nginxサーバーを実行します。
+共有ボリュームのマウントパスは<code>/usr/share/nginx/html</code>です。
+2番目のコンテナはdebianイメージをベースとしており、<code>/pod-data</code>のマウントパスを持っています。
+2番目のコンテナは次のコマンドを実行してから終了します。</p><pre><code>echo Hello from the debian container &gt; /pod-data/index.html
+</code></pre><p>2番目のコンテナがnginxサーバーのルートディレクトリに<code>index.html</code>ファイルを書き込むことに注意してください。</p><p>Podと2つのコンテナを作成します:</p><pre><code>kubectl apply -f https://k8s.io/examples/pods/two-container-pod.yaml
+</code></pre><p>Podとコンテナに関する情報を表示します:</p><pre><code>kubectl get pod two-containers --output=yaml
+</code></pre><p>こちらは出力の一部です:</p><pre><code>apiVersion: v1
+kind: Pod
+metadata:
+  ...
+  name: two-containers
+  namespace: default
+  ...
+spec:
+  ...
+  containerStatuses:
+
+  - containerID: docker://c1d8abd1 ...
+    image: debian
+    ...
+    lastState:
+      terminated:
+        ...
+    name: debian-container
+    ...
+
+  - containerID: docker://96c1ff2c5bb ...
+    image: nginx
+    ...
+    name: nginx-container
+    ...
+    state:
+      running:
+    ...
+</code></pre><p>debianコンテナが終了し、nginxコンテナがまだ実行されていることがわかります。</p><p>nginxコンテナへのシェルを取得します:</p><pre><code>kubectl exec -it two-containers -c nginx-container -- /bin/bash
+</code></pre><p>シェルで、nginxが実行されていることを確認します:</p><pre><code>root@two-containers:/# apt-get update
+root@two-containers:/# apt-get install curl procps
+root@two-containers:/# ps aux
+</code></pre><p>出力はこのようになります:</p><pre><code>USER       PID  ...  STAT START   TIME COMMAND
+root         1  ...  Ss   21:12   0:00 nginx: master process nginx -g daemon off;
+</code></pre><p>debianコンテナがnginxルートディレクトリに<code>index.html</code>ファイルを作成したことを思い出してください。
+<code>curl</code>を使用して、GETリクエストをnginxサーバーに送信します:</p><pre tabindex=0><code>root@two-containers:/# curl localhost
+</code></pre><p>出力は、nginxがdebianコンテナによって書かれたWebページを提供することを示しています:</p><pre tabindex=0><code>Hello from the debian container
+</code></pre><h2 id=議論>議論</h2><p>Podが複数のコンテナを持つことができる主な理由は、プライマリアプリケーションを支援するヘルパーアプリケーションをサポートするためです。
+ヘルパーアプリケーションの典型的な例は、データプラー、データプッシャー、およびプロキシです。
+多くの場合、ヘルパーアプリケーションとプライマリアプリケーションは互いに通信する必要があります。
+通常、これは、この演習に示すように共有ファイルシステムを介して、またはループバックネットワークインターフェイスであるlocalhostを介して行われます。
+このパターンの例は、新しい更新のためにGitリポジトリをポーリングするヘルパープログラムを伴うWebサーバーです。</p><p>この演習のボリュームは、コンテナがポッドの寿命中に通信する方法を提供します。
+Podを削除して再作成すると、共有ボリュームに保存されているデータはすべて失われます。</p><h2 id=次の項目>次の項目</h2><ul><li><p><a href=https://kubernetes.io/blog/2015/06/the-distributed-system-toolkit-patterns>複合コンテナのパターン</a>の詳細</p></li><li><p><a href=http://www.slideshare.net/Docker/slideshare-burns>モジュラーアーキテクチャ用の複合コンテナ</a>について学ぶ</p></li><li><p><a href=/ja/docs/tasks/configure-pod-container/configure-volume-storage/>ストレージにボリュームを使用するPodの構成</a>を参照</p></li><li><p><a href=/ja/docs/tasks/configure-pod-container/share-process-namespace/>Pod内のコンテナ間でプロセス名前空間を共有するPodの構成</a>を参照</p></li><li><p><a href=/docs/reference/generated/kubernetes-api/v1.25/#volume-v1-core>Volume</a>を参照</p></li><li><p><a href=/docs/reference/generated/kubernetes-api/v1.25/#pod-v1-core>Pod</a>を参照</p></li></ul></div></main></div></div><footer class=d-print-none><div class=footer__links><nav><a class=text-white href=/ja/docs/home/>ホーム</a>
+<a class=text-white href=/ja/blog/>Blogs</a>
+<a class=text-white href=/ja/training/>トレーニング</a>
+<a class=text-white href=/ja/partners/>パートナー</a>
+<a class=text-white href=/ja/community/>コミュニティ</a>
+<a class=text-white href=/ja/case-studies/>ケーススタディ</a></nav></div><div class=container-fluid><div class=row><div class="col-6 col-sm-2 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="User mailing list" aria-label="User mailing list"><a class=text-white target=_blank href=https://discuss.kubernetes.io><i class="fa fa-envelope"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank href=https://twitter.com/kubernetesio><i class="fab fa-twitter"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Calendar aria-label=Calendar><a class=text-white target=_blank href="https://calendar.google.com/calendar/embed?src=calendar%40kubernetes.io"><i class="fas fa-calendar-alt"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Youtube aria-label=Youtube><a class=text-white target=_blank href=https://youtube.com/kubernetescommunity><i class="fab fa-youtube"></i></a></li></ul></div><div class="col-6 col-sm-2 text-right text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank href=https://github.com/kubernetes/kubernetes><i class="fab fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Slack aria-label=Slack><a class=text-white target=_blank href=https://slack.k8s.io><i class="fab fa-slack"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Contribute aria-label=Contribute><a class=text-white target=_blank href=https://git.k8s.io/community/contributors/guide><i class="fas fa-edit"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="Stack Overflow" aria-label="Stack Overflow"><a class=text-white target=_blank href=https://stackoverflow.com/questions/tagged/kubernetes><i class="fab fa-stack-overflow"></i></a></li></ul></div><div class="col-12 col-sm-8 text-center order-sm-2"><small class=text-white>&copy; 2023 The Kubernetes Authors | Documentation Distributed under <a href=https://git.k8s.io/website/LICENSE class=light-text>CC BY 4.0</a></small><br><small class=text-white>Copyright &copy; 2023 The Linux Foundation &reg;. All rights reserved. The Linux Foundation has registered trademarks and uses trademarks. For a list of trademarks of The Linux Foundation, please see our <a href=https://www.linuxfoundation.org/trademark-usage class=light-text>Trademark Usage page</a></small><br><small class=text-white>ICP license: 京ICP备17074266号-3</small></div></div></div></footer></div><script src=/js/jquery-3.6.0.min.js integrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script>
+<script src=/js/popper-1.16.1.min.js intregrity=sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN crossorigin=anonymous></script>
+<script src=/js/bootstrap-4.6.1.min.js integrity=sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2 crossorigin=anonymous></script>
+<script src=/js/script.js></script>
+<script async src=/js/mermaid-8.13.4.min.js integrity=sha384-5hHNvPeMrNH14oM3IcQofDoBhiclNK3g2+hnEinKzQ07C4AliMeVpnvxuiwEGpaO crossorigin=anonymous></script>
+<script src=/js/main.min.5c0bf7f21dc4f66485f74efbbeeff28a7e4f8cddaac1bae47043159c922ff3a3.js integrity="sha256-XAv38h3E9mSF9077vu/yin5PjN2qwbrkcEMVnJIv86M=" crossorigin=anonymous></script></body></html>

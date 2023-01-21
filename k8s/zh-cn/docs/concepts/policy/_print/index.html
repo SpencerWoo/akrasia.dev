@@ -1,0 +1,446 @@
+<!doctype html><html lang=zh-cn class=no-js><head><meta name=robots content="noindex, nofollow"><link rel=alternate hreflang=en href=https://kubernetes.io/docs/concepts/policy/><link rel=alternate hreflang=ko href=https://kubernetes.io/ko/docs/concepts/policy/><link rel=alternate hreflang=ja href=https://kubernetes.io/ja/docs/concepts/policy/><link rel=alternate hreflang=fr href=https://kubernetes.io/fr/docs/concepts/policy/><link rel=alternate hreflang=de href=https://kubernetes.io/de/docs/concepts/policy/><link rel=alternate hreflang=es href=https://kubernetes.io/es/docs/concepts/policy/><link rel=alternate hreflang=pt-br href=https://kubernetes.io/pt-br/docs/concepts/policy/><link rel=alternate hreflang=id href=https://kubernetes.io/id/docs/concepts/policy/><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.110.0"><link rel=canonical type=text/html href=https://kubernetes.io/zh-cn/docs/concepts/policy/><link rel="shortcut icon" type=image/png href=/images/favicon.png><link rel=apple-touch-icon href=/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=manifest href=/manifest.webmanifest><link rel=apple-touch-icon href=/images/kubernetes-192x192.png><title>策略 | Kubernetes</title><meta property="og:title" content="策略"><meta property="og:description" content="可配置的、可应用到一组资源的策略。"><meta property="og:type" content="website"><meta property="og:url" content="https://kubernetes.io/zh-cn/docs/concepts/policy/"><meta property="og:site_name" content="Kubernetes"><meta itemprop=name content="策略"><meta itemprop=description content="可配置的、可应用到一组资源的策略。"><meta name=twitter:card content="summary"><meta name=twitter:title content="策略"><meta name=twitter:description content="可配置的、可应用到一组资源的策略。"><link href=/scss/main.css rel=stylesheet><script type=application/ld+json>{"@context":"https://schema.org","@type":"Organization","url":"https://kubernetes.io","logo":"https://kubernetes.io/images/favicon.png","potentialAction":{"@type":"SearchAction","target":"https://kubernetes.io/search/?q={search_term_string}","query-input":"required name=search_term_string"}}</script><meta name=theme-color content="#326ce5"><link rel=stylesheet href=/css/feature-states.css><meta name=description content="可配置的、可应用到一组资源的策略。"><meta property="og:description" content="可配置的、可应用到一组资源的策略。"><meta name=twitter:description content="可配置的、可应用到一组资源的策略。"><meta property="og:url" content="https://kubernetes.io/zh-cn/docs/concepts/policy/"><meta property="og:title" content="策略"><meta name=twitter:title content="策略"><meta name=twitter:image content="https://kubernetes.io/images/favicon.png"><meta name=twitter:image:alt content="Kubernetes"><meta property="og:image" content="/images/kubernetes-horizontal-color.png"><meta property="og:type" content="article"><script src=/js/jquery-3.6.0.min.js intregrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script></head><body class=td-section><header><nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar" data-auto-burger=primary><a class=navbar-brand href=/zh-cn/></a><div class="td-navbar-nav-scroll ml-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0"><li class="nav-item mr-2 mb-lg-0"><a class="nav-link active" href=/zh-cn/docs/>文档</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/blog/>Kubernetes 博客</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/training/>培训</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/partners/>合作伙伴</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/community/>社区</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/case-studies/>案例分析</a></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>版本列表</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/zh-cn/releases>Release Information</a>
+<a class=dropdown-item href=https://kubernetes.io/zh-cn/docs/concepts/policy/>v1.25</a>
+<a class=dropdown-item href=https://v1-24.docs.kubernetes.io/zh-cn/docs/concepts/policy/>v1.24</a>
+<a class=dropdown-item href=https://v1-23.docs.kubernetes.io/zh-cn/docs/concepts/policy/>v1.23</a>
+<a class=dropdown-item href=https://v1-22.docs.kubernetes.io/zh-cn/docs/concepts/policy/>v1.22</a>
+<a class=dropdown-item href=https://v1-21.docs.kubernetes.io/zh-cn/docs/concepts/policy/>v1.21</a></div></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdownMenuLink role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>中文 (Chinese)</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/docs/concepts/policy/>English</a>
+<a class=dropdown-item href=/ko/docs/concepts/policy/>한국어 (Korean)</a>
+<a class=dropdown-item href=/ja/docs/concepts/policy/>日本語 (Japanese)</a>
+<a class=dropdown-item href=/fr/docs/concepts/policy/>Français (French)</a>
+<a class=dropdown-item href=/de/docs/concepts/policy/>Deutsch (German)</a>
+<a class=dropdown-item href=/es/docs/concepts/policy/>Español (Spanish)</a>
+<a class=dropdown-item href=/pt-br/docs/concepts/policy/>Português (Portuguese)</a>
+<a class=dropdown-item href=/id/docs/concepts/policy/>Bahasa Indonesia</a></div></li></ul></div><button id=hamburger onclick=kub.toggleMenu() data-auto-burger-exclude><div></div></button></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><div class=td-content><div class="pageinfo pageinfo-primary d-print-none"><p>这是本节的多页打印视图。
+<a href=# onclick="return print(),!1">点击此处打印</a>.</p><p><a href=/zh-cn/docs/concepts/policy/>返回本页常规视图</a>.</p></div><h1 class=title>策略</h1><div class=lead>可配置的、可应用到一组资源的策略。</div><ul><li>1: <a href=#pg-a935ff8c59eb116b43494255cc67f69a>限制范围</a></li><li>2: <a href=#pg-94ddc6e901c30f256138db11d09f05a3>资源配额</a></li><li>3: <a href=#pg-7352434db5f5954d2f7656b46fe5a324>进程 ID 约束与预留</a></li><li>4: <a href=#pg-b528c4464c030f3f044124b38d778f04>节点资源管理器</a></li></ul><div class=content><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>有关 Kubernetes 中的 NetworkPolicy 的文档，
+请参阅<a href=/zh-cn/docs/concepts/services-networking/network-policies/>网络策略</a>。</div></div></div><div class=td-content><h1 id=pg-a935ff8c59eb116b43494255cc67f69a>1 - 限制范围</h1><p>默认情况下， Kubernetes 集群上的容器运行使用的<a href=/zh-cn/docs/concepts/configuration/manage-resources-containers/>计算资源</a>没有限制。
+使用 Kubernetes <a href=/zh-cn/docs/concepts/policy/resource-quotas/>资源配额</a>，
+管理员（也称为 <strong>集群操作者</strong>）可以在一个指定的<a class=glossary-tooltip title='名字空间是 Kubernetes 用来支持隔离单个集群中的资源组的一种抽象。' data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/overview/working-with-objects/namespaces/ target=_blank aria-label=命名空间>命名空间</a>内限制集群资源的使用与创建。
+在命名空间中，一个 <a class=glossary-tooltip title='Pod 表示你的集群上一组正在运行的容器。' data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/workloads/pods/ target=_blank aria-label=Pod>Pod</a> 最多能够使用命名空间的资源配额所定义的 CPU 和内存用量。
+作为集群操作者或命名空间级的管理员，你可能也会担心如何确保一个 Pod 不会垄断命名空间内所有可用的资源。</p><p>LimitRange 是限制命名空间内可为每个适用的对象类别
+（例如 Pod 或 <a class=glossary-tooltip title=声明在持久卷中定义的存储资源，以便可以将其挂载为容器中的卷。 data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims target=_blank aria-label=PersistentVolumeClaim>PersistentVolumeClaim</a>）
+指定的资源分配量（限制和请求）的策略对象。</p><p>一个 <strong>LimitRange（限制范围）</strong> 对象提供的限制能够做到：</p><ul><li>在一个命名空间中实施对每个 Pod 或 Container 最小和最大的资源使用量的限制。</li><li>在一个命名空间中实施对每个 <a class=glossary-tooltip title=声明在持久卷中定义的存储资源，以便可以将其挂载为容器中的卷。 data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims target=_blank aria-label=PersistentVolumeClaim>PersistentVolumeClaim</a>
+能申请的最小和最大的存储空间大小的限制。</li><li>在一个命名空间中实施对一种资源的申请值和限制值的比值的控制。</li><li>设置一个命名空间中对计算资源的默认申请/限制值，并且自动的在运行时注入到多个 Container 中。</li></ul><p>当某命名空间中有一个 LimitRange 对象时，将在该命名空间中实施 LimitRange 限制。</p><p>LimitRange 的名称必须是合法的
+<a href=/zh-cn/docs/concepts/overview/working-with-objects/names#dns-subdomain-names>DNS 子域名</a>。</p><h2 id=constraints-on-resource-limits-and-requests>资源限制和请求的约束</h2><ul><li>管理员在一个命名空间内创建一个 <code>LimitRange</code> 对象。</li><li>用户在此命名空间内创建（或尝试创建） Pod 和 PersistentVolumeClaim 等对象。</li><li>首先，<code>LimitRanger</code> 准入控制器对所有没有设置计算资源需求的所有 Pod（及其容器）设置默认请求值与限制值。</li><li>其次，<code>LimitRange</code> 跟踪其使用量以保证没有超出命名空间中存在的任意 <code>LimitRange</code> 所定义的最小、最大资源使用量以及使用量比值。</li><li>若尝试创建或更新的对象（Pod 和 PersistentVolumeClaim）违反了 <code>LimitRange</code> 的约束，
+向 API 服务器的请求会失败，并返回 HTTP 状态码 <code>403 Forbidden</code> 以及描述哪一项约束被违反的消息。</li><li>若你在命名空间中添加 <code>LimitRange</code> 启用了对 <code>cpu</code> 和 <code>memory</code> 等计算相关资源的限制，
+你必须指定这些值的请求使用量与限制使用量。否则，系统将会拒绝创建 Pod。</li><li><code>LimitRange</code> 的验证仅在 Pod 准入阶段进行，不对正在运行的 Pod 进行验证。
+如果你添加或修改 LimitRange，命名空间中已存在的 Pod 将继续不变。</li><li>如果命名空间中存在两个或更多 <code>LimitRange</code> 对象，应用哪个默认值是不确定的。</li></ul><h2 id=limitrange-and-admission-checks-for-pod>Pod 的 LimitRange 和准入检查</h2><p><code>LimitRange</code> <strong>不</strong> 检查所应用的默认值的一致性。
+这意味着 <code>LimitRange</code> 设置的 <strong>limit</strong> 的默认值可能小于客户端提交给 API 服务器的规约中为容器指定的 <strong>request</strong> 值。
+如果发生这种情况，最终 Pod 将无法调度。</p><p>例如，你使用如下清单定义一个 <code>LimitRange</code>：</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/zh-cn/examples/concepts/policy/limit-range/problematic-limit-range.yaml download=concepts/policy/limit-range/problematic-limit-range.yaml><code>concepts/policy/limit-range/problematic-limit-range.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("concepts-policy-limit-range-problematic-limit-range-yaml")' title="Copy concepts/policy/limit-range/problematic-limit-range.yaml to clipboard"></img></div><div class=includecode id=concepts-policy-limit-range-problematic-limit-range-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>LimitRange<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>cpu-resource-constraint<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>limits</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>default</span>:<span style=color:#bbb> </span><span style=color:#080;font-style:italic># 此处定义默认限制值</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>cpu</span>:<span style=color:#bbb> </span>500m<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>defaultRequest</span>:<span style=color:#bbb> </span><span style=color:#080;font-style:italic># 此处定义默认请求值</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>cpu</span>:<span style=color:#bbb> </span>500m<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>max</span>:<span style=color:#bbb> </span><span style=color:#080;font-style:italic># max 和 min 定义限制范围</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>cpu</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;1&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>min</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>cpu</span>:<span style=color:#bbb> </span>100m<span style=color:#bbb>
+</span></span></span></code></pre></div></div></div><p>以及一个声明 CPU 资源请求为 <code>700m</code> 但未声明限制值的 Pod：</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/zh-cn/examples/concepts/policy/limit-range/example-conflict-with-limitrange-cpu.yaml download=concepts/policy/limit-range/example-conflict-with-limitrange-cpu.yaml><code>concepts/policy/limit-range/example-conflict-with-limitrange-cpu.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("concepts-policy-limit-range-example-conflict-with-limitrange-cpu-yaml")' title="Copy concepts/policy/limit-range/example-conflict-with-limitrange-cpu.yaml to clipboard"></img></div><div class=includecode id=concepts-policy-limit-range-example-conflict-with-limitrange-cpu-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>example-conflict-with-limitrange-cpu<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>demo<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>registry.k8s.io/pause:2.0<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>resources</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>requests</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>cpu</span>:<span style=color:#bbb> </span>700m<span style=color:#bbb>
+</span></span></span></code></pre></div></div></div><p>那么该 Pod 将不会被调度，失败并出现类似以下的错误：</p><pre tabindex=0><code>Pod &#34;example-conflict-with-limitrange-cpu&#34; is invalid: spec.containers[0].resources.requests: Invalid value: &#34;700m&#34;: must be less than or equal to cpu limit
+</code></pre><p>如果你同时设置了 <code>request</code> 和 <code>limit</code>，那么即使使用相同的 <code>LimitRange</code>，新 Pod 也会被成功调度：</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/zh-cn/examples/concepts/policy/limit-range/example-no-conflict-with-limitrange-cpu.yaml download=concepts/policy/limit-range/example-no-conflict-with-limitrange-cpu.yaml><code>concepts/policy/limit-range/example-no-conflict-with-limitrange-cpu.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("concepts-policy-limit-range-example-no-conflict-with-limitrange-cpu-yaml")' title="Copy concepts/policy/limit-range/example-no-conflict-with-limitrange-cpu.yaml to clipboard"></img></div><div class=includecode id=concepts-policy-limit-range-example-no-conflict-with-limitrange-cpu-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>example-no-conflict-with-limitrange-cpu<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>demo<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>registry.k8s.io/pause:2.0<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>resources</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>requests</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>cpu</span>:<span style=color:#bbb> </span>700m<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>limits</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>cpu</span>:<span style=color:#bbb> </span>700m<span style=color:#bbb>
+</span></span></span></code></pre></div></div></div><h2 id=example-resource-constraints>资源约束示例</h2><p>能够使用限制范围创建的策略示例有：</p><ul><li>在一个有两个节点，8 GiB 内存与16个核的集群中，限制一个命名空间的 Pod 申请
+100m 单位，最大 500m 单位的 CPU，以及申请 200Mi，最大 600Mi 的内存。</li><li>为 spec 中没有 cpu 和内存需求值的 Container 定义默认 CPU 限制值与需求值
+150m，内存默认需求值 300Mi。</li></ul><p>在命名空间的总限制值小于 Pod 或 Container 的限制值的总和的情况下，可能会产生资源竞争。
+在这种情况下，将不会创建 Container 或 Pod。</p><p>竞争和对 LimitRange 的改变都不会影响任何已经创建了的资源。</p><h2 id=接下来>接下来</h2><p>关于使用限值的例子，可参阅：</p><ul><li><a href=/zh-cn/docs/tasks/administer-cluster/manage-resources/cpu-constraint-namespace/>如何配置每个命名空间最小和最大的 CPU 约束</a>。</li><li><a href=/zh-cn/docs/tasks/administer-cluster/manage-resources/memory-constraint-namespace/>如何配置每个命名空间最小和最大的内存约束</a>。</li><li><a href=/zh-cn/docs/tasks/administer-cluster/manage-resources/cpu-default-namespace/>如何配置每个命名空间默认的 CPU 申请值和限制值</a>。</li><li><a href=/zh-cn/docs/tasks/administer-cluster/manage-resources/memory-default-namespace/>如何配置每个命名空间默认的内存申请值和限制值</a>。</li><li><a href=/zh-cn/docs/tasks/administer-cluster/limit-storage-consumption/#limitrange-to-limit-requests-for-storage>如何配置每个命名空间最小和最大存储使用量</a>。</li><li><a href=/zh-cn/docs/tasks/administer-cluster/manage-resources/quota-memory-cpu-namespace/>配置每个命名空间的配额的详细例子</a>。</li></ul><p>有关上下文和历史信息，请参阅 <a href=https://git.k8s.io/design-proposals-archive/resource-management/admission_control_limit_range.md>LimitRanger 设计文档</a>。</p></div><div class=td-content style=page-break-before:always><h1 id=pg-94ddc6e901c30f256138db11d09f05a3>2 - 资源配额</h1><p>当多个用户或团队共享具有固定节点数目的集群时，人们会担心有人使用超过其基于公平原则所分配到的资源量。</p><p>资源配额是帮助管理员解决这一问题的工具。</p><p>资源配额，通过 <code>ResourceQuota</code> 对象来定义，对每个命名空间的资源消耗总量提供限制。
+它可以限制命名空间中某种类型的对象的总数目上限，也可以限制命名空间中的 Pod 可以使用的计算资源的总上限。</p><p>资源配额的工作方式如下：</p><ul><li><p>不同的团队可以在不同的命名空间下工作。这可以通过
+<a href=/zh-cn/docs/reference/access-authn-authz/rbac/>RBAC</a> 强制执行。</p></li><li><p>集群管理员可以为每个命名空间创建一个或多个 ResourceQuota 对象。</p></li><li><p>当用户在命名空间下创建资源（如 Pod、Service 等）时，Kubernetes 的配额系统会跟踪集群的资源使用情况，
+以确保使用的资源用量不超过 ResourceQuota 中定义的硬性资源限额。</p></li><li><p>如果资源创建或者更新请求违反了配额约束，那么该请求会报错（HTTP 403 FORBIDDEN），
+并在消息中给出有可能违反的约束。</p></li><li><p>如果命名空间下的计算资源 （如 <code>cpu</code> 和 <code>memory</code>）的配额被启用，
+则用户必须为这些资源设定请求值（request）和约束值（limit），否则配额系统将拒绝 Pod 的创建。
+提示: 可使用 <code>LimitRanger</code> 准入控制器来为没有设置计算资源需求的 Pod 设置默认值。</p><p>若想避免这类问题，请参考
+<a href=/zh-cn/docs/tasks/administer-cluster/manage-resources/quota-memory-cpu-namespace/>演练</a>示例。</p></li></ul><div class="alert alert-info note callout" role=alert><strong>说明：</strong><ul><li>对于 <code>cpu</code> 和 <code>memory</code> 资源：ResourceQuota 强制该命名空间中的每个（新）Pod 为该资源设置限制。
+如果你在命名空间中为 <code>cpu</code> 和 <code>memory</code> 制实施资源配额，
+你或其他客户端<strong>必须</strong>为你提交的每个新 Pod 指定该资源的 <code>requests</code> 或 <code>limits</code>。
+否则，控制平面可能会拒绝接纳该 Pod。</li><li>对于其他资源：ResourceQuota 可以工作，并且会忽略命名空间中的 Pod，而无需为该资源设置限制或请求。
+这意味着，如果资源配额限制了此命名空间的临时存储，则可以创建没有限制/请求临时存储的新 Pod。
+你可以使用<a href=/zh-cn/docs/concepts/policy/limit-range/>限制范围</a>自动设置对这些资源的默认请求。</li></ul></div><p>ResourceQuota 对象的名称必须是合法的
+<a href=/zh-cn/docs/concepts/overview/working-with-objects/names#dns-subdomain-names>DNS 子域名</a>。</p><p>下面是使用命名空间和配额构建策略的示例：</p><ul><li>在具有 32 GiB 内存和 16 核 CPU 资源的集群中，允许 A 团队使用 20 GiB 内存 和 10 核的 CPU 资源，
+允许 B 团队使用 10 GiB 内存和 4 核的 CPU 资源，并且预留 2 GiB 内存和 2 核的 CPU 资源供将来分配。</li><li>限制 "testing" 命名空间使用 1 核 CPU 资源和 1GiB 内存。允许 "production" 命名空间使用任意数量。</li></ul><p>在集群容量小于各命名空间配额总和的情况下，可能存在资源竞争。资源竞争时，Kubernetes 系统会遵循先到先得的原则。</p><p>不管是资源竞争还是配额的修改，都不会影响已经创建的资源使用对象。</p><h2 id=enabling-resource-quota>启用资源配额</h2><p>资源配额的支持在很多 Kubernetes 版本中是默认启用的。
+当 <a class=glossary-tooltip title='提供 Kubernetes API 服务的控制面组件。' data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/overview/components/#kube-apiserver target=_blank aria-label='API 服务器'>API 服务器</a>
+的命令行标志 <code>--enable-admission-plugins=</code> 中包含 <code>ResourceQuota</code> 时，
+资源配额会被启用。</p><p>当命名空间中存在一个 ResourceQuota 对象时，对于该命名空间而言，资源配额就是开启的。</p><h2 id=compute-resource-quota>计算资源配额</h2><p>用户可以对给定命名空间下的可被请求的
+<a href=/zh-cn/docs/concepts/configuration/manage-resources-containers/>计算资源</a>
+总量进行限制。</p><p>配额机制所支持的资源类型：</p><table><thead><tr><th>资源名称</th><th>描述</th></tr></thead><tbody><tr><td><code>limits.cpu</code></td><td>所有非终止状态的 Pod，其 CPU 限额总量不能超过该值。</td></tr><tr><td><code>limits.memory</code></td><td>所有非终止状态的 Pod，其内存限额总量不能超过该值。</td></tr><tr><td><code>requests.cpu</code></td><td>所有非终止状态的 Pod，其 CPU 需求总量不能超过该值。</td></tr><tr><td><code>requests.memory</code></td><td>所有非终止状态的 Pod，其内存需求总量不能超过该值。</td></tr><tr><td><code>hugepages-&lt;size></code></td><td>对于所有非终止状态的 Pod，针对指定尺寸的巨页请求总数不能超过此值。</td></tr><tr><td><code>cpu</code></td><td>与 <code>requests.cpu</code> 相同。</td></tr><tr><td><code>memory</code></td><td>与 <code>requests.memory</code> 相同。</td></tr></tbody></table><h3 id=resource-quota-for-extended-resources>扩展资源的资源配额</h3><p>除上述资源外，在 Kubernetes 1.10 版本中，还添加了对
+<a href=/zh-cn/docs/concepts/configuration/manage-resources-containers/#extended-resources>扩展资源</a>
+的支持。</p><p>由于扩展资源不可超量分配，因此没有必要在配额中为同一扩展资源同时指定 <code>requests</code> 和 <code>limits</code>。
+对于扩展资源而言，目前仅允许使用前缀为 <code>requests.</code> 的配额项。</p><p>以 GPU 拓展资源为例，如果资源名称为 <code>nvidia.com/gpu</code>，并且要将命名空间中请求的 GPU
+资源总数限制为 4，则可以如下定义配额：</p><ul><li><code>requests.nvidia.com/gpu: 4</code></li></ul><p>有关更多详细信息，请参阅<a href=#viewing-and-setting-quotas>查看和设置配额</a>。</p><h2 id=storage-resource-quota>存储资源配额</h2><p>用户可以对给定命名空间下的<a href=/zh-cn/docs/concepts/storage/persistent-volumes/>存储资源</a>
+总量进行限制。</p><p>此外，还可以根据相关的存储类（Storage Class）来限制存储资源的消耗。</p><table><thead><tr><th>资源名称</th><th>描述</th></tr></thead><tbody><tr><td><code>requests.storage</code></td><td>所有 PVC，存储资源的需求总量不能超过该值。</td></tr><tr><td><code>persistentvolumeclaims</code></td><td>在该命名空间中所允许的 <a href=/zh-cn/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims>PVC</a> 总量。</td></tr><tr><td><code>&lt;storage-class-name>.storageclass.storage.k8s.io/requests.storage</code></td><td>在所有与 <code>&lt;storage-class-name></code> 相关的持久卷申领中，存储请求的总和不能超过该值。</td></tr><tr><td><code>&lt;storage-class-name>.storageclass.storage.k8s.io/persistentvolumeclaims</code></td><td>在与 storage-class-name 相关的所有持久卷申领中，命名空间中可以存在的<a href=/zh-cn/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims>持久卷申领</a>总数。</td></tr></tbody></table><p>例如，如果一个操作人员针对 <code>gold</code> 存储类型与 <code>bronze</code> 存储类型设置配额，
+操作人员可以定义如下配额：</p><ul><li><code>gold.storageclass.storage.k8s.io/requests.storage: 500Gi</code></li><li><code>bronze.storageclass.storage.k8s.io/requests.storage: 100Gi</code></li></ul><p>在 Kubernetes 1.8 版本中，本地临时存储的配额支持已经是 Alpha 功能：</p><table><thead><tr><th>资源名称</th><th>描述</th></tr></thead><tbody><tr><td><code>requests.ephemeral-storage</code></td><td>在命名空间的所有 Pod 中，本地临时存储请求的总和不能超过此值。</td></tr><tr><td><code>limits.ephemeral-storage</code></td><td>在命名空间的所有 Pod 中，本地临时存储限制值的总和不能超过此值。</td></tr><tr><td><code>ephemeral-storage</code></td><td>与 <code>requests.ephemeral-storage</code> 相同。</td></tr></tbody></table><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>如果所使用的是 CRI 容器运行时，容器日志会被计入临时存储配额。
+这可能会导致存储配额耗尽的 Pods 被意外地驱逐出节点。
+参考<a href=/zh-cn/docs/concepts/cluster-administration/logging/>日志架构</a>
+了解详细信息。</div><h2 id=object-count-quota>对象数量配额</h2><p>你可以使用以下语法对所有标准的、命名空间域的资源类型进行配额设置：</p><ul><li><code>count/&lt;resource>.&lt;group></code>：用于非核心（core）组的资源</li><li><code>count/&lt;resource></code>：用于核心组的资源</li></ul><p>这是用户可能希望利用对象计数配额来管理的一组资源示例。</p><ul><li><code>count/persistentvolumeclaims</code></li><li><code>count/services</code></li><li><code>count/secrets</code></li><li><code>count/configmaps</code></li><li><code>count/replicationcontrollers</code></li><li><code>count/deployments.apps</code></li><li><code>count/replicasets.apps</code></li><li><code>count/statefulsets.apps</code></li><li><code>count/jobs.batch</code></li><li><code>count/cronjobs.batch</code></li></ul><p>相同语法也可用于自定义资源。
+例如，要对 <code>example.com</code> API 组中的自定义资源 <code>widgets</code> 设置配额，请使用
+<code>count/widgets.example.com</code>。</p><p>当使用 <code>count/*</code> 资源配额时，如果对象存在于服务器存储中，则会根据配额管理资源。
+这些类型的配额有助于防止存储资源耗尽。例如，用户可能想根据服务器的存储能力来对服务器中
+Secret 的数量进行配额限制。
+集群中存在过多的 Secret 实际上会导致服务器和控制器无法启动。
+用户可以选择对 Job 进行配额管理，以防止配置不当的 CronJob 在某命名空间中创建太多
+Job 而导致集群拒绝服务。</p><p>对有限的一组资源上实施一般性的对象数量配额也是可能的。</p><p>支持以下类型：</p><table><thead><tr><th>资源名称</th><th>描述</th></tr></thead><tbody><tr><td><code>configmaps</code></td><td>在该命名空间中允许存在的 ConfigMap 总数上限。</td></tr><tr><td><code>persistentvolumeclaims</code></td><td>在该命名空间中允许存在的 <a href=/zh-cn/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims>PVC</a> 的总数上限。</td></tr><tr><td><code>pods</code></td><td>在该命名空间中允许存在的非终止状态的 Pod 总数上限。Pod 终止状态等价于 Pod 的 <code>.status.phase in (Failed, Succeeded)</code> 为真。</td></tr><tr><td><code>replicationcontrollers</code></td><td>在该命名空间中允许存在的 ReplicationController 总数上限。</td></tr><tr><td><code>resourcequotas</code></td><td>在该命名空间中允许存在的 ResourceQuota 总数上限。</td></tr><tr><td><code>services</code></td><td>在该命名空间中允许存在的 Service 总数上限。</td></tr><tr><td><code>services.loadbalancers</code></td><td>在该命名空间中允许存在的 LoadBalancer 类型的 Service 总数上限。</td></tr><tr><td><code>services.nodeports</code></td><td>在该命名空间中允许存在的 NodePort 类型的 Service 总数上限。</td></tr><tr><td><code>secrets</code></td><td>在该命名空间中允许存在的 Secret 总数上限。</td></tr></tbody></table><p>例如，<code>pods</code> 配额统计某个命名空间中所创建的、非终止状态的 <code>Pod</code> 个数并确保其不超过某上限值。
+用户可能希望在某命名空间中设置 <code>pods</code> 配额，以避免有用户创建很多小的 Pod，
+从而耗尽集群所能提供的 Pod IP 地址。</p><h2 id=quota-scopes>配额作用域</h2><p>每个配额都有一组相关的 <code>scope</code>（作用域），配额只会对作用域内的资源生效。
+配额机制仅统计所列举的作用域的交集中的资源用量。</p><p>当一个作用域被添加到配额中后，它会对作用域相关的资源数量作限制。
+如配额中指定了允许（作用域）集合之外的资源，会导致验证错误。</p><table><thead><tr><th>作用域</th><th>描述</th></tr></thead><tbody><tr><td><code>Terminating</code></td><td>匹配所有 <code>spec.activeDeadlineSeconds</code> 不小于 0 的 Pod。</td></tr><tr><td><code>NotTerminating</code></td><td>匹配所有 <code>spec.activeDeadlineSeconds</code> 是 nil 的 Pod。</td></tr><tr><td><code>BestEffort</code></td><td>匹配所有 Qos 是 BestEffort 的 Pod。</td></tr><tr><td><code>NotBestEffort</code></td><td>匹配所有 Qos 不是 BestEffort 的 Pod。</td></tr><tr><td><code>PriorityClass</code></td><td>匹配所有引用了所指定的<a href=/zh-cn/docs/concepts/scheduling-eviction/pod-priority-preemption>优先级类</a>的 Pods。</td></tr><tr><td><code>CrossNamespacePodAffinity</code></td><td>匹配那些设置了跨名字空间 <a href=/zh-cn/docs/concepts/scheduling-eviction/assign-pod-node>（反）亲和性条件</a>的 Pod。</td></tr></tbody></table><p><code>BestEffort</code> 作用域限制配额跟踪以下资源：</p><ul><li><code>pods</code></li></ul><p><code>Terminating</code>、<code>NotTerminating</code>、<code>NotBestEffort</code> 和 <code>PriorityClass</code> 这些作用域限制配额跟踪以下资源：</p><ul><li><code>pods</code></li><li><code>cpu</code></li><li><code>memory</code></li><li><code>requests.cpu</code></li><li><code>requests.memory</code></li><li><code>limits.cpu</code></li><li><code>limits.memory</code></li></ul><p>需要注意的是，你不可以在同一个配额对象中同时设置 <code>Terminating</code> 和 <code>NotTerminating</code>
+作用域，你也不可以在同一个配额中同时设置 <code>BestEffort</code> 和 <code>NotBestEffort</code>
+作用域。</p><p><code>scopeSelector</code> 支持在 <code>operator</code> 字段中使用以下值：</p><ul><li><code>In</code></li><li><code>NotIn</code></li><li><code>Exists</code></li><li><code>DoesNotExist</code></li></ul><p>定义 <code>scopeSelector</code> 时，如果使用以下值之一作为 <code>scopeName</code> 的值，则对应的
+<code>operator</code> 只能是 <code>Exists</code>。</p><ul><li><code>Terminating</code></li><li><code>NotTerminating</code></li><li><code>BestEffort</code></li><li><code>NotBestEffort</code></li></ul><p>如果 <code>operator</code> 是 <code>In</code> 或 <code>NotIn</code> 之一，则 <code>values</code> 字段必须至少包含一个值。
+例如：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>scopeSelector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>matchExpressions</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>scopeName</span>:<span style=color:#bbb> </span>PriorityClass<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>operator</span>:<span style=color:#bbb> </span>In<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>values</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span>- middle<span style=color:#bbb>
+</span></span></span></code></pre></div><p>如果 <code>operator</code> 为 <code>Exists</code> 或 <code>DoesNotExist</code>，则<strong>不</strong>可以设置 <code>values</code> 字段。</p><h3 id=resource-quota-per-priorityclass>基于优先级类（PriorityClass）来设置资源配额</h3><div style=margin-top:10px;margin-bottom:10px><b>特性状态：</b> <code>Kubernetes v1.17 [stable]</code></div><p>Pod 可以创建为特定的<a href=/zh-cn/docs/concepts/scheduling-eviction/pod-priority-preemption/#pod-priority>优先级</a>。
+通过使用配额规约中的 <code>scopeSelector</code> 字段，用户可以根据 Pod 的优先级控制其系统资源消耗。</p><p>仅当配额规范中的 <code>scopeSelector</code> 字段选择到某 Pod 时，配额机制才会匹配和计量 Pod 的资源消耗。</p><p>如果配额对象通过 <code>scopeSelector</code> 字段设置其作用域为优先级类，
+则配额对象只能跟踪以下资源：</p><ul><li><code>pods</code></li><li><code>cpu</code></li><li><code>memory</code></li><li><code>ephemeral-storage</code></li><li><code>limits.cpu</code></li><li><code>limits.memory</code></li><li><code>limits.ephemeral-storage</code></li><li><code>requests.cpu</code></li><li><code>requests.memory</code></li><li><code>requests.ephemeral-storage</code></li></ul><p>本示例创建一个配额对象，并将其与具有特定优先级的 Pod 进行匹配。
+该示例的工作方式如下：</p><ul><li>集群中的 Pod 可取三个优先级类之一，即 "low"、"medium"、"high"。</li><li>为每个优先级创建一个配额对象。</li></ul><p>将以下 YAML 保存到文件 <code>quota.yml</code> 中。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>List<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>items</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>ResourceQuota<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>pods-high<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>hard</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>cpu</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;1000&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>memory</span>:<span style=color:#bbb> </span>200Gi<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>pods</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;10&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>scopeSelector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>matchExpressions</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>operator </span>:<span style=color:#bbb> </span>In<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>scopeName</span>:<span style=color:#bbb> </span>PriorityClass<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>values</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;high&#34;</span>]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>ResourceQuota<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>pods-medium<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>hard</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>cpu</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;10&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>memory</span>:<span style=color:#bbb> </span>20Gi<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>pods</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;10&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>scopeSelector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>matchExpressions</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>operator </span>:<span style=color:#bbb> </span>In<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>scopeName</span>:<span style=color:#bbb> </span>PriorityClass<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>values</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;medium&#34;</span>]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>ResourceQuota<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>pods-low<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>hard</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>cpu</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;5&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>memory</span>:<span style=color:#bbb> </span>10Gi<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>pods</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;10&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>scopeSelector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>matchExpressions</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>operator </span>:<span style=color:#bbb> </span>In<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>scopeName</span>:<span style=color:#bbb> </span>PriorityClass<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>values</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;low&#34;</span>]<span style=color:#bbb>
+</span></span></span></code></pre></div><p>使用 <code>kubectl create</code> 命令运行以下操作。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create -f ./quota.yml
+</span></span></code></pre></div><pre tabindex=0><code>resourcequota/pods-high created
+resourcequota/pods-medium created
+resourcequota/pods-low created
+</code></pre><p>使用 <code>kubectl describe quota</code> 操作验证配额的 <code>Used</code> 值为 <code>0</code>。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl describe quota
+</span></span></code></pre></div><pre tabindex=0><code>Name:       pods-high
+Namespace:  default
+Resource    Used  Hard
+--------    ----  ----
+cpu         0     1k
+memory      0     200Gi
+pods        0     10
+
+
+Name:       pods-low
+Namespace:  default
+Resource    Used  Hard
+--------    ----  ----
+cpu         0     5
+memory      0     10Gi
+pods        0     10
+
+
+Name:       pods-medium
+Namespace:  default
+Resource    Used  Hard
+--------    ----  ----
+cpu         0     10
+memory      0     20Gi
+pods        0     10
+</code></pre><p>创建优先级为 "high" 的 Pod。
+将以下 YAML 保存到文件 <code>high-priority-pod.yml</code> 中。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>high-priority<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>high-priority<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>ubuntu<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>command</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;/bin/sh&#34;</span>]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>args</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;-c&#34;</span>,<span style=color:#bbb> </span><span style=color:#b44>&#34;while true; do echo hello; sleep 10;done&#34;</span>]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>resources</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>requests</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>memory</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;10Gi&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>cpu</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;500m&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>limits</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>memory</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;10Gi&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>cpu</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;500m&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>priorityClassName</span>:<span style=color:#bbb> </span>high<span style=color:#bbb>
+</span></span></span></code></pre></div><p>使用 <code>kubectl create</code> 运行以下操作。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create -f ./high-priority-pod.yml
+</span></span></code></pre></div><p>确认 "high" 优先级配额 <code>pods-high</code> 的 "Used" 统计信息已更改，并且其他两个配额未更改。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl describe quota
+</span></span></code></pre></div><pre tabindex=0><code>Name:       pods-high
+Namespace:  default
+Resource    Used  Hard
+--------    ----  ----
+cpu         500m  1k
+memory      10Gi  200Gi
+pods        1     10
+
+
+Name:       pods-low
+Namespace:  default
+Resource    Used  Hard
+--------    ----  ----
+cpu         0     5
+memory      0     10Gi
+pods        0     10
+
+
+Name:       pods-medium
+Namespace:  default
+Resource    Used  Hard
+--------    ----  ----
+cpu         0     10
+memory      0     20Gi
+pods        0     10
+</code></pre><h3 id=cross-namespace-pod-affinity-quota>跨名字空间的 Pod 亲和性配额</h3><div style=margin-top:10px;margin-bottom:10px><b>特性状态：</b> <code>Kubernetes v1.24 [stable]</code></div><p>集群运维人员可以使用 <code>CrossNamespacePodAffinity</code>
+配额作用域来限制哪个名字空间中可以存在包含跨名字空间亲和性规则的 Pod。
+更为具体一点，此作用域用来配置哪些 Pod 可以在其 Pod 亲和性规则中设置
+<code>namespaces</code> 或 <code>namespaceSelector</code> 字段。</p><p>禁止用户使用跨名字空间的亲和性规则可能是一种被需要的能力，
+因为带有反亲和性约束的 Pod 可能会阻止所有其他名字空间的 Pod 被调度到某失效域中。</p><p>使用此作用域操作符可以避免某些名字空间（例如下面例子中的 <code>foo-ns</code>）运行特别的 Pod，
+这类 Pod 使用跨名字空间的 Pod 亲和性约束，在该名字空间中创建了作用域为
+<code>CrossNamespaceAffinity</code> 的、硬性约束为 0 的资源配额对象。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>ResourceQuota<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>disable-cross-namespace-affinity<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>namespace</span>:<span style=color:#bbb> </span>foo-ns<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>hard</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>pods</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;0&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>scopeSelector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>matchExpressions</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>scopeName</span>:<span style=color:#bbb> </span>CrossNamespaceAffinity<span style=color:#bbb>
+</span></span></span></code></pre></div><p>如果集群运维人员希望默认禁止使用 <code>namespaces</code> 和 <code>namespaceSelector</code>，
+而仅仅允许在特定名字空间中这样做，他们可以将 <code>CrossNamespaceAffinity</code>
+作为一个被约束的资源。方法是为 <code>kube-apiserver</code> 设置标志
+<code>--admission-control-config-file</code>，使之指向如下的配置文件：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>apiserver.config.k8s.io/v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>AdmissionConfiguration<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>plugins</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;ResourceQuota&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>configuration</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>apiserver.config.k8s.io/v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>ResourceQuotaConfiguration<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>limitedResources</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>resource</span>:<span style=color:#bbb> </span>pods<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>matchScopes</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>scopeName</span>:<span style=color:#bbb> </span>CrossNamespaceAffinity<span style=color:#bbb>
+</span></span></span></code></pre></div><p>基于上面的配置，只有名字空间中包含作用域为 <code>CrossNamespaceAffinity</code>
+且硬性约束大于或等于使用 <code>namespaces</code> 和 <code>namespaceSelector</code> 字段的 Pod
+个数时，才可以在该名字空间中继续创建在其 Pod 亲和性规则中设置 <code>namespaces</code>
+或 <code>namespaceSelector</code> 的新 Pod。</p><h2 id=requests-vs-limits>请求与限制的比较</h2><p>分配计算资源时，每个容器可以为 CPU 或内存指定请求和约束。
+配额可以针对二者之一进行设置。</p><p>如果配额中指定了 <code>requests.cpu</code> 或 <code>requests.memory</code> 的值，则它要求每个容器都显式给出对这些资源的请求。
+同理，如果配额中指定了 <code>limits.cpu</code> 或 <code>limits.memory</code> 的值，那么它要求每个容器都显式设定对应资源的限制。</p><h2 id=viewing-and-setting-quotas>查看和设置配额</h2><p>Kubectl 支持创建、更新和查看配额：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create namespace myspace
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>cat <span style=color:#b44>&lt;&lt;EOF &gt; compute-resources.yaml
+</span></span></span><span style=display:flex><span><span style=color:#b44>apiVersion: v1
+</span></span></span><span style=display:flex><span><span style=color:#b44>kind: ResourceQuota
+</span></span></span><span style=display:flex><span><span style=color:#b44>metadata:
+</span></span></span><span style=display:flex><span><span style=color:#b44>  name: compute-resources
+</span></span></span><span style=display:flex><span><span style=color:#b44>spec:
+</span></span></span><span style=display:flex><span><span style=color:#b44>  hard:
+</span></span></span><span style=display:flex><span><span style=color:#b44>    requests.cpu: &#34;1&#34;
+</span></span></span><span style=display:flex><span><span style=color:#b44>    requests.memory: 1Gi
+</span></span></span><span style=display:flex><span><span style=color:#b44>    limits.cpu: &#34;2&#34;
+</span></span></span><span style=display:flex><span><span style=color:#b44>    limits.memory: 2Gi
+</span></span></span><span style=display:flex><span><span style=color:#b44>    requests.nvidia.com/gpu: 4
+</span></span></span><span style=display:flex><span><span style=color:#b44>EOF</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create -f ./compute-resources.yaml --namespace<span style=color:#666>=</span>myspace
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>cat <span style=color:#b44>&lt;&lt;EOF &gt; object-counts.yaml
+</span></span></span><span style=display:flex><span><span style=color:#b44>apiVersion: v1
+</span></span></span><span style=display:flex><span><span style=color:#b44>kind: ResourceQuota
+</span></span></span><span style=display:flex><span><span style=color:#b44>metadata:
+</span></span></span><span style=display:flex><span><span style=color:#b44>  name: object-counts
+</span></span></span><span style=display:flex><span><span style=color:#b44>spec:
+</span></span></span><span style=display:flex><span><span style=color:#b44>  hard:
+</span></span></span><span style=display:flex><span><span style=color:#b44>    configmaps: &#34;10&#34;
+</span></span></span><span style=display:flex><span><span style=color:#b44>    persistentvolumeclaims: &#34;4&#34;
+</span></span></span><span style=display:flex><span><span style=color:#b44>    pods: &#34;4&#34;
+</span></span></span><span style=display:flex><span><span style=color:#b44>    replicationcontrollers: &#34;20&#34;
+</span></span></span><span style=display:flex><span><span style=color:#b44>    secrets: &#34;10&#34;
+</span></span></span><span style=display:flex><span><span style=color:#b44>    services: &#34;10&#34;
+</span></span></span><span style=display:flex><span><span style=color:#b44>    services.loadbalancers: &#34;2&#34;
+</span></span></span><span style=display:flex><span><span style=color:#b44>EOF</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create -f ./object-counts.yaml --namespace<span style=color:#666>=</span>myspace
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get quota --namespace<span style=color:#666>=</span>myspace
+</span></span></code></pre></div><pre tabindex=0><code class=language-none data-lang=none>NAME                    AGE
+compute-resources       30s
+object-counts           32s
+</code></pre><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl describe quota compute-resources --namespace<span style=color:#666>=</span>myspace
+</span></span></code></pre></div><pre tabindex=0><code class=language-none data-lang=none>Name:                    compute-resources
+Namespace:               myspace
+Resource                 Used  Hard
+--------                 ----  ----
+limits.cpu               0     2
+limits.memory            0     2Gi
+requests.cpu             0     1
+requests.memory          0     1Gi
+requests.nvidia.com/gpu  0     4
+</code></pre><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl describe quota object-counts --namespace<span style=color:#666>=</span>myspace
+</span></span></code></pre></div><pre tabindex=0><code class=language-none data-lang=none>Name:                   object-counts
+Namespace:              myspace
+Resource                Used    Hard
+--------                ----    ----
+configmaps              0       10
+persistentvolumeclaims  0       4
+pods                    0       4
+replicationcontrollers  0       20
+secrets                 1       10
+services                0       10
+services.loadbalancers  0       2
+</code></pre><p>kubectl 还使用语法 <code>count/&lt;resource>.&lt;group></code> 支持所有标准的、命名空间域的资源的对象计数配额：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create namespace myspace
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create quota <span style=color:#a2f>test</span> --hard<span style=color:#666>=</span>count/deployments.apps<span style=color:#666>=</span>2,count/replicasets.apps<span style=color:#666>=</span>4,count/pods<span style=color:#666>=</span>3,count/secrets<span style=color:#666>=</span><span style=color:#666>4</span> --namespace<span style=color:#666>=</span>myspace
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create deployment nginx --image<span style=color:#666>=</span>nginx --namespace<span style=color:#666>=</span>myspace --replicas<span style=color:#666>=</span><span style=color:#666>2</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl describe quota --namespace<span style=color:#666>=</span>myspace
+</span></span></code></pre></div><pre tabindex=0><code>Name:                         test
+Namespace:                    myspace
+Resource                      Used  Hard
+--------                      ----  ----
+count/deployments.apps        1     2
+count/pods                    2     3
+count/replicasets.apps        1     4
+count/secrets                 1     4
+</code></pre><h2 id=quota-and-cluster-capacity>配额和集群容量</h2><p>ResourceQuota 与集群资源总量是完全独立的。它们通过绝对的单位来配置。
+所以，为集群添加节点时，资源配额<em>不会</em>自动赋予每个命名空间消耗更多资源的能力。</p><p>有时可能需要资源配额支持更复杂的策略，比如：</p><ul><li>在几个团队中按比例划分总的集群资源。</li><li>允许每个租户根据需要增加资源使用量，但要有足够的限制以防止资源意外耗尽。</li><li>探测某个命名空间的需求，添加物理节点并扩大资源配额值。</li></ul><p>这些策略可以通过将资源配额作为一个组成模块、手动编写一个控制器来监控资源使用情况，
+并结合其他信号调整命名空间上的硬性资源配额来实现。</p><p>注意：资源配额对集群资源总体进行划分，但它对节点没有限制：来自不同命名空间的 Pod 可能在同一节点上运行。</p><h2 id=limit-priority-class-consumption-by-default>默认情况下限制特定优先级的资源消耗</h2><p>有时候可能希望当且仅当某名字空间中存在匹配的配额对象时，才可以创建特定优先级
+（例如 "cluster-services"）的 Pod。</p><p>通过这种机制，操作人员能够限制某些高优先级类仅出现在有限数量的命名空间中，
+而并非每个命名空间默认情况下都能够使用这些优先级类。</p><p>要实现此目的，应设置 <code>kube-apiserver</code> 的标志 <code>--admission-control-config-file</code>
+指向如下配置文件：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>apiserver.config.k8s.io/v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>AdmissionConfiguration<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>plugins</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;ResourceQuota&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>configuration</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>apiserver.config.k8s.io/v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>ResourceQuotaConfiguration<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>limitedResources</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>resource</span>:<span style=color:#bbb> </span>pods<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>matchScopes</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>scopeName</span>:<span style=color:#bbb> </span>PriorityClass<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>operator</span>:<span style=color:#bbb> </span>In<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>values</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;cluster-services&#34;</span>]<span style=color:#bbb>
+</span></span></span></code></pre></div><p>现在在 <code>kube-system</code> 名字空间中创建一个资源配额对象：</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/zh-cn/examples/policy/priority-class-resourcequota.yaml download=policy/priority-class-resourcequota.yaml><code>policy/priority-class-resourcequota.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("policy-priority-class-resourcequota-yaml")' title="Copy policy/priority-class-resourcequota.yaml to clipboard"></img></div><div class=includecode id=policy-priority-class-resourcequota-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>ResourceQuota<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>pods-cluster-services<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>scopeSelector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>matchExpressions</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>operator </span>:<span style=color:#bbb> </span>In<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>scopeName</span>:<span style=color:#bbb> </span>PriorityClass<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>values</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;cluster-services&#34;</span>]</span></span></code></pre></div></div></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -f https://k8s.io/examples/policy/priority-class-resourcequota.yaml -n kube-system
+</span></span></code></pre></div><pre tabindex=0><code class=language-none data-lang=none>resourcequota/pods-cluster-services created
+</code></pre><p>在这里，当以下条件满足时可以创建 Pod：</p><ol><li>Pod 未设置 <code>priorityClassName</code></li><li>Pod 的 <code>priorityClassName</code> 设置值不是 <code>cluster-services</code></li><li>Pod 的 <code>priorityClassName</code> 设置值为 <code>cluster-services</code>，它将被创建于
+<code>kube-system</code> 名字空间中，并且它已经通过了资源配额检查。</li></ol><p>如果 Pod 的 <code>priorityClassName</code> 设置为 <code>cluster-services</code>，但要被创建到
+<code>kube-system</code> 之外的别的名字空间，则 Pod 创建请求也被拒绝。</p><h2 id=接下来>接下来</h2><ul><li>参阅<a href=https://git.k8s.io/design-proposals-archive/resource-management/admission_control_resource_quota.md>资源配额设计文档</a>。</li><li>参阅<a href=/zh-cn/docs/tasks/administer-cluster/quota-api-object/>如何使用资源配额的详细示例</a>。</li><li>参阅<a href=https://git.k8s.io/design-proposals-archive/scheduling/pod-priority-resourcequota.md>优先级类配额支持的设计文档</a>了解更多信息。</li><li>参阅 <a href=https://github.com/kubernetes/kubernetes/pull/36765>LimitedResources</a>。</li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-7352434db5f5954d2f7656b46fe5a324>3 - 进程 ID 约束与预留</h1><div style=margin-top:10px;margin-bottom:10px><b>特性状态：</b> <code>Kubernetes v1.20 [stable]</code></div><p>Kubernetes 允许你限制一个 <a class=glossary-tooltip title='Pod 表示你的集群上一组正在运行的容器。' data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/workloads/pods/ target=_blank aria-label=Pod>Pod</a> 中可以使用的
+进程 ID（PID）数目。你也可以为每个 <a class=glossary-tooltip title='Kubernetes 中的工作机器称作节点。' data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/architecture/nodes/ target=_blank aria-label=节点>节点</a>
+预留一定数量的可分配的 PID，供操作系统和守护进程（而非 Pod）使用。</p><p>进程 ID（PID）是节点上的一种基础资源。很容易就会在尚未超出其它资源约束的时候就
+已经触及任务个数上限，进而导致宿主机器不稳定。</p><p>集群管理员需要一定的机制来确保集群中运行的 Pod 不会导致 PID 资源枯竭，甚而
+造成宿主机上的守护进程（例如
+<a class=glossary-tooltip title='一个在集群中每个节点上运行的代理。它保证容器都运行在 Pod 中。' data-toggle=tooltip data-placement=top href=/docs/reference/generated/kubelet target=_blank aria-label=kubelet>kubelet</a> 或者
+<a class=glossary-tooltip title='kube-proxy 是集群中每个节点上运行的网络代理。' data-toggle=tooltip data-placement=top href=/zh-cn/docs/reference/command-line-tools-reference/kube-proxy/ target=_blank aria-label=kube-proxy>kube-proxy</a>
+乃至包括容器运行时本身）无法正常运行。
+此外，确保 Pod 中 PID 的个数受限对于保证其不会影响到同一节点上其它负载也很重要。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>在某些 Linux 安装环境中，操作系统会将 PID 约束设置为一个较低的默认值，例如
+<code>32768</code>。这时可以考虑提升 <code>/proc/sys/kernel/pid_max</code> 的设置值。</div><p>你可以配置 kubelet 限制给定 Pod 能够使用的 PID 个数。
+例如，如果你的节点上的宿主操作系统被设置为最多可使用 <code>262144</code> 个 PID，同时预期
+节点上会运行的 Pod 个数不会超过 <code>250</code>，那么你可以为每个 Pod 设置 <code>1000</code> 个 PID
+的预算，避免耗尽该节点上可用 PID 的总量。
+如果管理员系统像 CPU 或内存那样允许对 PID 进行过量分配（Overcommit），他们也可以
+这样做，只是会有一些额外的风险。不管怎样，任何一个 Pod 都不可以将整个机器的运行
+状态破坏。这类资源限制有助于避免简单的派生炸弹（Fork
+Bomb）影响到整个集群的运行。</p><p>在 Pod 级别设置 PID 限制使得管理员能够保护 Pod 之间不会互相伤害，不过无法
+确保所有调度到该宿主机器上的所有 Pod 都不会影响到节点整体。
+Pod 级别的限制也无法保护节点代理任务自身不会受到 PID 耗尽的影响。</p><p>你也可以预留一定量的 PID，作为节点的额外开销，与分配给 Pod 的 PID 集合独立。
+这有点类似于在给操作系统和其它设施预留 CPU、内存或其它资源时所做的操作，
+这些任务都在 Pod 及其所包含的容器之外运行。</p><p>PID 限制是与<a href=/zh-cn/docs/concepts/configuration/manage-resources-containers/>计算资源</a>
+请求和限制相辅相成的一种机制。不过，你需要用一种不同的方式来设置这一限制：
+你需要将其设置到 kubelet 上而不是在 Pod 的 <code>.spec</code> 中为 Pod 设置资源限制。
+目前还不支持在 Pod 级别设置 PID 限制。</p><div class="alert alert-warning caution callout" role=alert><strong>注意：</strong><p>这意味着，施加在 Pod 之上的限制值可能因为 Pod 运行所在的节点不同而有差别。
+为了简化系统，最简单的方法是为所有节点设置相同的 PID 资源限制和预留值。</div><h2 id=node-pid-limits>节点级别 PID 限制</h2><p>Kubernetes 允许你为系统预留一定量的进程 ID。为了配置预留数量，你可以使用
+kubelet 的 <code>--system-reserved</code> 和 <code>--kube-reserved</code> 命令行选项中的参数
+<code>pid=&lt;number></code>。你所设置的参数值分别用来声明为整个系统和 Kubernetes 系统
+守护进程所保留的进程 ID 数目。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>在 Kubernetes 1.20 版本之前，在节点级别通过 PID 资源限制预留 PID 的能力
+需要启用<a href=/zh-cn/docs/reference/command-line-tools-reference/feature-gates/>特性门控</a>
+<code>SupportNodePidsLimit</code> 才行。</div><h2 id=pod-pid-limits>Pod 级别 PID 限制</h2><p>Kubernetes 允许你限制 Pod 中运行的进程个数。你可以在节点级别设置这一限制，
+而不是为特定的 Pod 来将其设置为资源限制。
+每个节点都可以有不同的 PID 限制设置。
+要设置限制值，你可以设置 kubelet 的命令行参数 <code>--pod-max-pids</code>，或者
+在 kubelet 的<a href=/zh-cn/docs/tasks/administer-cluster/kubelet-config-file/>配置文件</a>
+中设置 <code>PodPidsLimit</code>。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>在 Kubernetes 1.20 版本之前，为 Pod 设置 PID 资源限制的能力需要启用
+<a href=/zh-cn/docs/reference/command-line-tools-reference/feature-gates/>特性门控</a>
+<code>SupportNodePidsLimit</code> 才行。</div><h2 id=pid-based-eviction>基于 PID 的驱逐</h2><p>你可以配置 kubelet 使之在 Pod 行为不正常或者消耗不正常数量资源的时候将其终止。
+这一特性称作驱逐。你可以针对不同的驱逐信号
+<a href=/zh-cn/docs/concepts/scheduling-eviction/node-pressure-eviction/>配置资源不足的处理</a>。
+使用 <code>pid.available</code> 驱逐信号来配置 Pod 使用的 PID 个数的阈值。
+你可以设置硬性的和软性的驱逐策略。不过，即使使用硬性的驱逐策略，
+如果 PID 个数增长过快，节点仍然可能因为触及节点 PID 限制而进入一种不稳定状态。
+驱逐信号的取值是周期性计算的，而不是一直能够强制实施约束。</p><p>Pod 级别和节点级别的 PID 限制会设置硬性限制。
+一旦触及限制值，工作负载会在尝试获得新的 PID 时开始遇到问题。
+这可能会也可能不会导致 Pod 被重新调度，取决于工作负载如何应对这类失败
+以及 Pod 的存活性和就绪态探测是如何配置的。
+可是，如果限制值被正确设置，你可以确保其它 Pod 负载和系统进程不会因为某个
+Pod 行为不正常而没有 PID 可用。</p><h2 id=接下来>接下来</h2><ul><li>参阅 <a href=https://github.com/kubernetes/enhancements/blob/097b4d8276bc9564e56adf72505d43ce9bc5e9e8/keps/sig-node/20190129-pid-limiting.md>PID 约束改进文档</a>
+以了解更多信息。</li><li>关于历史背景，请阅读
+<a href=/blog/2019/04/15/process-id-limiting-for-stability-improvements-in-kubernetes-1.14/>Kubernetes 1.14 中限制进程 ID 以提升稳定性</a>
+的博文。</li><li>请阅读<a href=/zh-cn/docs/concepts/configuration/manage-resources-containers/>为容器管理资源</a>。</li><li>学习如何<a href=/zh-cn/docs/concepts/scheduling-eviction/node-pressure-eviction/>配置资源不足情况的处理</a>。</li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-b528c4464c030f3f044124b38d778f04>4 - 节点资源管理器</h1><p>Kubernetes 提供了一组资源管理器，用于支持延迟敏感的、高吞吐量的工作负载。
+资源管理器的目标是协调和优化节点资源，以支持对 CPU、设备和内存（巨页）等资源有特殊需求的 Pod。</p><p>主管理器，也叫拓扑管理器（Topology Manager），是一个 Kubelet 组件，
+它通过<a href=/zh-cn/docs/tasks/administer-cluster/topology-manager/>策略</a>，
+协调全局的资源管理过程。</p><p>各个管理器的配置方式会在专项文档中详细阐述：</p><ul><li><a href=/zh-cn/docs/tasks/administer-cluster/cpu-management-policies/>CPU 管理器策略</a></li><li><a href=/zh-cn/docs/concepts/extend-kubernetes/compute-storage-net/device-plugins/#device-plugin-integration-with-the-topology-manager>设备管理器</a></li><li><a href=/zh-cn/docs/tasks/administer-cluster/memory-manager/>内存管理器策略</a></li></ul></div></main></div></div><footer class=d-print-none><div class=footer__links><nav><a class=text-white href=/zh-cn/docs/home/>主页</a>
+<a class=text-white href=/zh-cn/blog/>博客</a>
+<a class=text-white href=/zh-cn/training/>培训</a>
+<a class=text-white href=/zh-cn/partners/>合作伙伴</a>
+<a class=text-white href=/zh-cn/community/>社区</a>
+<a class=text-white href=/zh-cn/case-studies/>案例分析</a></nav></div><div class=container-fluid><div class=row><div class="col-6 col-sm-2 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="User mailing list" aria-label="User mailing list"><a class=text-white target=_blank href=https://discuss.kubernetes.io><i class="fa fa-envelope"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank href=https://twitter.com/kubernetesio><i class="fab fa-twitter"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Calendar aria-label=Calendar><a class=text-white target=_blank href="https://calendar.google.com/calendar/embed?src=calendar%40kubernetes.io"><i class="fas fa-calendar-alt"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Youtube aria-label=Youtube><a class=text-white target=_blank href=https://youtube.com/kubernetescommunity><i class="fab fa-youtube"></i></a></li></ul></div><div class="col-6 col-sm-2 text-right text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank href=https://github.com/kubernetes/kubernetes><i class="fab fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Slack aria-label=Slack><a class=text-white target=_blank href=https://slack.k8s.io><i class="fab fa-slack"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Contribute aria-label=Contribute><a class=text-white target=_blank href=https://git.k8s.io/community/contributors/guide><i class="fas fa-edit"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="Stack Overflow" aria-label="Stack Overflow"><a class=text-white target=_blank href=https://stackoverflow.com/questions/tagged/kubernetes><i class="fab fa-stack-overflow"></i></a></li></ul></div><div class="col-12 col-sm-8 text-center order-sm-2"><small class=text-white>&copy; 2023 The Kubernetes 作者 | 文档发布基于 <a href=https://git.k8s.io/website/LICENSE class=light-text>CC BY 4.0</a> 授权许可</small><br><small class=text-white>Copyright &copy; 2023 Linux 基金会&reg;。保留所有权利。Linux 基金会已注册并使用商标。如需了解 Linux 基金会的商标列表，请访问<a href=https://www.linuxfoundation.org/trademark-usage class=light-text>商标使用页面</a></small><br><small class=text-white>ICP license: 京ICP备17074266号-3</small></div></div></div></footer></div><script src=/js/jquery-3.6.0.min.js integrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script>
+<script src=/js/popper-1.16.1.min.js intregrity=sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN crossorigin=anonymous></script>
+<script src=/js/bootstrap-4.6.1.min.js integrity=sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2 crossorigin=anonymous></script>
+<script src=/js/script.js></script>
+<script async src=/js/mermaid-8.13.4.min.js integrity=sha384-5hHNvPeMrNH14oM3IcQofDoBhiclNK3g2+hnEinKzQ07C4AliMeVpnvxuiwEGpaO crossorigin=anonymous></script>
+<script src=/js/main.min.5c0bf7f21dc4f66485f74efbbeeff28a7e4f8cddaac1bae47043159c922ff3a3.js integrity="sha256-XAv38h3E9mSF9077vu/yin5PjN2qwbrkcEMVnJIv86M=" crossorigin=anonymous></script></body></html>

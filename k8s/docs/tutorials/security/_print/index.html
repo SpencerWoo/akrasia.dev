@@ -1,0 +1,816 @@
+<!doctype html><html lang=en class=no-js><head><meta name=robots content="noindex, nofollow"><link rel=alternate hreflang=zh-cn href=https://kubernetes.io/zh-cn/docs/tutorials/security/><link rel=alternate hreflang=ko href=https://kubernetes.io/ko/docs/tutorials/security/><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.110.0"><link rel=canonical type=text/html href=https://kubernetes.io/docs/tutorials/security/><link rel="shortcut icon" type=image/png href=/images/favicon.png><link rel=apple-touch-icon href=/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=manifest href=/manifest.webmanifest><link rel=apple-touch-icon href=/images/kubernetes-192x192.png><title>Security | Kubernetes</title><meta property="og:title" content="Security"><meta property="og:description" content="Production-Grade Container Orchestration"><meta property="og:type" content="website"><meta property="og:url" content="https://kubernetes.io/docs/tutorials/security/"><meta property="og:site_name" content="Kubernetes"><meta itemprop=name content="Security"><meta itemprop=description content="Production-Grade Container Orchestration"><meta name=twitter:card content="summary"><meta name=twitter:title content="Security"><meta name=twitter:description content="Production-Grade Container Orchestration"><link href=/scss/main.css rel=stylesheet><script type=application/ld+json>{"@context":"https://schema.org","@type":"Organization","url":"https://kubernetes.io","logo":"https://kubernetes.io/images/favicon.png","potentialAction":{"@type":"SearchAction","target":"https://kubernetes.io/search/?q={search_term_string}","query-input":"required name=search_term_string"}}</script><meta name=theme-color content="#326ce5"><link rel=stylesheet href=/css/feature-states.css><meta name=description content><meta property="og:description" content><meta name=twitter:description content><meta property="og:url" content="https://kubernetes.io/docs/tutorials/security/"><meta property="og:title" content="Security"><meta name=twitter:title content="Security"><meta name=twitter:image content="https://kubernetes.io/images/favicon.png"><meta name=twitter:image:alt content="Kubernetes"><meta property="og:image" content="/images/kubernetes-horizontal-color.png"><meta property="og:type" content="article"><script src=/js/jquery-3.6.0.min.js intregrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script></head><body class=td-section><header><nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar" data-auto-burger=primary><a class=navbar-brand href=/></a><div class="td-navbar-nav-scroll ml-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0"><li class="nav-item mr-2 mb-lg-0"><a class="nav-link active" href=/docs/>Documentation</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/blog/>Kubernetes Blog</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/training/>Training</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/partners/>Partners</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/community/>Community</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/case-studies/>Case Studies</a></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>Versions</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/releases>Release Information</a>
+<a class=dropdown-item href=https://kubernetes.io/docs/tutorials/security/>v1.25</a>
+<a class=dropdown-item href=https://v1-24.docs.kubernetes.io/docs/tutorials/security/>v1.24</a>
+<a class=dropdown-item href=https://v1-23.docs.kubernetes.io/docs/tutorials/security/>v1.23</a>
+<a class=dropdown-item href=https://v1-22.docs.kubernetes.io/docs/tutorials/security/>v1.22</a>
+<a class=dropdown-item href=https://v1-21.docs.kubernetes.io/docs/tutorials/security/>v1.21</a></div></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdownMenuLink role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>English</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/zh-cn/docs/tutorials/security/>中文 (Chinese)</a>
+<a class=dropdown-item href=/ko/docs/tutorials/security/>한국어 (Korean)</a></div></li></ul></div><button id=hamburger onclick=kub.toggleMenu() data-auto-burger-exclude><div></div></button></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><div class=td-content><div class="pageinfo pageinfo-primary d-print-none"><p>This is the multi-page printable view of this section.
+<a href=# onclick="return print(),!1">Click here to print</a>.</p><p><a href=/docs/tutorials/security/>Return to the regular view of this page</a>.</p></div><h1 class=title>Security</h1><ul><li>1: <a href=#pg-d5f847bcdb6f7efbfc9c8a180d73e29a>Apply Pod Security Standards at the Cluster Level</a></li><li>2: <a href=#pg-31a6c137cfc5bfea9d88f4b109109465>Apply Pod Security Standards at the Namespace Level</a></li><li>3: <a href=#pg-fca078b8ac6b82352ed52187a2da91b7>Restrict a Container's Access to Resources with AppArmor</a></li><li>4: <a href=#pg-8b105172a11322c70d0223bc9dff1904>Restrict a Container's Syscalls with seccomp</a></li></ul><div class=content></div></div><div class=td-content><h1 id=pg-d5f847bcdb6f7efbfc9c8a180d73e29a>1 - Apply Pod Security Standards at the Cluster Level</h1><div class="alert alert-primary" role=alert><h4 class=alert-heading>Note</h4>This tutorial applies only for new clusters.</div><p>Pod Security admission (PSA) is enabled by default in v1.23 and later, as it has
+<a href=/blog/2021/12/09/pod-security-admission-beta/>graduated to beta</a>.
+Pod Security
+is an admission controller that carries out checks against the Kubernetes
+<a href=/docs/concepts/security/pod-security-standards/>Pod Security Standards</a> when new pods are
+created. This tutorial shows you how to enforce the <code>baseline</code> Pod Security
+Standard at the cluster level which applies a standard configuration
+to all namespaces in a cluster.</p><p>To apply Pod Security Standards to specific namespaces, refer to
+<a href=/docs/tutorials/security/ns-level-pss>Apply Pod Security Standards at the namespace level</a>.</p><p>If you are running a version of Kubernetes other than v1.25,
+check the documentation for that version.</p><h2 id=before-you-begin>Before you begin</h2><p>Install the following on your workstation:</p><ul><li><a href=https://kind.sigs.k8s.io/docs/user/quick-start/#installation>KinD</a></li><li><a href=/docs/tasks/tools/>kubectl</a></li></ul><h2 id=choose-the-right-pod-security-standard-to-apply>Choose the right Pod Security Standard to apply</h2><p><a href=/docs/concepts/security/pod-security-admission/>Pod Security Admission</a>
+lets you apply built-in <a href=/docs/concepts/security/pod-security-standards/>Pod Security Standards</a>
+with the following modes: <code>enforce</code>, <code>audit</code>, and <code>warn</code>.</p><p>To gather information that helps you to choose the Pod Security Standards
+that are most appropriate for your configuration, do the following:</p><ol><li><p>Create a cluster with no Pod Security Standards applied:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kind create cluster --name psa-wo-cluster-pss --image kindest/node:v1.24.0
+</span></span></code></pre></div><p>The output is similar to this:</p><pre tabindex=0><code>Creating cluster &#34;psa-wo-cluster-pss&#34; ...
+✓ Ensuring node image (kindest/node:v1.24.0) 🖼
+✓ Preparing nodes 📦  
+✓ Writing configuration 📜
+✓ Starting control-plane 🕹️
+✓ Installing CNI 🔌
+✓ Installing StorageClass 💾
+Set kubectl context to &#34;kind-psa-wo-cluster-pss&#34;
+You can now use your cluster with:
+
+kubectl cluster-info --context kind-psa-wo-cluster-pss
+
+Thanks for using kind! 😊
+</code></pre></li><li><p>Set the kubectl context to the new cluster:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl cluster-info --context kind-psa-wo-cluster-pss
+</span></span></code></pre></div><p>The output is similar to this:</p><pre tabindex=0><code> Kubernetes control plane is running at https://127.0.0.1:61350
+
+CoreDNS is running at https://127.0.0.1:61350/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use &#39;kubectl cluster-info dump&#39;.
+</code></pre></li><li><p>Get a list of namespaces in the cluster:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get ns
+</span></span></code></pre></div><p>The output is similar to this:</p><pre tabindex=0><code>NAME                 STATUS   AGE
+default              Active   9m30s
+kube-node-lease      Active   9m32s
+kube-public          Active   9m32s
+kube-system          Active   9m32s
+local-path-storage   Active   9m26s
+</code></pre></li><li><p>Use <code>--dry-run=server</code> to understand what happens when different Pod Security Standards
+are applied:</p><ol><li>Privileged<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl label --dry-run<span style=color:#666>=</span>server --overwrite ns --all <span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>pod-security.kubernetes.io/enforce<span style=color:#666>=</span>privileged
+</span></span></code></pre></div></li></ol><p>The output is similar to this:</p><pre tabindex=0><code>namespace/default labeled
+namespace/kube-node-lease labeled
+namespace/kube-public labeled
+namespace/kube-system labeled
+namespace/local-path-storage labeled
+</code></pre><ol start=2><li>Baseline<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl label --dry-run<span style=color:#666>=</span>server --overwrite ns --all <span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>pod-security.kubernetes.io/enforce<span style=color:#666>=</span>baseline
+</span></span></code></pre></div></li></ol><p>The output is similar to this:</p><pre tabindex=0><code>namespace/default labeled
+namespace/kube-node-lease labeled
+namespace/kube-public labeled
+Warning: existing pods in namespace &#34;kube-system&#34; violate the new PodSecurity enforce level &#34;baseline:latest&#34;
+Warning: etcd-psa-wo-cluster-pss-control-plane (and 3 other pods): host namespaces, hostPath volumes
+Warning: kindnet-vzj42: non-default capabilities, host namespaces, hostPath volumes
+Warning: kube-proxy-m6hwf: host namespaces, hostPath volumes, privileged
+namespace/kube-system labeled
+namespace/local-path-storage labeled
+</code></pre><ol start=3><li>Restricted</li></ol><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span> kubectl label --dry-run<span style=color:#666>=</span>server --overwrite ns --all <span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span> pod-security.kubernetes.io/enforce<span style=color:#666>=</span>restricted
+</span></span></code></pre></div><p>The output is similar to this:</p><pre tabindex=0><code>namespace/default labeled
+namespace/kube-node-lease labeled
+namespace/kube-public labeled
+Warning: existing pods in namespace &#34;kube-system&#34; violate the new PodSecurity enforce level &#34;restricted:latest&#34;
+Warning: coredns-7bb9c7b568-hsptc (and 1 other pod): unrestricted capabilities, runAsNonRoot != true, seccompProfile
+Warning: etcd-psa-wo-cluster-pss-control-plane (and 3 other pods): host namespaces, hostPath volumes, allowPrivilegeEscalation != false, unrestricted capabilities, restricted volume types, runAsNonRoot != true
+Warning: kindnet-vzj42: non-default capabilities, host namespaces, hostPath volumes, allowPrivilegeEscalation != false, unrestricted capabilities, restricted volume types, runAsNonRoot != true, seccompProfile
+Warning: kube-proxy-m6hwf: host namespaces, hostPath volumes, privileged, allowPrivilegeEscalation != false, unrestricted capabilities, restricted volume types, runAsNonRoot != true, seccompProfile
+namespace/kube-system labeled
+Warning: existing pods in namespace &#34;local-path-storage&#34; violate the new PodSecurity enforce level &#34;restricted:latest&#34;
+Warning: local-path-provisioner-d6d9f7ffc-lw9lh: allowPrivilegeEscalation != false, unrestricted capabilities, runAsNonRoot != true, seccompProfile
+namespace/local-path-storage labeled
+</code></pre></li></ol><p>From the previous output, you'll notice that applying the <code>privileged</code> Pod Security Standard shows no warnings
+for any namespaces. However, <code>baseline</code> and <code>restricted</code> standards both have
+warnings, specifically in the <code>kube-system</code> namespace.</p><h2 id=set-modes-versions-and-standards>Set modes, versions and standards</h2><p>In this section, you apply the following Pod Security Standards to the <code>latest</code> version:</p><ul><li><code>baseline</code> standard in <code>enforce</code> mode.</li><li><code>restricted</code> standard in <code>warn</code> and <code>audit</code> mode.</li></ul><p>The <code>baseline</code> Pod Security Standard provides a convenient
+middle ground that allows keeping the exemption list short and prevents known
+privilege escalations.</p><p>Additionally, to prevent pods from failing in <code>kube-system</code>, you'll exempt the namespace
+from having Pod Security Standards applied.</p><p>When you implement Pod Security Admission in your own environment, consider the
+following:</p><ol><li><p>Based on the risk posture applied to a cluster, a stricter Pod Security
+Standard like <code>restricted</code> might be a better choice.</p></li><li><p>Exempting the <code>kube-system</code> namespace allows pods to run as
+<code>privileged</code> in this namespace. For real world use, the Kubernetes project
+strongly recommends that you apply strict RBAC
+policies that limit access to <code>kube-system</code>, following the principle of least
+privilege.
+To implement the preceding standards, do the following:</p></li><li><p>Create a configuration file that can be consumed by the Pod Security
+Admission Controller to implement these Pod Security Standards:</p><pre tabindex=0><code>mkdir -p /tmp/pss
+cat &lt;&lt;EOF &gt; /tmp/pss/cluster-level-pss.yaml 
+apiVersion: apiserver.config.k8s.io/v1
+kind: AdmissionConfiguration
+plugins:
+- name: PodSecurity
+  configuration:
+    apiVersion: pod-security.admission.config.k8s.io/v1
+    kind: PodSecurityConfiguration
+    defaults:
+      enforce: &#34;baseline&#34;
+      enforce-version: &#34;latest&#34;
+      audit: &#34;restricted&#34;
+      audit-version: &#34;latest&#34;
+      warn: &#34;restricted&#34;
+      warn-version: &#34;latest&#34;
+    exemptions:
+      usernames: []
+      runtimeClasses: []
+      namespaces: [kube-system]
+EOF
+</code></pre><div class="alert alert-info note callout" role=alert><strong>Note:</strong> <code>pod-security.admission.config.k8s.io/v1</code> configuration requires v1.25+.
+For v1.23 and v1.24, use <a href=https://v1-24.docs.kubernetes.io/docs/tasks/configure-pod-container/enforce-standards-admission-controller/>v1beta1</a>.
+For v1.22, use <a href=https://v1-22.docs.kubernetes.io/docs/tasks/configure-pod-container/enforce-standards-admission-controller/>v1alpha1</a>.</div></li><li><p>Configure the API server to consume this file during cluster creation:</p><pre tabindex=0><code>cat &lt;&lt;EOF &gt; /tmp/pss/cluster-config.yaml 
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  kubeadmConfigPatches:
+  - |
+    kind: ClusterConfiguration
+    apiServer:
+        extraArgs:
+          admission-control-config-file: /etc/config/cluster-level-pss.yaml
+        extraVolumes:
+          - name: accf
+            hostPath: /etc/config
+            mountPath: /etc/config
+            readOnly: false
+            pathType: &#34;DirectoryOrCreate&#34;
+  extraMounts:
+  - hostPath: /tmp/pss
+    containerPath: /etc/config
+    # optional: if set, the mount is read-only.
+    # default false
+    readOnly: false
+    # optional: if set, the mount needs SELinux relabeling.
+    # default false
+    selinuxRelabel: false
+    # optional: set propagation mode (None, HostToContainer or Bidirectional)
+    # see https://kubernetes.io/docs/concepts/storage/volumes/#mount-propagation
+    # default None
+    propagation: None
+EOF
+</code></pre><div class="alert alert-info note callout" role=alert><strong>Note:</strong> If you use Docker Desktop with KinD on macOS, you can
+add <code>/tmp</code> as a Shared Directory under the menu item
+<strong>Preferences > Resources > File Sharing</strong>.</div></li><li><p>Create a cluster that uses Pod Security Admission to apply
+these Pod Security Standards:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span> kind create cluster --name psa-with-cluster-pss --image kindest/node:v1.24.0 --config /tmp/pss/cluster-config.yaml
+</span></span></code></pre></div><p>The output is similar to this:</p><pre tabindex=0><code> Creating cluster &#34;psa-with-cluster-pss&#34; ...
+  ✓ Ensuring node image (kindest/node:v1.24.0) 🖼 
+  ✓ Preparing nodes 📦  
+  ✓ Writing configuration 📜 
+  ✓ Starting control-plane 🕹️ 
+  ✓ Installing CNI 🔌 
+  ✓ Installing StorageClass 💾 
+ Set kubectl context to &#34;kind-psa-with-cluster-pss&#34;
+ You can now use your cluster with:
+
+ kubectl cluster-info --context kind-psa-with-cluster-pss
+
+ Have a question, bug, or feature request? Let us know! https://kind.sigs.k8s.io/#community 🙂
+</code></pre></li><li><p>Point kubectl to the cluster</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span> kubectl cluster-info --context kind-psa-with-cluster-pss
+</span></span></code></pre></div><p>The output is similar to this:</p><pre tabindex=0><code> Kubernetes control plane is running at https://127.0.0.1:63855
+ CoreDNS is running at https://127.0.0.1:63855/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+ To further debug and diagnose cluster problems, use &#39;kubectl cluster-info dump&#39;.
+</code></pre></li><li><p>Create the following Pod specification for a minimal configuration in the default namespace:</p><pre tabindex=0><code>cat &lt;&lt;EOF &gt; /tmp/pss/nginx-pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers:
+    - image: nginx
+      name: nginx
+      ports:
+        - containerPort: 80
+EOF
+</code></pre></li><li><p>Create the Pod in the cluster:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span> kubectl apply -f /tmp/pss/nginx-pod.yaml
+</span></span></code></pre></div><p>The output is similar to this:</p><pre tabindex=0><code> Warning: would violate PodSecurity &#34;restricted:latest&#34;: allowPrivilegeEscalation != false (container &#34;nginx&#34; must set securityContext.allowPrivilegeEscalation=false), unrestricted capabilities (container &#34;nginx&#34; must set securityContext.capabilities.drop=[&#34;ALL&#34;]), runAsNonRoot != true (pod or container &#34;nginx&#34; must set securityContext.runAsNonRoot=true), seccompProfile (pod or container &#34;nginx&#34; must set securityContext.seccompProfile.type to &#34;RuntimeDefault&#34; or &#34;Localhost&#34;)
+ pod/nginx created
+</code></pre></li></ol><h2 id=clean-up>Clean up</h2><p>Run <code>kind delete cluster --name psa-with-cluster-pss</code> and
+<code>kind delete cluster --name psa-wo-cluster-pss</code> to delete the clusters you
+created.</p><h2 id=what-s-next>What's next</h2><ul><li>Run a
+<a href=/examples/security/kind-with-cluster-level-baseline-pod-security.sh>shell script</a>
+to perform all the preceding steps at once:<ol><li>Create a Pod Security Standards based cluster level Configuration</li><li>Create a file to let API server consume this configuration</li><li>Create a cluster that creates an API server with this configuration</li><li>Set kubectl context to this new cluster</li><li>Create a minimal pod yaml file</li><li>Apply this file to create a Pod in the new cluster</li></ol></li><li><a href=/docs/concepts/security/pod-security-admission/>Pod Security Admission</a></li><li><a href=/docs/concepts/security/pod-security-standards/>Pod Security Standards</a></li><li><a href=/docs/tutorials/security/ns-level-pss/>Apply Pod Security Standards at the namespace level</a></li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-31a6c137cfc5bfea9d88f4b109109465>2 - Apply Pod Security Standards at the Namespace Level</h1><div class="alert alert-primary" role=alert><h4 class=alert-heading>Note</h4>This tutorial applies only for new clusters.</div><p>Pod Security admission (PSA) is enabled by default in v1.23 and later, as it
+<a href=/blog/2021/12/09/pod-security-admission-beta/>graduated to beta</a>. Pod Security Admission
+is an admission controller that applies
+<a href=/docs/concepts/security/pod-security-standards/>Pod Security Standards</a>
+when pods are created. In this tutorial, you will enforce the <code>baseline</code> Pod Security Standard,
+one namespace at a time.</p><p>You can also apply Pod Security Standards to multiple namespaces at once at the cluster
+level. For instructions, refer to
+<a href=/docs/tutorials/security/cluster-level-pss/>Apply Pod Security Standards at the cluster level</a>.</p><h2 id=before-you-begin>Before you begin</h2><p>Install the following on your workstation:</p><ul><li><a href=https://kind.sigs.k8s.io/docs/user/quick-start/#installation>KinD</a></li><li><a href=/docs/tasks/tools/>kubectl</a></li></ul><h2 id=create-cluster>Create cluster</h2><ol><li><p>Create a <code>KinD</code> cluster as follows:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kind create cluster --name psa-ns-level --image kindest/node:v1.23.0
+</span></span></code></pre></div><p>The output is similar to this:</p><pre tabindex=0><code>Creating cluster &#34;psa-ns-level&#34; ...
+ ✓ Ensuring node image (kindest/node:v1.23.0) 🖼 
+ ✓ Preparing nodes 📦  
+ ✓ Writing configuration 📜 
+ ✓ Starting control-plane 🕹️ 
+ ✓ Installing CNI 🔌 
+ ✓ Installing StorageClass 💾 
+Set kubectl context to &#34;kind-psa-ns-level&#34;
+You can now use your cluster with:
+
+kubectl cluster-info --context kind-psa-ns-level
+
+Not sure what to do next? 😅  Check out https://kind.sigs.k8s.io/docs/user/quick-start/
+</code></pre></li><li><p>Set the kubectl context to the new cluster:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl cluster-info --context kind-psa-ns-level
+</span></span></code></pre></div><p>The output is similar to this:</p><pre tabindex=0><code>Kubernetes control plane is running at https://127.0.0.1:50996
+CoreDNS is running at https://127.0.0.1:50996/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use &#39;kubectl cluster-info dump&#39;.
+</code></pre></li></ol><h2 id=create-a-namespace>Create a namespace</h2><p>Create a new namespace called <code>example</code>:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create ns example
+</span></span></code></pre></div><p>The output is similar to this:</p><pre tabindex=0><code>namespace/example created
+</code></pre><h2 id=apply-pod-security-standards>Apply Pod Security Standards</h2><ol><li><p>Enable Pod Security Standards on this namespace using labels supported by
+built-in Pod Security Admission. In this step we will warn on baseline pod
+security standard as per the latest version (default value)</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl label --overwrite ns example <span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>   pod-security.kubernetes.io/warn<span style=color:#666>=</span>baseline <span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>   pod-security.kubernetes.io/warn-version<span style=color:#666>=</span>latest
+</span></span></code></pre></div></li><li><p>Multiple pod security standards can be enabled on any namespace, using labels.
+Following command will <code>enforce</code> the <code>baseline</code> Pod Security Standard, but
+<code>warn</code> and <code>audit</code> for <code>restricted</code> Pod Security Standards as per the latest
+version (default value)</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl label --overwrite ns example <span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>  pod-security.kubernetes.io/enforce<span style=color:#666>=</span>baseline <span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>  pod-security.kubernetes.io/enforce-version<span style=color:#666>=</span>latest <span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>  pod-security.kubernetes.io/warn<span style=color:#666>=</span>restricted <span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>  pod-security.kubernetes.io/warn-version<span style=color:#666>=</span>latest <span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>  pod-security.kubernetes.io/audit<span style=color:#666>=</span>restricted <span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>  pod-security.kubernetes.io/audit-version<span style=color:#666>=</span>latest
+</span></span></code></pre></div></li></ol><h2 id=verify-the-pod-security-standards>Verify the Pod Security Standards</h2><ol><li><p>Create a minimal pod in <code>example</code> namespace:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>cat <span style=color:#b44>&lt;&lt;EOF &gt; /tmp/pss/nginx-pod.yaml
+</span></span></span><span style=display:flex><span><span style=color:#b44>apiVersion: v1
+</span></span></span><span style=display:flex><span><span style=color:#b44>kind: Pod
+</span></span></span><span style=display:flex><span><span style=color:#b44>metadata:
+</span></span></span><span style=display:flex><span><span style=color:#b44>  name: nginx
+</span></span></span><span style=display:flex><span><span style=color:#b44>spec:
+</span></span></span><span style=display:flex><span><span style=color:#b44>  containers:
+</span></span></span><span style=display:flex><span><span style=color:#b44>    - image: nginx
+</span></span></span><span style=display:flex><span><span style=color:#b44>      name: nginx
+</span></span></span><span style=display:flex><span><span style=color:#b44>      ports:
+</span></span></span><span style=display:flex><span><span style=color:#b44>        - containerPort: 80
+</span></span></span><span style=display:flex><span><span style=color:#b44>EOF</span>
+</span></span></code></pre></div></li><li><p>Apply the pod spec to the cluster in <code>example</code> namespace:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -n example -f /tmp/pss/nginx-pod.yaml
+</span></span></code></pre></div><p>The output is similar to this:</p><pre tabindex=0><code>Warning: would violate PodSecurity &#34;restricted:latest&#34;: allowPrivilegeEscalation != false (container &#34;nginx&#34; must set securityContext.allowPrivilegeEscalation=false), unrestricted capabilities (container &#34;nginx&#34; must set securityContext.capabilities.drop=[&#34;ALL&#34;]), runAsNonRoot != true (pod or container &#34;nginx&#34; must set securityContext.runAsNonRoot=true), seccompProfile (pod or container &#34;nginx&#34; must set securityContext.seccompProfile.type to &#34;RuntimeDefault&#34; or &#34;Localhost&#34;)
+pod/nginx created
+</code></pre></li><li><p>Apply the pod spec to the cluster in <code>default</code> namespace:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -n default -f /tmp/pss/nginx-pod.yaml
+</span></span></code></pre></div><p>Output is similar to this:</p><pre tabindex=0><code>pod/nginx created
+</code></pre></li></ol><p>The Pod Security Standards were applied only to the <code>example</code>
+namespace. You could create the same Pod in the <code>default</code> namespace
+with no warnings.</p><h2 id=clean-up>Clean up</h2><p>Run <code>kind delete cluster --name psa-ns-level</code> to delete the cluster created.</p><h2 id=what-s-next>What's next</h2><ul><li><p>Run a
+<a href=/examples/security/kind-with-namespace-level-baseline-pod-security.sh>shell script</a>
+to perform all the preceding steps all at once.</p><ol><li>Create KinD cluster</li><li>Create new namespace</li><li>Apply <code>baseline</code> Pod Security Standard in <code>enforce</code> mode while applying
+<code>restricted</code> Pod Security Standard also in <code>warn</code> and <code>audit</code> mode.</li><li>Create a new pod with the following pod security standards applied</li></ol></li><li><p><a href=/docs/concepts/security/pod-security-admission/>Pod Security Admission</a></p></li><li><p><a href=/docs/concepts/security/pod-security-standards/>Pod Security Standards</a></p></li><li><p><a href=/docs/tutorials/security/cluster-level-pss/>Apply Pod Security Standards at the cluster level</a></p></li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-fca078b8ac6b82352ed52187a2da91b7>3 - Restrict a Container's Access to Resources with AppArmor</h1><div style=margin-top:10px;margin-bottom:10px><b>FEATURE STATE:</b> <code>Kubernetes v1.4 [beta]</code></div><p>AppArmor is a Linux kernel security module that supplements the standard Linux user and group based
+permissions to confine programs to a limited set of resources. AppArmor can be configured for any
+application to reduce its potential attack surface and provide greater in-depth defense. It is
+configured through profiles tuned to allow the access needed by a specific program or container,
+such as Linux capabilities, network access, file permissions, etc. Each profile can be run in either
+<em>enforcing</em> mode, which blocks access to disallowed resources, or <em>complain</em> mode, which only reports
+violations.</p><p>AppArmor can help you to run a more secure deployment by restricting what containers are allowed to
+do, and/or provide better auditing through system logs. However, it is important to keep in mind
+that AppArmor is not a silver bullet and can only do so much to protect against exploits in your
+application code. It is important to provide good, restrictive profiles, and harden your
+applications and cluster from other angles as well.</p><h2 id=objectives>Objectives</h2><ul><li>See an example of how to load a profile on a node</li><li>Learn how to enforce the profile on a Pod</li><li>Learn how to check that the profile is loaded</li><li>See what happens when a profile is violated</li><li>See what happens when a profile cannot be loaded</li></ul><h2 id=before-you-begin>Before you begin</h2><p>Make sure:</p><ol><li><p>Kubernetes version is at least v1.4 -- Kubernetes support for AppArmor was added in
+v1.4. Kubernetes components older than v1.4 are not aware of the new AppArmor annotations, and
+will <strong>silently ignore</strong> any AppArmor settings that are provided. To ensure that your Pods are
+receiving the expected protections, it is important to verify the Kubelet version of your nodes:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get nodes -o<span style=color:#666>=</span><span style=color:#b8860b>jsonpath</span><span style=color:#666>=</span><span style=color:#b44>$&#39;{range .items[*]}{@.metadata.name}: {@.status.nodeInfo.kubeletVersion}\n{end}&#39;</span>
+</span></span></code></pre></div><pre tabindex=0><code>gke-test-default-pool-239f5d02-gyn2: v1.4.0
+gke-test-default-pool-239f5d02-x1kf: v1.4.0
+gke-test-default-pool-239f5d02-xwux: v1.4.0
+</code></pre></li><li><p>AppArmor kernel module is enabled -- For the Linux kernel to enforce an AppArmor profile, the
+AppArmor kernel module must be installed and enabled. Several distributions enable the module by
+default, such as Ubuntu and SUSE, and many others provide optional support. To check whether the
+module is enabled, check the <code>/sys/module/apparmor/parameters/enabled</code> file:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>cat /sys/module/apparmor/parameters/enabled
+</span></span><span style=display:flex><span>Y
+</span></span></code></pre></div><p>If the Kubelet contains AppArmor support (>= v1.4), it will refuse to run a Pod with AppArmor
+options if the kernel module is not enabled.</p></li></ol><div class="alert alert-info note callout" role=alert><strong>Note:</strong> Ubuntu carries many AppArmor patches that have not been merged into the upstream Linux
+kernel, including patches that add additional hooks and features. Kubernetes has only been
+tested with the upstream version, and does not promise support for other features.</div><ol start=3><li><p>Container runtime supports AppArmor -- Currently all common Kubernetes-supported container
+runtimes should support AppArmor, like <a class=glossary-tooltip title='Docker is a software technology providing operating-system-level virtualization also known as containers.' data-toggle=tooltip data-placement=top href=https://docs.docker.com/engine/ target=_blank aria-label=Docker>Docker</a>,
+<a class=glossary-tooltip title='A lightweight container runtime specifically for Kubernetes' data-toggle=tooltip data-placement=top href=https://cri-o.io/#what-is-cri-o target=_blank aria-label=CRI-O>CRI-O</a> or <a class=glossary-tooltip title='A container runtime with an emphasis on simplicity, robustness and portability' data-toggle=tooltip data-placement=top href=https://containerd.io/docs/ target=_blank aria-label=containerd>containerd</a>.
+Please refer to the corresponding runtime documentation and verify that the cluster fulfills
+the requirements to use AppArmor.</p></li><li><p>Profile is loaded -- AppArmor is applied to a Pod by specifying an AppArmor profile that each
+container should be run with. If any of the specified profiles is not already loaded in the
+kernel, the Kubelet (>= v1.4) will reject the Pod. You can view which profiles are loaded on a
+node by checking the <code>/sys/kernel/security/apparmor/profiles</code> file. For example:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>ssh gke-test-default-pool-239f5d02-gyn2 <span style=color:#b44>&#34;sudo cat /sys/kernel/security/apparmor/profiles | sort&#34;</span>
+</span></span></code></pre></div><pre tabindex=0><code>apparmor-test-deny-write (enforce)
+apparmor-test-audit-write (enforce)
+docker-default (enforce)
+k8s-nginx (enforce)
+</code></pre><p>For more details on loading profiles on nodes, see
+<a href=#setting-up-nodes-with-profiles>Setting up nodes with profiles</a>.</p></li></ol><p>As long as the Kubelet version includes AppArmor support (>= v1.4), the Kubelet will reject a Pod
+with AppArmor options if any of the prerequisites are not met. You can also verify AppArmor support
+on nodes by checking the node ready condition message (though this is likely to be removed in a
+later release):</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get nodes -o<span style=color:#666>=</span><span style=color:#b8860b>jsonpath</span><span style=color:#666>=</span><span style=color:#b44>&#39;{range .items[*]}{@.metadata.name}: {.status.conditions[?(@.reason==&#34;KubeletReady&#34;)].message}{&#34;\n&#34;}{end}&#39;</span>
+</span></span></code></pre></div><pre tabindex=0><code>gke-test-default-pool-239f5d02-gyn2: kubelet is posting ready status. AppArmor enabled
+gke-test-default-pool-239f5d02-x1kf: kubelet is posting ready status. AppArmor enabled
+gke-test-default-pool-239f5d02-xwux: kubelet is posting ready status. AppArmor enabled
+</code></pre><h2 id=securing-a-pod>Securing a Pod</h2><div class="alert alert-info note callout" role=alert><strong>Note:</strong> AppArmor is currently in beta, so options are specified as annotations. Once support graduates to
+general availability, the annotations will be replaced with first-class fields (more details in
+<a href=#upgrade-path-to-general-availability>Upgrade path to GA</a>).</div><p>AppArmor profiles are specified <em>per-container</em>. To specify the AppArmor profile to run a Pod
+container with, add an annotation to the Pod's metadata:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>container.apparmor.security.beta.kubernetes.io/&lt;container_name&gt;</span>:<span style=color:#bbb> </span>&lt;profile_ref&gt;<span style=color:#bbb>
+</span></span></span></code></pre></div><p>Where <code>&lt;container_name></code> is the name of the container to apply the profile to, and <code>&lt;profile_ref></code>
+specifies the profile to apply. The <code>profile_ref</code> can be one of:</p><ul><li><code>runtime/default</code> to apply the runtime's default profile</li><li><code>localhost/&lt;profile_name></code> to apply the profile loaded on the host with the name <code>&lt;profile_name></code></li><li><code>unconfined</code> to indicate that no profiles will be loaded</li></ul><p>See the <a href=#api-reference>API Reference</a> for the full details on the annotation and profile name formats.</p><p>Kubernetes AppArmor enforcement works by first checking that all the prerequisites have been
+met, and then forwarding the profile selection to the container runtime for enforcement. If the
+prerequisites have not been met, the Pod will be rejected, and will not run.</p><p>To verify that the profile was applied, you can look for the AppArmor security option listed in the container created event:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get events | grep Created
+</span></span></code></pre></div><pre tabindex=0><code>22s        22s         1         hello-apparmor     Pod       spec.containers{hello}   Normal    Created     {kubelet e2e-test-stclair-node-pool-31nt}   Created container with docker id 269a53b202d3; Security:[seccomp=unconfined apparmor=k8s-apparmor-example-deny-write]
+</code></pre><p>You can also verify directly that the container's root process is running with the correct profile by checking its proc attr:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl <span style=color:#a2f>exec</span> &lt;pod_name&gt; -- cat /proc/1/attr/current
+</span></span></code></pre></div><pre tabindex=0><code>k8s-apparmor-example-deny-write (enforce)
+</code></pre><h2 id=example>Example</h2><p><em>This example assumes you have already set up a cluster with AppArmor support.</em></p><p>First, we need to load the profile we want to use onto our nodes. This profile denies all file writes:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#080;font-style:italic>#include &lt;tunables/global&gt;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>profile k8s-apparmor-example-deny-write <span style=color:#b8860b>flags</span><span style=color:#666>=(</span>attach_disconnected<span style=color:#666>)</span> <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>  <span style=color:#080;font-style:italic>#include &lt;abstractions/base&gt;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  file,
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#080;font-style:italic># Deny all file writes.</span>
+</span></span><span style=display:flex><span>  deny /** w,
+</span></span><span style=display:flex><span><span style=color:#666>}</span>
+</span></span></code></pre></div><p>Since we don't know where the Pod will be scheduled, we'll need to load the profile on all our
+nodes. For this example we'll use SSH to install the profiles, but other approaches are
+discussed in <a href=#setting-up-nodes-with-profiles>Setting up nodes with profiles</a>.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#b8860b>NODES</span><span style=color:#666>=(</span>
+</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic># The SSH-accessible domain names of your nodes</span>
+</span></span><span style=display:flex><span>    gke-test-default-pool-239f5d02-gyn2.us-central1-a.my-k8s
+</span></span><span style=display:flex><span>    gke-test-default-pool-239f5d02-x1kf.us-central1-a.my-k8s
+</span></span><span style=display:flex><span>    gke-test-default-pool-239f5d02-xwux.us-central1-a.my-k8s<span style=color:#666>)</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>for</span> NODE in <span style=color:#b68;font-weight:700>${</span><span style=color:#b8860b>NODES</span>[*]<span style=color:#b68;font-weight:700>}</span>; <span style=color:#a2f;font-weight:700>do</span> ssh <span style=color:#b8860b>$NODE</span> <span style=color:#b44>&#39;sudo apparmor_parser -q &lt;&lt;EOF
+</span></span></span><span style=display:flex><span><span style=color:#b44>#include &lt;tunables/global&gt;
+</span></span></span><span style=display:flex><span><span style=color:#b44>
+</span></span></span><span style=display:flex><span><span style=color:#b44>profile k8s-apparmor-example-deny-write flags=(attach_disconnected) {
+</span></span></span><span style=display:flex><span><span style=color:#b44>  #include &lt;abstractions/base&gt;
+</span></span></span><span style=display:flex><span><span style=color:#b44>
+</span></span></span><span style=display:flex><span><span style=color:#b44>  file,
+</span></span></span><span style=display:flex><span><span style=color:#b44>
+</span></span></span><span style=display:flex><span><span style=color:#b44>  # Deny all file writes.
+</span></span></span><span style=display:flex><span><span style=color:#b44>  deny /** w,
+</span></span></span><span style=display:flex><span><span style=color:#b44>}
+</span></span></span><span style=display:flex><span><span style=color:#b44>EOF&#39;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>done</span>
+</span></span></code></pre></div><p>Next, we'll run a simple "Hello AppArmor" pod with the deny-write profile:</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/en/examples/pods/security/hello-apparmor.yaml download=pods/security/hello-apparmor.yaml><code>pods/security/hello-apparmor.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("pods-security-hello-apparmor-yaml")' title="Copy pods/security/hello-apparmor.yaml to clipboard"></img></div><div class=includecode id=pods-security-hello-apparmor-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>hello-apparmor<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>annotations</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:#080;font-style:italic># Tell Kubernetes to apply the AppArmor profile &#34;k8s-apparmor-example-deny-write&#34;.</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:#080;font-style:italic># Note that this is ignored if the Kubernetes node is not running version 1.4 or greater.</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>container.apparmor.security.beta.kubernetes.io/hello</span>:<span style=color:#bbb> </span>localhost/k8s-apparmor-example-deny-write<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>hello<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>busybox:1.28<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>command</span>:<span style=color:#bbb> </span>[<span style=color:#bbb> </span><span style=color:#b44>&#34;sh&#34;</span>,<span style=color:#bbb> </span><span style=color:#b44>&#34;-c&#34;</span>,<span style=color:#bbb> </span><span style=color:#b44>&#34;echo &#39;Hello AppArmor!&#39; &amp;&amp; sleep 1h&#34;</span><span style=color:#bbb> </span>]<span style=color:#bbb>
+</span></span></span></code></pre></div></div></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create -f ./hello-apparmor.yaml
+</span></span></code></pre></div><p>If we look at the pod events, we can see that the Pod container was created with the AppArmor
+profile "k8s-apparmor-example-deny-write":</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get events | grep hello-apparmor
+</span></span></code></pre></div><pre tabindex=0><code>14s        14s         1         hello-apparmor   Pod                                Normal    Scheduled   {default-scheduler }                           Successfully assigned hello-apparmor to gke-test-default-pool-239f5d02-gyn2
+14s        14s         1         hello-apparmor   Pod       spec.containers{hello}   Normal    Pulling     {kubelet gke-test-default-pool-239f5d02-gyn2}   pulling image &#34;busybox&#34;
+13s        13s         1         hello-apparmor   Pod       spec.containers{hello}   Normal    Pulled      {kubelet gke-test-default-pool-239f5d02-gyn2}   Successfully pulled image &#34;busybox&#34;
+13s        13s         1         hello-apparmor   Pod       spec.containers{hello}   Normal    Created     {kubelet gke-test-default-pool-239f5d02-gyn2}   Created container with docker id 06b6cd1c0989; Security:[seccomp=unconfined apparmor=k8s-apparmor-example-deny-write]
+13s        13s         1         hello-apparmor   Pod       spec.containers{hello}   Normal    Started     {kubelet gke-test-default-pool-239f5d02-gyn2}   Started container with docker id 06b6cd1c0989
+</code></pre><p>We can verify that the container is actually running with that profile by checking its proc attr:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl <span style=color:#a2f>exec</span> hello-apparmor -- cat /proc/1/attr/current
+</span></span></code></pre></div><pre tabindex=0><code>k8s-apparmor-example-deny-write (enforce)
+</code></pre><p>Finally, we can see what happens if we try to violate the profile by writing to a file:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl <span style=color:#a2f>exec</span> hello-apparmor -- touch /tmp/test
+</span></span></code></pre></div><pre tabindex=0><code>touch: /tmp/test: Permission denied
+error: error executing remote command: command terminated with non-zero exit code: Error executing in Docker Container: 1
+</code></pre><p>To wrap up, let's look at what happens if we try to specify a profile that hasn't been loaded:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create -f /dev/stdin &lt;&lt;EOF
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>hello-apparmor-2<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>annotations</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>container.apparmor.security.beta.kubernetes.io/hello</span>:<span style=color:#bbb> </span>localhost/k8s-apparmor-example-allow-write<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>hello<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>busybox:1.28<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>command</span>:<span style=color:#bbb> </span>[<span style=color:#bbb> </span><span style=color:#b44>&#34;sh&#34;</span>,<span style=color:#bbb> </span><span style=color:#b44>&#34;-c&#34;</span>,<span style=color:#bbb> </span><span style=color:#b44>&#34;echo &#39;Hello AppArmor!&#39; &amp;&amp; sleep 1h&#34;</span><span style=color:#bbb> </span>]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>EOF<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>pod/hello-apparmor-2 created<span style=color:#bbb>
+</span></span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl describe pod hello-apparmor-2
+</span></span></code></pre></div><pre tabindex=0><code>Name:          hello-apparmor-2
+Namespace:     default
+Node:          gke-test-default-pool-239f5d02-x1kf/
+Start Time:    Tue, 30 Aug 2016 17:58:56 -0700
+Labels:        &lt;none&gt;
+Annotations:   container.apparmor.security.beta.kubernetes.io/hello=localhost/k8s-apparmor-example-allow-write
+Status:        Pending
+Reason:        AppArmor
+Message:       Pod Cannot enforce AppArmor: profile &#34;k8s-apparmor-example-allow-write&#34; is not loaded
+IP:
+Controllers:   &lt;none&gt;
+Containers:
+  hello:
+    Container ID:
+    Image:     busybox
+    Image ID:
+    Port:
+    Command:
+      sh
+      -c
+      echo &#39;Hello AppArmor!&#39; &amp;&amp; sleep 1h
+    State:              Waiting
+      Reason:           Blocked
+    Ready:              False
+    Restart Count:      0
+    Environment:        &lt;none&gt;
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-dnz7v (ro)
+Conditions:
+  Type          Status
+  Initialized   True
+  Ready         False
+  PodScheduled  True
+Volumes:
+  default-token-dnz7v:
+    Type:    Secret (a volume populated by a Secret)
+    SecretName:    default-token-dnz7v
+    Optional:   false
+QoS Class:      BestEffort
+Node-Selectors: &lt;none&gt;
+Tolerations:    &lt;none&gt;
+Events:
+  FirstSeen    LastSeen    Count    From                        SubobjectPath    Type        Reason        Message
+  ---------    --------    -----    ----                        -------------    --------    ------        -------
+  23s          23s         1        {default-scheduler }                         Normal      Scheduled     Successfully assigned hello-apparmor-2 to e2e-test-stclair-node-pool-t1f5
+  23s          23s         1        {kubelet e2e-test-stclair-node-pool-t1f5}             Warning        AppArmor    Cannot enforce AppArmor: profile &#34;k8s-apparmor-example-allow-write&#34; is not loaded
+</code></pre><p>Note the pod status is Pending, with a helpful error message: <code>Pod Cannot enforce AppArmor: profile "k8s-apparmor-example-allow-write" is not loaded</code>. An event was also recorded with the same message.</p><h2 id=administration>Administration</h2><h3 id=setting-up-nodes-with-profiles>Setting up nodes with profiles</h3><p>Kubernetes does not currently provide any native mechanisms for loading AppArmor profiles onto
+nodes. There are lots of ways to set up the profiles though, such as:</p><ul><li>Through a <a href=/docs/concepts/workloads/controllers/daemonset/>DaemonSet</a> that runs a Pod on each node to
+ensure the correct profiles are loaded. An example implementation can be found
+<a href=https://git.k8s.io/kubernetes/test/images/apparmor-loader>here</a>.</li><li>At node initialization time, using your node initialization scripts (e.g. Salt, Ansible, etc.) or
+image.</li><li>By copying the profiles to each node and loading them through SSH, as demonstrated in the
+<a href=#example>Example</a>.</li></ul><p>The scheduler is not aware of which profiles are loaded onto which node, so the full set of profiles
+must be loaded onto every node. An alternative approach is to add a node label for each profile (or
+class of profiles) on the node, and use a
+<a href=/docs/concepts/scheduling-eviction/assign-pod-node/>node selector</a> to ensure the Pod is run on a
+node with the required profile.</p><h3 id=disabling-apparmor>Disabling AppArmor</h3><p>If you do not want AppArmor to be available on your cluster, it can be disabled by a command-line flag:</p><pre tabindex=0><code>--feature-gates=AppArmor=false
+</code></pre><p>When disabled, any Pod that includes an AppArmor profile will fail validation with a "Forbidden"
+error.</p><div class="alert alert-info note callout" role=alert><strong>Note:</strong> Even if the Kubernetes feature is disabled, runtimes may still enforce the default profile. The
+option to disable the AppArmor feature will be removed when AppArmor graduates to general
+availability (GA).</div><h2 id=authoring-profiles>Authoring Profiles</h2><p>Getting AppArmor profiles specified correctly can be a tricky business. Fortunately there are some
+tools to help with that:</p><ul><li><code>aa-genprof</code> and <code>aa-logprof</code> generate profile rules by monitoring an application's activity and
+logs, and admitting the actions it takes. Further instructions are provided by the
+<a href=https://gitlab.com/apparmor/apparmor/wikis/Profiling_with_tools>AppArmor documentation</a>.</li><li><a href=https://github.com/jfrazelle/bane>bane</a> is an AppArmor profile generator for Docker that uses a
+simplified profile language.</li></ul><p>To debug problems with AppArmor, you can check the system logs to see what, specifically, was
+denied. AppArmor logs verbose messages to <code>dmesg</code>, and errors can usually be found in the system
+logs or through <code>journalctl</code>. More information is provided in
+<a href=https://gitlab.com/apparmor/apparmor/wikis/AppArmor_Failures>AppArmor failures</a>.</p><h2 id=api-reference>API Reference</h2><h3 id=pod-annotation>Pod Annotation</h3><p>Specifying the profile a container will run with:</p><ul><li><strong>key</strong>: <code>container.apparmor.security.beta.kubernetes.io/&lt;container_name></code>
+Where <code>&lt;container_name></code> matches the name of a container in the Pod.
+A separate profile can be specified for each container in the Pod.</li><li><strong>value</strong>: a profile reference, described below</li></ul><h3 id=profile-reference>Profile Reference</h3><ul><li><code>runtime/default</code>: Refers to the default runtime profile.<ul><li>Equivalent to not specifying a profile, except it still
+requires AppArmor to be enabled.</li><li>In practice, many container runtimes use the same OCI default profile, defined here:
+<a href=https://github.com/containers/common/blob/main/pkg/apparmor/apparmor_linux_template.go>https://github.com/containers/common/blob/main/pkg/apparmor/apparmor_linux_template.go</a></li></ul></li><li><code>localhost/&lt;profile_name></code>: Refers to a profile loaded on the node (localhost) by name.<ul><li>The possible profile names are detailed in the
+<a href=https://gitlab.com/apparmor/apparmor/wikis/AppArmor_Core_Policy_Reference#profile-names-and-attachment-specifications>core policy reference</a>.</li></ul></li><li><code>unconfined</code>: This effectively disables AppArmor on the container.</li></ul><p>Any other profile reference format is invalid.</p><h2 id=what-s-next>What's next</h2><p>Additional resources:</p><ul><li><a href=https://gitlab.com/apparmor/apparmor/wikis/QuickProfileLanguage>Quick guide to the AppArmor profile language</a></li><li><a href=https://gitlab.com/apparmor/apparmor/wikis/Policy_Layout>AppArmor core policy reference</a></li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-8b105172a11322c70d0223bc9dff1904>4 - Restrict a Container's Syscalls with seccomp</h1><div style=margin-top:10px;margin-bottom:10px><b>FEATURE STATE:</b> <code>Kubernetes v1.19 [stable]</code></div><p>Seccomp stands for secure computing mode and has been a feature of the Linux
+kernel since version 2.6.12. It can be used to sandbox the privileges of a
+process, restricting the calls it is able to make from userspace into the
+kernel. Kubernetes lets you automatically apply seccomp profiles loaded onto a
+<a class=glossary-tooltip title='A node is a worker machine in Kubernetes.' data-toggle=tooltip data-placement=top href=/docs/concepts/architecture/nodes/ target=_blank aria-label=node>node</a> to your Pods and containers.</p><p>Identifying the privileges required for your workloads can be difficult. In this
+tutorial, you will go through how to load seccomp profiles into a local
+Kubernetes cluster, how to apply them to a Pod, and how you can begin to craft
+profiles that give only the necessary privileges to your container processes.</p><h2 id=objectives>Objectives</h2><ul><li>Learn how to load seccomp profiles on a node</li><li>Learn how to apply a seccomp profile to a container</li><li>Observe auditing of syscalls made by a container process</li><li>Observe behavior when a missing profile is specified</li><li>Observe a violation of a seccomp profile</li><li>Learn how to create fine-grained seccomp profiles</li><li>Learn how to apply a container runtime default seccomp profile</li></ul><h2 id=before-you-begin>Before you begin</h2><p>In order to complete all steps in this tutorial, you must install
+<a href=/docs/tasks/tools/#kind>kind</a> and <a href=/docs/tasks/tools/#kubectl>kubectl</a>.</p><p>This tutorial shows some examples that are still beta (since v1.25) and
+others that use only generally available seccomp functionality. You should
+make sure that your cluster is
+<a href=https://kind.sigs.k8s.io/docs/user/quick-start/#setting-kubernetes-version>configured correctly</a>
+for the version you are using.</p><p>The tutorial also uses the <code>curl</code> tool for downloading examples to your computer.
+You can adapt the steps to use a different tool if you prefer.</p><div class="alert alert-info note callout" role=alert><strong>Note:</strong> It is not possible to apply a seccomp profile to a container running with
+<code>privileged: true</code> set in the container's <code>securityContext</code>. Privileged containers always
+run as <code>Unconfined</code>.</div><h2 id=download-profiles>Download example seccomp profiles</h2><p>The contents of these profiles will be explored later on, but for now go ahead
+and download them into a directory named <code>profiles/</code> so that they can be loaded
+into the cluster.</p><ul class="nav nav-tabs" id=tab-with-code role=tablist><li class=nav-item><a data-toggle=tab class="nav-link active" href=#tab-with-code-0 role=tab aria-controls=tab-with-code-0 aria-selected=true>audit.json</a></li><li class=nav-item><a data-toggle=tab class=nav-link href=#tab-with-code-1 role=tab aria-controls=tab-with-code-1>violation.json</a></li><li class=nav-item><a data-toggle=tab class=nav-link href=#tab-with-code-2 role=tab aria-controls=tab-with-code-2>fine-grained.json</a></li></ul><div class=tab-content id=tab-with-code><div id=tab-with-code-0 class="tab-pane show active" role=tabpanel aria-labelledby=tab-with-code-0><p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/en/examples/pods/security/seccomp/profiles/audit.json download=pods/security/seccomp/profiles/audit.json><code>pods/security/seccomp/profiles/audit.json</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("pods-security-seccomp-profiles-audit-json")' title="Copy pods/security/seccomp/profiles/audit.json to clipboard"></img></div><div class=includecode id=pods-security-seccomp-profiles-audit-json><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;defaultAction&#34;</span>: <span style=color:#b44>&#34;SCMP_ACT_LOG&#34;</span>
+</span></span><span style=display:flex><span>}</span></span></code></pre></div></div></div></div><div id=tab-with-code-1 class=tab-pane role=tabpanel aria-labelledby=tab-with-code-1><p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/en/examples/pods/security/seccomp/profiles/violation.json download=pods/security/seccomp/profiles/violation.json><code>pods/security/seccomp/profiles/violation.json</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("pods-security-seccomp-profiles-violation-json")' title="Copy pods/security/seccomp/profiles/violation.json to clipboard"></img></div><div class=includecode id=pods-security-seccomp-profiles-violation-json><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;defaultAction&#34;</span>: <span style=color:#b44>&#34;SCMP_ACT_ERRNO&#34;</span>
+</span></span><span style=display:flex><span>}</span></span></code></pre></div></div></div></div><div id=tab-with-code-2 class=tab-pane role=tabpanel aria-labelledby=tab-with-code-2><p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/en/examples/pods/security/seccomp/profiles/fine-grained.json download=pods/security/seccomp/profiles/fine-grained.json><code>pods/security/seccomp/profiles/fine-grained.json</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("pods-security-seccomp-profiles-fine-grained-json")' title="Copy pods/security/seccomp/profiles/fine-grained.json to clipboard"></img></div><div class=includecode id=pods-security-seccomp-profiles-fine-grained-json><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;defaultAction&#34;</span>: <span style=color:#b44>&#34;SCMP_ACT_ERRNO&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;architectures&#34;</span>: [
+</span></span><span style=display:flex><span>        <span style=color:#b44>&#34;SCMP_ARCH_X86_64&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#b44>&#34;SCMP_ARCH_X86&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#b44>&#34;SCMP_ARCH_X32&#34;</span>
+</span></span><span style=display:flex><span>    ],
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;syscalls&#34;</span>: [
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:green;font-weight:700>&#34;names&#34;</span>: [
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;accept4&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;epoll_wait&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;pselect6&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;futex&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;madvise&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;epoll_ctl&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;getsockname&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;setsockopt&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;vfork&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;mmap&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;read&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;write&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;close&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;arch_prctl&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;sched_getaffinity&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;munmap&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;brk&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;rt_sigaction&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;rt_sigprocmask&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;sigaltstack&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;gettid&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;clone&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;bind&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;socket&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;openat&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;readlinkat&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;exit_group&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;epoll_create1&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;listen&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;rt_sigreturn&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;sched_yield&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;clock_gettime&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;connect&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;dup2&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;epoll_pwait&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;execve&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;exit&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;fcntl&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;getpid&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;getuid&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;ioctl&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;mprotect&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;nanosleep&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;open&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;poll&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;recvfrom&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;sendto&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;set_tid_address&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;setitimer&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;writev&#34;</span>
+</span></span><span style=display:flex><span>            ],
+</span></span><span style=display:flex><span>            <span style=color:green;font-weight:700>&#34;action&#34;</span>: <span style=color:#b44>&#34;SCMP_ACT_ALLOW&#34;</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    ]
+</span></span><span style=display:flex><span>}</span></span></code></pre></div></div></div></div></div><p>Run these commands:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>mkdir ./profiles
+</span></span><span style=display:flex><span>curl -L -o profiles/audit.json https://k8s.io/examples/pods/security/seccomp/profiles/audit.json
+</span></span><span style=display:flex><span>curl -L -o profiles/violation.json https://k8s.io/examples/pods/security/seccomp/profiles/violation.json
+</span></span><span style=display:flex><span>curl -L -o profiles/fine-grained.json https://k8s.io/examples/pods/security/seccomp/profiles/fine-grained.json
+</span></span><span style=display:flex><span>ls profiles
+</span></span></code></pre></div><p>You should see three profiles listed at the end of the final step:</p><pre tabindex=0><code>audit.json  fine-grained.json  violation.json
+</code></pre><h2 id=create-a-local-kubernetes-cluster-with-kind>Create a local Kubernetes cluster with kind</h2><p>For simplicity, <a href=https://kind.sigs.k8s.io/>kind</a> can be used to create a single
+node cluster with the seccomp profiles loaded. Kind runs Kubernetes in Docker,
+so each node of the cluster is a container. This allows for files
+to be mounted in the filesystem of each container similar to loading files
+onto a node.</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/en/examples/pods/security/seccomp/kind.yaml download=pods/security/seccomp/kind.yaml><code>pods/security/seccomp/kind.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("pods-security-seccomp-kind-yaml")' title="Copy pods/security/seccomp/kind.yaml to clipboard"></img></div><div class=includecode id=pods-security-seccomp-kind-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>kind.x-k8s.io/v1alpha4<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Cluster<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>nodes</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>role</span>:<span style=color:#bbb> </span>control-plane<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>extraMounts</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>hostPath</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;./profiles&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>containerPath</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;/var/lib/kubelet/seccomp/profiles&#34;</span></span></span></code></pre></div></div></div><p>Download that example kind configuration, and save it to a file named <code>kind.yaml</code>:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>curl -L -O https://k8s.io/examples/pods/security/seccomp/kind.yaml
+</span></span></code></pre></div><p>You can set a specific Kubernetes version by setting the node's container image.
+See <a href=https://kind.sigs.k8s.io/docs/user/configuration/#nodes>Nodes</a> within the
+kind documentation about configuration for more details on this.
+This tutorial assumes you are using Kubernetes v1.25.</p><p>As a beta feature, you can configure Kubernetes to use the profile that the
+<a class=glossary-tooltip title='The container runtime is the software that is responsible for running containers.' data-toggle=tooltip data-placement=top href=/docs/setup/production-environment/container-runtimes target=_blank aria-label='container runtime'>container runtime</a>
+prefers by default, rather than falling back to <code>Unconfined</code>.
+If you want to try that, see
+<a href=#enable-the-use-of-runtimedefault-as-the-default-seccomp-profile-for-all-workloads>enable the use of <code>RuntimeDefault</code> as the default seccomp profile for all workloads</a>
+before you continue.</p><p>Once you have a kind configuration in place, create the kind cluster with
+that configuration:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kind create cluster --config<span style=color:#666>=</span>kind.yaml
+</span></span></code></pre></div><p>After the new Kubernetes cluster is ready, identify the Docker container running
+as the single node cluster:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>docker ps
+</span></span></code></pre></div><p>You should see output indicating that a container is running with name
+<code>kind-control-plane</code>. The output is similar to:</p><pre tabindex=0><code>CONTAINER ID        IMAGE                  COMMAND                  CREATED             STATUS              PORTS                       NAMES
+6a96207fed4b        kindest/node:v1.18.2   &#34;/usr/local/bin/entr…&#34;   27 seconds ago      Up 24 seconds       127.0.0.1:42223-&gt;6443/tcp   kind-control-plane
+</code></pre><p>If observing the filesystem of that container, you should see that the
+<code>profiles/</code> directory has been successfully loaded into the default seccomp path
+of the kubelet. Use <code>docker exec</code> to run a command in the Pod:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#080;font-style:italic># Change 6a96207fed4b to the container ID you saw from &#34;docker ps&#34;</span>
+</span></span><span style=display:flex><span>docker <span style=color:#a2f>exec</span> -it 6a96207fed4b ls /var/lib/kubelet/seccomp/profiles
+</span></span></code></pre></div><pre tabindex=0><code>audit.json  fine-grained.json  violation.json
+</code></pre><p>You have verified that these seccomp profiles are available to the kubelet
+running within kind.</p><h2 id=enable-the-use-of-runtimedefault-as-the-default-seccomp-profile-for-all-workloads>Enable the use of <code>RuntimeDefault</code> as the default seccomp profile for all workloads</h2><div style=margin-top:10px;margin-bottom:10px><b>FEATURE STATE:</b> <code>Kubernetes v1.25 [beta]</code></div><p>To use seccomp profile defaulting, you must run the kubelet with the <code>SeccompDefault</code>
+<a href=/docs/reference/command-line-tools-reference/feature-gates/>feature gate</a> enabled
+(this is the default). You must also explicitly enable the defaulting behavior for each
+node where you want to use this with the corresponding <code>--seccomp-default</code>
+<a href=/docs/reference/command-line-tools-reference/kubelet>command line flag</a>.
+Both have to be enabled simultaneously to use the feature.</p><p>If enabled, the kubelet will use the <code>RuntimeDefault</code> seccomp profile by default, which is
+defined by the container runtime, instead of using the <code>Unconfined</code> (seccomp disabled) mode.
+The default profiles aim to provide a strong set
+of security defaults while preserving the functionality of the workload. It is
+possible that the default profiles differ between container runtimes and their
+release versions, for example when comparing those from CRI-O and containerd.</p><div class="alert alert-info note callout" role=alert><strong>Note:</strong> Enabling the feature will neither change the Kubernetes
+<code>securityContext.seccompProfile</code> API field nor add the deprecated annotations of
+the workload. This provides users the possibility to rollback anytime without
+actually changing the workload configuration. Tools like
+<a href=https://github.com/kubernetes-sigs/cri-tools><code>crictl inspect</code></a> can be used to
+verify which seccomp profile is being used by a container.</div><p>Some workloads may require a lower amount of syscall restrictions than others.
+This means that they can fail during runtime even with the <code>RuntimeDefault</code>
+profile. To mitigate such a failure, you can:</p><ul><li>Run the workload explicitly as <code>Unconfined</code>.</li><li>Disable the <code>SeccompDefault</code> feature for the nodes. Also making sure that
+workloads get scheduled on nodes where the feature is disabled.</li><li>Create a custom seccomp profile for the workload.</li></ul><p>If you were introducing this feature into production-like cluster, the Kubernetes project
+recommends that you enable this feature gate on a subset of your nodes and then
+test workload execution before rolling the change out cluster-wide.</p><p>You can find more detailed information about a possible upgrade and downgrade strategy
+in the related Kubernetes Enhancement Proposal (KEP):
+<a href=https://github.com/kubernetes/enhancements/tree/9a124fd29d1f9ddf2ff455c49a630e3181992c25/keps/sig-node/2413-seccomp-by-default#upgrade--downgrade-strategy>Enable seccomp by default</a>.</p><p>Kubernetes 1.25 lets you configure the seccomp profile
+that applies when the spec for a Pod doesn't define a specific seccomp profile.
+This is a beta feature and the corresponding <code>SeccompDefault</code> <a href=/docs/reference/command-line-tools-reference/feature-gates/>feature
+gate</a> is enabled by
+default. However, you still need to enable this defaulting for each node where
+you would like to use it.</p><p>If you are running a Kubernetes 1.25 cluster and want to
+enable the feature, either run the kubelet with the <code>--seccomp-default</code> command
+line flag, or enable it through the <a href=/docs/tasks/administer-cluster/kubelet-config-file/>kubelet configuration
+file</a>. To enable the
+feature gate in <a href=https://kind.sigs.k8s.io>kind</a>, ensure that <code>kind</code> provides
+the minimum required Kubernetes version and enables the <code>SeccompDefault</code> feature
+<a href=https://kind.sigs.k8s.io/docs/user/quick-start/#enable-feature-gates-in-your-cluster>in the kind configuration</a>:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Cluster<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>kind.x-k8s.io/v1alpha4<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>featureGates</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>SeccompDefault</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>true</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>nodes</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>role</span>:<span style=color:#bbb> </span>control-plane<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>kindest/node:v1.23.0@sha256:49824ab1727c04e56a21a5d8372a402fcd32ea51ac96a2706a12af38934f81ac<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>kubeadmConfigPatches</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- |<span style=color:#b44;font-style:italic>
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>        kind: JoinConfiguration
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>        nodeRegistration:
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>          kubeletExtraArgs:
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>            seccomp-default: &#34;true&#34;</span><span style=color:#bbb>        
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>role</span>:<span style=color:#bbb> </span>worker<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>kindest/node:v1.23.0@sha256:49824ab1727c04e56a21a5d8372a402fcd32ea51ac96a2706a12af38934f81ac<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>kubeadmConfigPatches</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- |<span style=color:#b44;font-style:italic>
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>        kind: JoinConfiguration
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>        nodeRegistration:
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>          kubeletExtraArgs:
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>            feature-gates: SeccompDefault=true
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>            seccomp-default: &#34;true&#34;</span><span style=color:#bbb>        
+</span></span></span></code></pre></div><p>If the cluster is ready, then running a pod:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl run --rm -it --restart<span style=color:#666>=</span>Never --image<span style=color:#666>=</span>alpine alpine -- sh
+</span></span></code></pre></div><p>Should now have the default seccomp profile attached. This can be verified by
+using <code>docker exec</code> to run <code>crictl inspect</code> for the container on the kind
+worker:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>docker <span style=color:#a2f>exec</span> -it kind-worker bash -c <span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>    <span style=color:#b44>&#39;crictl inspect $(crictl ps --name=alpine -q) | jq .info.runtimeSpec.linux.seccomp&#39;</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;defaultAction&#34;</span>: <span style=color:#b44>&#34;SCMP_ACT_ERRNO&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;architectures&#34;</span>: [<span style=color:#b44>&#34;SCMP_ARCH_X86_64&#34;</span>, <span style=color:#b44>&#34;SCMP_ARCH_X86&#34;</span>, <span style=color:#b44>&#34;SCMP_ARCH_X32&#34;</span>],
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;syscalls&#34;</span>: [
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;names&#34;</span>: [<span style=color:#b44>&#34;...&#34;</span>]
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>  ]
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 id=create-a-pod-with-a-seccomp-profile-for-syscall-auditing>Create a Pod with a seccomp profile for syscall auditing</h2><p>To start off, apply the <code>audit.json</code> profile, which will log all syscalls of the
+process, to a new Pod.</p><p>Here's a manifest for that Pod:</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/en/examples/pods/security/seccomp/ga/audit-pod.yaml download=pods/security/seccomp/ga/audit-pod.yaml><code>pods/security/seccomp/ga/audit-pod.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("pods-security-seccomp-ga-audit-pod-yaml")' title="Copy pods/security/seccomp/ga/audit-pod.yaml to clipboard"></img></div><div class=includecode id=pods-security-seccomp-ga-audit-pod-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>audit-pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>app</span>:<span style=color:#bbb> </span>audit-pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>securityContext</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>seccompProfile</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>type</span>:<span style=color:#bbb> </span>Localhost<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>localhostProfile</span>:<span style=color:#bbb> </span>profiles/audit.json<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>test-container<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>hashicorp/http-echo:0.2.3<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>args</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:#b44>&#34;-text=just made some syscalls!&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>securityContext</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>allowPrivilegeEscalation</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>false</span></span></span></code></pre></div></div></div><div class="alert alert-info note callout" role=alert><strong>Note:</strong><p>The functional support for the already deprecated seccomp annotations
+<code>seccomp.security.alpha.kubernetes.io/pod</code> (for the whole pod) and
+<code>container.seccomp.security.alpha.kubernetes.io/[name]</code> (for a single container)
+is going to be removed with a future release of Kubernetes. Please always use
+the native API fields in favor of the annotations.</p><p>Since Kubernetes v1.25, kubelets no longer support the annotations, use of the
+annotations in static pods is no longer supported, and the seccomp annotations
+are no longer auto-populated when pods with seccomp fields are created.
+Auto-population of the seccomp fields from the annotations is planned to be
+removed in a future release.</p></div><p>Create the Pod in the cluster:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -f https://k8s.io/examples/pods/security/seccomp/ga/audit-pod.yaml
+</span></span></code></pre></div><p>This profile does not restrict any syscalls, so the Pod should start
+successfully.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pod/audit-pod
+</span></span></code></pre></div><pre tabindex=0><code>NAME        READY   STATUS    RESTARTS   AGE
+audit-pod   1/1     Running   0          30s
+</code></pre><p>In order to be able to interact with this endpoint exposed by this
+container, create a NodePort <a class=glossary-tooltip title='A way to expose an application running on a set of Pods as a network service.' data-toggle=tooltip data-placement=top href=/docs/concepts/services-networking/service/ target=_blank aria-label=Services>Services</a>
+that allows access to the endpoint from inside the kind control plane container.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl expose pod audit-pod --type NodePort --port <span style=color:#666>5678</span>
+</span></span></code></pre></div><p>Check what port the Service has been assigned on the node.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get service audit-pod
+</span></span></code></pre></div><p>The output is similar to:</p><pre tabindex=0><code>NAME        TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+audit-pod   NodePort   10.111.36.142   &lt;none&gt;        5678:32373/TCP   72s
+</code></pre><p>Now you can use <code>curl</code> to access that endpoint from inside the kind control plane container,
+at the port exposed by this Service. Use <code>docker exec</code> to run the <code>curl</code> command within the
+container belonging to that control plane container:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#080;font-style:italic># Change 6a96207fed4b to the control plane container ID you saw from &#34;docker ps&#34;</span>
+</span></span><span style=display:flex><span>docker <span style=color:#a2f>exec</span> -it 6a96207fed4b curl localhost:32373
+</span></span></code></pre></div><pre tabindex=0><code>just made some syscalls!
+</code></pre><p>You can see that the process is running, but what syscalls did it actually make?
+Because this Pod is running in a local cluster, you should be able to see those
+in <code>/var/log/syslog</code>. Open up a new terminal window and <code>tail</code> the output for
+calls from <code>http-echo</code>:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>tail -f /var/log/syslog | grep <span style=color:#b44>&#39;http-echo&#39;</span>
+</span></span></code></pre></div><p>You should already see some logs of syscalls made by <code>http-echo</code>, and if you
+<code>curl</code> the endpoint in the control plane container you will see more written.</p><p>For example:</p><pre tabindex=0><code>Jul  6 15:37:40 my-machine kernel: [369128.669452] audit: type=1326 audit(1594067860.484:14536): auid=4294967295 uid=0 gid=0 ses=4294967295 pid=29064 comm=&#34;http-echo&#34; exe=&#34;/http-echo&#34; sig=0 arch=c000003e syscall=51 compat=0 ip=0x46fe1f code=0x7ffc0000
+Jul  6 15:37:40 my-machine kernel: [369128.669453] audit: type=1326 audit(1594067860.484:14537): auid=4294967295 uid=0 gid=0 ses=4294967295 pid=29064 comm=&#34;http-echo&#34; exe=&#34;/http-echo&#34; sig=0 arch=c000003e syscall=54 compat=0 ip=0x46fdba code=0x7ffc0000
+Jul  6 15:37:40 my-machine kernel: [369128.669455] audit: type=1326 audit(1594067860.484:14538): auid=4294967295 uid=0 gid=0 ses=4294967295 pid=29064 comm=&#34;http-echo&#34; exe=&#34;/http-echo&#34; sig=0 arch=c000003e syscall=202 compat=0 ip=0x455e53 code=0x7ffc0000
+Jul  6 15:37:40 my-machine kernel: [369128.669456] audit: type=1326 audit(1594067860.484:14539): auid=4294967295 uid=0 gid=0 ses=4294967295 pid=29064 comm=&#34;http-echo&#34; exe=&#34;/http-echo&#34; sig=0 arch=c000003e syscall=288 compat=0 ip=0x46fdba code=0x7ffc0000
+Jul  6 15:37:40 my-machine kernel: [369128.669517] audit: type=1326 audit(1594067860.484:14540): auid=4294967295 uid=0 gid=0 ses=4294967295 pid=29064 comm=&#34;http-echo&#34; exe=&#34;/http-echo&#34; sig=0 arch=c000003e syscall=0 compat=0 ip=0x46fd44 code=0x7ffc0000
+Jul  6 15:37:40 my-machine kernel: [369128.669519] audit: type=1326 audit(1594067860.484:14541): auid=4294967295 uid=0 gid=0 ses=4294967295 pid=29064 comm=&#34;http-echo&#34; exe=&#34;/http-echo&#34; sig=0 arch=c000003e syscall=270 compat=0 ip=0x4559b1 code=0x7ffc0000
+Jul  6 15:38:40 my-machine kernel: [369188.671648] audit: type=1326 audit(1594067920.488:14559): auid=4294967295 uid=0 gid=0 ses=4294967295 pid=29064 comm=&#34;http-echo&#34; exe=&#34;/http-echo&#34; sig=0 arch=c000003e syscall=270 compat=0 ip=0x4559b1 code=0x7ffc0000
+Jul  6 15:38:40 my-machine kernel: [369188.671726] audit: type=1326 audit(1594067920.488:14560): auid=4294967295 uid=0 gid=0 ses=4294967295 pid=29064 comm=&#34;http-echo&#34; exe=&#34;/http-echo&#34; sig=0 arch=c000003e syscall=202 compat=0 ip=0x455e53 code=0x7ffc0000
+</code></pre><p>You can begin to understand the syscalls required by the <code>http-echo</code> process by
+looking at the <code>syscall=</code> entry on each line. While these are unlikely to
+encompass all syscalls it uses, it can serve as a basis for a seccomp profile
+for this container.</p><p>Clean up that Pod and Service before moving to the next section:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl delete service audit-pod --wait
+</span></span><span style=display:flex><span>kubectl delete pod audit-pod --wait --now
+</span></span></code></pre></div><h2 id=create-pod-with-a-seccomp-profile-that-causes-violation>Create Pod with a seccomp profile that causes violation</h2><p>For demonstration, apply a profile to the Pod that does not allow for any
+syscalls.</p><p>The manifest for this demonstration is:</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/en/examples/pods/security/seccomp/ga/violation-pod.yaml download=pods/security/seccomp/ga/violation-pod.yaml><code>pods/security/seccomp/ga/violation-pod.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("pods-security-seccomp-ga-violation-pod-yaml")' title="Copy pods/security/seccomp/ga/violation-pod.yaml to clipboard"></img></div><div class=includecode id=pods-security-seccomp-ga-violation-pod-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>violation-pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>app</span>:<span style=color:#bbb> </span>violation-pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>securityContext</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>seccompProfile</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>type</span>:<span style=color:#bbb> </span>Localhost<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>localhostProfile</span>:<span style=color:#bbb> </span>profiles/violation.json<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>test-container<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>hashicorp/http-echo:0.2.3<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>args</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:#b44>&#34;-text=just made some syscalls!&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>securityContext</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>allowPrivilegeEscalation</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>false</span></span></span></code></pre></div></div></div><p>Attempt to create the Pod in the cluster:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -f https://k8s.io/examples/pods/security/seccomp/ga/violation-pod.yaml
+</span></span></code></pre></div><p>The Pod creates, but there is an issue.
+If you check the status of the Pod, you should see that it failed to start.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pod/violation-pod
+</span></span></code></pre></div><pre tabindex=0><code>NAME            READY   STATUS             RESTARTS   AGE
+violation-pod   0/1     CrashLoopBackOff   1          6s
+</code></pre><p>As seen in the previous example, the <code>http-echo</code> process requires quite a few
+syscalls. Here seccomp has been instructed to error on any syscall by setting
+<code>"defaultAction": "SCMP_ACT_ERRNO"</code>. This is extremely secure, but removes the
+ability to do anything meaningful. What you really want is to give workloads
+only the privileges they need.</p><p>Clean up that Pod before moving to the next section:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl delete pod violation-pod --wait --now
+</span></span></code></pre></div><h2 id=create-pod-with-a-seccomp-profile-that-only-allows-necessary-syscalls>Create Pod with a seccomp profile that only allows necessary syscalls</h2><p>If you take a look at the <code>fine-grained.json</code> profile, you will notice some of the syscalls
+seen in syslog of the first example where the profile set <code>"defaultAction": "SCMP_ACT_LOG"</code>. Now the profile is setting <code>"defaultAction": "SCMP_ACT_ERRNO"</code>,
+but explicitly allowing a set of syscalls in the <code>"action": "SCMP_ACT_ALLOW"</code>
+block. Ideally, the container will run successfully and you will see no messages
+sent to <code>syslog</code>.</p><p>The manifest for this example is:</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/en/examples/pods/security/seccomp/ga/fine-pod.yaml download=pods/security/seccomp/ga/fine-pod.yaml><code>pods/security/seccomp/ga/fine-pod.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("pods-security-seccomp-ga-fine-pod-yaml")' title="Copy pods/security/seccomp/ga/fine-pod.yaml to clipboard"></img></div><div class=includecode id=pods-security-seccomp-ga-fine-pod-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>fine-pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>app</span>:<span style=color:#bbb> </span>fine-pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>securityContext</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>seccompProfile</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>type</span>:<span style=color:#bbb> </span>Localhost<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>localhostProfile</span>:<span style=color:#bbb> </span>profiles/fine-grained.json<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>test-container<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>hashicorp/http-echo:0.2.3<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>args</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:#b44>&#34;-text=just made some syscalls!&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>securityContext</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>allowPrivilegeEscalation</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>false</span></span></span></code></pre></div></div></div><p>Create the Pod in your cluster:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -f https://k8s.io/examples/pods/security/seccomp/ga/fine-pod.yaml
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pod fine-pod
+</span></span></code></pre></div><p>The Pod should be showing as having started successfully:</p><pre tabindex=0><code>NAME        READY   STATUS    RESTARTS   AGE
+fine-pod   1/1     Running   0          30s
+</code></pre><p>Open up a new terminal window and use <code>tail</code> to monitor for log entries that
+mention calls from <code>http-echo</code>:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#080;font-style:italic># The log path on your computer might be different from &#34;/var/log/syslog&#34;</span>
+</span></span><span style=display:flex><span>tail -f /var/log/syslog | grep <span style=color:#b44>&#39;http-echo&#39;</span>
+</span></span></code></pre></div><p>Next, expose the Pod with a NodePort Service:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl expose pod fine-pod --type NodePort --port <span style=color:#666>5678</span>
+</span></span></code></pre></div><p>Check what port the Service has been assigned on the node:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get service fine-pod
+</span></span></code></pre></div><p>The output is similar to:</p><pre tabindex=0><code>NAME        TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+fine-pod    NodePort   10.111.36.142   &lt;none&gt;        5678:32373/TCP   72s
+</code></pre><p>Use <code>curl</code> to access that endpoint from inside the kind control plane container:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#080;font-style:italic># Change 6a96207fed4b to the control plane container ID you saw from &#34;docker ps&#34;</span>
+</span></span><span style=display:flex><span>docker <span style=color:#a2f>exec</span> -it 6a96207fed4b curl localhost:32373
+</span></span></code></pre></div><pre tabindex=0><code>just made some syscalls!
+</code></pre><p>You should see no output in the <code>syslog</code>. This is because the profile allowed all
+necessary syscalls and specified that an error should occur if one outside of
+the list is invoked. This is an ideal situation from a security perspective, but
+required some effort in analyzing the program. It would be nice if there was a
+simple way to get closer to this security without requiring as much effort.</p><p>Clean up that Pod and Service before moving to the next section:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl delete service fine-pod --wait
+</span></span><span style=display:flex><span>kubectl delete pod fine-pod --wait --now
+</span></span></code></pre></div><h2 id=create-pod-that-uses-the-container-runtime-default-seccomp-profile>Create Pod that uses the container runtime default seccomp profile</h2><p>Most container runtimes provide a sane set of default syscalls that are allowed
+or not. You can adopt these defaults for your workload by setting the seccomp
+type in the security context of a pod or container to <code>RuntimeDefault</code>.</p><div class="alert alert-info note callout" role=alert><strong>Note:</strong> If you have the <code>SeccompDefault</code> <a href=/docs/reference/command-line-tools-reference/feature-gates/>feature gate</a> enabled, then Pods use the <code>RuntimeDefault</code> seccomp profile whenever
+no other seccomp profile is specified. Otherwise, the default is <code>Unconfined</code>.</div><p>Here's a manifest for a Pod that requests the <code>RuntimeDefault</code> seccomp profile
+for all its containers:</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/en/examples/pods/security/seccomp/ga/default-pod.yaml download=pods/security/seccomp/ga/default-pod.yaml><code>pods/security/seccomp/ga/default-pod.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("pods-security-seccomp-ga-default-pod-yaml")' title="Copy pods/security/seccomp/ga/default-pod.yaml to clipboard"></img></div><div class=includecode id=pods-security-seccomp-ga-default-pod-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>default-pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>app</span>:<span style=color:#bbb> </span>default-pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>securityContext</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>seccompProfile</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>type</span>:<span style=color:#bbb> </span>RuntimeDefault<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>test-container<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>hashicorp/http-echo:0.2.3<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>args</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:#b44>&#34;-text=just made some more syscalls!&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>securityContext</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>allowPrivilegeEscalation</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>false</span></span></span></code></pre></div></div></div><p>Create that Pod:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -f https://k8s.io/examples/pods/security/seccomp/ga/default-pod.yaml
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pod default-pod
+</span></span></code></pre></div><p>The Pod should be showing as having started successfully:</p><pre tabindex=0><code>NAME        READY   STATUS    RESTARTS   AGE
+default-pod 1/1     Running   0          20s
+</code></pre><p>Finally, now that you saw that work OK, clean up:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl delete pod default-pod --wait --now
+</span></span></code></pre></div><h2 id=what-s-next>What's next</h2><p>You can learn more about Linux seccomp:</p><ul><li><a href=https://lwn.net/Articles/656307/>A seccomp Overview</a></li><li><a href=https://docs.docker.com/engine/security/seccomp/>Seccomp Security Profiles for Docker</a></li></ul></div></main></div></div><footer class=d-print-none><div class=footer__links><nav><a class=text-white href=/docs/home/>Home</a>
+<a class=text-white href=/blog/>Blog</a>
+<a class=text-white href=/training/>Training</a>
+<a class=text-white href=/partners/>Partners</a>
+<a class=text-white href=/community/>Community</a>
+<a class=text-white href=/case-studies/>Case Studies</a></nav></div><div class=container-fluid><div class=row><div class="col-6 col-sm-2 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="User mailing list" aria-label="User mailing list"><a class=text-white target=_blank href=https://discuss.kubernetes.io><i class="fa fa-envelope"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank href=https://twitter.com/kubernetesio><i class="fab fa-twitter"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Calendar aria-label=Calendar><a class=text-white target=_blank href="https://calendar.google.com/calendar/embed?src=calendar%40kubernetes.io"><i class="fas fa-calendar-alt"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Youtube aria-label=Youtube><a class=text-white target=_blank href=https://youtube.com/kubernetescommunity><i class="fab fa-youtube"></i></a></li></ul></div><div class="col-6 col-sm-2 text-right text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank href=https://github.com/kubernetes/kubernetes><i class="fab fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Slack aria-label=Slack><a class=text-white target=_blank href=https://slack.k8s.io><i class="fab fa-slack"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Contribute aria-label=Contribute><a class=text-white target=_blank href=https://git.k8s.io/community/contributors/guide><i class="fas fa-edit"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="Stack Overflow" aria-label="Stack Overflow"><a class=text-white target=_blank href=https://stackoverflow.com/questions/tagged/kubernetes><i class="fab fa-stack-overflow"></i></a></li></ul></div><div class="col-12 col-sm-8 text-center order-sm-2"><small class=text-white>&copy; 2023 The Kubernetes Authors | Documentation Distributed under <a href=https://git.k8s.io/website/LICENSE class=light-text>CC BY 4.0</a></small><br><small class=text-white>Copyright &copy; 2023 The Linux Foundation &reg;. All rights reserved. The Linux Foundation has registered trademarks and uses trademarks. For a list of trademarks of The Linux Foundation, please see our <a href=https://www.linuxfoundation.org/trademark-usage class=light-text>Trademark Usage page</a></small><br><small class=text-white>ICP license: 京ICP备17074266号-3</small></div></div></div></footer></div><script src=/js/jquery-3.6.0.min.js integrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script>
+<script src=/js/popper-1.16.1.min.js intregrity=sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN crossorigin=anonymous></script>
+<script src=/js/bootstrap-4.6.1.min.js integrity=sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2 crossorigin=anonymous></script>
+<script src=/js/script.js></script>
+<script async src=/js/mermaid-8.13.4.min.js integrity=sha384-5hHNvPeMrNH14oM3IcQofDoBhiclNK3g2+hnEinKzQ07C4AliMeVpnvxuiwEGpaO crossorigin=anonymous></script>
+<script src=/js/main.min.5c0bf7f21dc4f66485f74efbbeeff28a7e4f8cddaac1bae47043159c922ff3a3.js integrity="sha256-XAv38h3E9mSF9077vu/yin5PjN2qwbrkcEMVnJIv86M=" crossorigin=anonymous></script></body></html>

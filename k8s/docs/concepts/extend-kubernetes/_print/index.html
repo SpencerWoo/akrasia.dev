@@ -1,0 +1,603 @@
+<!doctype html><html lang=en class=no-js><head><meta name=robots content="noindex, nofollow"><link rel=alternate hreflang=zh-cn href=https://kubernetes.io/zh-cn/docs/concepts/extend-kubernetes/><link rel=alternate hreflang=ko href=https://kubernetes.io/ko/docs/concepts/extend-kubernetes/><link rel=alternate hreflang=ja href=https://kubernetes.io/ja/docs/concepts/extend-kubernetes/><link rel=alternate hreflang=fr href=https://kubernetes.io/fr/docs/concepts/extend-kubernetes/><link rel=alternate hreflang=de href=https://kubernetes.io/de/docs/concepts/extend-kubernetes/><link rel=alternate hreflang=es href=https://kubernetes.io/es/docs/concepts/extend-kubernetes/><link rel=alternate hreflang=pt-br href=https://kubernetes.io/pt-br/docs/concepts/extend-kubernetes/><link rel=alternate hreflang=id href=https://kubernetes.io/id/docs/concepts/extend-kubernetes/><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.110.0"><link rel=canonical type=text/html href=https://kubernetes.io/docs/concepts/extend-kubernetes/><link rel="shortcut icon" type=image/png href=/images/favicon.png><link rel=apple-touch-icon href=/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=manifest href=/manifest.webmanifest><link rel=apple-touch-icon href=/images/kubernetes-192x192.png><title>Extending Kubernetes | Kubernetes</title><meta property="og:title" content="Extending Kubernetes"><meta property="og:description" content="Different ways to change the behavior of your Kubernetes cluster."><meta property="og:type" content="website"><meta property="og:url" content="https://kubernetes.io/docs/concepts/extend-kubernetes/"><meta property="og:site_name" content="Kubernetes"><meta itemprop=name content="Extending Kubernetes"><meta itemprop=description content="Different ways to change the behavior of your Kubernetes cluster."><meta name=twitter:card content="summary"><meta name=twitter:title content="Extending Kubernetes"><meta name=twitter:description content="Different ways to change the behavior of your Kubernetes cluster."><link href=/scss/main.css rel=stylesheet><script type=application/ld+json>{"@context":"https://schema.org","@type":"Organization","url":"https://kubernetes.io","logo":"https://kubernetes.io/images/favicon.png","potentialAction":{"@type":"SearchAction","target":"https://kubernetes.io/search/?q={search_term_string}","query-input":"required name=search_term_string"}}</script><meta name=theme-color content="#326ce5"><link rel=stylesheet href=/css/feature-states.css><meta name=description content="Different ways to change the behavior of your Kubernetes cluster."><meta property="og:description" content="Different ways to change the behavior of your Kubernetes cluster."><meta name=twitter:description content="Different ways to change the behavior of your Kubernetes cluster."><meta property="og:url" content="https://kubernetes.io/docs/concepts/extend-kubernetes/"><meta property="og:title" content="Extending Kubernetes"><meta name=twitter:title content="Extending Kubernetes"><meta name=twitter:image content="https://kubernetes.io/images/favicon.png"><meta name=twitter:image:alt content="Kubernetes"><meta property="og:image" content="/images/kubernetes-horizontal-color.png"><meta property="og:type" content="article"><script src=/js/jquery-3.6.0.min.js intregrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script></head><body class=td-section><header><nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar" data-auto-burger=primary><a class=navbar-brand href=/></a><div class="td-navbar-nav-scroll ml-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0"><li class="nav-item mr-2 mb-lg-0"><a class="nav-link active" href=/docs/>Documentation</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/blog/>Kubernetes Blog</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/training/>Training</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/partners/>Partners</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/community/>Community</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/case-studies/>Case Studies</a></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>Versions</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/releases>Release Information</a>
+<a class=dropdown-item href=https://kubernetes.io/docs/concepts/extend-kubernetes/>v1.25</a>
+<a class=dropdown-item href=https://v1-24.docs.kubernetes.io/docs/concepts/extend-kubernetes/>v1.24</a>
+<a class=dropdown-item href=https://v1-23.docs.kubernetes.io/docs/concepts/extend-kubernetes/>v1.23</a>
+<a class=dropdown-item href=https://v1-22.docs.kubernetes.io/docs/concepts/extend-kubernetes/>v1.22</a>
+<a class=dropdown-item href=https://v1-21.docs.kubernetes.io/docs/concepts/extend-kubernetes/>v1.21</a></div></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdownMenuLink role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>English</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/zh-cn/docs/concepts/extend-kubernetes/>中文 (Chinese)</a>
+<a class=dropdown-item href=/ko/docs/concepts/extend-kubernetes/>한국어 (Korean)</a>
+<a class=dropdown-item href=/ja/docs/concepts/extend-kubernetes/>日本語 (Japanese)</a>
+<a class=dropdown-item href=/fr/docs/concepts/extend-kubernetes/>Français (French)</a>
+<a class=dropdown-item href=/de/docs/concepts/extend-kubernetes/>Deutsch (German)</a>
+<a class=dropdown-item href=/es/docs/concepts/extend-kubernetes/>Español (Spanish)</a>
+<a class=dropdown-item href=/pt-br/docs/concepts/extend-kubernetes/>Português (Portuguese)</a>
+<a class=dropdown-item href=/id/docs/concepts/extend-kubernetes/>Bahasa Indonesia</a></div></li></ul></div><button id=hamburger onclick=kub.toggleMenu() data-auto-burger-exclude><div></div></button></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><div class=td-content><div class="pageinfo pageinfo-primary d-print-none"><p>This is the multi-page printable view of this section.
+<a href=# onclick="return print(),!1">Click here to print</a>.</p><p><a href=/docs/concepts/extend-kubernetes/>Return to the regular view of this page</a>.</p></div><h1 class=title>Extending Kubernetes</h1><div class=lead>Different ways to change the behavior of your Kubernetes cluster.</div><ul><li>1: <a href=#pg-c8937cdc9df96f3328becf04f8211292>Compute, Storage, and Networking Extensions</a></li><ul><li>1.1: <a href=#pg-1ac2260db9ecccbf0303a899bc27ce6d>Network Plugins</a></li><li>1.2: <a href=#pg-53e1ea8892ceca307ba19e8d6a7b8d32>Device Plugins</a></li></ul><li>2: <a href=#pg-0af41d3bd7c785621b58b7564793396a>Extending the Kubernetes API</a></li><ul><li>2.1: <a href=#pg-342388440304e19ce30c0f8ada1c77ce>Custom Resources</a></li><li>2.2: <a href=#pg-1ea4977c0ebf97569bf54a477faa7fa5>Kubernetes API Aggregation Layer</a></li></ul><li>3: <a href=#pg-3131452556176159fb269593c1a52012>Operator pattern</a></li></ul><div class=content><p>Kubernetes is highly configurable and extensible. As a result, there is rarely a need to fork or
+submit patches to the Kubernetes project code.</p><p>This guide describes the options for customizing a Kubernetes cluster. It is aimed at
+<a class=glossary-tooltip title='A person who configures, controls, and monitors clusters.' data-toggle=tooltip data-placement=top href='/docs/reference/glossary/?all=true#term-cluster-operator' target=_blank aria-label='cluster operators'>cluster operators</a> who want to understand
+how to adapt their Kubernetes cluster to the needs of their work environment. Developers who are
+prospective <a class=glossary-tooltip title='A person who customizes the Kubernetes platform to fit the needs of their project.' data-toggle=tooltip data-placement=top href='/docs/reference/glossary/?all=true#term-platform-developer' target=_blank aria-label='Platform Developers'>Platform Developers</a> or
+Kubernetes Project <a class=glossary-tooltip title='Someone who donates code, documentation, or their time to help the Kubernetes project or community.' data-toggle=tooltip data-placement=top href='/docs/reference/glossary/?all=true#term-contributor' target=_blank aria-label=Contributors>Contributors</a> will also
+find it useful as an introduction to what extension points and patterns exist, and their
+trade-offs and limitations.</p><p>Customization approaches can be broadly divided into <a href=#configuration>configuration</a>, which only
+involves changing command line arguments, local configuration files, or API resources; and <a href=#extensions>extensions</a>,
+which involve running additional programs, additional network services, or both.
+This document is primarily about <em>extensions</em>.</p><h2 id=configuration>Configuration</h2><p><em>Configuration files</em> and <em>command arguments</em> are documented in the <a href=/docs/reference/>Reference</a> section of the online
+documentation, with a page for each binary:</p><ul><li><a href=/docs/reference/command-line-tools-reference/kube-apiserver/><code>kube-apiserver</code></a></li><li><a href=/docs/reference/command-line-tools-reference/kube-controller-manager/><code>kube-controller-manager</code></a></li><li><a href=/docs/reference/command-line-tools-reference/kube-scheduler/><code>kube-scheduler</code></a></li><li><a href=/docs/reference/command-line-tools-reference/kubelet/><code>kubelet</code></a></li><li><a href=/docs/reference/command-line-tools-reference/kube-proxy/><code>kube-proxy</code></a></li></ul><p>Command arguments and configuration files may not always be changeable in a hosted Kubernetes service or a
+distribution with managed installation. When they are changeable, they are usually only changeable
+by the cluster operator. Also, they are subject to change in future Kubernetes versions, and
+setting them may require restarting processes. For those reasons, they should be used only when
+there are no other options.</p><p>Built-in <em>policy APIs</em>, such as <a href=/docs/concepts/policy/resource-quotas/>ResourceQuota</a>,
+<a href=/docs/concepts/services-networking/network-policies/>NetworkPolicy</a> and Role-based Access Control
+(<a href=/docs/reference/access-authn-authz/rbac/>RBAC</a>), are built-in Kubernetes APIs that provide declaratively configured policy settings.
+APIs are typically usable even with hosted Kubernetes services and with managed Kubernetes installations.
+The built-in policy APIs follow the same conventions as other Kubernetes resources such as Pods.
+When you use a policy APIs that is <a href=/docs/reference/using-api/#api-versioning>stable</a>, you benefit from a
+<a href=/docs/reference/using-api/deprecation-policy/>defined support policy</a> like other Kubernetes APIs.
+For these reasons, policy APIs are recommended over <em>configuration files</em> and <em>command arguments</em> where suitable.</p><h2 id=extensions>Extensions</h2><p>Extensions are software components that extend and deeply integrate with Kubernetes.
+They adapt it to support new types and new kinds of hardware.</p><p>Many cluster administrators use a hosted or distribution instance of Kubernetes.
+These clusters come with extensions pre-installed. As a result, most Kubernetes
+users will not need to install extensions and even fewer users will need to author new ones.</p><h3 id=extension-patterns>Extension patterns</h3><p>Kubernetes is designed to be automated by writing client programs. Any
+program that reads and/or writes to the Kubernetes API can provide useful
+automation. <em>Automation</em> can run on the cluster or off it. By following
+the guidance in this doc you can write highly available and robust automation.
+Automation generally works with any Kubernetes cluster, including hosted
+clusters and managed installations.</p><p>There is a specific pattern for writing client programs that work well with
+Kubernetes called the <a class=glossary-tooltip title='A control loop that watches the shared state of the cluster through the apiserver and makes changes attempting to move the current state towards the desired state.' data-toggle=tooltip data-placement=top href=/docs/concepts/architecture/controller/ target=_blank aria-label=controller>controller</a>
+pattern. Controllers typically read an object's <code>.spec</code>, possibly do things, and then
+update the object's <code>.status</code>.</p><p>A controller is a client of the Kubernetes API. When Kubernetes is the client and calls
+out to a remote service, Kubernetes calls this a <em>webhook</em>. The remote service is called
+a <em>webhook backend</em>. As with custom controllers, webhooks do add a point of failure.</p><div class="alert alert-info note callout" role=alert><strong>Note:</strong> Outside of Kubernetes, the term “webhook” typically refers to a mechanism for asynchronous
+notifications, where the webhook call serves as a one-way notification to another system or
+component. In the Kubernetes ecosystem, even synchronous HTTP callouts are often
+described as “webhooks”.</div><p>In the webhook model, Kubernetes makes a network request to a remote service.
+With the alternative <em>binary Plugin</em> model, Kubernetes executes a binary (program).
+Binary plugins are used by the kubelet (for example, <a href=https://kubernetes-csi.github.io/docs/>CSI storage plugins</a>
+and <a href=/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/>CNI network plugins</a>),
+and by kubectl (see <a href=/docs/tasks/extend-kubectl/kubectl-plugins/>Extend kubectl with plugins</a>).</p><h3 id=extension-points>Extension points</h3><p>This diagram shows the extension points in a Kubernetes cluster and the
+clients that access it.</p><figure class=diagram-large><img src=/docs/concepts/extend-kubernetes/extension-points.png alt="Symbolic representation of seven numbered extension points for Kubernetes"><figcaption><p>Kubernetes extension points</p></figcaption></figure><h4 id=key-to-the-figure>Key to the figure</h4><ol><li><p>Users often interact with the Kubernetes API using <code>kubectl</code>. <a href=#client-extensions>Plugins</a>
+customise the behaviour of clients. There are generic extensions that can apply to different clients,
+as well as specific ways to extend <code>kubectl</code>.</p></li><li><p>The API server handles all requests. Several types of extension points in the API server allow
+authenticating requests, or blocking them based on their content, editing content, and handling
+deletion. These are described in the <a href=#api-access-extensions>API Access Extensions</a> section.</p></li><li><p>The API server serves various kinds of <em>resources</em>. <em>Built-in resource kinds</em>, such as
+<code>pods</code>, are defined by the Kubernetes project and can't be changed.
+Read <a href=#api-extensions>API extensions</a> to learn about extending the Kubernetes API.</p></li><li><p>The Kubernetes scheduler <a href=/docs/concepts/scheduling-eviction/assign-pod-node/>decides</a>
+which nodes to place pods on. There are several ways to extend scheduling, which are
+described in the <a href=#scheduling-extensions>Scheduling extensions</a> section.</p></li><li><p>Much of the behavior of Kubernetes is implemented by programs called
+<a class=glossary-tooltip title='A control loop that watches the shared state of the cluster through the apiserver and makes changes attempting to move the current state towards the desired state.' data-toggle=tooltip data-placement=top href=/docs/concepts/architecture/controller/ target=_blank aria-label=controllers>controllers</a>, that are
+clients of the API server. Controllers are often used in conjunction with custom resources.
+Read <a href=#combining-new-apis-with-automation>combining new APIs with automation</a> and
+<a href=#changing-built-in-resources>Changing built-in resources</a> to learn more.</p></li><li><p>The kubelet runs on servers (nodes), and helps pods appear like virtual servers with their own IPs on
+the cluster network. <a href=#network-plugins>Network Plugins</a> allow for different implementations of
+pod networking.</p></li><li><p>You can use <a href=#device-plugins>Device Plugins</a> to integrate custom hardware or other special
+node-local facilities, and make these available to Pods running in your cluster. The kubelet
+includes support for working with device plugins.</p><p>The kubelet also mounts and unmounts
+<a class=glossary-tooltip title='A directory containing data, accessible to the containers in a pod.' data-toggle=tooltip data-placement=top href=/docs/concepts/storage/volumes/ target=_blank aria-label=volume>volume</a> for pods and their containers.
+You can use <a href=#storage-plugins>Storage Plugins</a> to add support for new kinds
+of storage and other volume types.</p></li></ol><h4 id=extension-flowchart>Extension point choice flowchart</h4><p>If you are unsure where to start, this flowchart can help. Note that some solutions may involve
+several types of extensions.</p><figure class=diagram-large><img src=/docs/concepts/extend-kubernetes/flowchart.png alt="Flowchart with questions about use cases and guidance for implementers. Green circles indicate yes; red circles indicate no."><figcaption><p>Flowchart guide to select an extension approach</p></figcaption></figure><hr><h2 id=client-extensions>Client extensions</h2><p>Plugins for kubectl are separate binaries that add or replace the behavior of specific subcommands.
+The <code>kubectl</code> tool can also integrate with <a href=/docs/reference/access-authn-authz/authentication/#client-go-credential-plugins>credential plugins</a>
+These extensions only affect a individual user's local environment, and so cannot enforce site-wide policies.</p><p>If you want to extend the <code>kubectl</code> tool, read <a href=/docs/tasks/extend-kubectl/kubectl-plugins/>Extend kubectl with plugins</a>.</p><h2 id=api-extensions>API extensions</h2><h3 id=custom-resource-definitions>Custom resource definitions</h3><p>Consider adding a <em>Custom Resource</em> to Kubernetes if you want to define new controllers, application
+configuration objects or other declarative APIs, and to manage them using Kubernetes tools, such
+as <code>kubectl</code>.</p><p>For more about Custom Resources, see the
+<a href=/docs/concepts/extend-kubernetes/api-extension/custom-resources/>Custom Resources</a> concept guide.</p><h3 id=api-aggregation-layer>API aggregation layer</h3><p>You can use Kubernetes' <a href=/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/>API Aggregation Layer</a>
+to integrate the Kubernetes API with additional services such as for <a href=/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/>metrics</a>.</p><h3 id=combining-new-apis-with-automation>Combining new APIs with automation</h3><p>A combination of a custom resource API and a control loop is called the
+<a class=glossary-tooltip title='A control loop that watches the shared state of the cluster through the apiserver and makes changes attempting to move the current state towards the desired state.' data-toggle=tooltip data-placement=top href=/docs/concepts/architecture/controller/ target=_blank aria-label=controllers>controllers</a> pattern. If your controller takes
+the place of a human operator deploying infrastructure based on a desired state, then the controller
+may also be following the <a class=glossary-tooltip title='A specialized controller used to manage a custom resource' data-toggle=tooltip data-placement=top href=/docs/concepts/extend-kubernetes/operator/ target=_blank aria-label='operator pattern'>operator pattern</a>.
+The Operator pattern is used to manage specific applications; usually, these are applications that
+maintain state and require care in how they are managed.</p><p>You can also make your own custom APIs and control loops that manage other resources, such as storage,
+or to define policies (such as an access control restriction).</p><h3 id=changing-built-in-resources>Changing built-in resources</h3><p>When you extend the Kubernetes API by adding custom resources, the added resources always fall
+into a new API Groups. You cannot replace or change existing API groups.
+Adding an API does not directly let you affect the behavior of existing APIs (such as Pods), whereas
+<em>API Access Extensions</em> do.</p><h2 id=api-access-extensions>API access extensions</h2><p>When a request reaches the Kubernetes API Server, it is first <em>authenticated</em>, then <em>authorized</em>,
+and is then subject to various types of <em>admission control</em> (some requests are in fact not
+authenticated, and get special treatment). See
+<a href=/docs/concepts/security/controlling-access/>Controlling Access to the Kubernetes API</a>
+for more on this flow.</p><p>Each of the steps in the Kubernetes authentication / authorization flow offers extension points.</p><h3 id=authentication>Authentication</h3><p><a href=/docs/reference/access-authn-authz/authentication/>Authentication</a> maps headers or certificates
+in all requests to a username for the client making the request.</p><p>Kubernetes has several built-in authentication methods that it supports. It can also sit behind an
+authenticating proxy, and it can send a token from an <code>Authorization:</code> header to a remote service for
+verification (an <a href=/docs/reference/access-authn-authz/authentication/#webhook-token-authentication>authentication webhook</a>)
+if those don't meet your needs.</p><h3 id=authorization>Authorization</h3><p><a href=/docs/reference/access-authn-authz/authorization/>Authorization</a> determines whether specific
+users can read, write, and do other operations on API resources. It works at the level of whole
+resources -- it doesn't discriminate based on arbitrary object fields.</p><p>If the built-in authorization options don't meet your needs, an
+<a href=/docs/reference/access-authn-authz/webhook/>authorization webhook</a>
+allows calling out to custom code that makes an authorization decision.</p><h3 id=dynamic-admission-control>Dynamic admission control</h3><p>After a request is authorized, if it is a write operation, it also goes through
+<a href=/docs/reference/access-authn-authz/admission-controllers/>Admission Control</a> steps.
+In addition to the built-in steps, there are several extensions:</p><ul><li>The <a href=/docs/reference/access-authn-authz/admission-controllers/#imagepolicywebhook>Image Policy webhook</a>
+restricts what images can be run in containers.</li><li>To make arbitrary admission control decisions, a general
+<a href=/docs/reference/access-authn-authz/extensible-admission-controllers/#admission-webhooks>Admission webhook</a>
+can be used. Admission webhooks can reject creations or updates.
+Some admission webhooks modify the incoming request data before it is handled further by Kubernetes.</li></ul><h2 id=infrastructure-extensions>Infrastructure extensions</h2><h3 id=device-plugins>Device plugins</h3><p><em>Device plugins</em> allow a node to discover new Node resources (in addition to the
+builtin ones like cpu and memory) via a
+<a href=/docs/concepts/extend-kubernetes/compute-storage-net/device-plugins/>Device Plugin</a>.</p><h3 id=storage-plugins>Storage plugins</h3><p><a class=glossary-tooltip title='The Container Storage Interface (CSI) defines a standard interface to expose storage systems to containers.' data-toggle=tooltip data-placement=top href=/docs/concepts/storage/volumes/#csi target=_blank aria-label='Container Storage Interface'>Container Storage Interface</a> (CSI) plugins provide
+a way to extend Kubernetes with supports for new kinds of volumes. The volumes can be backed by
+durable external storage, or provide ephemeral storage, or they might offer a read-only interface
+to information using a filesystem paradigm.</p><p>Kubernetes also includes support for <a href=/docs/concepts/storage/volumes/#flexvolume-deprecated>FlexVolume</a> plugins,
+which are deprecated since Kubernetes v1.23 (in favour of CSI).</p><p>FlexVolume plugins allow users to mount volume types that aren't natively supported by Kubernetes. When
+you run a Pod that relies on FlexVolume storage, the kubelet calls a binary plugin to mount the volume.
+The archived <a href=https://git.k8s.io/design-proposals-archive/storage/flexvolume-deployment.md>FlexVolume</a>
+design proposal has more detail on this approach.</p><p>The <a href=https://github.com/kubernetes/community/blob/master/sig-storage/volume-plugin-faq.md#kubernetes-volume-plugin-faq-for-storage-vendors>Kubernetes Volume Plugin FAQ for Storage Vendors</a>
+includes general information on storage plugins.</p><h3 id=network-plugins>Network plugins</h3><p>Your Kubernetes cluster needs a <em>network plugin</em> in order to have a working Pod network
+and to support other aspects of the Kubernetes network model.</p><p><a href=/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/>Network Plugins</a>
+allow Kubernetes to work with different networking topologies and technologies.</p><h2 id=scheduling-extensions>Scheduling extensions</h2><p>The scheduler is a special type of controller that watches pods, and assigns
+pods to nodes. The default scheduler can be replaced entirely, while
+continuing to use other Kubernetes components, or
+<a href=/docs/tasks/extend-kubernetes/configure-multiple-schedulers/>multiple schedulers</a>
+can run at the same time.</p><p>This is a significant undertaking, and almost all Kubernetes users find they
+do not need to modify the scheduler.</p><p>You can control which <a href=/docs/reference/scheduling/config/#scheduling-plugins>scheduling plugins</a>
+are active, or associate sets of plugins with different named <a href=/docs/reference/scheduling/config/#multiple-profiles>scheduler profiles</a>.
+You can also write your own plugin that integrates with one or more of the kube-scheduler's
+<a href=/docs/concepts/scheduling-eviction/scheduling-framework/#extension-points>extension points</a>.</p><p>Finally, the built in <code>kube-scheduler</code> component supports a
+<a href=https://git.k8s.io/design-proposals-archive/scheduling/scheduler_extender.md>webhook</a>
+that permits a remote HTTP backend (scheduler extension) to filter and / or prioritize
+the nodes that the kube-scheduler chooses for a pod.</p><div class="alert alert-info note callout" role=alert><strong>Note:</strong> You can only affect node filtering
+and node prioritization with a scheduler extender webhook; other extension points are
+not available through the webhook integration.</div><h2 id=what-s-next>What's next</h2><ul><li>Learn more about infrastructure extensions<ul><li><a href=/docs/concepts/extend-kubernetes/compute-storage-net/device-plugins/>Device Plugins</a></li><li><a href=/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/>Network Plugins</a></li><li>CSI <a href=https://kubernetes-csi.github.io/docs/>storage plugins</a></li></ul></li><li>Learn about <a href=/docs/tasks/extend-kubectl/kubectl-plugins/>kubectl plugins</a></li><li>Learn more about <a href=/docs/concepts/extend-kubernetes/api-extension/custom-resources/>Custom Resources</a></li><li>Learn more about <a href=/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/>Extension API Servers</a></li><li>Learn about <a href=/docs/reference/access-authn-authz/extensible-admission-controllers/>Dynamic admission control</a></li><li>Learn about the <a href=/docs/concepts/extend-kubernetes/operator/>Operator pattern</a></li></ul></div></div><div class=td-content style=page-break-before:always><h1 id=pg-c8937cdc9df96f3328becf04f8211292>1 - Compute, Storage, and Networking Extensions</h1><p>This section covers extensions to your cluster that do not come as part as Kubernetes itself.
+You can use these extensions to enhance the nodes in your cluster, or to provide the network
+fabric that links Pods together.</p><ul><li><p><a href=/docs/concepts/storage/volumes/#csi>CSI</a> and <a href=/docs/concepts/storage/volumes/#flexvolume>FlexVolume</a> storage plugins</p><p><a class=glossary-tooltip title='The Container Storage Interface (CSI) defines a standard interface to expose storage systems to containers.' data-toggle=tooltip data-placement=top href=/docs/concepts/storage/volumes/#csi target=_blank aria-label='Container Storage Interface'>Container Storage Interface</a> (CSI) plugins
+provide a way to extend Kubernetes with supports for new kinds of volumes. The volumes can
+be backed by durable external storage, or provide ephemeral storage, or they might offer a
+read-only interface to information using a filesystem paradigm.</p><p>Kubernetes also includes support for <a href=/docs/concepts/storage/volumes/#flexvolume>FlexVolume</a>
+plugins, which are deprecated since Kubernetes v1.23 (in favour of CSI).</p><p>FlexVolume plugins allow users to mount volume types that aren't natively
+supported by Kubernetes. When you run a Pod that relies on FlexVolume
+storage, the kubelet calls a binary plugin to mount the volume. The archived
+<a href=https://git.k8s.io/design-proposals-archive/storage/flexvolume-deployment.md>FlexVolume</a>
+design proposal has more detail on this approach.</p><p>The <a href=https://github.com/kubernetes/community/blob/master/sig-storage/volume-plugin-faq.md#kubernetes-volume-plugin-faq-for-storage-vendors>Kubernetes Volume Plugin FAQ for Storage Vendors</a>
+includes general information on storage plugins.</p></li><li><p><a href=/docs/concepts/extend-kubernetes/compute-storage-net/device-plugins/>Device plugins</a></p><p>Device plugins allow a node to discover new Node facilities (in addition to the
+built-in node resources such as <code>cpu</code> and <code>memory</code>), and provide these custom node-local
+facilities to Pods that request them.</p></li><li><p><a href=/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/>Network plugins</a></p><p>A network plugin allow Kubernetes to work with different networking topologies and technologies.
+Your Kubernetes cluster needs a <em>network plugin</em> in order to have a working Pod network
+and to support other aspects of the Kubernetes network model.</p><p>Kubernetes 1.25 is compatible with <a class=glossary-tooltip title='Container network interface (CNI) plugins are a type of Network plugin that adheres to the appc/CNI specification.' data-toggle=tooltip data-placement=top href=/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/ target=_blank aria-label=CNI>CNI</a>
+network plugins.</p></li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-1ac2260db9ecccbf0303a899bc27ce6d>1.1 - Network Plugins</h1><p>Kubernetes 1.25 supports <a href=https://github.com/containernetworking/cni>Container Network Interface</a>
+(CNI) plugins for cluster networking. You must use a CNI plugin that is compatible with your
+cluster and that suits your needs. Different plugins are available (both open- and closed- source)
+in the wider Kubernetes ecosystem.</p><p>A CNI plugin is required to implement the
+<a href=/docs/concepts/services-networking/#the-kubernetes-network-model>Kubernetes network model</a>.</p><p>You must use a CNI plugin that is compatible with the
+<a href=https://github.com/containernetworking/cni/blob/spec-v0.4.0/SPEC.md>v0.4.0</a> or later
+releases of the CNI specification. The Kubernetes project recommends using a plugin that is
+compatible with the <a href=https://github.com/containernetworking/cni/blob/spec-v1.0.0/SPEC.md>v1.0.0</a>
+CNI specification (plugins can be compatible with multiple spec versions).</p><h2 id=installation>Installation</h2><p>A Container Runtime, in the networking context, is a daemon on a node configured to provide CRI
+Services for kubelet. In particular, the Container Runtime must be configured to load the CNI
+plugins required to implement the Kubernetes network model.</p><div class="alert alert-info note callout" role=alert><strong>Note:</strong><p>Prior to Kubernetes 1.24, the CNI plugins could also be managed by the kubelet using the
+<code>cni-bin-dir</code> and <code>network-plugin</code> command-line parameters.
+These command-line parameters were removed in Kubernetes 1.24, with management of the CNI no
+longer in scope for kubelet.</p><p>See <a href=/docs/tasks/administer-cluster/migrating-from-dockershim/troubleshooting-cni-plugin-related-errors/>Troubleshooting CNI plugin-related errors</a>
+if you are facing issues following the removal of dockershim.</p></div><p>For specific information about how a Container Runtime manages the CNI plugins, see the
+documentation for that Container Runtime, for example:</p><ul><li><a href=https://github.com/containerd/containerd/blob/main/script/setup/install-cni>containerd</a></li><li><a href=https://github.com/cri-o/cri-o/blob/main/contrib/cni/README.md>CRI-O</a></li></ul><p>For specific information about how to install and manage a CNI plugin, see the documentation for
+that plugin or <a href=/docs/concepts/cluster-administration/networking/#how-to-implement-the-kubernetes-networking-model>networking provider</a>.</p><h2 id=network-plugin-requirements>Network Plugin Requirements</h2><p>For plugin developers and users who regularly build or deploy Kubernetes, the plugin may also need
+specific configuration to support kube-proxy. The iptables proxy depends on iptables, and the
+plugin may need to ensure that container traffic is made available to iptables. For example, if
+the plugin connects containers to a Linux bridge, the plugin must set the
+<code>net/bridge/bridge-nf-call-iptables</code> sysctl to <code>1</code> to ensure that the iptables proxy functions
+correctly. If the plugin does not use a Linux bridge, but uses something like Open vSwitch or
+some other mechanism instead, it should ensure container traffic is appropriately routed for the
+proxy.</p><p>By default, if no kubelet network plugin is specified, the <code>noop</code> plugin is used, which sets
+<code>net/bridge/bridge-nf-call-iptables=1</code> to ensure simple configurations (like Docker with a bridge)
+work correctly with the iptables proxy.</p><h3 id=loopback-cni>Loopback CNI</h3><p>In addition to the CNI plugin installed on the nodes for implementing the Kubernetes network
+model, Kubernetes also requires the container runtimes to provide a loopback interface <code>lo</code>, which
+is used for each sandbox (pod sandboxes, vm sandboxes, ...).
+Implementing the loopback interface can be accomplished by re-using the
+<a href=https://github.com/containernetworking/plugins/blob/master/plugins/main/loopback/loopback.go>CNI loopback plugin.</a>
+or by developing your own code to achieve this (see
+<a href=https://github.com/cri-o/ocicni/blob/release-1.24/pkg/ocicni/util_linux.go#L91>this example from CRI-O</a>).</p><h3 id=support-hostport>Support hostPort</h3><p>The CNI networking plugin supports <code>hostPort</code>. You can use the official
+<a href=https://github.com/containernetworking/plugins/tree/master/plugins/meta/portmap>portmap</a>
+plugin offered by the CNI plugin team or use your own plugin with portMapping functionality.</p><p>If you want to enable <code>hostPort</code> support, you must specify <code>portMappings capability</code> in your
+<code>cni-conf-dir</code>. For example:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;name&#34;</span>: <span style=color:#b44>&#34;k8s-pod-network&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;cniVersion&#34;</span>: <span style=color:#b44>&#34;0.4.0&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;plugins&#34;</span>: [
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;type&#34;</span>: <span style=color:#b44>&#34;calico&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;log_level&#34;</span>: <span style=color:#b44>&#34;info&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;datastore_type&#34;</span>: <span style=color:#b44>&#34;kubernetes&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;nodename&#34;</span>: <span style=color:#b44>&#34;127.0.0.1&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;ipam&#34;</span>: {
+</span></span><span style=display:flex><span>        <span style=color:green;font-weight:700>&#34;type&#34;</span>: <span style=color:#b44>&#34;host-local&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:green;font-weight:700>&#34;subnet&#34;</span>: <span style=color:#b44>&#34;usePodCidr&#34;</span>
+</span></span><span style=display:flex><span>      },
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;policy&#34;</span>: {
+</span></span><span style=display:flex><span>        <span style=color:green;font-weight:700>&#34;type&#34;</span>: <span style=color:#b44>&#34;k8s&#34;</span>
+</span></span><span style=display:flex><span>      },
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;kubernetes&#34;</span>: {
+</span></span><span style=display:flex><span>        <span style=color:green;font-weight:700>&#34;kubeconfig&#34;</span>: <span style=color:#b44>&#34;/etc/cni/net.d/calico-kubeconfig&#34;</span>
+</span></span><span style=display:flex><span>      }
+</span></span><span style=display:flex><span>    },
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;type&#34;</span>: <span style=color:#b44>&#34;portmap&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;capabilities&#34;</span>: {<span style=color:green;font-weight:700>&#34;portMappings&#34;</span>: <span style=color:#a2f;font-weight:700>true</span>}
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>  ]
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=support-traffic-shaping>Support traffic shaping</h3><p><strong>Experimental Feature</strong></p><p>The CNI networking plugin also supports pod ingress and egress traffic shaping. You can use the
+official <a href=https://github.com/containernetworking/plugins/tree/master/plugins/meta/bandwidth>bandwidth</a>
+plugin offered by the CNI plugin team or use your own plugin with bandwidth control functionality.</p><p>If you want to enable traffic shaping support, you must add the <code>bandwidth</code> plugin to your CNI
+configuration file (default <code>/etc/cni/net.d</code>) and ensure that the binary is included in your CNI
+bin dir (default <code>/opt/cni/bin</code>).</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;name&#34;</span>: <span style=color:#b44>&#34;k8s-pod-network&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;cniVersion&#34;</span>: <span style=color:#b44>&#34;0.4.0&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;plugins&#34;</span>: [
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;type&#34;</span>: <span style=color:#b44>&#34;calico&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;log_level&#34;</span>: <span style=color:#b44>&#34;info&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;datastore_type&#34;</span>: <span style=color:#b44>&#34;kubernetes&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;nodename&#34;</span>: <span style=color:#b44>&#34;127.0.0.1&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;ipam&#34;</span>: {
+</span></span><span style=display:flex><span>        <span style=color:green;font-weight:700>&#34;type&#34;</span>: <span style=color:#b44>&#34;host-local&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:green;font-weight:700>&#34;subnet&#34;</span>: <span style=color:#b44>&#34;usePodCidr&#34;</span>
+</span></span><span style=display:flex><span>      },
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;policy&#34;</span>: {
+</span></span><span style=display:flex><span>        <span style=color:green;font-weight:700>&#34;type&#34;</span>: <span style=color:#b44>&#34;k8s&#34;</span>
+</span></span><span style=display:flex><span>      },
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;kubernetes&#34;</span>: {
+</span></span><span style=display:flex><span>        <span style=color:green;font-weight:700>&#34;kubeconfig&#34;</span>: <span style=color:#b44>&#34;/etc/cni/net.d/calico-kubeconfig&#34;</span>
+</span></span><span style=display:flex><span>      }
+</span></span><span style=display:flex><span>    },
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;type&#34;</span>: <span style=color:#b44>&#34;bandwidth&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;capabilities&#34;</span>: {<span style=color:green;font-weight:700>&#34;bandwidth&#34;</span>: <span style=color:#a2f;font-weight:700>true</span>}
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>  ]
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Now you can add the <code>kubernetes.io/ingress-bandwidth</code> and <code>kubernetes.io/egress-bandwidth</code>
+annotations to your Pod. For example:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>annotations</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>kubernetes.io/ingress-bandwidth</span>:<span style=color:#bbb> </span>1M<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>kubernetes.io/egress-bandwidth</span>:<span style=color:#bbb> </span>1M<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#00f;font-weight:700>...</span><span style=color:#bbb>
+</span></span></span></code></pre></div><h2 id=what-s-next>What's next</h2></div><div class=td-content style=page-break-before:always><h1 id=pg-53e1ea8892ceca307ba19e8d6a7b8d32>1.2 - Device Plugins</h1><div class=lead>Device plugins let you configure your cluster with support for devices or resources that require vendor-specific setup, such as GPUs, NICs, FPGAs, or non-volatile main memory.</div><div style=margin-top:10px;margin-bottom:10px><b>FEATURE STATE:</b> <code>Kubernetes v1.10 [beta]</code></div><p>Kubernetes provides a <a href=https://git.k8s.io/design-proposals-archive/resource-management/device-plugin.md>device plugin framework</a>
+that you can use to advertise system hardware resources to the
+<a class=glossary-tooltip title='An agent that runs on each node in the cluster. It makes sure that containers are running in a pod.' data-toggle=tooltip data-placement=top href=/docs/reference/generated/kubelet target=_blank aria-label=Kubelet>Kubelet</a>.</p><p>Instead of customizing the code for Kubernetes itself, vendors can implement a
+device plugin that you deploy either manually or as a <a class=glossary-tooltip title='Ensures a copy of a Pod is running across a set of nodes in a cluster.' data-toggle=tooltip data-placement=top href=/docs/concepts/workloads/controllers/daemonset target=_blank aria-label=DaemonSet>DaemonSet</a>.
+The targeted devices include GPUs, high-performance NICs, FPGAs, InfiniBand adapters,
+and other similar computing resources that may require vendor specific initialization
+and setup.</p><h2 id=device-plugin-registration>Device plugin registration</h2><p>The kubelet exports a <code>Registration</code> gRPC service:</p><pre tabindex=0><code class=language-gRPC data-lang=gRPC>service Registration {
+	rpc Register(RegisterRequest) returns (Empty) {}
+}
+</code></pre><p>A device plugin can register itself with the kubelet through this gRPC service.
+During the registration, the device plugin needs to send:</p><ul><li>The name of its Unix socket.</li><li>The Device Plugin API version against which it was built.</li><li>The <code>ResourceName</code> it wants to advertise. Here <code>ResourceName</code> needs to follow the
+<a href=/docs/concepts/configuration/manage-resources-containers/#extended-resources>extended resource naming scheme</a>
+as <code>vendor-domain/resourcetype</code>.
+(For example, an NVIDIA GPU is advertised as <code>nvidia.com/gpu</code>.)</li></ul><p>Following a successful registration, the device plugin sends the kubelet the
+list of devices it manages, and the kubelet is then in charge of advertising those
+resources to the API server as part of the kubelet node status update.
+For example, after a device plugin registers <code>hardware-vendor.example/foo</code> with the kubelet
+and reports two healthy devices on a node, the node status is updated
+to advertise that the node has 2 "Foo" devices installed and available.</p><p>Then, users can request devices as part of a Pod specification
+(see <a href=/docs/reference/kubernetes-api/workload-resources/pod-v1/#Container><code>container</code></a>).
+Requesting extended resources is similar to how you manage requests and limits for
+other resources, with the following differences:</p><ul><li>Extended resources are only supported as integer resources and cannot be overcommitted.</li><li>Devices cannot be shared between containers.</li></ul><h3 id=example-pod>Example</h3><p>Suppose a Kubernetes cluster is running a device plugin that advertises resource <code>hardware-vendor.example/foo</code>
+on certain nodes. Here is an example of a pod requesting this resource to run a demo workload:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#00f;font-weight:700>---</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>demo-pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>demo-container-1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>registry.k8s.io/pause:2.0<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>resources</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>limits</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>hardware-vendor.example/foo</span>:<span style=color:#bbb> </span><span style=color:#666>2</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#080;font-style:italic>#</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#080;font-style:italic># This Pod needs 2 of the hardware-vendor.example/foo devices</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#080;font-style:italic># and can only schedule onto a Node that&#39;s able to satisfy</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#080;font-style:italic># that need.</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#080;font-style:italic>#</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#080;font-style:italic># If the Node has more than 2 of those devices available, the</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#080;font-style:italic># remainder would be available for other Pods to use.</span><span style=color:#bbb>
+</span></span></span></code></pre></div><h2 id=device-plugin-implementation>Device plugin implementation</h2><p>The general workflow of a device plugin includes the following steps:</p><ul><li><p>Initialization. During this phase, the device plugin performs vendor specific
+initialization and setup to make sure the devices are in a ready state.</p></li><li><p>The plugin starts a gRPC service, with a Unix socket under host path
+<code>/var/lib/kubelet/device-plugins/</code>, that implements the following interfaces:</p><pre tabindex=0><code class=language-gRPC data-lang=gRPC>service DevicePlugin {
+      // GetDevicePluginOptions returns options to be communicated with Device Manager.
+      rpc GetDevicePluginOptions(Empty) returns (DevicePluginOptions) {}
+
+      // ListAndWatch returns a stream of List of Devices
+      // Whenever a Device state change or a Device disappears, ListAndWatch
+      // returns the new list
+      rpc ListAndWatch(Empty) returns (stream ListAndWatchResponse) {}
+
+      // Allocate is called during container creation so that the Device
+      // Plugin can run device specific operations and instruct Kubelet
+      // of the steps to make the Device available in the container
+      rpc Allocate(AllocateRequest) returns (AllocateResponse) {}
+
+      // GetPreferredAllocation returns a preferred set of devices to allocate
+      // from a list of available ones. The resulting preferred allocation is not
+      // guaranteed to be the allocation ultimately performed by the
+      // devicemanager. It is only designed to help the devicemanager make a more
+      // informed allocation decision when possible.
+      rpc GetPreferredAllocation(PreferredAllocationRequest) returns (PreferredAllocationResponse) {}
+
+      // PreStartContainer is called, if indicated by Device Plugin during registeration phase,
+      // before each container start. Device plugin can run device specific operations
+      // such as resetting the device before making devices available to the container.
+      rpc PreStartContainer(PreStartContainerRequest) returns (PreStartContainerResponse) {}
+}
+</code></pre><div class="alert alert-info note callout" role=alert><strong>Note:</strong> Plugins are not required to provide useful implementations for
+<code>GetPreferredAllocation()</code> or <code>PreStartContainer()</code>. Flags indicating which
+(if any) of these calls are available should be set in the <code>DevicePluginOptions</code>
+message sent back by a call to <code>GetDevicePluginOptions()</code>. The <code>kubelet</code> will
+always call <code>GetDevicePluginOptions()</code> to see which optional functions are
+available, before calling any of them directly.</div></li><li><p>The plugin registers itself with the kubelet through the Unix socket at host
+path <code>/var/lib/kubelet/device-plugins/kubelet.sock</code>.</p></li><li><p>After successfully registering itself, the device plugin runs in serving mode, during which it keeps
+monitoring device health and reports back to the kubelet upon any device state changes.
+It is also responsible for serving <code>Allocate</code> gRPC requests. During <code>Allocate</code>, the device plugin may
+do device-specific preparation; for example, GPU cleanup or QRNG initialization.
+If the operations succeed, the device plugin returns an <code>AllocateResponse</code> that contains container
+runtime configurations for accessing the allocated devices. The kubelet passes this information
+to the container runtime.</p></li></ul><h3 id=handling-kubelet-restarts>Handling kubelet restarts</h3><p>A device plugin is expected to detect kubelet restarts and re-register itself with the new
+kubelet instance. In the current implementation, a new kubelet instance deletes all the existing Unix sockets
+under <code>/var/lib/kubelet/device-plugins</code> when it starts. A device plugin can monitor the deletion
+of its Unix socket and re-register itself upon such an event.</p><h2 id=device-plugin-deployment>Device plugin deployment</h2><p>You can deploy a device plugin as a DaemonSet, as a package for your node's operating system,
+or manually.</p><p>The canonical directory <code>/var/lib/kubelet/device-plugins</code> requires privileged access,
+so a device plugin must run in a privileged security context.
+If you're deploying a device plugin as a DaemonSet, <code>/var/lib/kubelet/device-plugins</code>
+must be mounted as a <a class=glossary-tooltip title='A directory containing data, accessible to the containers in a pod.' data-toggle=tooltip data-placement=top href=/docs/concepts/storage/volumes/ target=_blank aria-label=Volume>Volume</a>
+in the plugin's <a href=/docs/reference/generated/kubernetes-api/v1.25/#podspec-v1-core>PodSpec</a>.</p><p>If you choose the DaemonSet approach you can rely on Kubernetes to: place the device plugin's
+Pod onto Nodes, to restart the daemon Pod after failure, and to help automate upgrades.</p><h2 id=api-compatibility>API compatibility</h2><p>Kubernetes device plugin support is in beta. The API may change before stabilization,
+in incompatible ways. As a project, Kubernetes recommends that device plugin developers:</p><ul><li>Watch for changes in future releases.</li><li>Support multiple versions of the device plugin API for backward/forward compatibility.</li></ul><p>If you enable the DevicePlugins feature and run device plugins on nodes that need to be upgraded to
+a Kubernetes release with a newer device plugin API version, upgrade your device plugins
+to support both versions before upgrading these nodes. Taking that approach will
+ensure the continuous functioning of the device allocations during the upgrade.</p><h2 id=monitoring-device-plugin-resources>Monitoring device plugin resources</h2><div style=margin-top:10px;margin-bottom:10px><b>FEATURE STATE:</b> <code>Kubernetes v1.15 [beta]</code></div><p>In order to monitor resources provided by device plugins, monitoring agents need to be able to
+discover the set of devices that are in-use on the node and obtain metadata to describe which
+container the metric should be associated with. <a href=https://prometheus.io/>Prometheus</a> metrics
+exposed by device monitoring agents should follow the
+<a href=https://github.com/kubernetes/community/blob/master/contributors/devel/sig-instrumentation/instrumentation.md>Kubernetes Instrumentation Guidelines</a>,
+identifying containers using <code>pod</code>, <code>namespace</code>, and <code>container</code> prometheus labels.</p><p>The kubelet provides a gRPC service to enable discovery of in-use devices, and to provide metadata
+for these devices:</p><pre tabindex=0><code class=language-gRPC data-lang=gRPC>// PodResourcesLister is a service provided by the kubelet that provides information about the
+// node resources consumed by pods and containers on the node
+service PodResourcesLister {
+    rpc List(ListPodResourcesRequest) returns (ListPodResourcesResponse) {}
+    rpc GetAllocatableResources(AllocatableResourcesRequest) returns (AllocatableResourcesResponse) {}
+}
+</code></pre><h3 id=grpc-endpoint-list><code>List</code> gRPC endpoint</h3><p>The <code>List</code> endpoint provides information on resources of running pods, with details such as the
+id of exclusively allocated CPUs, device id as it was reported by device plugins and id of
+the NUMA node where these devices are allocated. Also, for NUMA-based machines, it contains the
+information about memory and hugepages reserved for a container.</p><pre tabindex=0><code class=language-gRPC data-lang=gRPC>// ListPodResourcesResponse is the response returned by List function
+message ListPodResourcesResponse {
+    repeated PodResources pod_resources = 1;
+}
+
+// PodResources contains information about the node resources assigned to a pod
+message PodResources {
+    string name = 1;
+    string namespace = 2;
+    repeated ContainerResources containers = 3;
+}
+
+// ContainerResources contains information about the resources assigned to a container
+message ContainerResources {
+    string name = 1;
+    repeated ContainerDevices devices = 2;
+    repeated int64 cpu_ids = 3;
+    repeated ContainerMemory memory = 4;
+}
+
+// ContainerMemory contains information about memory and hugepages assigned to a container
+message ContainerMemory {
+    string memory_type = 1;
+    uint64 size = 2;
+    TopologyInfo topology = 3;
+}
+
+// Topology describes hardware topology of the resource
+message TopologyInfo {
+        repeated NUMANode nodes = 1;
+}
+
+// NUMA representation of NUMA node
+message NUMANode {
+        int64 ID = 1;
+}
+
+// ContainerDevices contains information about the devices assigned to a container
+message ContainerDevices {
+    string resource_name = 1;
+    repeated string device_ids = 2;
+    TopologyInfo topology = 3;
+}
+</code></pre><div class="alert alert-info note callout" role=alert><strong>Note:</strong><p>cpu_ids in the <code>ContainerResources</code> in the <code>List</code> endpoint correspond to exclusive CPUs allocated
+to a partilar container. If the goal is to evaluate CPUs that belong to the shared pool, the <code>List</code>
+endpoint needs to be used in conjunction with the <code>GetAllocatableResources</code> endpoint as explained
+below:</p><ol><li>Call <code>GetAllocatableResources</code> to get a list of all the allocatable CPUs</li><li>Call <code>GetCpuIds</code> on all <code>ContainerResources</code> in the system</li><li>Subtract out all of the CPUs from the <code>GetCpuIds</code> calls from the <code>GetAllocatableResources</code> call</li></ol></div><h3 id=grpc-endpoint-getallocatableresources><code>GetAllocatableResources</code> gRPC endpoint</h3><div style=margin-top:10px;margin-bottom:10px><b>FEATURE STATE:</b> <code>Kubernetes v1.23 [beta]</code></div><p>GetAllocatableResources provides information on resources initially available on the worker node.
+It provides more information than kubelet exports to APIServer.</p><div class="alert alert-info note callout" role=alert><strong>Note:</strong><p><code>GetAllocatableResources</code> should only be used to evaluate <a href=/docs/tasks/administer-cluster/reserve-compute-resources/#node-allocatable>allocatable</a>
+resources on a node. If the goal is to evaluate free/unallocated resources it should be used in
+conjunction with the List() endpoint. The result obtained by <code>GetAllocatableResources</code> would remain
+the same unless the underlying resources exposed to kubelet change. This happens rarely but when
+it does (for example: hotplug/hotunplug, device health changes), client is expected to call
+<code>GetAlloctableResources</code> endpoint.</p><p>However, calling <code>GetAllocatableResources</code> endpoint is not sufficient in case of cpu and/or memory
+update and Kubelet needs to be restarted to reflect the correct resource capacity and allocatable.</p></div><pre tabindex=0><code class=language-gRPC data-lang=gRPC>// AllocatableResourcesResponses contains informations about all the devices known by the kubelet
+message AllocatableResourcesResponse {
+    repeated ContainerDevices devices = 1;
+    repeated int64 cpu_ids = 2;
+    repeated ContainerMemory memory = 3;
+}
+</code></pre><p>Starting from Kubernetes v1.23, the <code>GetAllocatableResources</code> is enabled by default.
+You can disable it by turning off the <code>KubeletPodResourcesGetAllocatable</code>
+<a href=/docs/reference/command-line-tools-reference/feature-gates/>feature gate</a>.</p><p>Preceding Kubernetes v1.23, to enable this feature <code>kubelet</code> must be started with the following flag:</p><pre tabindex=0><code>--feature-gates=KubeletPodResourcesGetAllocatable=true
+</code></pre><p><code>ContainerDevices</code> do expose the topology information declaring to which NUMA cells the device is
+affine. The NUMA cells are identified using a opaque integer ID, which value is consistent to
+what device plugins report
+<a href=/docs/concepts/extend-kubernetes/compute-storage-net/device-plugins/#device-plugin-integration-with-the-topology-manager>when they register themselves to the kubelet</a>.</p><p>The gRPC service is served over a unix socket at <code>/var/lib/kubelet/pod-resources/kubelet.sock</code>.
+Monitoring agents for device plugin resources can be deployed as a daemon, or as a DaemonSet.
+The canonical directory <code>/var/lib/kubelet/pod-resources</code> requires privileged access, so monitoring
+agents must run in a privileged security context. If a device monitoring agent is running as a
+DaemonSet, <code>/var/lib/kubelet/pod-resources</code> must be mounted as a
+<a class=glossary-tooltip title='A directory containing data, accessible to the containers in a pod.' data-toggle=tooltip data-placement=top href=/docs/concepts/storage/volumes/ target=_blank aria-label=Volume>Volume</a> in the device monitoring agent's
+<a href=/docs/reference/generated/kubernetes-api/v1.25/#podspec-v1-core>PodSpec</a>.</p><p>Support for the <code>PodResourcesLister service</code> requires <code>KubeletPodResources</code>
+<a href=/docs/reference/command-line-tools-reference/feature-gates/>feature gate</a> to be enabled.
+It is enabled by default starting with Kubernetes 1.15 and is v1 since Kubernetes 1.20.</p><h2 id=device-plugin-integration-with-the-topology-manager>Device plugin integration with the Topology Manager</h2><div style=margin-top:10px;margin-bottom:10px><b>FEATURE STATE:</b> <code>Kubernetes v1.18 [beta]</code></div><p>The Topology Manager is a Kubelet component that allows resources to be co-ordinated in a Topology
+aligned manner. In order to do this, the Device Plugin API was extended to include a
+<code>TopologyInfo</code> struct.</p><pre tabindex=0><code class=language-gRPC data-lang=gRPC>message TopologyInfo {
+    repeated NUMANode nodes = 1;
+}
+
+message NUMANode {
+    int64 ID = 1;
+}
+</code></pre><p>Device Plugins that wish to leverage the Topology Manager can send back a populated TopologyInfo
+struct as part of the device registration, along with the device IDs and the health of the device.
+The device manager will then use this information to consult with the Topology Manager and make
+resource assignment decisions.</p><p><code>TopologyInfo</code> supports setting a <code>nodes</code> field to either <code>nil</code> or a list of NUMA nodes. This
+allows the Device Plugin to advertise a device that spans multiple NUMA nodes.</p><p>Setting <code>TopologyInfo</code> to <code>nil</code> or providing an empty list of NUMA nodes for a given device
+indicates that the Device Plugin does not have a NUMA affinity preference for that device.</p><p>An example <code>TopologyInfo</code> struct populated for a device by a Device Plugin:</p><pre tabindex=0><code>pluginapi.Device{ID: &#34;25102017&#34;, Health: pluginapi.Healthy, Topology:&amp;pluginapi.TopologyInfo{Nodes: []*pluginapi.NUMANode{&amp;pluginapi.NUMANode{ID: 0,},}}}
+</code></pre><h2 id=examples>Device plugin examples</h2><div class="alert alert-secondary callout third-party-content" role=alert><strong>Note:</strong>
+This section links to third party projects that provide functionality required by Kubernetes. The Kubernetes project authors aren't responsible for these projects, which are listed alphabetically. To add a project to this list, read the <a href=/docs/contribute/style/content-guide/#third-party-content>content guide</a> before submitting a change. <a href=#third-party-content-disclaimer>More information.</a></div><p>Here are some examples of device plugin implementations:</p><ul><li>The <a href=https://github.com/RadeonOpenCompute/k8s-device-plugin>AMD GPU device plugin</a></li><li>The <a href=https://github.com/intel/intel-device-plugins-for-kubernetes>Intel device plugins</a> for
+Intel GPU, FPGA, QAT, VPU, SGX, DSA, DLB and IAA devices</li><li>The <a href=https://github.com/kubevirt/kubernetes-device-plugins>KubeVirt device plugins</a> for
+hardware-assisted virtualization</li><li>The <a href=https://github.com/GoogleCloudPlatform/container-engine-accelerators/tree/master/cmd/nvidia_gpu>NVIDIA GPU device plugin for Container-Optimized OS</a></li><li>The <a href=https://github.com/hustcat/k8s-rdma-device-plugin>RDMA device plugin</a></li><li>The <a href=https://github.com/collabora/k8s-socketcan>SocketCAN device plugin</a></li><li>The <a href=https://github.com/vikaschoudhary16/sfc-device-plugin>Solarflare device plugin</a></li><li>The <a href=https://github.com/intel/sriov-network-device-plugin>SR-IOV Network device plugin</a></li><li>The <a href=https://github.com/Xilinx/FPGA_as_a_Service/tree/master/k8s-device-plugin>Xilinx FPGA device plugins</a> for Xilinx FPGA devices</li></ul><h2 id=what-s-next>What's next</h2><ul><li>Learn about <a href=/docs/tasks/manage-gpus/scheduling-gpus/>scheduling GPU resources</a> using device
+plugins</li><li>Learn about <a href=/docs/tasks/administer-cluster/extended-resource-node/>advertising extended resources</a>
+on a node</li><li>Learn about the <a href=/docs/tasks/administer-cluster/topology-manager/>Topology Manager</a></li><li>Read about using <a href=/blog/2019/04/24/hardware-accelerated-ssl/tls-termination-in-ingress-controllers-using-kubernetes-device-plugins-and-runtimeclass/>hardware acceleration for TLS ingress</a>
+with Kubernetes</li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-0af41d3bd7c785621b58b7564793396a>2 - Extending the Kubernetes API</h1></div><div class=td-content><h1 id=pg-342388440304e19ce30c0f8ada1c77ce>2.1 - Custom Resources</h1><p><em>Custom resources</em> are extensions of the Kubernetes API. This page discusses when to add a custom
+resource to your Kubernetes cluster and when to use a standalone service. It describes the two
+methods for adding custom resources and how to choose between them.</p><h2 id=custom-resources>Custom resources</h2><p>A <em>resource</em> is an endpoint in the <a href=/docs/concepts/overview/kubernetes-api/>Kubernetes API</a> that
+stores a collection of <a href=/docs/concepts/overview/working-with-objects/kubernetes-objects/>API objects</a>
+of a certain kind; for example, the built-in <em>pods</em> resource contains a collection of Pod objects.</p><p>A <em>custom resource</em> is an extension of the Kubernetes API that is not necessarily available in a default
+Kubernetes installation. It represents a customization of a particular Kubernetes installation. However,
+many core Kubernetes functions are now built using custom resources, making Kubernetes more modular.</p><p>Custom resources can appear and disappear in a running cluster through dynamic registration,
+and cluster admins can update custom resources independently of the cluster itself.
+Once a custom resource is installed, users can create and access its objects using
+<a class=glossary-tooltip title='A command line tool for communicating with a Kubernetes cluster.' data-toggle=tooltip data-placement=top href=/docs/user-guide/kubectl-overview/ target=_blank aria-label=kubectl>kubectl</a>, just as they do for built-in resources
+like <em>Pods</em>.</p><h2 id=custom-controllers>Custom controllers</h2><p>On their own, custom resources let you store and retrieve structured data.
+When you combine a custom resource with a <em>custom controller</em>, custom resources
+provide a true <em>declarative API</em>.</p><p>The Kubernetes <a href=/docs/concepts/overview/kubernetes-api/>declarative API</a>
+enforces a separation of responsibilities. You declare the desired state of
+your resource. The Kubernetes controller keeps the current state of Kubernetes
+objects in sync with your declared desired state. This is in contrast to an
+imperative API, where you <em>instruct</em> a server what to do.</p><p>You can deploy and update a custom controller on a running cluster, independently
+of the cluster's lifecycle. Custom controllers can work with any kind of resource,
+but they are especially effective when combined with custom resources. The
+<a href=/docs/concepts/extend-kubernetes/operator/>Operator pattern</a> combines custom
+resources and custom controllers. You can use custom controllers to encode domain knowledge
+for specific applications into an extension of the Kubernetes API.</p><h2 id=should-i-add-a-custom-resource-to-my-kubernetes-cluster>Should I add a custom resource to my Kubernetes cluster?</h2><p>When creating a new API, consider whether to
+<a href=/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/>aggregate your API with the Kubernetes cluster APIs</a>
+or let your API stand alone.</p><table><thead><tr><th>Consider API aggregation if:</th><th>Prefer a stand-alone API if:</th></tr></thead><tbody><tr><td>Your API is <a href=#declarative-apis>Declarative</a>.</td><td>Your API does not fit the <a href=#declarative-apis>Declarative</a> model.</td></tr><tr><td>You want your new types to be readable and writable using <code>kubectl</code>.</td><td><code>kubectl</code> support is not required</td></tr><tr><td>You want to view your new types in a Kubernetes UI, such as dashboard, alongside built-in types.</td><td>Kubernetes UI support is not required.</td></tr><tr><td>You are developing a new API.</td><td>You already have a program that serves your API and works well.</td></tr><tr><td>You are willing to accept the format restriction that Kubernetes puts on REST resource paths, such as API Groups and Namespaces. (See the <a href=/docs/concepts/overview/kubernetes-api/>API Overview</a>.)</td><td>You need to have specific REST paths to be compatible with an already defined REST API.</td></tr><tr><td>Your resources are naturally scoped to a cluster or namespaces of a cluster.</td><td>Cluster or namespace scoped resources are a poor fit; you need control over the specifics of resource paths.</td></tr><tr><td>You want to reuse <a href=#common-features>Kubernetes API support features</a>.</td><td>You don't need those features.</td></tr></tbody></table><h3 id=declarative-apis>Declarative APIs</h3><p>In a Declarative API, typically:</p><ul><li>Your API consists of a relatively small number of relatively small objects (resources).</li><li>The objects define configuration of applications or infrastructure.</li><li>The objects are updated relatively infrequently.</li><li>Humans often need to read and write the objects.</li><li>The main operations on the objects are CRUD-y (creating, reading, updating and deleting).</li><li>Transactions across objects are not required: the API represents a desired state, not an exact state.</li></ul><p>Imperative APIs are not declarative.
+Signs that your API might not be declarative include:</p><ul><li>The client says "do this", and then gets a synchronous response back when it is done.</li><li>The client says "do this", and then gets an operation ID back, and has to check a separate
+Operation object to determine completion of the request.</li><li>You talk about Remote Procedure Calls (RPCs).</li><li>Directly storing large amounts of data; for example, > a few kB per object, or > 1000s of objects.</li><li>High bandwidth access (10s of requests per second sustained) needed.</li><li>Store end-user data (such as images, PII, etc.) or other large-scale data processed by applications.</li><li>The natural operations on the objects are not CRUD-y.</li><li>The API is not easily modeled as objects.</li><li>You chose to represent pending operations with an operation ID or an operation object.</li></ul><h2 id=should-i-use-a-configmap-or-a-custom-resource>Should I use a ConfigMap or a custom resource?</h2><p>Use a ConfigMap if any of the following apply:</p><ul><li>There is an existing, well-documented configuration file format, such as a <code>mysql.cnf</code> or
+<code>pom.xml</code>.</li><li>You want to put the entire configuration into one key of a ConfigMap.</li><li>The main use of the configuration file is for a program running in a Pod on your cluster to
+consume the file to configure itself.</li><li>Consumers of the file prefer to consume via file in a Pod or environment variable in a pod,
+rather than the Kubernetes API.</li><li>You want to perform rolling updates via Deployment, etc., when the file is updated.</li></ul><div class="alert alert-info note callout" role=alert><strong>Note:</strong> Use a <a class=glossary-tooltip title='Stores sensitive information, such as passwords, OAuth tokens, and ssh keys.' data-toggle=tooltip data-placement=top href=/docs/concepts/configuration/secret/ target=_blank aria-label=Secret>Secret</a> for sensitive data, which is similar
+to a ConfigMap but more secure.</div><p>Use a custom resource (CRD or Aggregated API) if most of the following apply:</p><ul><li>You want to use Kubernetes client libraries and CLIs to create and update the new resource.</li><li>You want top-level support from <code>kubectl</code>; for example, <code>kubectl get my-object object-name</code>.</li><li>You want to build new automation that watches for updates on the new object, and then CRUD other
+objects, or vice versa.</li><li>You want to write automation that handles updates to the object.</li><li>You want to use Kubernetes API conventions like <code>.spec</code>, <code>.status</code>, and <code>.metadata</code>.</li><li>You want the object to be an abstraction over a collection of controlled resources, or a
+summarization of other resources.</li></ul><h2 id=adding-custom-resources>Adding custom resources</h2><p>Kubernetes provides two ways to add custom resources to your cluster:</p><ul><li>CRDs are simple and can be created without any programming.</li><li><a href=/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/>API Aggregation</a>
+requires programming, but allows more control over API behaviors like how data is stored and
+conversion between API versions.</li></ul><p>Kubernetes provides these two options to meet the needs of different users, so that neither ease
+of use nor flexibility is compromised.</p><p>Aggregated APIs are subordinate API servers that sit behind the primary API server, which acts as
+a proxy. This arrangement is called <a href=/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/>API Aggregation</a>(AA).
+To users, the Kubernetes API appears extended.</p><p>CRDs allow users to create new types of resources without adding another API server. You do not
+need to understand API Aggregation to use CRDs.</p><p>Regardless of how they are installed, the new resources are referred to as Custom Resources to
+distinguish them from built-in Kubernetes resources (like pods).</p><div class="alert alert-info note callout" role=alert><strong>Note:</strong><p>Avoid using a Custom Resource as data storage for application, end user, or monitoring data:
+architecture designs that store application data within the Kubernetes API typically represent
+a design that is too closely coupled.</p><p>Architecturally, <a href=https://www.cncf.io/about/faq/#what-is-cloud-native>cloud native</a> application architectures
+favor loose coupling between components. If part of your workload requires a backing service for
+its routine operation, run that backing service as a component or consume it as an external service.
+This way, your workload does not rely on the Kubernetes API for its normal operation.</p></div><h2 id=customresourcedefinitions>CustomResourceDefinitions</h2><p>The <a href=/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/>CustomResourceDefinition</a>
+API resource allows you to define custom resources.
+Defining a CRD object creates a new custom resource with a name and schema that you specify.
+The Kubernetes API serves and handles the storage of your custom resource.
+The name of a CRD object must be a valid
+<a href=/docs/concepts/overview/working-with-objects/names#dns-subdomain-names>DNS subdomain name</a>.</p><p>This frees you from writing your own API server to handle the custom resource,
+but the generic nature of the implementation means you have less flexibility than with
+<a href=#api-server-aggregation>API server aggregation</a>.</p><p>Refer to the <a href=https://github.com/kubernetes/sample-controller>custom controller example</a>
+for an example of how to register a new custom resource, work with instances of your new resource type,
+and use a controller to handle events.</p><h2 id=api-server-aggregation>API server aggregation</h2><p>Usually, each resource in the Kubernetes API requires code that handles REST requests and manages
+persistent storage of objects. The main Kubernetes API server handles built-in resources like
+<em>pods</em> and <em>services</em>, and can also generically handle custom resources through
+<a href=#customresourcedefinitions>CRDs</a>.</p><p>The <a href=/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/>aggregation layer</a>
+allows you to provide specialized implementations for your custom resources by writing and
+deploying your own API server.
+The main API server delegates requests to your API server for the custom resources that you handle,
+making them available to all of its clients.</p><h2 id=choosing-a-method-for-adding-custom-resources>Choosing a method for adding custom resources</h2><p>CRDs are easier to use. Aggregated APIs are more flexible. Choose the method that best meets your needs.</p><p>Typically, CRDs are a good fit if:</p><ul><li>You have a handful of fields</li><li>You are using the resource within your company, or as part of a small open-source project (as
+opposed to a commercial product)</li></ul><h3 id=comparing-ease-of-use>Comparing ease of use</h3><p>CRDs are easier to create than Aggregated APIs.</p><table><thead><tr><th>CRDs</th><th>Aggregated API</th></tr></thead><tbody><tr><td>Do not require programming. Users can choose any language for a CRD controller.</td><td>Requires programming and building binary and image.</td></tr><tr><td>No additional service to run; CRDs are handled by API server.</td><td>An additional service to create and that could fail.</td></tr><tr><td>No ongoing support once the CRD is created. Any bug fixes are picked up as part of normal Kubernetes Master upgrades.</td><td>May need to periodically pickup bug fixes from upstream and rebuild and update the Aggregated API server.</td></tr><tr><td>No need to handle multiple versions of your API; for example, when you control the client for this resource, you can upgrade it in sync with the API.</td><td>You need to handle multiple versions of your API; for example, when developing an extension to share with the world.</td></tr></tbody></table><h3 id=advanced-features-and-flexibility>Advanced features and flexibility</h3><p>Aggregated APIs offer more advanced API features and customization of other features; for example, the storage layer.</p><table><thead><tr><th>Feature</th><th>Description</th><th>CRDs</th><th>Aggregated API</th></tr></thead><tbody><tr><td>Validation</td><td>Help users prevent errors and allow you to evolve your API independently of your clients. These features are most useful when there are many clients who can't all update at the same time.</td><td>Yes. Most validation can be specified in the CRD using <a href=/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#validation>OpenAPI v3.0 validation</a>. Any other validations supported by addition of a <a href=/docs/reference/access-authn-authz/admission-controllers/#validatingadmissionwebhook-alpha-in-1-8-beta-in-1-9>Validating Webhook</a>.</td><td>Yes, arbitrary validation checks</td></tr><tr><td>Defaulting</td><td>See above</td><td>Yes, either via <a href=/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#defaulting>OpenAPI v3.0 validation</a> <code>default</code> keyword (GA in 1.17), or via a <a href=/docs/reference/access-authn-authz/admission-controllers/#mutatingadmissionwebhook>Mutating Webhook</a> (though this will not be run when reading from etcd for old objects).</td><td>Yes</td></tr><tr><td>Multi-versioning</td><td>Allows serving the same object through two API versions. Can help ease API changes like renaming fields. Less important if you control your client versions.</td><td><a href=/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definition-versioning>Yes</a></td><td>Yes</td></tr><tr><td>Custom Storage</td><td>If you need storage with a different performance mode (for example, a time-series database instead of key-value store) or isolation for security (for example, encryption of sensitive information, etc.)</td><td>No</td><td>Yes</td></tr><tr><td>Custom Business Logic</td><td>Perform arbitrary checks or actions when creating, reading, updating or deleting an object</td><td>Yes, using <a href=/docs/reference/access-authn-authz/extensible-admission-controllers/#admission-webhooks>Webhooks</a>.</td><td>Yes</td></tr><tr><td>Scale Subresource</td><td>Allows systems like HorizontalPodAutoscaler and PodDisruptionBudget interact with your new resource</td><td><a href=/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#scale-subresource>Yes</a></td><td>Yes</td></tr><tr><td>Status Subresource</td><td>Allows fine-grained access control where user writes the spec section and the controller writes the status section. Allows incrementing object Generation on custom resource data mutation (requires separate spec and status sections in the resource)</td><td><a href=/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#status-subresource>Yes</a></td><td>Yes</td></tr><tr><td>Other Subresources</td><td>Add operations other than CRUD, such as "logs" or "exec".</td><td>No</td><td>Yes</td></tr><tr><td>strategic-merge-patch</td><td>The new endpoints support PATCH with <code>Content-Type: application/strategic-merge-patch+json</code>. Useful for updating objects that may be modified both locally, and by the server. For more information, see <a href=/docs/tasks/manage-kubernetes-objects/update-api-object-kubectl-patch/>"Update API Objects in Place Using kubectl patch"</a></td><td>No</td><td>Yes</td></tr><tr><td>Protocol Buffers</td><td>The new resource supports clients that want to use Protocol Buffers</td><td>No</td><td>Yes</td></tr><tr><td>OpenAPI Schema</td><td>Is there an OpenAPI (swagger) schema for the types that can be dynamically fetched from the server? Is the user protected from misspelling field names by ensuring only allowed fields are set? Are types enforced (in other words, don't put an <code>int</code> in a <code>string</code> field?)</td><td>Yes, based on the <a href=/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#validation>OpenAPI v3.0 validation</a> schema (GA in 1.16).</td><td>Yes</td></tr></tbody></table><h3 id=common-features>Common Features</h3><p>When you create a custom resource, either via a CRD or an AA, you get many features for your API,
+compared to implementing it outside the Kubernetes platform:</p><table><thead><tr><th>Feature</th><th>What it does</th></tr></thead><tbody><tr><td>CRUD</td><td>The new endpoints support CRUD basic operations via HTTP and <code>kubectl</code></td></tr><tr><td>Watch</td><td>The new endpoints support Kubernetes Watch operations via HTTP</td></tr><tr><td>Discovery</td><td>Clients like <code>kubectl</code> and dashboard automatically offer list, display, and field edit operations on your resources</td></tr><tr><td>json-patch</td><td>The new endpoints support PATCH with <code>Content-Type: application/json-patch+json</code></td></tr><tr><td>merge-patch</td><td>The new endpoints support PATCH with <code>Content-Type: application/merge-patch+json</code></td></tr><tr><td>HTTPS</td><td>The new endpoints uses HTTPS</td></tr><tr><td>Built-in Authentication</td><td>Access to the extension uses the core API server (aggregation layer) for authentication</td></tr><tr><td>Built-in Authorization</td><td>Access to the extension can reuse the authorization used by the core API server; for example, RBAC.</td></tr><tr><td>Finalizers</td><td>Block deletion of extension resources until external cleanup happens.</td></tr><tr><td>Admission Webhooks</td><td>Set default values and validate extension resources during any create/update/delete operation.</td></tr><tr><td>UI/CLI Display</td><td>Kubectl, dashboard can display extension resources.</td></tr><tr><td>Unset versus Empty</td><td>Clients can distinguish unset fields from zero-valued fields.</td></tr><tr><td>Client Libraries Generation</td><td>Kubernetes provides generic client libraries, as well as tools to generate type-specific client libraries.</td></tr><tr><td>Labels and annotations</td><td>Common metadata across objects that tools know how to edit for core and custom resources.</td></tr></tbody></table><h2 id=preparing-to-install-a-custom-resource>Preparing to install a custom resource</h2><p>There are several points to be aware of before adding a custom resource to your cluster.</p><h3 id=third-party-code-and-new-points-of-failure>Third party code and new points of failure</h3><p>While creating a CRD does not automatically add any new points of failure (for example, by causing
+third party code to run on your API server), packages (for example, Charts) or other installation
+bundles often include CRDs as well as a Deployment of third-party code that implements the
+business logic for a new custom resource.</p><p>Installing an Aggregated API server always involves running a new Deployment.</p><h3 id=storage>Storage</h3><p>Custom resources consume storage space in the same way that ConfigMaps do. Creating too many
+custom resources may overload your API server's storage space.</p><p>Aggregated API servers may use the same storage as the main API server, in which case the same
+warning applies.</p><h3 id=authentication-authorization-and-auditing>Authentication, authorization, and auditing</h3><p>CRDs always use the same authentication, authorization, and audit logging as the built-in
+resources of your API server.</p><p>If you use RBAC for authorization, most RBAC roles will not grant access to the new resources
+(except the cluster-admin role or any role created with wildcard rules). You'll need to explicitly
+grant access to the new resources. CRDs and Aggregated APIs often come bundled with new role
+definitions for the types they add.</p><p>Aggregated API servers may or may not use the same authentication, authorization, and auditing as
+the primary API server.</p><h2 id=accessing-a-custom-resource>Accessing a custom resource</h2><p>Kubernetes <a href=/docs/reference/using-api/client-libraries/>client libraries</a> can be used to access
+custom resources. Not all client libraries support custom resources. The <em>Go</em> and <em>Python</em> client
+libraries do.</p><p>When you add a custom resource, you can access it using:</p><ul><li><code>kubectl</code></li><li>The Kubernetes dynamic client.</li><li>A REST client that you write.</li><li>A client generated using <a href=https://github.com/kubernetes/code-generator>Kubernetes client generation tools</a>
+(generating one is an advanced undertaking, but some projects may provide a client along with
+the CRD or AA).</li></ul><h2 id=what-s-next>What's next</h2><ul><li>Learn how to <a href=/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/>Extend the Kubernetes API with the aggregation layer</a>.</li><li>Learn how to <a href=/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/>Extend the Kubernetes API with CustomResourceDefinition</a>.</li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-1ea4977c0ebf97569bf54a477faa7fa5>2.2 - Kubernetes API Aggregation Layer</h1><p>The aggregation layer allows Kubernetes to be extended with additional APIs, beyond what is
+offered by the core Kubernetes APIs.
+The additional APIs can either be ready-made solutions such as a
+<a href=https://github.com/kubernetes-sigs/metrics-server>metrics server</a>, or APIs that you develop yourself.</p><p>The aggregation layer is different from
+<a href=/docs/concepts/extend-kubernetes/api-extension/custom-resources/>Custom Resources</a>,
+which are a way to make the <a class=glossary-tooltip title='Control plane component that serves the Kubernetes API.' data-toggle=tooltip data-placement=top href=/docs/concepts/overview/components/#kube-apiserver target=_blank aria-label=kube-apiserver>kube-apiserver</a>
+recognise new kinds of object.</p><h2 id=aggregation-layer>Aggregation layer</h2><p>The aggregation layer runs in-process with the kube-apiserver. Until an extension resource is
+registered, the aggregation layer will do nothing. To register an API, you add an <em>APIService</em>
+object, which "claims" the URL path in the Kubernetes API. At that point, the aggregation layer
+will proxy anything sent to that API path (e.g. <code>/apis/myextension.mycompany.io/v1/…</code>) to the
+registered APIService.</p><p>The most common way to implement the APIService is to run an <em>extension API server</em> in Pod(s) that
+run in your cluster. If you're using the extension API server to manage resources in your cluster,
+the extension API server (also written as "extension-apiserver") is typically paired with one or
+more <a class=glossary-tooltip title='A control loop that watches the shared state of the cluster through the apiserver and makes changes attempting to move the current state towards the desired state.' data-toggle=tooltip data-placement=top href=/docs/concepts/architecture/controller/ target=_blank aria-label=controllers>controllers</a>. The apiserver-builder
+library provides a skeleton for both extension API servers and the associated controller(s).</p><h3 id=response-latency>Response latency</h3><p>Extension API servers should have low latency networking to and from the kube-apiserver.
+Discovery requests are required to round-trip from the kube-apiserver in five seconds or less.</p><p>If your extension API server cannot achieve that latency requirement, consider making changes that
+let you meet it.</p><h2 id=what-s-next>What's next</h2><ul><li>To get the aggregator working in your environment, <a href=/docs/tasks/extend-kubernetes/configure-aggregation-layer/>configure the aggregation layer</a>.</li><li>Then, <a href=/docs/tasks/extend-kubernetes/setup-extension-api-server/>setup an extension api-server</a> to work with the aggregation layer.</li><li>Read about <a href=/docs/reference/kubernetes-api/cluster-resources/api-service-v1/>APIService</a> in the API reference</li></ul><p>Alternatively: learn how to
+<a href=/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/>extend the Kubernetes API using Custom Resource Definitions</a>.</p></div><div class=td-content style=page-break-before:always><h1 id=pg-3131452556176159fb269593c1a52012>3 - Operator pattern</h1><p>Operators are software extensions to Kubernetes that make use of
+<a href=/docs/concepts/extend-kubernetes/api-extension/custom-resources/>custom resources</a>
+to manage applications and their components. Operators follow
+Kubernetes principles, notably the <a href=/docs/concepts/architecture/controller>control loop</a>.</p><h2 id=motivation>Motivation</h2><p>The <em>operator pattern</em> aims to capture the key aim of a human operator who
+is managing a service or set of services. Human operators who look after
+specific applications and services have deep knowledge of how the system
+ought to behave, how to deploy it, and how to react if there are problems.</p><p>People who run workloads on Kubernetes often like to use automation to take
+care of repeatable tasks. The operator pattern captures how you can write
+code to automate a task beyond what Kubernetes itself provides.</p><h2 id=operators-in-kubernetes>Operators in Kubernetes</h2><p>Kubernetes is designed for automation. Out of the box, you get lots of
+built-in automation from the core of Kubernetes. You can use Kubernetes
+to automate deploying and running workloads, <em>and</em> you can automate how
+Kubernetes does that.</p><p>Kubernetes' <a class=glossary-tooltip title='A specialized controller used to manage a custom resource' data-toggle=tooltip data-placement=top href=/docs/concepts/extend-kubernetes/operator/ target=_blank aria-label='operator pattern'>operator pattern</a>
+concept lets you extend the cluster's behaviour without modifying the code of Kubernetes
+itself by linking <a class=glossary-tooltip title='A control loop that watches the shared state of the cluster through the apiserver and makes changes attempting to move the current state towards the desired state.' data-toggle=tooltip data-placement=top href=/docs/concepts/architecture/controller/ target=_blank aria-label=controllers>controllers</a> to
+one or more custom resources. Operators are clients of the Kubernetes API that act as
+controllers for a <a href=/docs/concepts/extend-kubernetes/api-extension/custom-resources/>Custom Resource</a>.</p><h2 id=example>An example operator</h2><p>Some of the things that you can use an operator to automate include:</p><ul><li>deploying an application on demand</li><li>taking and restoring backups of that application's state</li><li>handling upgrades of the application code alongside related changes such
+as database schemas or extra configuration settings</li><li>publishing a Service to applications that don't support Kubernetes APIs to
+discover them</li><li>simulating failure in all or part of your cluster to test its resilience</li><li>choosing a leader for a distributed application without an internal
+member election process</li></ul><p>What might an operator look like in more detail? Here's an example:</p><ol><li>A custom resource named SampleDB, that you can configure into the cluster.</li><li>A Deployment that makes sure a Pod is running that contains the
+controller part of the operator.</li><li>A container image of the operator code.</li><li>Controller code that queries the control plane to find out what SampleDB
+resources are configured.</li><li>The core of the operator is code to tell the API server how to make
+reality match the configured resources.<ul><li>If you add a new SampleDB, the operator sets up PersistentVolumeClaims
+to provide durable database storage, a StatefulSet to run SampleDB and
+a Job to handle initial configuration.</li><li>If you delete it, the operator takes a snapshot, then makes sure that
+the StatefulSet and Volumes are also removed.</li></ul></li><li>The operator also manages regular database backups. For each SampleDB
+resource, the operator determines when to create a Pod that can connect
+to the database and take backups. These Pods would rely on a ConfigMap
+and / or a Secret that has database connection details and credentials.</li><li>Because the operator aims to provide robust automation for the resource
+it manages, there would be additional supporting code. For this example,
+code checks to see if the database is running an old version and, if so,
+creates Job objects that upgrade it for you.</li></ol><h2 id=deploying-operators>Deploying operators</h2><p>The most common way to deploy an operator is to add the
+Custom Resource Definition and its associated Controller to your cluster.
+The Controller will normally run outside of the
+<a class=glossary-tooltip title='The container orchestration layer that exposes the API and interfaces to define, deploy, and manage the lifecycle of containers.' data-toggle=tooltip data-placement=top href='/docs/reference/glossary/?all=true#term-control-plane' target=_blank aria-label='control plane'>control plane</a>,
+much as you would run any containerized application.
+For example, you can run the controller in your cluster as a Deployment.</p><h2 id=using-operators>Using an operator</h2><p>Once you have an operator deployed, you'd use it by adding, modifying or
+deleting the kind of resource that the operator uses. Following the above
+example, you would set up a Deployment for the operator itself, and then:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get SampleDB                   <span style=color:#080;font-style:italic># find configured databases</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>kubectl edit SampleDB/example-database <span style=color:#080;font-style:italic># manually change some settings</span>
+</span></span></code></pre></div><p>…and that's it! The operator will take care of applying the changes
+as well as keeping the existing service in good shape.</p><h2 id=writing-operator>Writing your own operator</h2><p>If there isn't an operator in the ecosystem that implements the behavior you
+want, you can code your own.</p><p>You also implement an operator (that is, a Controller) using any language / runtime
+that can act as a <a href=/docs/reference/using-api/client-libraries/>client for the Kubernetes API</a>.</p><p>Following are a few libraries and tools you can use to write your own cloud native
+operator.</p><div class="alert alert-secondary callout third-party-content" role=alert><strong>Note:</strong>
+This section links to third party projects that provide functionality required by Kubernetes. The Kubernetes project authors aren't responsible for these projects, which are listed alphabetically. To add a project to this list, read the <a href=/docs/contribute/style/content-guide/#third-party-content>content guide</a> before submitting a change. <a href=#third-party-content-disclaimer>More information.</a></div><ul><li><a href=https://juju.is/>Charmed Operator Framework</a></li><li><a href=https://github.com/java-operator-sdk/java-operator-sdk>Java Operator SDK</a></li><li><a href=https://github.com/nolar/kopf>Kopf</a> (Kubernetes Operator Pythonic Framework)</li><li><a href=https://kube.rs/>kube-rs</a> (Rust)</li><li><a href=https://book.kubebuilder.io/>kubebuilder</a></li><li><a href=https://buehler.github.io/dotnet-operator-sdk/>KubeOps</a> (.NET operator SDK)</li><li><a href=https://kudo.dev/>KUDO</a> (Kubernetes Universal Declarative Operator)</li><li><a href=https://metacontroller.github.io/metacontroller/intro.html>Metacontroller</a> along with WebHooks that
+you implement yourself</li><li><a href=https://operatorframework.io>Operator Framework</a></li><li><a href=https://github.com/flant/shell-operator>shell-operator</a></li></ul><h2 id=what-s-next>What's next</h2><ul><li>Read the <a class=glossary-tooltip title='Cloud Native Computing Foundation' data-toggle=tooltip data-placement=top href=https://cncf.io/ target=_blank aria-label=CNCF>CNCF</a>
+<a href=https://github.com/cncf/tag-app-delivery/blob/eece8f7307f2970f46f100f51932db106db46968/operator-wg/whitepaper/Operator-WhitePaper_v1-0.md>Operator White Paper</a>.</li><li>Learn more about <a href=/docs/concepts/extend-kubernetes/api-extension/custom-resources/>Custom Resources</a></li><li>Find ready-made operators on <a href=https://operatorhub.io/>OperatorHub.io</a> to suit your use case</li><li><a href=https://operatorhub.io/>Publish</a> your operator for other people to use</li><li>Read <a href=https://web.archive.org/web/20170129131616/https://coreos.com/blog/introducing-operators.html>CoreOS' original article</a>
+that introduced the operator pattern (this is an archived version of the original article).</li><li>Read an <a href=https://cloud.google.com/blog/products/containers-kubernetes/best-practices-for-building-kubernetes-operators-and-stateful-apps>article</a>
+from Google Cloud about best practices for building operators</li></ul></div></main></div></div><footer class=d-print-none><div class=footer__links><nav><a class=text-white href=/docs/home/>Home</a>
+<a class=text-white href=/blog/>Blog</a>
+<a class=text-white href=/training/>Training</a>
+<a class=text-white href=/partners/>Partners</a>
+<a class=text-white href=/community/>Community</a>
+<a class=text-white href=/case-studies/>Case Studies</a></nav></div><div class=container-fluid><div class=row><div class="col-6 col-sm-2 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="User mailing list" aria-label="User mailing list"><a class=text-white target=_blank href=https://discuss.kubernetes.io><i class="fa fa-envelope"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank href=https://twitter.com/kubernetesio><i class="fab fa-twitter"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Calendar aria-label=Calendar><a class=text-white target=_blank href="https://calendar.google.com/calendar/embed?src=calendar%40kubernetes.io"><i class="fas fa-calendar-alt"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Youtube aria-label=Youtube><a class=text-white target=_blank href=https://youtube.com/kubernetescommunity><i class="fab fa-youtube"></i></a></li></ul></div><div class="col-6 col-sm-2 text-right text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank href=https://github.com/kubernetes/kubernetes><i class="fab fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Slack aria-label=Slack><a class=text-white target=_blank href=https://slack.k8s.io><i class="fab fa-slack"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Contribute aria-label=Contribute><a class=text-white target=_blank href=https://git.k8s.io/community/contributors/guide><i class="fas fa-edit"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="Stack Overflow" aria-label="Stack Overflow"><a class=text-white target=_blank href=https://stackoverflow.com/questions/tagged/kubernetes><i class="fab fa-stack-overflow"></i></a></li></ul></div><div class="col-12 col-sm-8 text-center order-sm-2"><small class=text-white>&copy; 2023 The Kubernetes Authors | Documentation Distributed under <a href=https://git.k8s.io/website/LICENSE class=light-text>CC BY 4.0</a></small><br><small class=text-white>Copyright &copy; 2023 The Linux Foundation &reg;. All rights reserved. The Linux Foundation has registered trademarks and uses trademarks. For a list of trademarks of The Linux Foundation, please see our <a href=https://www.linuxfoundation.org/trademark-usage class=light-text>Trademark Usage page</a></small><br><small class=text-white>ICP license: 京ICP备17074266号-3</small></div></div></div></footer></div><script src=/js/jquery-3.6.0.min.js integrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script>
+<script src=/js/popper-1.16.1.min.js intregrity=sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN crossorigin=anonymous></script>
+<script src=/js/bootstrap-4.6.1.min.js integrity=sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2 crossorigin=anonymous></script>
+<script src=/js/script.js></script>
+<script async src=/js/mermaid-8.13.4.min.js integrity=sha384-5hHNvPeMrNH14oM3IcQofDoBhiclNK3g2+hnEinKzQ07C4AliMeVpnvxuiwEGpaO crossorigin=anonymous></script>
+<script src=/js/main.min.5c0bf7f21dc4f66485f74efbbeeff28a7e4f8cddaac1bae47043159c922ff3a3.js integrity="sha256-XAv38h3E9mSF9077vu/yin5PjN2qwbrkcEMVnJIv86M=" crossorigin=anonymous></script></body></html>
