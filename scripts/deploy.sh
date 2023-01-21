@@ -14,7 +14,7 @@ fi
 
 BUCKET=$1
 LOCALSRC=$2
-gsutil rsync -R $LOCALSRC gs://$BUCKET
+gsutil -m rsync -R $LOCALSRC gs://$BUCKET
 
 gsutil iam ch allUsers:objectViewer gs://$BUCKET
 
