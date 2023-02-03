@@ -9,6 +9,9 @@
 
 # config
 
+1. Compile websites
+
+2. Deploy websites
 ```sh
 ./scripts/setup.sh prng prng-be akrasia.dev ../prng/public
 ./scripts/setup.sh talon talon-be akrasia.dev ../talon
