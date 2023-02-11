@@ -1,0 +1,582 @@
+<!doctype html><html lang=ko class=no-js><head><meta name=robots content="noindex, nofollow"><link rel=alternate hreflang=en href=https://kubernetes.io/docs/tasks/extend-kubernetes/><link rel=alternate hreflang=zh-cn href=https://kubernetes.io/zh-cn/docs/tasks/extend-kubernetes/><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.110.0"><link rel=canonical type=text/html href=https://kubernetes.io/ko/docs/tasks/extend-kubernetes/><link rel="shortcut icon" type=image/png href=/images/favicon.png><link rel=apple-touch-icon href=/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=manifest href=/manifest.webmanifest><link rel=apple-touch-icon href=/images/kubernetes-192x192.png><title>쿠버네티스 확장 | Kubernetes</title><meta property="og:title" content="쿠버네티스 확장"><meta property="og:description" content="쿠버네티스 클러스터를 작업 환경의 요구에 맞게 조정하는 고급 과정을 이해한다."><meta property="og:type" content="website"><meta property="og:url" content="https://kubernetes.io/ko/docs/tasks/extend-kubernetes/"><meta property="og:site_name" content="Kubernetes"><meta itemprop=name content="쿠버네티스 확장"><meta itemprop=description content="쿠버네티스 클러스터를 작업 환경의 요구에 맞게 조정하는 고급 과정을 이해한다."><meta name=twitter:card content="summary"><meta name=twitter:title content="쿠버네티스 확장"><meta name=twitter:description content="쿠버네티스 클러스터를 작업 환경의 요구에 맞게 조정하는 고급 과정을 이해한다."><link href=/scss/main.css rel=stylesheet><script type=application/ld+json>{"@context":"https://schema.org","@type":"Organization","url":"https://kubernetes.io","logo":"https://kubernetes.io/images/favicon.png","potentialAction":{"@type":"SearchAction","target":"https://kubernetes.io/search/?q={search_term_string}","query-input":"required name=search_term_string"}}</script><meta name=theme-color content="#326ce5"><link rel=stylesheet href=/css/feature-states.css><meta name=description content="쿠버네티스 클러스터를 작업 환경의 요구에 맞게 조정하는 고급 과정을 이해한다."><meta property="og:description" content="쿠버네티스 클러스터를 작업 환경의 요구에 맞게 조정하는 고급 과정을 이해한다."><meta name=twitter:description content="쿠버네티스 클러스터를 작업 환경의 요구에 맞게 조정하는 고급 과정을 이해한다."><meta property="og:url" content="https://kubernetes.io/ko/docs/tasks/extend-kubernetes/"><meta property="og:title" content="쿠버네티스 확장"><meta name=twitter:title content="쿠버네티스 확장"><meta name=twitter:image content="https://kubernetes.io/images/favicon.png"><meta name=twitter:image:alt content="Kubernetes"><meta property="og:image" content="/images/kubernetes-horizontal-color.png"><meta property="og:type" content="article"><script src=/js/jquery-3.6.0.min.js intregrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script></head><body class=td-section><header><nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar" data-auto-burger=primary><a class=navbar-brand href=/ko/></a><div class="td-navbar-nav-scroll ml-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0"><li class="nav-item mr-2 mb-lg-0"><a class="nav-link active" href=/ko/docs/>문서</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ko/blog/>쿠버네티스 블로그</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ko/training/>교육</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ko/partners/>파트너</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ko/community/>Community</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ko/case-studies/>사례 연구</a></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>버전</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/ko/releases>Release Information</a>
+<a class=dropdown-item href=https://kubernetes.io/ko/docs/tasks/extend-kubernetes/>v1.25</a>
+<a class=dropdown-item href=https://v1-24.docs.kubernetes.io/ko/docs/tasks/extend-kubernetes/>v1.24</a>
+<a class=dropdown-item href=https://v1-23.docs.kubernetes.io/ko/docs/tasks/extend-kubernetes/>v1.23</a>
+<a class=dropdown-item href=https://v1-22.docs.kubernetes.io/ko/docs/tasks/extend-kubernetes/>v1.22</a>
+<a class=dropdown-item href=https://v1-21.docs.kubernetes.io/ko/docs/tasks/extend-kubernetes/>v1.21</a></div></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdownMenuLink role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>한국어 (Korean)</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/docs/tasks/extend-kubernetes/>English</a>
+<a class=dropdown-item href=/zh-cn/docs/tasks/extend-kubernetes/>中文 (Chinese)</a></div></li></ul></div><button id=hamburger onclick=kub.toggleMenu() data-auto-burger-exclude><div></div></button></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><div class=td-content><div class="pageinfo pageinfo-primary d-print-none"><p>이 섹션의 다중 페이지 출력 화면임.
+<a href=# onclick="return print(),!1">여기를 클릭하여 프린트</a>.</p><p><a href=/ko/docs/tasks/extend-kubernetes/>이 페이지의 일반 화면으로 돌아가기</a>.</p></div><h1 class=title>쿠버네티스 확장</h1><div class=lead>쿠버네티스 클러스터를 작업 환경의 요구에 맞게 조정하는 고급 과정을 이해한다.</div><ul><li>1: <a href=#pg-c4798e42eaccc051e396542befb3c57b>확장 API 서버 설정</a></li><li>2: <a href=#pg-c00a2767fac9dbfafce583cf489cc423>다중 스케줄러 설정</a></li><li>3: <a href=#pg-1707517970dd390995f760308c2e2de6>HTTP 프록시를 사용하여 쿠버네티스 API에 접근</a></li><li>4: <a href=#pg-46417c7cdd2da2c530aaeddca1861e5c>SOCKS5 프록시를 사용하여 쿠버네티스 API에 접근</a></li><li>5: <a href=#pg-61cf1f2f0fbe98e7635fce65f04a775f>Konnectivity 서비스 설정</a></li></ul><div class=content></div></div><div class=td-content><h1 id=pg-c4798e42eaccc051e396542befb3c57b>1 - 확장 API 서버 설정</h1><p>애그리게이션 레이어(aggregation layer)와 작동하도록 확장 API 서버를 설정하면 쿠버네티스 API 서버를 쿠버네티스의 핵심 API의 일부가 아닌 추가 API로 확장할 수 있다.</p><h2 id=시작하기-전에>시작하기 전에</h2><p><p>쿠버네티스 클러스터가 필요하고, kubectl 커맨드-라인 툴이 클러스터와
+통신할 수 있도록 설정되어 있어야 한다. 이 튜토리얼은 컨트롤 플레인 호스트가 아닌 노드가 적어도 2개 포함된 클러스터에서 실행하는 것을 추천한다. 만약, 아직 클러스터를 가지고
+있지 않다면,
+<a href=/ko/docs/tasks/tools/#minikube>minikube</a>를 사용해서 생성하거나
+다음 쿠버네티스 플레이그라운드 중 하나를 사용할 수 있다.</p><ul><li><a href=https://killercoda.com/playgrounds/scenario/kubernetes>Killercoda</a></li><li><a href=https://labs.play-with-k8s.com/>Play with Kubernetes</a></li></ul>버전 확인을 위해서, 다음 커맨드를 실행 <code>kubectl version</code>.</p><ul><li><a href=/docs/tasks/extend-kubernetes/configure-aggregation-layer/>애그리게이션 레이어를 구성</a>하고 apiserver 플래그를 활성화해야 한다.</li></ul><h2 id=애그리게이션-레이어와-작동하도록-확장-api-서버-설정하기>애그리게이션 레이어와 작동하도록 확장 API 서버 설정하기</h2><p>다음 단계는 확장 API 서버를 <em>높은 수준</em> 으로 설정하는 방법을 설명한다. 이 단계는 YAML 구성을 사용하거나 API를 사용하는 것에 상관없이 적용된다. 둘 사이의 차이점을 구체적으로 식별하려고 시도한다. YAML 구성을 사용하여 구현하는 방법에 대한 구체적인 예를 보려면, 쿠버네티스 리포지터리에서 <a href=https://github.com/kubernetes/sample-apiserver/blob/master/README.md>sample-apiserver</a>를 참고할 수 있다.</p><p>또는, <a href=https://github.com/kubernetes-sigs/apiserver-builder-alpha/blob/master/README.md>apiserver-builder</a>와 같은 기존의 타사 솔루션을 사용하여 스켈레톤(skeleton)을 생성하고 다음 단계를 모두 자동화해야 한다.</p><ol><li>API서비스(APIService) API가 활성화되어 있는지 확인한다(<code>--runtime-config</code> 확인). 클러스터에서 일부러 해제하지 않았다면, 기본적으로 활성화되어 있어야 한다.</li><li>API서비스 오브젝트를 추가하거나 클러스터 관리자가 작성하도록 RBAC 규칙을 작성해야 할 수도 있다. (API 확장은 전체 클러스터에 영향을 주기 때문에, 운영 중인 클러스터에서 API 확장에 대한 테스트/개발/디버깅을 수행하지 않는 것이 좋다.)</li><li>확장 API 서비스를 실행하려는 쿠버네티스 네임스페이스를 생성한다.</li><li>HTTPS를 위해 확장 API 서버가 사용하는 서버 인증서에 서명하는 데 사용할 CA 인증서를 생성하거나 가져온다.</li><li>HTTPS를 위해 API 서버가 사용할 서버 인증서/키를 생성한다. 이 인증서는 위의 CA 인증서에 의해 서명해야 한다. 또한 Kube DNS 이름의 CN이 있어야 한다. 이것은 쿠버네티스 서비스에서 파생되었으며 <code>&lt;service name>.&lt;service name namespace>.svc</code> 형식이다.</li><li>네임스페이스에 서버 인증서/키를 사용하여 쿠버네티스 시크릿을 생성한다.</li><li>확장 API 서버에 대한 쿠버네티스 디플로이먼트를 생성하고 시크릿을 볼륨으로 로드하는지 확인한다. 확장 API 서버의 작동하는(working) 이미지에 대한 참조를 포함해야 한다. 디플로이먼트는 네임스페이스에도 있어야 한다.</li><li>확장 API 서버가 해당 볼륨에서 해당 인증서를 로드하고 HTTPS 핸드셰이크에 사용되는지 확인한다.</li><li>네임스페이스에서 쿠버네티스 서비스 어카운트를 생성한다.</li><li>리소스에 허용하려는 작업에 대한 쿠버네티스 클러스터 롤(role)을 생성한다.</li><li>네임스페이스의 서비스 어카운트에서 방금 만든 클러스터 롤로 쿠버네티스 클러스터 롤 바인딩을 생성한다.</li><li>네임스페이스의 서비스 어카운트에서 <code>system:auth-delegator</code> 클러스터 롤로 쿠버네티스 클러스터 롤 바인딩을 만들어 인증 결정을 쿠버네티스 핵심 API 서버에 위임한다.</li><li>네임스페이스의 서비스 어카운트에서 <code>extension-apiserver-authentication-reader</code> 롤로 쿠버네티스 롤 바인딩을 생성한다. 이를 통해 확장 API 서버가 <code>extension-apiserver-authentication</code> 컨피그맵(configmap)에 접근할 수 있다.</li><li>쿠버네티스 API 서비스를 생성한다. 위의 CA 인증서는 base64로 인코딩되어, 새로운 라인이 제거되고 API 서비스에서 spec.caBundle로 사용되어야 한다. 이것은 namespaced가 아니어야 한다. <a href=https://github.com/kubernetes/kube-aggregator/>kube-aggregator API</a>를 사용하는 경우, base64 인코딩이 수행되므로 PEM 인코딩된 CA 번들만 통과한다.</li><li>kubectl을 사용하여 리소스를 얻는다. kubectl을 실행하면, "No resources found."가 반환된다. 이 메시지는
+모든 것이 작동됐지만 현재 해당 리소스 유형의 오브젝트가 생성되지 않았음을 나타낸다.</li></ol><h2 id=다음-내용>다음 내용</h2><ul><li><a href=/docs/tasks/extend-kubernetes/configure-aggregation-layer/>API 애그리게이션 레이어를 구성</a>하고 apiserver 플래그를 활성화하는 단계를 수행한다.</li><li>높은 수준의 개요에 대해서는, <a href=/ko/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/>애그리게이션 레이어로 쿠버네티스 API 확장하기</a>를 참고한다.</li><li><a href=/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/>커스텀 리소스 데피니션을 사용하여 쿠버네티스 API 확장</a>하는 방법에 대해 알아본다.</li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-c00a2767fac9dbfafce583cf489cc423>2 - 다중 스케줄러 설정</h1><p>쿠버네티스는 <a href=/docs/reference/command-line-tools-reference/kube-scheduler/>여기</a>에서
+설명한 스케줄러를 기본 스케줄러로 사용한다.
+만일 기본 스케줄러가 사용자의 필요를 만족시키지 못한다면 직접 스케줄러를 구현하여 사용할 수 있다.
+이에 더해, 기본 스케줄러와 함께 여러 스케줄러를 동시에 사용하여
+쿠버네티스가 각 파드에 대해 어떤 스케줄러를 적용할지에 대한 설정도 할 수 있다.
+예제와 함께 쿠버네티스에서 다중 스케줄러를 사용하는 방법에 대해 배워보도록 하자.</p><p>스케줄러를 구현하는 방법에 대한 자세한 설명은 해당 문서에서 다루지 않는다.
+kube-scheduler 구현을 다루는 공식 예시는 쿠버네티스 소스 디렉토리에 있는
+<a href=https://github.com/kubernetes/kubernetes/tree/master/pkg/scheduler>pkg/scheduler</a>
+를 참고한다.</p><h2 id=시작하기-전에>시작하기 전에</h2><p><p>쿠버네티스 클러스터가 필요하고, kubectl 커맨드-라인 툴이 클러스터와
+통신할 수 있도록 설정되어 있어야 한다. 이 튜토리얼은 컨트롤 플레인 호스트가 아닌 노드가 적어도 2개 포함된 클러스터에서 실행하는 것을 추천한다. 만약, 아직 클러스터를 가지고
+있지 않다면,
+<a href=/ko/docs/tasks/tools/#minikube>minikube</a>를 사용해서 생성하거나
+다음 쿠버네티스 플레이그라운드 중 하나를 사용할 수 있다.</p><ul><li><a href=https://killercoda.com/playgrounds/scenario/kubernetes>Killercoda</a></li><li><a href=https://labs.play-with-k8s.com/>Play with Kubernetes</a></li></ul>버전 확인을 위해서, 다음 커맨드를 실행 <code>kubectl version</code>.</p><h2 id=스케줄러-패키징>스케줄러 패키징</h2><p>스케줄러 바이너리를 컨테이너 이미지로 패키징한다. 해당 예제를 통해
+기본 스케줄러 (kube-scheduler)를 두 번째 스케줄러로 사용할 수 있다.
+<a href=https://github.com/kubernetes/kubernetes>GitHub 쿠버네티스 소스코드</a>를
+클론하고 소스를 빌드하자.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git clone https://github.com/kubernetes/kubernetes.git
+</span></span><span style=display:flex><span><span style=color:#a2f>cd</span> kubernetes
+</span></span><span style=display:flex><span>make
+</span></span></code></pre></div><p>kube-scheduler 바이너리를 담은 컨테이너 이미지를 생성하자.
+이미지를 빌드 하기 위한 <code>Dockerfile</code>은 다음과 같다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-docker data-lang=docker><span style=display:flex><span><span style=color:#a2f;font-weight:700>FROM</span><span style=color:#b44> busybox</span><span>
+</span></span></span><span style=display:flex><span><span></span><span style=color:#a2f;font-weight:700>ADD</span> ./_output/local/bin/linux/amd64/kube-scheduler /usr/local/bin/kube-scheduler<span>
+</span></span></span></code></pre></div><p>파일을 <code>Dockerfile</code>로 저장하고 이미지를 빌드한 후 레지스트리로 푸시하자. 해당 예제에서는 이미지를
+<a href=https://cloud.google.com/container-registry/>Google Container Registry (GCR)</a>로
+푸시하고 있다.
+이에 대한 자세한 내용은 GCR
+<a href=https://cloud.google.com/container-registry/docs/>문서</a>를 참고하자.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>docker build -t gcr.io/my-gcp-project/my-kube-scheduler:1.0 .
+</span></span><span style=display:flex><span>gcloud docker -- push gcr.io/my-gcp-project/my-kube-scheduler:1.0
+</span></span></code></pre></div><h2 id=스케줄러에서-사용할-쿠버네티스-디플로이먼트-정의하기>스케줄러에서 사용할 쿠버네티스 디플로이먼트 정의하기</h2><p>이제 스케줄러 컨테이너 이미지가 있으니, 해당 이미지를 포함하는 파드 구성을 생성하고
+쿠버네티스 클러스터 내에서 실행해보자. 해당 예제에서는, 클러스터 내에 직접 파드를 생성하는 대신에
+<a href=/ko/docs/concepts/workloads/controllers/deployment/>디플로이먼트</a>를 사용해도 된다.
+<a href=/ko/docs/concepts/workloads/controllers/deployment/>디플로이먼트</a>는
+<a href=/ko/docs/concepts/workloads/controllers/replicaset/>레플리카 셋</a>을 관리하며,
+이는 또 파드를 관리하기 때문에 스케줄러에 대한 회복 탄력성을 제공한다.
+다음은 디플로이먼트에 대한 구성 파일이다. 이 파일을 <code>my-scheduler.yaml</code>으로 저장한다.</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/ko/examples/admin/sched/my-scheduler.yaml download=admin/sched/my-scheduler.yaml><code>admin/sched/my-scheduler.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("admin-sched-my-scheduler-yaml")' title="Copy admin/sched/my-scheduler.yaml to clipboard"></img></div><div class=includecode id=admin-sched-my-scheduler-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>ServiceAccount<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>my-scheduler<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>namespace</span>:<span style=color:#bbb> </span>kube-system<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#00f;font-weight:700>---</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>rbac.authorization.k8s.io/v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>ClusterRoleBinding<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>my-scheduler-as-kube-scheduler<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>subjects</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>ServiceAccount<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>my-scheduler<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>namespace</span>:<span style=color:#bbb> </span>kube-system<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>roleRef</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>ClusterRole<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>system:kube-scheduler<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>apiGroup</span>:<span style=color:#bbb> </span>rbac.authorization.k8s.io<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#00f;font-weight:700>---</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>rbac.authorization.k8s.io/v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>ClusterRoleBinding<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>my-scheduler-as-volume-scheduler<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>subjects</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>ServiceAccount<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>my-scheduler<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>namespace</span>:<span style=color:#bbb> </span>kube-system<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>roleRef</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>ClusterRole<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>system:volume-scheduler<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>apiGroup</span>:<span style=color:#bbb> </span>rbac.authorization.k8s.io<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#00f;font-weight:700>---</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>ConfigMap<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>my-scheduler-config<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>namespace</span>:<span style=color:#bbb> </span>kube-system<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>data</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>my-scheduler-config.yaml</span>:<span style=color:#bbb> </span>|<span style=color:#b44;font-style:italic>
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>    apiVersion: kubescheduler.config.k8s.io/v1beta2
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>    kind: KubeSchedulerConfiguration
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>    profiles:
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>      - schedulerName: my-scheduler
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>    leaderElection:
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>      leaderElect: false</span><span style=color:#bbb>    
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#00f;font-weight:700>---</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>apps/v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Deployment<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>component</span>:<span style=color:#bbb> </span>scheduler<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>tier</span>:<span style=color:#bbb> </span>control-plane<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>my-scheduler<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>namespace</span>:<span style=color:#bbb> </span>kube-system<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>selector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>matchLabels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>component</span>:<span style=color:#bbb> </span>scheduler<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>tier</span>:<span style=color:#bbb> </span>control-plane<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>replicas</span>:<span style=color:#bbb> </span><span style=color:#666>1</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>template</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>component</span>:<span style=color:#bbb> </span>scheduler<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>tier</span>:<span style=color:#bbb> </span>control-plane<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>version</span>:<span style=color:#bbb> </span>second<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>serviceAccountName</span>:<span style=color:#bbb> </span>my-scheduler<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>command</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span>- /usr/local/bin/kube-scheduler<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span>- --config=/etc/kubernetes/my-scheduler/my-scheduler-config.yaml<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>gcr.io/my-gcp-project/my-kube-scheduler:1.0<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>livenessProbe</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>httpGet</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>path</span>:<span style=color:#bbb> </span>/healthz<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>port</span>:<span style=color:#bbb> </span><span style=color:#666>10259</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>scheme</span>:<span style=color:#bbb> </span>HTTPS<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>initialDelaySeconds</span>:<span style=color:#bbb> </span><span style=color:#666>15</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>kube-second-scheduler<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>readinessProbe</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>httpGet</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>path</span>:<span style=color:#bbb> </span>/healthz<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>port</span>:<span style=color:#bbb> </span><span style=color:#666>10259</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>scheme</span>:<span style=color:#bbb> </span>HTTPS<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>resources</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>requests</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>cpu</span>:<span style=color:#bbb> </span><span style=color:#b44>&#39;0.1&#39;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>securityContext</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>privileged</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>false</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>volumeMounts</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>config-volume<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>mountPath</span>:<span style=color:#bbb> </span>/etc/kubernetes/my-scheduler<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>hostNetwork</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>false</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>hostPID</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>false</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>volumes</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>config-volume<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>configMap</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>my-scheduler-config<span style=color:#bbb>
+</span></span></span></code></pre></div></div></div><p>해당 매니페스트에서는 <a href=/ko/docs/reference/scheduling/config/>KubeSchedulerConfiguration</a>을
+사용하여 구현할 스케줄러의 특성을 정의한다. 이러한 설정은 초기화 과정에서 <code>--config</code> 옵션을 통해 <code>kube-scheduler</code>에게 전달된다.
+해당 구성 파일은 <code>my-scheduler-config</code> 컨피그맵에 저장된다. <code>my-scheduler</code> 디플로이먼트의 파드에서는 <code>my-scheduler-config</code> 컨피그맵을 볼륨으로 마운트 시킨다.</p><p>앞서 언급한 스케줄러 구성에서는, 구현한 스케줄러가
+<a href=/docs/reference/config-api/kube-scheduler-config.v1beta3/#kubescheduler-config-k8s-io-v1beta3-KubeSchedulerProfile>KubeSchedulerProfile</a>의 형식으로 나타나게 된다.<div class="alert alert-info note callout" role=alert><strong>참고:</strong> 스케줄러가 특정 파드에 대한 스케줄링을 수행하는지 판단하기 위해서는, PodTemplate 또는 파드 매니페스트의
+<code>spec.schedulerName</code> 필드가 <code>KubeSchedulerProfile</code>의 <code>schedulerName</code> 필드와 일치하는지 확인해야 한다.
+클러스터 내 실행되고 있는 모든 스케줄러는 고유한 이름을 가져야 한다.</div></p><p>또한, <code>kube-scheduler</code>와 같은 권한을 부여받기 위해서는 전용 서비스 어카운트 <code>my-scheduler</code>를 생성하고
+해당 서비스 어카운트를 클러스터롤 <code>system:kube-scheduler</code>와 바인딩해야 한다.</p><p>이외의 커맨드 라인 인자에 대한 자세한 설명은
+<a href=/docs/reference/command-line-tools-reference/kube-scheduler/>kube-scheduler 문서</a>에서 참고하고
+이외의 사용자 정의 <code>kube-scheduler</code> 구성에 대한 자세한 설명은
+<a href=/docs/reference/config-api/kube-scheduler-config.v1beta3/>스케줄러 구성 레퍼런스</a>
+에서 참고한다.</p><h2 id=두-번째-스케줄러를-클러스터에서-실행하기>두 번째 스케줄러를 클러스터에서 실행하기</h2><p>쿠버네티스 클러스터에서 스케줄러를 실행하기 위해서,
+위의 구성 파일에서 명시한 디플로이먼트를 쿠버네티스 클러스터 내에 생성한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create -f my-scheduler.yaml
+</span></span></code></pre></div><p>스케줄러 파드가 실행되고 있는지 확인한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pods --namespace<span style=color:#666>=</span>kube-system
+</span></span></code></pre></div><pre tabindex=0><code>NAME                                           READY     STATUS    RESTARTS   AGE
+....
+my-scheduler-lnf4s-4744f                       1/1       Running   0          2m
+...
+</code></pre><p>기본 kube-scheduler 파드와 더불어,
+my-scheduler 파드가 실행("Running")되고 있다는 것을 목록에서 볼 수 있을 것이다.</p><h3 id=리더-선출-활성화>리더 선출 활성화</h3><p>리더 선출이 활성화된 상태로 다중 스케줄러를 실행하기 위해서는 다음과 같은 작업을 수행해야 한다.</p><p><code>my-scheduler-config</code> 컨피그맵의 YAML 파일에서 KubeSchedulerConfiguration의 다음과 같은 필드들을 갱신한다.</p><ul><li><code>leaderElection.leaderElect</code> 를 <code>true</code> 로</li><li><code>leaderElection.resourceNamespace</code> 를 <code>&lt;lock-object-namespace></code> 로</li><li><code>leaderElection.resourceName</code> 을 <code>&lt;lock-object-name></code> 으로</li></ul><div class="alert alert-info note callout" role=alert><strong>참고:</strong> 컨트롤 플레인이 잠금 오브젝트를 생성해 주지만, 해당 네임스페이스가 존재하는 상태이어야 한다.
+<code>kube-system</code> 네임스페이스를 사용해도 된다.</div><p>클러스터 내에 RBAC가 활성화되어 있는 상태라면, <code>system:kube-scheduler</code> 클러스터롤을 업데이트 해야 한다.
+다음 예시와 같이, 구현한 스케줄러의 이름을 <code>endpoints</code>와 <code>leases</code> 리소스에 적용되는 룰의 resourceNames에 추가하자.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl edit clusterrole system:kube-scheduler
+</span></span></code></pre></div><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/ko/examples/admin/sched/clusterrole.yaml download=admin/sched/clusterrole.yaml><code>admin/sched/clusterrole.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("admin-sched-clusterrole-yaml")' title="Copy admin/sched/clusterrole.yaml to clipboard"></img></div><div class=includecode id=admin-sched-clusterrole-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>rbac.authorization.k8s.io/v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>ClusterRole<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>annotations</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>rbac.authorization.kubernetes.io/autoupdate</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;true&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>kubernetes.io/bootstrapping</span>:<span style=color:#bbb> </span>rbac-defaults<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>system:kube-scheduler<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>rules</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>apiGroups</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- coordination.k8s.io<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>resources</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- leases<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>verbs</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- create<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>apiGroups</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- coordination.k8s.io<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>resourceNames</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- kube-scheduler<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- my-scheduler<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>resources</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- leases<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>verbs</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- get<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- update<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>apiGroups</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:#b44>&#34;&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>resourceNames</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- kube-scheduler<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- my-scheduler<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>resources</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- endpoints<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>verbs</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- delete<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- get<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- patch<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- update<span style=color:#bbb>
+</span></span></span></code></pre></div></div></div><h2 id=파드의-스케줄러를-지정하기>파드의 스케줄러를 지정하기</h2><p>이제 두 번째 스케줄러가 실행되고 있으니,
+파드를 몇 개 생성하여 기본 스케줄러 또는 새로 배치한 스케줄러에 의해 스케줄링이 되도록 설정해 보자.
+특정 스케줄러를 이용하여 파드를 스케줄링하기 위해서는
+해당 파드의 명세에 해당 스케줄러의 이름을 명시해야 한다. 세 가지 예시를 참고해 보자.</p><ul><li><p>스케줄러 이름을 명시하지 않은 파드 명세</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/ko/examples/admin/sched/pod1.yaml download=admin/sched/pod1.yaml><code>admin/sched/pod1.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("admin-sched-pod1-yaml")' title="Copy admin/sched/pod1.yaml to clipboard"></img></div><div class=includecode id=admin-sched-pod1-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+  </span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Pod<span style=color:#bbb>
+  </span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+  </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>no</span>-annotation<span style=color:#bbb>
+  </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+  </span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>multischeduler-example<span style=color:#bbb>
+  </span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+  </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+  </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>pod-with-no-annotation-container<span style=color:#bbb>
+  </span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>registry.k8s.io/pause:2.0</span></span></code></pre></div></div></div><p>스케줄러 이름을 제공받지 못했다면,
+파드는 자동으로 기본 스케줄러에 의해 스케줄링이 수행된다.</p><p>해당 파일을 <code>pod1.yaml</code>로 저장하고 쿠버네티스 클러스터에 제출해 보자.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create -f pod1.yaml
+</span></span></code></pre></div></li><li><p><code>default-scheduler</code>를 명시한 파드 명세</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/ko/examples/admin/sched/pod2.yaml download=admin/sched/pod2.yaml><code>admin/sched/pod2.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("admin-sched-pod2-yaml")' title="Copy admin/sched/pod2.yaml to clipboard"></img></div><div class=includecode id=admin-sched-pod2-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+  </span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Pod<span style=color:#bbb>
+  </span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+  </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>annotation-default-scheduler<span style=color:#bbb>
+  </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+  </span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>multischeduler-example<span style=color:#bbb>
+  </span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+  </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>schedulerName</span>:<span style=color:#bbb> </span>default-scheduler<span style=color:#bbb>
+  </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+  </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>pod-with-default-annotation-container<span style=color:#bbb>
+  </span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>registry.k8s.io/pause:2.0<span style=color:#bbb>
+  </span></span></span></code></pre></div></div></div><p><code>spec.schedulerName</code>의 값으로 스케줄러 이름을 제공함으로써 스케줄러가 정해진다.
+이와 같은 경우에서는, 기본 스케줄러의 이름인 <code>default-scheduler</code>를 명시하고 있다.</p><p>해당 파일을 <code>pod2.yaml</code>로 저장하고 쿠버네티스 클러스터에 제출해 보자.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create -f pod2.yaml
+</span></span></code></pre></div></li><li><p><code>my-scheduler</code>를 명시한 파드 명세</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/ko/examples/admin/sched/pod3.yaml download=admin/sched/pod3.yaml><code>admin/sched/pod3.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("admin-sched-pod3-yaml")' title="Copy admin/sched/pod3.yaml to clipboard"></img></div><div class=includecode id=admin-sched-pod3-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+  </span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Pod<span style=color:#bbb>
+  </span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+  </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>annotation-second-scheduler<span style=color:#bbb>
+  </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+  </span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>multischeduler-example<span style=color:#bbb>
+  </span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+  </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>schedulerName</span>:<span style=color:#bbb> </span>my-scheduler<span style=color:#bbb>
+  </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+  </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>pod-with-second-annotation-container<span style=color:#bbb>
+  </span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>registry.k8s.io/pause:2.0<span style=color:#bbb>
+  </span></span></span></code></pre></div></div></div><p>이와 같은 경우에서는, 직접 배치한 스케줄러 - <code>my-scheduler</code>를 통해
+해당 파드의 스케줄링이 수행되어야 한다는 것을 명시하고 있다.
+<code>spec.schedulerName</code>의 값은 <code>KubeSchedulerProfile</code> 매핑의 <code>schedulerName</code> 필드와 일치해야 한다.</p><p>해당 파일을 <code>pod3.yaml</code>로 저장하고 쿠버네티스 클러스터에 제출해 보자.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create -f pod3.yaml
+</span></span></code></pre></div><p>세 개의 파드가 모두 실행되고 있는지 확인해 보자.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pods
+</span></span></code></pre></div></li></ul><h3 id=파드가-원하는-스케줄러에-의해-스케줄링-되었는지-확인해보기>파드가 원하는 스케줄러에 의해 스케줄링 되었는지 확인해보기</h3><p>이번 예제들을 수월하게 진행하기 위해,
+파드가 실제로 원하는 스케줄러에 의해 스케줄링되고 있는지 확인해 보지 않았다.
+해당 사항은 파드와 디플로이먼트 구성 파일의 제출 순서를 바꿔보면 확인해 볼 수 있다.
+만일 스케줄러 디플로이먼트 구성 파일을 제출하기 전에 모든 파드의 구성 파일을 쿠버네티스 클러스터에 제출한다면,
+다른 두 개의 파드는 스케줄링 되는 와중에 <code>annotation-second-scheduler</code> 파드는
+무기한 "Pending" 상태에 머무르는 것을 관찰할 수 있다.
+스케줄러 디플로이먼트 구성 파일을 제출하여 새로운 스케줄러가 실행되기 시작하면,
+<code>annotation-second-scheduler</code> 파드도 스케줄링 된다.</p><p>다른 방법으로는, 이벤트 로그에서 "Scheduled" 항목을 찾아
+파드가 원하는 스케줄러에 의해 스케줄링 되었는지 확인해 볼 수 있다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get events
+</span></span></code></pre></div><p>또한, 관련된 컨트롤 플레인 노드들의 스태틱 파드 매니페스트를 수정하면 클러스터의 메인 스케줄러로
+<a href=/ko/docs/reference/scheduling/config/#multiple-profiles>사용자 정의 스케줄러 구성</a>
+또는 사용자 정의 컨테이너 이미지를 사용할 수도 있다.</p></div><div class=td-content style=page-break-before:always><h1 id=pg-1707517970dd390995f760308c2e2de6>3 - HTTP 프록시를 사용하여 쿠버네티스 API에 접근</h1><p>이 페이지는 쿠버네티스 API에 접근하기 위해 HTTP 프록시를 사용하는 방법을 설명한다.</p><h2 id=시작하기-전에>시작하기 전에</h2><p><p>쿠버네티스 클러스터가 필요하고, kubectl 커맨드-라인 툴이 클러스터와
+통신할 수 있도록 설정되어 있어야 한다. 이 튜토리얼은 컨트롤 플레인 호스트가 아닌 노드가 적어도 2개 포함된 클러스터에서 실행하는 것을 추천한다. 만약, 아직 클러스터를 가지고
+있지 않다면,
+<a href=/ko/docs/tasks/tools/#minikube>minikube</a>를 사용해서 생성하거나
+다음 쿠버네티스 플레이그라운드 중 하나를 사용할 수 있다.</p><ul><li><a href=https://killercoda.com/playgrounds/scenario/kubernetes>Killercoda</a></li><li><a href=https://labs.play-with-k8s.com/>Play with Kubernetes</a></li></ul>버전 확인을 위해서, 다음 커맨드를 실행 <code>kubectl version</code>.</p><p>클러스터에서 실행 중인 애플리케이션이 없다면,
+아래 명령을 입력하여 Hello world 애플리케이션을 시작한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create deployment node-hello --image<span style=color:#666>=</span>gcr.io/google-samples/node-hello:1.0 --port<span style=color:#666>=</span><span style=color:#666>8080</span>
+</span></span></code></pre></div><h2 id=kubectl을-사용하여-프록시-서버-시작>kubectl을 사용하여 프록시 서버 시작</h2><p>아래 커맨드는 쿠버네티스 API 서버의 프록시를 시작한다.</p><pre><code>kubectl proxy --port=8080
+</code></pre><h2 id=kubernetes-api-탐색>Kubernetes API 탐색</h2><p>프록시 서버가 실행 중일 때 <code>curl</code>, <code>wget</code>
+또는 브라우저를 사용하여 API를 탐색할 수 있다.</p><p>API 버전 가져오기.</p><pre><code>curl http://localhost:8080/api/
+</code></pre><p>출력은 다음과 유사하다.</p><pre><code>{
+  &quot;kind&quot;: &quot;APIVersions&quot;,
+  &quot;versions&quot;: [
+    &quot;v1&quot;
+  ],
+  &quot;serverAddressByClientCIDRs&quot;: [
+    {
+      &quot;clientCIDR&quot;: &quot;0.0.0.0/0&quot;,
+      &quot;serverAddress&quot;: &quot;10.0.2.15:8443&quot;
+    }
+  ]
+}
+</code></pre><p>파드 목록 가져오기.</p><pre><code>curl http://localhost:8080/api/v1/namespaces/default/pods
+</code></pre><p>출력은 다음과 유사하다.</p><pre><code>{
+  &quot;kind&quot;: &quot;PodList&quot;,
+  &quot;apiVersion&quot;: &quot;v1&quot;,
+  &quot;metadata&quot;: {
+    &quot;resourceVersion&quot;: &quot;33074&quot;
+  },
+  &quot;items&quot;: [
+    {
+      &quot;metadata&quot;: {
+        &quot;name&quot;: &quot;kubernetes-bootcamp-2321272333-ix8pt&quot;,
+        &quot;generateName&quot;: &quot;kubernetes-bootcamp-2321272333-&quot;,
+        &quot;namespace&quot;: &quot;default&quot;,
+        &quot;uid&quot;: &quot;ba21457c-6b1d-11e6-85f7-1ef9f1dab92b&quot;,
+        &quot;resourceVersion&quot;: &quot;33003&quot;,
+        &quot;creationTimestamp&quot;: &quot;2016-08-25T23:43:30Z&quot;,
+        &quot;labels&quot;: {
+          &quot;pod-template-hash&quot;: &quot;2321272333&quot;,
+          &quot;run&quot;: &quot;kubernetes-bootcamp&quot;
+        },
+        ...
+}
+</code></pre><h2 id=다음-내용>다음 내용</h2><p><a href=/docs/reference/generated/kubectl/kubectl-commands#proxy>kubectl 프록시</a>에 대해 더 배우기.</p></div><div class=td-content style=page-break-before:always><h1 id=pg-46417c7cdd2da2c530aaeddca1861e5c>4 - SOCKS5 프록시를 사용하여 쿠버네티스 API에 접근</h1><div style=margin-top:10px;margin-bottom:10px><b>기능 상태:</b> <code>Kubernetes v1.24 [stable]</code></div><p>이 문서는 SOCKS5 프록시를 사용하여 원격 쿠버네티스 클러스터의 API에 접근하는 방법을 설명한다.
+이 기능은 접근하려는 클러스터의 API를 공용 인터넷에 직접 노출하지 않으려고 할 때 유용하다.</p><h2 id=시작하기-전에>시작하기 전에</h2><p><p>쿠버네티스 클러스터가 필요하고, kubectl 커맨드-라인 툴이 클러스터와
+통신할 수 있도록 설정되어 있어야 한다. 이 튜토리얼은 컨트롤 플레인 호스트가 아닌 노드가 적어도 2개 포함된 클러스터에서 실행하는 것을 추천한다. 만약, 아직 클러스터를 가지고
+있지 않다면,
+<a href=/ko/docs/tasks/tools/#minikube>minikube</a>를 사용해서 생성하거나
+다음 쿠버네티스 플레이그라운드 중 하나를 사용할 수 있다.</p><ul><li><a href=https://killercoda.com/playgrounds/scenario/kubernetes>Killercoda</a></li><li><a href=https://labs.play-with-k8s.com/>Play with Kubernetes</a></li></ul>쿠버네티스 서버의 버전은 다음과 같거나 더 높아야 함. 버전: v1.24.
+버전 확인을 위해서, 다음 커맨드를 실행 <code>kubectl version</code>.</p><p>SSH 클라이언트 소프트웨어(<code>ssh</code> 도구)와 원격 서버에서 실행되는 SSH 서비스가 필요하다.
+원격 서버의 SSH 서비스에 로그인할 수 있어야 한다.</p><h2 id=작업-내용>작업 내용</h2><div class="alert alert-info note callout" role=alert><strong>참고:</strong> 아래 예시는 SSH 클라이언트 및 서버가 SOCKS 프록시 역할을 하는 SSH를 사용하여 트래픽을 터널링(tunnel)한다.
+다른 종류의 <a href=https://en.wikipedia.org/wiki/SOCKS#SOCKS5>SOCKS5</a> 프록시를 대신 사용할 수 있다.</div><p>그림 1은 이 작업에서 달성하고자 하는 목표를 나타낸다.</p><ul><li>우선 쿠버네티스 API와 통신을 시작하는 로컬 클라이언트 컴퓨터가 있다.</li><li>쿠버네티스 서버/API는 원격 서버에서 호스팅된다.</li><li>SSH 클라이언트와 서버 소프트웨어를 사용하여 로컬 서버와 원격 서버 간에 보안 SOCKS5 터널을 생성한다.
+클라이언트와 쿠버네티스 API 간의 HTTPS 트래픽은 SOCKS5 터널을 통해 전송되며,
+터널은 SSH를 통해 터널링된다.</li></ul><p><figure><div class=mermaid>graph LR;
+subgraph local[로컬 클라이언트 머신]
+client([클라이언트])-- 로컬<br>트래픽 .-> local_ssh[로컬 SSH<br>SOCKS5 프록시];
+end
+local_ssh[SSH<br>SOCKS5<br>프록시]-- SSH 터널 -->sshd
+subgraph remote[원격 서버]
+sshd[SSH<br>서버]-- 로컬 트래픽 -->service1;
+end
+client([클라이언트])-. 프록시된 HTTPs 트래픽<br>프록시를 통과 .->service1[쿠버네티스 API];
+classDef plain fill:#ddd,stroke:#fff,stroke-width:4px,color:#000;
+classDef k8s fill:#326ce5,stroke:#fff,stroke-width:4px,color:#fff;
+classDef cluster fill:#fff,stroke:#bbb,stroke-width:2px,color:#326ce5;
+class ingress,service1,service2,pod1,pod2,pod3,pod4 k8s;
+class client plain;
+class cluster cluster;</div></figure><noscript><div class="alert alert-secondary callout" role=alert><em class=javascript-required>이 컨텐츠를 보려면 자바스크립트가 <a href=https://www.enable-javascript.com/>활성화</a>되어 있어야 합니다.</em></div></noscript>그림 1. SOCKS5 튜토리얼 구성 요소</p><h2 id=ssh를-사용하여-socks5-프록시-생성하기>ssh를 사용하여 SOCKS5 프록시 생성하기</h2><p>아래 커맨드(command)는 클라이언트 컴퓨터와 원격 서버 간에 SOCKS5 프록시를 시작한다.
+SOCKS5 프록시를 사용하여 클러스터의 API 서버에 연결할 수 있다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#080;font-style:italic># 아래 커맨드를 실행한 후 SSH 터널은 포그라운드(foreground)에서 실행된다.</span>
+</span></span><span style=display:flex><span>ssh -D <span style=color:#666>1080</span> -q -N username@kubernetes-remote-server.example
+</span></span></code></pre></div><ul><li><code>-D 1080</code>: SOCKS 프록시를 로컬 포트 1080으로 연다.</li><li><code>-q</code>: quiet 모드. 경고 및 진단 메시지 대부분을 표시하지 않는다.</li><li><code>-N</code>: 원격 커맨드를 실행하지 않는다. 포트 포워딩에 유용.</li><li><code>username@kubernetes-remote-server.example</code>: 쿠버네티스 클러스터가 실행 중인 원격 SSH 서버.</li></ul><h2 id=클라이언트-환경-설정>클라이언트 환경 설정</h2><p>쿠버네티스 API를 사용하려면
+먼저, 클라이언트에게 앞에서 만든 SOCKS5 프록시를 통해 쿼리를 전송하도록 지시해야 한다.</p><p><code>https_proxy</code> 환경 변수를 설정하고 실행하는 커맨드를 커맨드라인 툴에 전달한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f>export</span> <span style=color:#b8860b>https_proxy</span><span style=color:#666>=</span>socks5h://localhost:1080
+</span></span></code></pre></div><p><code>https_proxy</code> 변수를 설정하면 <code>curl</code>과 같은 툴은 구성한 프록시를 통해 HTTPS 트래픽을 라우팅한다.
+툴이 SOCKS5 프록시를 지원해야 이 기능이 동작한다.</p><div class="alert alert-info note callout" role=alert><strong>참고:</strong> URL https://localhost:6443/api에서 <code>localhost</code>는 로컬 클라이언트 컴퓨터를 참조하지 않는다.
+대신 <code>localhost</code>라고 알려진 원격 서버의 엔드포인트(endpoint)를 가리킨다.
+<code>curl</code> 툴은 호스트 이름을 HTTPS URL에서 SOCKS를 통해 전송하고,
+원격 서버는 이것을 로컬(루프백 인터페이스에 속하는 주소)로 처리한다.</div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>curl -k -v https://localhost:6443/api
+</span></span></code></pre></div><p>프록시와 함께 공식 쿠버네티스 클라이언트 <code>kubectl</code>을 사용하려면, <code>~/.kube/config</code> 파일에서 관련 <code>cluster</code> 항목에 대한 <code>proxy-url</code> 요소를 설정한다.
+예시:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>clusters</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>cluster</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>certificate-authority-data</span>:<span style=color:#bbb> </span>LRMEMMW2<span style=color:#bbb> </span><span style=color:#080;font-style:italic># 가독성을 위해서 축약함</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>server</span>:<span style=color:#bbb> </span>https://&lt;API_SERVER_IP_ADRESS&gt;:6443 <span style=color:#bbb> </span><span style=color:#080;font-style:italic># &#34;쿠버네티스 API&#34; 서버, 쿠버네티스-원격-서버의 IP 주소</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>proxy-url</span>:<span style=color:#bbb> </span>socks5://localhost:1080  <span style=color:#bbb> </span><span style=color:#080;font-style:italic># 위 다이어그램의 &#34;SSH SOCKS5 프록시&#34; (SOCKS를 통한 DNS 확인 기능 빌트-인)</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>default<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>contexts</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>context</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>cluster</span>:<span style=color:#bbb> </span>default<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>user</span>:<span style=color:#bbb> </span>default<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>default<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>current-context</span>:<span style=color:#bbb> </span>default<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Config<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>preferences</span>:<span style=color:#bbb> </span>{}<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>users</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>default<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>user</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>client-certificate-data</span>:<span style=color:#bbb> </span>LS0tLS1CR==<span style=color:#bbb> </span><span style=color:#080;font-style:italic># 가독성을 위해서 축약함</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>client-key-data</span>:<span style=color:#bbb> </span>LS0tLS1CRUdJT=     <span style=color:#bbb> </span><span style=color:#080;font-style:italic># 가독성을 위해서 축약함</span><span style=color:#bbb>
+</span></span></span></code></pre></div><p>터널이 동작 중이고 이 클러스터를 사용하는 컨텍스트에서 <code>kubectl</code>을 사용하는 경우 프록시를 통해 클러스터와 상호 작용할 수 있다. 예시:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pods
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console><span style=display:flex><span><span style=color:#888>NAMESPACE     NAME                                     READY   STATUS      RESTARTS   AGE
+</span></span></span><span style=display:flex><span><span style=color:#888>kube-system   coredns-85cb69466-klwq8                  1/1     Running     0          5m46s
+</span></span></span></code></pre></div><h2 id=정리하기>정리하기</h2><p>SSH 포트 포워딩 프로세스가 실행 중인 터미널에서 <code>CTRL+C</code>를 눌러 프로세스를 중지한다.</p><p>터미널에 <code>unset https_proxy</code>를 입력하여 프록시를 통한 http 트래픽 전송을 중지한다.</p><h2 id=더-읽어보기>더 읽어보기</h2><ul><li><a href=https://man.openbsd.org/ssh>OpenSSH 원격 로그인 클라이언트</a></li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-61cf1f2f0fbe98e7635fce65f04a775f>5 - Konnectivity 서비스 설정</h1><p>Konnectivity 서비스는 컨트롤 플레인에 클러스터 통신을 위한 TCP 수준 프록시를
+제공한다.</p><h2 id=시작하기-전에>시작하기 전에</h2><p>쿠버네티스 클러스터가 있어야 하며, kubectl 명령줄 도구가
+클러스터와 통신하도록 설정되어 있어야 한다. 컨트롤 플레인 호스트가 아닌
+두 개 이상의 노드로 구성된 클러스터에서 이 튜토리얼을 수행하는 것을 권장한다.
+클러스터가 없다면, <a href=https://minikube.sigs.k8s.io/docs/tutorials/multi_node/>minikube</a>를
+이용하여 생성할 수 있다.</p><h2 id=konnectivity-서비스-설정>Konnectivity 서비스 설정</h2><p>다음 단계에는 송신(egress) 설정이 필요하다. 예를 들면 다음과 같다.</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/ko/examples/admin/konnectivity/egress-selector-configuration.yaml download=admin/konnectivity/egress-selector-configuration.yaml><code>admin/konnectivity/egress-selector-configuration.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("admin-konnectivity-egress-selector-configuration-yaml")' title="Copy admin/konnectivity/egress-selector-configuration.yaml to clipboard"></img></div><div class=includecode id=admin-konnectivity-egress-selector-configuration-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>apiserver.k8s.io/v1beta1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>EgressSelectorConfiguration<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>egressSelections</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#080;font-style:italic># 클러스터에 대한 송신(egress) 트래픽을 제어하기 위해 </span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#080;font-style:italic># &#34;cluster&#34;를 name으로 사용한다. 기타 지원되는 값은 &#34;etcd&#34; 및 &#34;controlplane&#34;이다.</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>cluster<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>connection</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:#080;font-style:italic># API 서버와 Konnectivity 서버 간의 프로토콜을</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:#080;font-style:italic># 제어한다. 지원되는 값은 &#34;GRPC&#34; 및 &#34;HTTPConnect&#34;이다. 두 모드 간에</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:#080;font-style:italic># 최종 사용자가 볼 수 있는 차이점은 없다. 동일한 모드에서 작동하도록</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:#080;font-style:italic># Konnectivity 서버를 설정해야 한다.</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>proxyProtocol</span>:<span style=color:#bbb> </span>GRPC<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>transport</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:#080;font-style:italic># API 서버가 Konnectivity 서버와 통신하는 데 사용하는 </span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:#080;font-style:italic># transport를 제어한다. Konnectivity 서버가 API 서버와 동일한 시스템에 </span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:#080;font-style:italic># 있는 경우 UDS를 사용하는 것이 좋다. 동일한 UDS 소켓에서 </span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:#080;font-style:italic># 수신 대기하도록 Konnectivity 서버를 구성해야 한다. </span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:#080;font-style:italic># 지원되는 다른 전송은 &#34;tcp&#34;이다. TCP 전송을 보호하려면 TLS 구성을 설정해야 한다.</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>uds</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>udsName</span>:<span style=color:#bbb> </span>/etc/kubernetes/konnectivity-server/konnectivity-server.socket<span style=color:#bbb>
+</span></span></span></code></pre></div></div></div><p>Konnectivity 서비스를 사용하고 네트워크 트래픽을 클러스터 노드로 보내도록
+API 서버를 구성해야 한다.</p><ol><li><a href=/docs/tasks/configure-pod-container/configure-service-account/#service-account-token-volume-projection>Service Account Token Volume Projection</a>
+기능이 활성화되어 있는지 확인한다.
+쿠버네티스 v1.20부터는 기본적으로 활성화되어 있다.</li><li><code>admin/konnectivity/egress-selector-configuration.yaml</code>과 같은 송신 구성 파일을 생성한다.</li><li>API 서버의 <code>--egress-selector-config-file</code> 플래그를
+API 서버 송신 구성 파일의 경로로 설정한다.</li><li>UDS 연결을 사용하는 경우 kube-apiserver에 볼륨 구성을 추가한다.<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>volumeMounts</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>konnectivity-uds<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>mountPath</span>:<span style=color:#bbb> </span>/etc/kubernetes/konnectivity-server<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>readOnly</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>false</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>volumes</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>konnectivity-uds<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>hostPath</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>path</span>:<span style=color:#bbb> </span>/etc/kubernetes/konnectivity-server<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>type</span>:<span style=color:#bbb> </span>DirectoryOrCreate<span style=color:#bbb>
+</span></span></span></code></pre></div></li></ol><p>konnectivity-server에 대한 인증서 및 kubeconfig를 생성하거나 얻는다.
+예를 들어 OpenSSL 커맨드라인 툴을 사용하여 컨트롤 플레인 호스트에서
+클러스터 CA 인증서 <code>/etc/kubernetes/pki/ca.crt</code>를 사용하여 X.509 인증서를 발급할 수 있다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>openssl req -subj <span style=color:#b44>&#34;/CN=system:konnectivity-server&#34;</span> -new -newkey rsa:2048 -nodes -out konnectivity.csr -keyout konnectivity.key -out konnectivity.csr
+</span></span><span style=display:flex><span>openssl x509 -req -in konnectivity.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out konnectivity.crt -days <span style=color:#666>375</span> -sha256
+</span></span><span style=display:flex><span><span style=color:#b8860b>SERVER</span><span style=color:#666>=</span><span style=color:#a2f;font-weight:700>$(</span>kubectl config view -o <span style=color:#b8860b>jsonpath</span><span style=color:#666>=</span><span style=color:#b44>&#39;{.clusters..server}&#39;</span><span style=color:#a2f;font-weight:700>)</span>
+</span></span><span style=display:flex><span>kubectl --kubeconfig /etc/kubernetes/konnectivity-server.conf config set-credentials system:konnectivity-server --client-certificate konnectivity.crt --client-key konnectivity.key --embed-certs<span style=color:#666>=</span><span style=color:#a2f>true</span>
+</span></span><span style=display:flex><span>kubectl --kubeconfig /etc/kubernetes/konnectivity-server.conf config set-cluster kubernetes --server <span style=color:#b44>&#34;</span><span style=color:#b8860b>$SERVER</span><span style=color:#b44>&#34;</span> --certificate-authority /etc/kubernetes/pki/ca.crt --embed-certs<span style=color:#666>=</span><span style=color:#a2f>true</span>
+</span></span><span style=display:flex><span>kubectl --kubeconfig /etc/kubernetes/konnectivity-server.conf config set-context system:konnectivity-server@kubernetes --cluster kubernetes --user system:konnectivity-server
+</span></span><span style=display:flex><span>kubectl --kubeconfig /etc/kubernetes/konnectivity-server.conf config use-context system:konnectivity-server@kubernetes
+</span></span><span style=display:flex><span>rm -f konnectivity.crt konnectivity.key konnectivity.csr
+</span></span></code></pre></div><p>다음으로 Konnectivity 서버와 에이전트를 배포해야 한다.
+<a href=https://github.com/kubernetes-sigs/apiserver-network-proxy>kubernetes-sigs/apiserver-network-proxy</a>에서
+구현을 참조할 수 있다.</p><p>컨트롤 플레인 노드에 Konnectivity 서버를 배포한다. 제공된
+<code>konnectivity-server.yaml</code> 매니페스트는
+쿠버네티스 구성 요소가 클러스터에 <a class=glossary-tooltip title='특정 노드의 Kubelet 데몬이 직접 관리하는 파드' data-toggle=tooltip data-placement=top href=/ko/docs/tasks/configure-pod-container/static-pod/ target=_blank aria-label='스태틱 파드(static Pod)'>스태틱 파드(static Pod)</a>로 배포되었다고 가정한다. 그렇지 않은 경우에는 Konnectivity
+서버를 데몬셋(DaemonSet)으로 배포할 수 있다.</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/ko/examples/admin/konnectivity/konnectivity-server.yaml download=admin/konnectivity/konnectivity-server.yaml><code>admin/konnectivity/konnectivity-server.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("admin-konnectivity-konnectivity-server-yaml")' title="Copy admin/konnectivity/konnectivity-server.yaml to clipboard"></img></div><div class=includecode id=admin-konnectivity-konnectivity-server-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>konnectivity-server<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>namespace</span>:<span style=color:#bbb> </span>kube-system<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>priorityClassName</span>:<span style=color:#bbb> </span>system-cluster-critical<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>hostNetwork</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>true</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>konnectivity-server-container<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>registry.k8s.io/kas-network-proxy/proxy-server:v0.0.32<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>command</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;/proxy-server&#34;</span>]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>args</span>:<span style=color:#bbb> </span>[<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:#b44>&#34;--logtostderr=true&#34;</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:#080;font-style:italic># 이것은 egressSelectorConfiguration에 설정된 값과 일치해야 한다.</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:#b44>&#34;--uds-name=/etc/kubernetes/konnectivity-server/konnectivity-server.socket&#34;</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:#080;font-style:italic># 다음 두 줄은 Konnectivity 서버가 apiserver와 </span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:#080;font-style:italic># 동일한 시스템에 배포되고 API 서버의 인증서와 </span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:#080;font-style:italic># 키가 지정된 위치에 있다고 가정한다.</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:#b44>&#34;--cluster-cert=/etc/kubernetes/pki/apiserver.crt&#34;</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:#b44>&#34;--cluster-key=/etc/kubernetes/pki/apiserver.key&#34;</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:#080;font-style:italic># 이것은 egressSelectorConfiguration에 설정된 값과 일치해야 한다.</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:#b44>&#34;--mode=grpc&#34;</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:#b44>&#34;--server-port=0&#34;</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:#b44>&#34;--agent-port=8132&#34;</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:#b44>&#34;--admin-port=8133&#34;</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:#b44>&#34;--health-port=8134&#34;</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:#b44>&#34;--agent-namespace=kube-system&#34;</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:#b44>&#34;--agent-service-account=konnectivity-agent&#34;</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:#b44>&#34;--kubeconfig=/etc/kubernetes/konnectivity-server.conf&#34;</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:#b44>&#34;--authentication-audience=system:konnectivity-server&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span>]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>livenessProbe</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>httpGet</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>scheme</span>:<span style=color:#bbb> </span>HTTP<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>host</span>:<span style=color:#bbb> </span><span style=color:#666>127.0.0.1</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>port</span>:<span style=color:#bbb> </span><span style=color:#666>8134</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>path</span>:<span style=color:#bbb> </span>/healthz<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>initialDelaySeconds</span>:<span style=color:#bbb> </span><span style=color:#666>30</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>timeoutSeconds</span>:<span style=color:#bbb> </span><span style=color:#666>60</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>ports</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>agentport<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>containerPort</span>:<span style=color:#bbb> </span><span style=color:#666>8132</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>hostPort</span>:<span style=color:#bbb> </span><span style=color:#666>8132</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>adminport<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>containerPort</span>:<span style=color:#bbb> </span><span style=color:#666>8133</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>hostPort</span>:<span style=color:#bbb> </span><span style=color:#666>8133</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>healthport<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>containerPort</span>:<span style=color:#bbb> </span><span style=color:#666>8134</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>hostPort</span>:<span style=color:#bbb> </span><span style=color:#666>8134</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>volumeMounts</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>k8s-certs<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>mountPath</span>:<span style=color:#bbb> </span>/etc/kubernetes/pki<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>readOnly</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>true</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>kubeconfig<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>mountPath</span>:<span style=color:#bbb> </span>/etc/kubernetes/konnectivity-server.conf<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>readOnly</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>true</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>konnectivity-uds<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>mountPath</span>:<span style=color:#bbb> </span>/etc/kubernetes/konnectivity-server<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>readOnly</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>false</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>volumes</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>k8s-certs<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>hostPath</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>path</span>:<span style=color:#bbb> </span>/etc/kubernetes/pki<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>kubeconfig<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>hostPath</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>path</span>:<span style=color:#bbb> </span>/etc/kubernetes/konnectivity-server.conf<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>type</span>:<span style=color:#bbb> </span>FileOrCreate<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>konnectivity-uds<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>hostPath</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>path</span>:<span style=color:#bbb> </span>/etc/kubernetes/konnectivity-server<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>type</span>:<span style=color:#bbb> </span>DirectoryOrCreate<span style=color:#bbb>
+</span></span></span></code></pre></div></div></div><p>그런 다음 클러스터에 Konnectivity 에이전트를 배포한다.</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/ko/examples/admin/konnectivity/konnectivity-agent.yaml download=admin/konnectivity/konnectivity-agent.yaml><code>admin/konnectivity/konnectivity-agent.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("admin-konnectivity-konnectivity-agent-yaml")' title="Copy admin/konnectivity/konnectivity-agent.yaml to clipboard"></img></div><div class=includecode id=admin-konnectivity-konnectivity-agent-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>apps/v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#080;font-style:italic># 에이전트를 Deployment(디플로이먼트)로 배포할 수도 있다. 각 노드에 에이전트가</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#080;font-style:italic># 있을 필요는 없다.</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>DaemonSet<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>addonmanager.kubernetes.io/mode</span>:<span style=color:#bbb> </span>Reconcile<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>k8s-app</span>:<span style=color:#bbb> </span>konnectivity-agent<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>namespace</span>:<span style=color:#bbb> </span>kube-system<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>konnectivity-agent<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>selector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>matchLabels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>k8s-app</span>:<span style=color:#bbb> </span>konnectivity-agent<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>template</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>k8s-app</span>:<span style=color:#bbb> </span>konnectivity-agent<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>priorityClassName</span>:<span style=color:#bbb> </span>system-cluster-critical<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>tolerations</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span>- <span style=color:green;font-weight:700>key</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;CriticalAddonsOnly&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>operator</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;Exists&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span>- <span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>us.gcr.io/k8s-artifacts-prod/kas-network-proxy/proxy-agent:v0.0.16<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>konnectivity-agent<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>command</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;/proxy-agent&#34;</span>]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>args</span>:<span style=color:#bbb> </span>[<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>                  </span><span style=color:#b44>&#34;--logtostderr=true&#34;</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>                  </span><span style=color:#b44>&#34;--ca-cert=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt&#34;</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>                  </span><span style=color:#080;font-style:italic># konnectivity 서버는 hostNetwork=true로 실행되기 때문에,</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>                  </span><span style=color:#080;font-style:italic># 이것은 마스터 머신의 IP 주소이다.</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>                  </span><span style=color:#b44>&#34;--proxy-server-host=35.225.206.7&#34;</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>                  </span><span style=color:#b44>&#34;--proxy-server-port=8132&#34;</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>                  </span><span style=color:#b44>&#34;--admin-server-port=8133&#34;</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>                  </span><span style=color:#b44>&#34;--health-server-port=8134&#34;</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>                  </span><span style=color:#b44>&#34;--service-account-token-path=/var/run/secrets/tokens/konnectivity-agent-token&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>                  </span>]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>volumeMounts</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span>- <span style=color:green;font-weight:700>mountPath</span>:<span style=color:#bbb> </span>/var/run/secrets/tokens<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>              </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>konnectivity-agent-token<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>livenessProbe</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>httpGet</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>              </span><span style=color:green;font-weight:700>port</span>:<span style=color:#bbb> </span><span style=color:#666>8134</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>              </span><span style=color:green;font-weight:700>path</span>:<span style=color:#bbb> </span>/healthz<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>initialDelaySeconds</span>:<span style=color:#bbb> </span><span style=color:#666>15</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>timeoutSeconds</span>:<span style=color:#bbb> </span><span style=color:#666>15</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>serviceAccountName</span>:<span style=color:#bbb> </span>konnectivity-agent<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>volumes</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>konnectivity-agent-token<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>projected</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>sources</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>              </span>- <span style=color:green;font-weight:700>serviceAccountToken</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>                  </span><span style=color:green;font-weight:700>path</span>:<span style=color:#bbb> </span>konnectivity-agent-token<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>                  </span><span style=color:green;font-weight:700>audience</span>:<span style=color:#bbb> </span>system:konnectivity-server<span style=color:#bbb>
+</span></span></span></code></pre></div></div></div><p>마지막으로 클러스터에서 RBAC가 활성화된 경우 관련 RBAC 규칙을 생성한다.</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/ko/examples/admin/konnectivity/konnectivity-rbac.yaml download=admin/konnectivity/konnectivity-rbac.yaml><code>admin/konnectivity/konnectivity-rbac.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("admin-konnectivity-konnectivity-rbac-yaml")' title="Copy admin/konnectivity/konnectivity-rbac.yaml to clipboard"></img></div><div class=includecode id=admin-konnectivity-konnectivity-rbac-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>rbac.authorization.k8s.io/v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>ClusterRoleBinding<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>system:konnectivity-server<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>kubernetes.io/cluster-service</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;true&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>addonmanager.kubernetes.io/mode</span>:<span style=color:#bbb> </span>Reconcile<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>roleRef</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>apiGroup</span>:<span style=color:#bbb> </span>rbac.authorization.k8s.io<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>ClusterRole<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>system:auth-delegator<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>subjects</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>apiGroup</span>:<span style=color:#bbb> </span>rbac.authorization.k8s.io<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>User<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>system:konnectivity-server<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#00f;font-weight:700>---</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>ServiceAccount<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>konnectivity-agent<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>namespace</span>:<span style=color:#bbb> </span>kube-system<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>kubernetes.io/cluster-service</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;true&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>addonmanager.kubernetes.io/mode</span>:<span style=color:#bbb> </span>Reconcile<span style=color:#bbb>
+</span></span></span></code></pre></div></div></div></div></main></div></div><footer class=d-print-none><div class=footer__links><nav><a class=text-white href=/ko/docs/home/>홈</a>
+<a class=text-white href=/ko/blog/>블로그</a>
+<a class=text-white href=/ko/training/>교육</a>
+<a class=text-white href=/ko/partners/>파트너</a>
+<a class=text-white href=/ko/community/>Community</a>
+<a class=text-white href=/ko/case-studies/>사례 연구</a></nav></div><div class=container-fluid><div class=row><div class="col-6 col-sm-2 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="User mailing list" aria-label="User mailing list"><a class=text-white target=_blank href=https://discuss.kubernetes.io><i class="fa fa-envelope"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank href=https://twitter.com/kubernetesio><i class="fab fa-twitter"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Calendar aria-label=Calendar><a class=text-white target=_blank href="https://calendar.google.com/calendar/embed?src=calendar%40kubernetes.io"><i class="fas fa-calendar-alt"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Youtube aria-label=Youtube><a class=text-white target=_blank href=https://youtube.com/kubernetescommunity><i class="fab fa-youtube"></i></a></li></ul></div><div class="col-6 col-sm-2 text-right text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank href=https://github.com/kubernetes/kubernetes><i class="fab fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Slack aria-label=Slack><a class=text-white target=_blank href=https://slack.k8s.io><i class="fab fa-slack"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Contribute aria-label=Contribute><a class=text-white target=_blank href=https://git.k8s.io/community/contributors/guide><i class="fas fa-edit"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="Stack Overflow" aria-label="Stack Overflow"><a class=text-white target=_blank href=https://stackoverflow.com/questions/tagged/kubernetes><i class="fab fa-stack-overflow"></i></a></li></ul></div><div class="col-12 col-sm-8 text-center order-sm-2"><small class=text-white>&copy; 2023 The Kubernetes Authors | Documentation Distributed under <a href=https://git.k8s.io/website/LICENSE class=light-text>CC BY 4.0</a></small><br><small class=text-white>Copyright &copy; 2023 The Linux Foundation &reg;. All rights reserved. The Linux Foundation has registered trademarks and uses trademarks. For a list of trademarks of The Linux Foundation, please see our <a href=https://www.linuxfoundation.org/trademark-usage class=light-text>Trademark Usage page</a></small><br><small class=text-white>ICP license: 京ICP备17074266号-3</small></div></div></div></footer></div><script src=/js/jquery-3.6.0.min.js integrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script>
+<script src=/js/popper-1.16.1.min.js intregrity=sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN crossorigin=anonymous></script>
+<script src=/js/bootstrap-4.6.1.min.js integrity=sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2 crossorigin=anonymous></script>
+<script src=/js/script.js></script>
+<script async src=/js/mermaid-8.13.4.min.js integrity=sha384-5hHNvPeMrNH14oM3IcQofDoBhiclNK3g2+hnEinKzQ07C4AliMeVpnvxuiwEGpaO crossorigin=anonymous></script>
+<script src=/js/main.min.5c0bf7f21dc4f66485f74efbbeeff28a7e4f8cddaac1bae47043159c922ff3a3.js integrity="sha256-XAv38h3E9mSF9077vu/yin5PjN2qwbrkcEMVnJIv86M=" crossorigin=anonymous></script></body></html>

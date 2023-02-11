@@ -1,0 +1,100 @@
+<!doctype html><html lang=ja class=no-js><head><meta name=robots content="noindex, nofollow"><link rel=alternate hreflang=en href=https://kubernetes.io/docs/reference/using-api/><link rel=alternate hreflang=zh-cn href=https://kubernetes.io/zh-cn/docs/reference/using-api/><link rel=alternate hreflang=ko href=https://kubernetes.io/ko/docs/reference/using-api/><link rel=alternate hreflang=fr href=https://kubernetes.io/fr/docs/reference/using-api/><link rel=alternate hreflang=de href=https://kubernetes.io/de/docs/reference/using-api/><link rel=alternate hreflang=es href=https://kubernetes.io/es/docs/reference/using-api/><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.110.0"><link rel=canonical type=text/html href=https://kubernetes.io/ja/docs/reference/using-api/><link rel="shortcut icon" type=image/png href=/images/favicon.png><link rel=apple-touch-icon href=/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=manifest href=/manifest.webmanifest><link rel=apple-touch-icon href=/images/kubernetes-192x192.png><title>API概要 | Kubernetes</title><meta property="og:title" content="API概要"><meta property="og:description" content="プロダクショングレードのコンテナ管理基盤"><meta property="og:type" content="website"><meta property="og:url" content="https://kubernetes.io/ja/docs/reference/using-api/"><meta property="og:site_name" content="Kubernetes"><meta itemprop=name content="API概要"><meta itemprop=description content="プロダクショングレードのコンテナ管理基盤"><meta name=twitter:card content="summary"><meta name=twitter:title content="API概要"><meta name=twitter:description content="プロダクショングレードのコンテナ管理基盤"><link href=/scss/main.css rel=stylesheet><script type=application/ld+json>{"@context":"https://schema.org","@type":"Organization","url":"https://kubernetes.io","logo":"https://kubernetes.io/images/favicon.png","potentialAction":{"@type":"SearchAction","target":"https://kubernetes.io/search/?q={search_term_string}","query-input":"required name=search_term_string"}}</script><meta name=theme-color content="#326ce5"><link rel=stylesheet href=/css/feature-states.css><meta name=description content="このセクションでは、Kubernetes APIのリファレンス情報を提供します。
+REST APIはKubernetesの基本的な構造です。 すべての操作とコンポーネント間のと通信、および外部ユーザーのコマンドは、REST API呼び出しでありAPIサーバーが処理します。
+その結果、Kubernetesプラットフォーム内のすべてのものは、APIオブジェクトとして扱われ、APIに対応するエントリーがあります。
+Kubernetes APIリファレンスは、Kubernetesバージョンv1.25のAPI一覧を提供します。
+一般的な背景情報を知るには、The Kubernetes API、 Controlling Access to the Kubernetes APIを読んでください。 それらはKubernetes APIサーバーがクライアントを認証する方法とリクエストを認可する方法を説明します。
+APIバージョニング JSONとProtobufなどのシリアル化スキーマの変更については同じガイドラインに従います。 以下の説明は、両方のフォーマットをカバーしています。
+APIのバージョニングとソフトウェアのバージョニングは間接的に関係しています。 API and release versioning proposalは、APIバージョニングとソフトウェアバージョニングの関係を説明しています。
+APIのバージョンが異なると、安定性やサポートのレベルも異なります。 各レベルの基準については、API Changes documentationで詳しく説明しています。
+各レベルの概要は以下の通りです:
+Alpha:
+バージョン名に「alpha」が含まれています（例：「v1alpha1」）。 バグが含まれている可能性があります。 機能を有効にするとバグが露呈する可能性があります。 機能がデフォルトで無効になっている可能性があります。 ある機能のサポートは、予告なしにいつでも中止される可能性があります。 後にリリースされるソフトウェアで、互換性のない方法で予告なく変更される可能性があります。 バグのリスクが高く、長期的なサポートが得られないため、短期間のテストクラスターのみでの使用を推奨します。 Beta:
+バージョン名には beta が含まれています(例：v2beta3)。
+ソフトウェアは十分にテストされています。 機能を有効にすることは安全であると考えられています。 機能はデフォルトで有効になっています。
+機能のサポートが打ち切られることはありませんが、詳細は変更される可能性があります。
+オブジェクトのスキーマやセマンティクスは、その後のベータ版や安定版のリリースで互換性のない方法で変更される可能性があります。 このような場合には、移行手順が提供されます。 スキーマの変更に伴い、APIオブジェクトの削除、編集、再作成が必要になる場合があります。 編集作業は単純ではないかもしれません。 移行に伴い、その機能に依存しているアプリケーションのダウンタイムが必要になる場合があります。
+本番環境での使用は推奨しません。 後続のリリース は、互換性のない変更を導入する可能性があります。 独立してアップグレード可能な複数のクラスターがある場合、この制限を緩和できる可能性があります。
+備考: ベータ版の機能をお試しいただき、ご意見をお寄せください。 ベータ版の機能が終了した後はこれ以上の変更ができない場合があります。 Stable:
+バージョン名は vX であり、X は整数である。 安定版の機能は、リリースされたソフトウェアの中で、その後の多くのバージョンに登場します。 APIグループ API groupsで、KubernetesのAPIを簡単に拡張することができます。 APIグループは、RESTパスとシリアル化されたオブジェクトのapiVersionフィールドで指定されます。"><meta property="og:description" content="このセクションでは、Kubernetes APIのリファレンス情報を提供します。
+REST APIはKubernetesの基本的な構造です。 すべての操作とコンポーネント間のと通信、および外部ユーザーのコマンドは、REST API呼び出しでありAPIサーバーが処理します。
+その結果、Kubernetesプラットフォーム内のすべてのものは、APIオブジェクトとして扱われ、APIに対応するエントリーがあります。
+Kubernetes APIリファレンスは、Kubernetesバージョンv1.25のAPI一覧を提供します。
+一般的な背景情報を知るには、The Kubernetes API、 Controlling Access to the Kubernetes APIを読んでください。 それらはKubernetes APIサーバーがクライアントを認証する方法とリクエストを認可する方法を説明します。
+APIバージョニング JSONとProtobufなどのシリアル化スキーマの変更については同じガイドラインに従います。 以下の説明は、両方のフォーマットをカバーしています。
+APIのバージョニングとソフトウェアのバージョニングは間接的に関係しています。 API and release versioning proposalは、APIバージョニングとソフトウェアバージョニングの関係を説明しています。
+APIのバージョンが異なると、安定性やサポートのレベルも異なります。 各レベルの基準については、API Changes documentationで詳しく説明しています。
+各レベルの概要は以下の通りです:
+Alpha:
+バージョン名に「alpha」が含まれています（例：「v1alpha1」）。 バグが含まれている可能性があります。 機能を有効にするとバグが露呈する可能性があります。 機能がデフォルトで無効になっている可能性があります。 ある機能のサポートは、予告なしにいつでも中止される可能性があります。 後にリリースされるソフトウェアで、互換性のない方法で予告なく変更される可能性があります。 バグのリスクが高く、長期的なサポートが得られないため、短期間のテストクラスターのみでの使用を推奨します。 Beta:
+バージョン名には beta が含まれています(例：v2beta3)。
+ソフトウェアは十分にテストされています。 機能を有効にすることは安全であると考えられています。 機能はデフォルトで有効になっています。
+機能のサポートが打ち切られることはありませんが、詳細は変更される可能性があります。
+オブジェクトのスキーマやセマンティクスは、その後のベータ版や安定版のリリースで互換性のない方法で変更される可能性があります。 このような場合には、移行手順が提供されます。 スキーマの変更に伴い、APIオブジェクトの削除、編集、再作成が必要になる場合があります。 編集作業は単純ではないかもしれません。 移行に伴い、その機能に依存しているアプリケーションのダウンタイムが必要になる場合があります。
+本番環境での使用は推奨しません。 後続のリリース は、互換性のない変更を導入する可能性があります。 独立してアップグレード可能な複数のクラスターがある場合、この制限を緩和できる可能性があります。
+備考: ベータ版の機能をお試しいただき、ご意見をお寄せください。 ベータ版の機能が終了した後はこれ以上の変更ができない場合があります。 Stable:
+バージョン名は vX であり、X は整数である。 安定版の機能は、リリースされたソフトウェアの中で、その後の多くのバージョンに登場します。 APIグループ API groupsで、KubernetesのAPIを簡単に拡張することができます。 APIグループは、RESTパスとシリアル化されたオブジェクトのapiVersionフィールドで指定されます。"><meta name=twitter:description content="このセクションでは、Kubernetes APIのリファレンス情報を提供します。
+REST APIはKubernetesの基本的な構造です。 すべての操作とコンポーネント間のと通信、および外部ユーザーのコマンドは、REST API呼び出しでありAPIサーバーが処理します。
+その結果、Kubernetesプラットフォーム内のすべてのものは、APIオブジェクトとして扱われ、APIに対応するエントリーがあります。
+Kubernetes APIリファレンスは、Kubernetesバージョンv1.25のAPI一覧を提供します。
+一般的な背景情報を知るには、The Kubernetes API、 Controlling Access to the Kubernetes APIを読んでください。 それらはKubernetes APIサーバーがクライアントを認証する方法とリクエストを認可する方法を説明します。
+APIバージョニング JSONとProtobufなどのシリアル化スキーマの変更については同じガイドラインに従います。 以下の説明は、両方のフォーマットをカバーしています。
+APIのバージョニングとソフトウェアのバージョニングは間接的に関係しています。 API and release versioning proposalは、APIバージョニングとソフトウェアバージョニングの関係を説明しています。
+APIのバージョンが異なると、安定性やサポートのレベルも異なります。 各レベルの基準については、API Changes documentationで詳しく説明しています。
+各レベルの概要は以下の通りです:
+Alpha:
+バージョン名に「alpha」が含まれています（例：「v1alpha1」）。 バグが含まれている可能性があります。 機能を有効にするとバグが露呈する可能性があります。 機能がデフォルトで無効になっている可能性があります。 ある機能のサポートは、予告なしにいつでも中止される可能性があります。 後にリリースされるソフトウェアで、互換性のない方法で予告なく変更される可能性があります。 バグのリスクが高く、長期的なサポートが得られないため、短期間のテストクラスターのみでの使用を推奨します。 Beta:
+バージョン名には beta が含まれています(例：v2beta3)。
+ソフトウェアは十分にテストされています。 機能を有効にすることは安全であると考えられています。 機能はデフォルトで有効になっています。
+機能のサポートが打ち切られることはありませんが、詳細は変更される可能性があります。
+オブジェクトのスキーマやセマンティクスは、その後のベータ版や安定版のリリースで互換性のない方法で変更される可能性があります。 このような場合には、移行手順が提供されます。 スキーマの変更に伴い、APIオブジェクトの削除、編集、再作成が必要になる場合があります。 編集作業は単純ではないかもしれません。 移行に伴い、その機能に依存しているアプリケーションのダウンタイムが必要になる場合があります。
+本番環境での使用は推奨しません。 後続のリリース は、互換性のない変更を導入する可能性があります。 独立してアップグレード可能な複数のクラスターがある場合、この制限を緩和できる可能性があります。
+備考: ベータ版の機能をお試しいただき、ご意見をお寄せください。 ベータ版の機能が終了した後はこれ以上の変更ができない場合があります。 Stable:
+バージョン名は vX であり、X は整数である。 安定版の機能は、リリースされたソフトウェアの中で、その後の多くのバージョンに登場します。 APIグループ API groupsで、KubernetesのAPIを簡単に拡張することができます。 APIグループは、RESTパスとシリアル化されたオブジェクトのapiVersionフィールドで指定されます。"><meta property="og:url" content="https://kubernetes.io/ja/docs/reference/using-api/"><meta property="og:title" content="API概要"><meta name=twitter:title content="API概要"><meta name=twitter:image content="https://kubernetes.io/images/favicon.png"><meta name=twitter:image:alt content="Kubernetes"><meta property="og:image" content="/images/kubernetes-horizontal-color.png"><meta property="og:type" content="article"><script src=/js/jquery-3.6.0.min.js intregrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script></head><body class=td-section><header><nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar" data-auto-burger=primary><a class=navbar-brand href=/ja/></a><div class="td-navbar-nav-scroll ml-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0"><li class="nav-item mr-2 mb-lg-0"><a class="nav-link active" href=/ja/docs/>ドキュメント</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ja/blog/>Blogs</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ja/training/>トレーニング</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ja/partners/>パートナー</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ja/community/>コミュニティ</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ja/case-studies/>ケーススタディ</a></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>バージョン</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/ja/releases>Release Information</a>
+<a class=dropdown-item href=https://kubernetes.io/ja/docs/reference/using-api/>v1.25</a>
+<a class=dropdown-item href=https://v1-24.docs.kubernetes.io/ja/docs/reference/using-api/>v1.24</a>
+<a class=dropdown-item href=https://v1-23.docs.kubernetes.io/ja/docs/reference/using-api/>v1.23</a>
+<a class=dropdown-item href=https://v1-22.docs.kubernetes.io/ja/docs/reference/using-api/>v1.22</a>
+<a class=dropdown-item href=https://v1-21.docs.kubernetes.io/ja/docs/reference/using-api/>v1.21</a></div></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdownMenuLink role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>日本語 (Japanese)</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/docs/reference/using-api/>English</a>
+<a class=dropdown-item href=/zh-cn/docs/reference/using-api/>中文 (Chinese)</a>
+<a class=dropdown-item href=/ko/docs/reference/using-api/>한국어 (Korean)</a>
+<a class=dropdown-item href=/fr/docs/reference/using-api/>Français (French)</a>
+<a class=dropdown-item href=/de/docs/reference/using-api/>Deutsch (German)</a>
+<a class=dropdown-item href=/es/docs/reference/using-api/>Español (Spanish)</a></div></li></ul></div><button id=hamburger onclick=kub.toggleMenu() data-auto-burger-exclude><div></div></button></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><div class=td-content><div class="pageinfo pageinfo-primary d-print-none"><p>これは、このセクションの複数ページの印刷可能なビューです。
+<a href=# onclick="return print(),!1">印刷するには、ここをクリックしてください</a>.</p><p><a href=/ja/docs/reference/using-api/>このページの通常のビューに戻る</a>.</p></div><h1 class=title>API概要</h1><ul></ul><div class=content><p>このセクションでは、Kubernetes APIのリファレンス情報を提供します。</p><p>REST APIはKubernetesの基本的な構造です。
+すべての操作とコンポーネント間のと通信、および外部ユーザーのコマンドは、REST API呼び出しでありAPIサーバーが処理します。</p><p>その結果、Kubernetesプラットフォーム内のすべてのものは、APIオブジェクトとして扱われ、<a href=/docs/reference/generated/kubernetes-api/v1.25/>API</a>に対応するエントリーがあります。</p><p><a href=/docs/reference/generated/kubernetes-api/v1.25/>Kubernetes APIリファレンス</a>は、Kubernetesバージョンv1.25のAPI一覧を提供します。</p><p>一般的な背景情報を知るには、<a href=/docs/concepts/overview/kubernetes-api/>The Kubernetes API</a>、
+<a href=/docs/concepts/security/controlling-access/>Controlling Access to the Kubernetes API</a>を読んでください。
+それらはKubernetes APIサーバーがクライアントを認証する方法とリクエストを認可する方法を説明します。</p><h2 id=apiバージョニング>APIバージョニング</h2><p>JSONとProtobufなどのシリアル化スキーマの変更については同じガイドラインに従います。
+以下の説明は、両方のフォーマットをカバーしています。</p><p>APIのバージョニングとソフトウェアのバージョニングは間接的に関係しています。
+<a href=https://git.k8s.io/sig-release/release-engineering/versioning.md>API and release versioning proposal</a>は、APIバージョニングとソフトウェアバージョニングの関係を説明しています。</p><p>APIのバージョンが異なると、安定性やサポートのレベルも異なります。
+各レベルの基準については、<a href=https://git.k8s.io/community/contributors/devel/sig-architecture/api_changes.md#alpha-beta-and-stable-versions>API Changes documentation</a>で詳しく説明しています。</p><p>各レベルの概要は以下の通りです:</p><ul><li><p>Alpha:</p><ul><li>バージョン名に「alpha」が含まれています（例：「v1alpha1」）。</li><li>バグが含まれている可能性があります。
+機能を有効にするとバグが露呈する可能性があります。
+機能がデフォルトで無効になっている可能性があります。</li><li>ある機能のサポートは、予告なしにいつでも中止される可能性があります。</li><li>後にリリースされるソフトウェアで、互換性のない方法で予告なく変更される可能性があります。</li><li>バグのリスクが高く、長期的なサポートが得られないため、短期間のテストクラスターのみでの使用を推奨します。</li></ul></li><li><p>Beta:</p><ul><li><p>バージョン名には <code>beta</code> が含まれています(例：<code>v2beta3</code>)。</p></li><li><p>ソフトウェアは十分にテストされています。
+機能を有効にすることは安全であると考えられています。
+機能はデフォルトで有効になっています。</p></li><li><p>機能のサポートが打ち切られることはありませんが、詳細は変更される可能性があります。</p></li><li><p>オブジェクトのスキーマやセマンティクスは、その後のベータ版や安定版のリリースで互換性のない方法で変更される可能性があります。
+このような場合には、移行手順が提供されます。
+スキーマの変更に伴い、APIオブジェクトの削除、編集、再作成が必要になる場合があります。
+編集作業は単純ではないかもしれません。
+移行に伴い、その機能に依存しているアプリケーションのダウンタイムが必要になる場合があります。</p></li><li><p>本番環境での使用は推奨しません。
+後続のリリース は、互換性のない変更を導入する可能性があります。
+独立してアップグレード可能な複数のクラスターがある場合、この制限を緩和できる可能性があります。</p></li></ul><div class="alert alert-info note callout" role=alert><strong>備考:</strong> ベータ版の機能をお試しいただき、ご意見をお寄せください。
+ベータ版の機能が終了した後はこれ以上の変更ができない場合があります。</div></li><li><p>Stable:</p><ul><li>バージョン名は <code>vX</code> であり、<code>X</code> は整数である。</li><li>安定版の機能は、リリースされたソフトウェアの中で、その後の多くのバージョンに登場します。</li></ul></li></ul><h2 id=apiグループ>APIグループ</h2><p><a href=https://git.k8s.io/community/contributors/design-proposals/api-machinery/api-group.md>API groups</a>で、KubernetesのAPIを簡単に拡張することができます。
+APIグループは、RESTパスとシリアル化されたオブジェクトの<code>apiVersion</code>フィールドで指定されます。</p><p>KubernetesにはいくつかのAPIグループがあります:</p><ul><li><em>core</em>(<em>legacy</em>とも呼ばれる)グループは、RESTパス <code>/api/v1</code> にあります。
+コアグループは <code>apiVersion</code> フィールドの一部としては指定されません。
+例えば、<code>apiVersion: v1</code> のように。</li><li>名前付きのグループは、RESTパス <code>/apis/$GROUP_NAME/$VERSION</code> にあり、以下のように使用します。
+<code>apiVersion: $GROUP_NAME/$VERSION</code>を使用します(例：<code>apiVersion: batch/v1</code>)。
+サポートされているAPIグループの完全なリストは以下にあります。
+<a href=/docs/reference/generated/kubernetes-api/v1.25/#strong-api-groups-strong->Kubernetes API reference</a>。</li></ul><h2 id=enabling-or-disabling>APIグループの有効化と無効化</h2><p>一部のリソースやAPIグループはデフォルトで有効になっています。
+APIサーバー上で<code>--runtime-config</code>を設定することで、有効にしたり無効にしたりすることができます。
+また<code>runtime-config</code>フラグには、APIサーバーのランタイム構成を記述したコンマ区切りの<code>&lt;key>[=&lt;value>]</code>ペアを指定します。
+もし<code>=&lt;value></code>の部分が省略された場合には、<code>=true</code>が指定されたものとして扱われます。</p><p>例えば:</p><ul><li><code>batch/v1</code>を無効するには、<code>--runtime-config=batch/v1=false</code>を設定する</li><li><code>batch/v2alpha1</code>を有効するには、<code>--runtime-config=batch/v2alpha1</code>を設定する</li></ul><div class="alert alert-info note callout" role=alert><strong>備考:</strong> グループやリソースを有効または無効にした場合、
+APIサーバーとコントローラマネージャーを再起動して、<code>--runtime-config</code>の変更を反映させる必要があります。</div><h2 id=永続化>永続化</h2><p>Kubernetesはシリアライズされた状態を、APIリソースとして<a class=glossary-tooltip title=一貫性、高可用性を持ったキーバリューストアで、Kubernetesの全てのクラスター情報の保存場所として利用されています。 data-toggle=tooltip data-placement=top href=/docs/tasks/administer-cluster/configure-upgrade-etcd/ target=_blank aria-label=etcd>etcd</a>に書き込んで保存します。</p><h2 id=次の項目>次の項目</h2><ul><li><a href=https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#api-conventions>API conventions</a>をもっと知る</li><li><a href=https://github.com/kubernetes/community/blob/master/contributors/design-proposals/api-machinery/aggregated-api-servers.md>aggregator</a>の設計ドキュメントを読む</li></ul></div></div></main></div></div><footer class=d-print-none><div class=footer__links><nav><a class=text-white href=/ja/docs/home/>ホーム</a>
+<a class=text-white href=/ja/blog/>Blogs</a>
+<a class=text-white href=/ja/training/>トレーニング</a>
+<a class=text-white href=/ja/partners/>パートナー</a>
+<a class=text-white href=/ja/community/>コミュニティ</a>
+<a class=text-white href=/ja/case-studies/>ケーススタディ</a></nav></div><div class=container-fluid><div class=row><div class="col-6 col-sm-2 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="User mailing list" aria-label="User mailing list"><a class=text-white target=_blank href=https://discuss.kubernetes.io><i class="fa fa-envelope"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank href=https://twitter.com/kubernetesio><i class="fab fa-twitter"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Calendar aria-label=Calendar><a class=text-white target=_blank href="https://calendar.google.com/calendar/embed?src=calendar%40kubernetes.io"><i class="fas fa-calendar-alt"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Youtube aria-label=Youtube><a class=text-white target=_blank href=https://youtube.com/kubernetescommunity><i class="fab fa-youtube"></i></a></li></ul></div><div class="col-6 col-sm-2 text-right text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank href=https://github.com/kubernetes/kubernetes><i class="fab fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Slack aria-label=Slack><a class=text-white target=_blank href=https://slack.k8s.io><i class="fab fa-slack"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Contribute aria-label=Contribute><a class=text-white target=_blank href=https://git.k8s.io/community/contributors/guide><i class="fas fa-edit"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="Stack Overflow" aria-label="Stack Overflow"><a class=text-white target=_blank href=https://stackoverflow.com/questions/tagged/kubernetes><i class="fab fa-stack-overflow"></i></a></li></ul></div><div class="col-12 col-sm-8 text-center order-sm-2"><small class=text-white>&copy; 2023 The Kubernetes Authors | Documentation Distributed under <a href=https://git.k8s.io/website/LICENSE class=light-text>CC BY 4.0</a></small><br><small class=text-white>Copyright &copy; 2023 The Linux Foundation &reg;. All rights reserved. The Linux Foundation has registered trademarks and uses trademarks. For a list of trademarks of The Linux Foundation, please see our <a href=https://www.linuxfoundation.org/trademark-usage class=light-text>Trademark Usage page</a></small><br><small class=text-white>ICP license: 京ICP备17074266号-3</small></div></div></div></footer></div><script src=/js/jquery-3.6.0.min.js integrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script>
+<script src=/js/popper-1.16.1.min.js intregrity=sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN crossorigin=anonymous></script>
+<script src=/js/bootstrap-4.6.1.min.js integrity=sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2 crossorigin=anonymous></script>
+<script src=/js/script.js></script>
+<script async src=/js/mermaid-8.13.4.min.js integrity=sha384-5hHNvPeMrNH14oM3IcQofDoBhiclNK3g2+hnEinKzQ07C4AliMeVpnvxuiwEGpaO crossorigin=anonymous></script>
+<script src=/js/main.min.5c0bf7f21dc4f66485f74efbbeeff28a7e4f8cddaac1bae47043159c922ff3a3.js integrity="sha256-XAv38h3E9mSF9077vu/yin5PjN2qwbrkcEMVnJIv86M=" crossorigin=anonymous></script></body></html>

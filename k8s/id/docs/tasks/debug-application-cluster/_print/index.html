@@ -1,0 +1,389 @@
+<!doctype html><html lang=id class=no-js><head><meta name=robots content="noindex, nofollow"><link rel=alternate hreflang=fr href=https://kubernetes.io/fr/docs/tasks/debug-application-cluster/><link rel=alternate hreflang=de href=https://kubernetes.io/de/docs/tasks/debug-application-cluster/><link rel=alternate hreflang=es href=https://kubernetes.io/es/docs/tasks/debug-application-cluster/><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.110.0"><link rel=canonical type=text/html href=https://kubernetes.io/id/docs/tasks/debug-application-cluster/><link rel="shortcut icon" type=image/png href=/images/favicon.png><link rel=apple-touch-icon href=/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=manifest href=/manifest.webmanifest><link rel=apple-touch-icon href=/images/kubernetes-192x192.png><title>Pemantauan, Pencatatan, and Debugging | Kubernetes</title><meta property="og:title" content="Pemantauan, Pencatatan, and Debugging"><meta property="og:description" content="Mengatur pemantauan dan pencatatan untuk memecahkan masalah klaster, atau men-_debug_ aplikasi yang terkontainerisasi."><meta property="og:type" content="website"><meta property="og:url" content="https://kubernetes.io/id/docs/tasks/debug-application-cluster/"><meta property="og:site_name" content="Kubernetes"><meta itemprop=name content="Pemantauan, Pencatatan, and Debugging"><meta itemprop=description content="Mengatur pemantauan dan pencatatan untuk memecahkan masalah klaster, atau men-_debug_ aplikasi yang terkontainerisasi."><meta name=twitter:card content="summary"><meta name=twitter:title content="Pemantauan, Pencatatan, and Debugging"><meta name=twitter:description content="Mengatur pemantauan dan pencatatan untuk memecahkan masalah klaster, atau men-_debug_ aplikasi yang terkontainerisasi."><link href=/scss/main.css rel=stylesheet><script type=application/ld+json>{"@context":"https://schema.org","@type":"Organization","url":"https://kubernetes.io","logo":"https://kubernetes.io/images/favicon.png","potentialAction":{"@type":"SearchAction","target":"https://kubernetes.io/search/?q={search_term_string}","query-input":"required name=search_term_string"}}</script><meta name=theme-color content="#326ce5"><link rel=stylesheet href=/css/feature-states.css><meta name=description content="Mengatur pemantauan dan pencatatan untuk memecahkan masalah klaster, atau men-_debug_ aplikasi yang terkontainerisasi."><meta property="og:description" content="Mengatur pemantauan dan pencatatan untuk memecahkan masalah klaster, atau men-_debug_ aplikasi yang terkontainerisasi."><meta name=twitter:description content="Mengatur pemantauan dan pencatatan untuk memecahkan masalah klaster, atau men-_debug_ aplikasi yang terkontainerisasi."><meta property="og:url" content="https://kubernetes.io/id/docs/tasks/debug-application-cluster/"><meta property="og:title" content="Pemantauan, Pencatatan, and Debugging"><meta name=twitter:title content="Pemantauan, Pencatatan, and Debugging"><meta name=twitter:image content="https://kubernetes.io/images/favicon.png"><meta name=twitter:image:alt content="Kubernetes"><meta property="og:image" content="/images/kubernetes-horizontal-color.png"><meta property="og:type" content="article"><script src=/js/jquery-3.6.0.min.js intregrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script></head><body class=td-section><header><nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar" data-auto-burger=primary><a class=navbar-brand href=/id/></a><div class="td-navbar-nav-scroll ml-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0"><li class="nav-item mr-2 mb-lg-0"><a class="nav-link active" href=/id/docs/>Dokumentasi</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/id/community/>Komunitas</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/id/case-studies/>Studi kasus</a></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>Versi</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/id/releases>Release Information</a>
+<a class=dropdown-item href=https://kubernetes.io/id/docs/tasks/debug-application-cluster/>v1.25</a>
+<a class=dropdown-item href=https://v1-24.docs.kubernetes.io/id/docs/tasks/debug-application-cluster/>v1.24</a>
+<a class=dropdown-item href=https://v1-23.docs.kubernetes.io/id/docs/tasks/debug-application-cluster/>v1.23</a>
+<a class=dropdown-item href=https://v1-22.docs.kubernetes.io/id/docs/tasks/debug-application-cluster/>v1.22</a>
+<a class=dropdown-item href=https://v1-21.docs.kubernetes.io/id/docs/tasks/debug-application-cluster/>v1.21</a></div></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdownMenuLink role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>Bahasa Indonesia</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/fr/docs/tasks/debug-application-cluster/>Français (French)</a>
+<a class=dropdown-item href=/de/docs/tasks/debug-application-cluster/>Deutsch (German)</a>
+<a class=dropdown-item href=/es/docs/tasks/debug-application-cluster/>Español (Spanish)</a></div></li></ul></div><button id=hamburger onclick=kub.toggleMenu() data-auto-burger-exclude><div></div></button></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><div class=td-content><div class="pageinfo pageinfo-primary d-print-none"><p>This is the multi-page printable view of this section.
+<a href=# onclick="return print(),!1">Click here to print</a>.</p><p><a href=/id/docs/tasks/debug-application-cluster/>Return to the regular view of this page</a>.</p></div><h1 class=title>Pemantauan, Pencatatan, and Debugging</h1><div class=lead>Mengatur pemantauan dan pencatatan untuk memecahkan masalah klaster, atau men-<em>debug</em> aplikasi yang terkontainerisasi.</div><ul><li>1: <a href=#pg-731bb8b338c16aebfb9590ba2bd3fdd1>Introspeksi dan _Debugging_ Aplikasi</a></li><li>2: <a href=#pg-9713ac27b6d9e3034033200d968221f2>Mendapatkan Shell Untuk Masuk ke Container yang Sedang Berjalan</a></li><li>3: <a href=#pg-9e6e1b706f11386fe2c4b4ffda1409e4>Perangkat untuk Memantau Sumber Daya</a></li></ul><div class=content></div></div><div class=td-content><h1 id=pg-731bb8b338c16aebfb9590ba2bd3fdd1>1 - Introspeksi dan _Debugging_ Aplikasi</h1><p>Setelah aplikasi kamu berjalan, kamu pasti perlu untuk men-<em>debug</em> masalah yang ada di dalamnya.
+Sebelumnya telah dijelaskan bagaimana kamu dapat menggunakan <code>kubectl get pods</code> untuk mengambil informasi status sederhana tentang
+Pod kamu. Namun ada sejumlah cara untuk mendapatkan lebih banyak informasi tentang aplikasi kamu.</p><h2 id=menggunakan-kubectl-describe-pod-untuk-mengambil-detil-informasi-pod>Menggunakan <code>kubectl describe pod</code> untuk mengambil detil informasi Pod</h2><p>Dalam contoh ini, kamu menggunakan Deployment untuk membuat dua buah Pod, yang hampir sama dengan contoh sebelumnya.</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/id/examples/application/nginx-with-request.yaml download=application/nginx-with-request.yaml><code>application/nginx-with-request.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("application-nginx-with-request-yaml")' title="Copy application/nginx-with-request.yaml to clipboard"></img></div><div class=includecode id=application-nginx-with-request-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>apps/v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Deployment<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>nginx-deployment<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>selector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>matchLabels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>app</span>:<span style=color:#bbb> </span>nginx<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>replicas</span>:<span style=color:#bbb> </span><span style=color:#666>2</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>template</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>app</span>:<span style=color:#bbb> </span>nginx<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>nginx<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>nginx<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>resources</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>limits</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>memory</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;128Mi&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>cpu</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;500m&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>ports</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span>- <span style=color:green;font-weight:700>containerPort</span>:<span style=color:#bbb> </span><span style=color:#666>80</span><span style=color:#bbb>
+</span></span></span></code></pre></div></div></div><p>Buat Deployment dengan menjalankan perintah ini:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -f https://k8s.io/examples/application/nginx-with-request.yaml
+</span></span></code></pre></div><pre tabindex=0><code class=language-none data-lang=none>deployment.apps/nginx-deployment created
+</code></pre><p>Cek status dari Pod dengan menggunakan perintah:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pods
+</span></span></code></pre></div><pre tabindex=0><code class=language-none data-lang=none>NAME                                READY     STATUS    RESTARTS   AGE
+nginx-deployment-1006230814-6winp   1/1       Running   0          11s
+nginx-deployment-1006230814-fmgu3   1/1       Running   0          11s
+</code></pre><p>Kamu dapat memperoleh lebih banyak informasi tentang masing-masing Pod ini dengan menggunakan perintah <code>kubectl describe pod</code>. Sebagai contoh:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl describe pod nginx-deployment-1006230814-6winp
+</span></span></code></pre></div><pre tabindex=0><code class=language-none data-lang=none>Name:		nginx-deployment-1006230814-6winp
+Namespace:	default
+Node:		kubernetes-node-wul5/10.240.0.9
+Start Time:	Thu, 24 Mar 2016 01:39:49 +0000
+Labels:		app=nginx,pod-template-hash=1006230814
+Annotations:    kubernetes.io/created-by={&#34;kind&#34;:&#34;SerializedReference&#34;,&#34;apiVersion&#34;:&#34;v1&#34;,&#34;reference&#34;:{&#34;kind&#34;:&#34;ReplicaSet&#34;,&#34;namespace&#34;:&#34;default&#34;,&#34;name&#34;:&#34;nginx-deployment-1956810328&#34;,&#34;uid&#34;:&#34;14e607e7-8ba1-11e7-b5cb-fa16&#34; ...
+Status:		Running
+IP:		10.244.0.6
+Controllers:	ReplicaSet/nginx-deployment-1006230814
+Containers:
+  nginx:
+    Container ID:	docker://90315cc9f513c724e9957a4788d3e625a078de84750f244a40f97ae355eb1149
+    Image:		nginx
+    Image ID:		docker://6f62f48c4e55d700cf3eb1b5e33fa051802986b77b874cc351cce539e5163707
+    Port:		80/TCP
+    QoS Tier:
+      cpu:	Guaranteed
+      memory:	Guaranteed
+    Limits:
+      cpu:	500m
+      memory:	128Mi
+    Requests:
+      memory:		128Mi
+      cpu:		500m
+    State:		Running
+      Started:		Thu, 24 Mar 2016 01:39:51 +0000
+    Ready:		True
+    Restart Count:	0
+    Environment:        &lt;none&gt;
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-5kdvl (ro)
+Conditions:
+  Type          Status
+  Initialized   True
+  Ready         True
+  PodScheduled  True
+Volumes:
+  default-token-4bcbi:
+    Type:	Secret (a volume populated by a Secret)
+    SecretName:	default-token-4bcbi
+    Optional:   false
+QoS Class:      Guaranteed
+Node-Selectors: &lt;none&gt;
+Tolerations:    &lt;none&gt;
+Events:
+  FirstSeen	LastSeen	Count	From					SubobjectPath		Type		Reason		Message
+  ---------	--------	-----	----					-------------		--------	------		-------
+  54s		54s		1	{default-scheduler }						Normal		Scheduled	Successfully assigned nginx-deployment-1006230814-6winp to kubernetes-node-wul5
+  54s		54s		1	{kubelet kubernetes-node-wul5}	spec.containers{nginx}	Normal		Pulling		pulling image &#34;nginx&#34;
+  53s		53s		1	{kubelet kubernetes-node-wul5}	spec.containers{nginx}	Normal		Pulled		Successfully pulled image &#34;nginx&#34;
+  53s		53s		1	{kubelet kubernetes-node-wul5}	spec.containers{nginx}	Normal		Created		Created container with docker id 90315cc9f513
+  53s		53s		1	{kubelet kubernetes-node-wul5}	spec.containers{nginx}	Normal		Started		Started container with docker id 90315cc9f513
+</code></pre><p>Di sini kamu dapat melihat informasi konfigurasi tentang Container dan Pod (label, kebutuhan resource, dll.), serta informasi status tentang Container dan Pod (status, kesiapan, berapa kali <em>restart</em>, <em>event</em>, dll.) .</p><p>Keadaan (<em>state</em>) Container merupakan salah satu dari keadaan <em>Waiting, Running,</em> atau <em>Terminated</em>. Tergantung dari keadaannya, informasi tambahan akan diberikan - di sini kamu dapat melihat bahwa untuk Container dalam keadaan <em>running</em>, sistem memberi tahu kamu kapan Container tersebut mulai dijalankan.</p><p><em>Ready</em> memberi tahu kepada kamu apakah Container berhasil melewati pemeriksaan kesiapan terakhir. (Dalam kasus ini, Container tidak memiliki pemeriksaan kesiapan yang dikonfigurasi; Container dianggap selalu siap jika tidak ada pemeriksaan kesiapan yang dikonfigurasi.)</p><p>Jumlah <em>restart</em> memberi tahu kamu berapa kali Container telah dimulai ulang; informasi ini dapat berguna untuk mendeteksi kemacetan tertutup (<em>crash loop</em>) dalam Container yang dikonfigurasi dengan nilai <em>restart policy</em> 'always.'.</p><p>Saat ini, satu-satunya kondisi yang terkait dengan Pod adalah kondisi <em>Binary Ready</em>, yang menunjukkan bahwa Pod tersebut dapat melayani permintaan dan harus ditambahkan ke kumpulan penyeimbang beban (<em>load balancing</em>) dari semua Service yang sesuai.</p><p>Terakhir, kamu melihat catatan (<em>log</em>) peristiwa terbaru yang terkait dengan Pod kamu. Sistem mengompresi beberapa peristiwa yang identik dengan menunjukkan kapan pertama dan terakhir kali peristiwa itu dilihat dan berapa kali peristiwa itu dilihat. "From" menunjukkan komponen yang mencatat peristiwa, "SubobjectPath" memberi tahu kamu objek mana (mis. Container dalam pod) yang dimaksud, dan "Reason" dan "Message" memberi tahu kamu apa yang sudah terjadi.</p><h2 id=contoh-men-debug-pod-yang-pending>Contoh: Men-<em>debug</em> Pod yang <em>Pending</em></h2><p>Skenario umum yang bisa kamu deteksi menggunakan peristiwa (<em>event</em>) adalah saat kamu telah membuat Pod yang tidak muat di Node mana pun. Misalnya, karena Pod mungkin meminta lebih banyak sumber daya yang tersedia dalam Node mana pun, atau mungkin Pod menentukan <em>label selector</em> yang tidak sesuai dengan Node mana pun. Katakanlah kamu sebelumnya membuat Deployment dengan 5 replika (bukan 2) dan meminta 600 millicore, bukan 500, pada klaster dengan empat Node di mana setiap mesin (virtual) memiliki 1 CPU. Sehingga salah satu Pod tidak akan bisa dijadwalkan. (Perhatikan bahwa Pod <em>addon</em> seperti fluentd, skydns, dll., yang berjalan di setiap Node pada klaster, tidak bisa dijadwalkan jika kamu meminta sebanyak 1000 millicore.)</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pods
+</span></span></code></pre></div><pre tabindex=0><code class=language-none data-lang=none>NAME                                READY     STATUS    RESTARTS   AGE
+nginx-deployment-1006230814-6winp   1/1       Running   0          7m
+nginx-deployment-1006230814-fmgu3   1/1       Running   0          7m
+nginx-deployment-1370807587-6ekbw   1/1       Running   0          1m
+nginx-deployment-1370807587-fg172   0/1       Pending   0          1m
+nginx-deployment-1370807587-fz9sd   0/1       Pending   0          1m
+</code></pre><p>Untuk mencari sebab kenapa Pod nginx-deployment-1370807587-fz9sd tidak berjalan, kamu dapat menggunakan <code>kubectl describe pod</code> pada Pod yang <em>pending</em> dan melihat setiap peristiwa yang terjadi di dalamnya:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl describe pod nginx-deployment-1370807587-fz9sd
+</span></span></code></pre></div><pre tabindex=0><code class=language-none data-lang=none>  Name:		nginx-deployment-1370807587-fz9sd
+  Namespace:	default
+  Node:		/
+  Labels:		app=nginx,pod-template-hash=1370807587
+  Status:		Pending
+  IP:
+  Controllers:	ReplicaSet/nginx-deployment-1370807587
+  Containers:
+    nginx:
+      Image:	nginx
+      Port:	80/TCP
+      QoS Tier:
+        memory:	Guaranteed
+        cpu:	Guaranteed
+      Limits:
+        cpu:	1
+        memory:	128Mi
+      Requests:
+        cpu:	1
+        memory:	128Mi
+      Environment Variables:
+  Volumes:
+    default-token-4bcbi:
+      Type:	Secret (a volume populated by a Secret)
+      SecretName:	default-token-4bcbi
+  Events:
+    FirstSeen	LastSeen	Count	From			        SubobjectPath	Type		Reason			    Message
+    ---------	--------	-----	----			        -------------	--------	------			    -------
+    1m		    48s		    7	    {default-scheduler }			        Warning		FailedScheduling	pod (nginx-deployment-1370807587-fz9sd) failed to fit in any node
+  fit failure on node (kubernetes-node-6ta5): Node didn&#39;t have enough resource: CPU, requested: 1000, used: 1420, capacity: 2000
+  fit failure on node (kubernetes-node-wul5): Node didn&#39;t have enough resource: CPU, requested: 1000, used: 1100, capacity: 2000
+</code></pre><p>Di sini kamu dapat melihat peristiwa yang dibuat oleh penjadwal yang mengatakan bahwa Pod gagal dijadwalkan karena alasan <code>FailedScheduling</code> (dan mungkin karena sebab yang lainnya). Pesan tersebut memberi tahu kamu bahwa tidak ada cukup sumber daya untuk Pod pada salah satu Node.</p><p>Untuk memperbaiki situasi ini, kamu dapat menggunakan <code>kubectl scale</code> untuk memperbarui Deployment kamu untuk menentukan empat replika atau yang lebih kecil. (Atau kamu bisa membiarkan satu Pod tertunda, dimana hal ini tidak berbahaya.)</p><p>Peristiwa seperti yang kamu lihat di bagian akhir keluaran dari perintah <code>kubectl description pod</code> akan tetap ada dalam etcd dan memberikan informasi tingkat tinggi tentang apa yang terjadi pada klaster. Untuk melihat daftar semua peristiwa kamu dapat menggunakan perintah</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get events
+</span></span></code></pre></div><p>tetapi kamu harus ingat bahwa peristiwa bersifat Namespace. Artinya, jika kamu tertarik dengan peristiwa untuk beberapa objek dalam Namespace (misalnya, apa yang terjadi dengan Pod pada Namespace <code>my-namespace</code>), kamu perlu secara eksplisit menyebutkan Namespace tersebut pada perintah:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get events --namespace<span style=color:#666>=</span>my-namespace
+</span></span></code></pre></div><p>Untuk melihat peristiwa dari semua Namespace, kamu dapat menggunakan argumen <code>--all-namespaces</code>.</p><p>Sebagai tambahan dari perintah <code>kubectl describe pod</code>, cara lain untuk mendapatkan informasi tambahan tentang sebuah Pod (selain yang disediakan oleh <code>kubectl get pod</code>) adalah dengan meneruskan <em>flag</em> format keluaran <code>-o yaml</code> ke perintah <code>kubectl get pod</code>. Ini akan memberikan kamu lebih banyak informasi dalam format YAML daripada <code>kubectl describe pod</code>--semua informasi dasar yang dimiliki sistem tentang Pod. Di sini kamu akan melihat hal-hal seperti anotasi (yang merupakan metadata nilai kunci tanpa batasan label, yang digunakan secara internal oleh komponen sistem Kubernetes), kebijakan mulai ulang, porta, dan volume.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pod nginx-deployment-1006230814-6winp -o yaml
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>annotations</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>kubernetes.io/created-by</span>:<span style=color:#bbb> </span>|<span style=color:#b44;font-style:italic>
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>      </span><span style=color:#bbb>      </span>{<span style=color:#b44>&#34;kind&#34;</span>:<span style=color:#b44>&#34;SerializedReference&#34;</span>,<span style=color:#b44>&#34;apiVersion&#34;</span>:<span style=color:#b44>&#34;v1&#34;</span>,<span style=color:#b44>&#34;reference&#34;</span>:{<span style=color:#b44>&#34;kind&#34;</span>:<span style=color:#b44>&#34;ReplicaSet&#34;</span>,<span style=color:#b44>&#34;namespace&#34;</span>:<span style=color:#b44>&#34;default&#34;</span>,<span style=color:#b44>&#34;name&#34;</span>:<span style=color:#b44>&#34;nginx-deployment-1006230814&#34;</span>,<span style=color:#b44>&#34;uid&#34;</span>:<span style=color:#b44>&#34;4c84c175-f161-11e5-9a78-42010af00005&#34;</span>,<span style=color:#b44>&#34;apiVersion&#34;</span>:<span style=color:#b44>&#34;extensions&#34;</span>,<span style=color:#b44>&#34;resourceVersion&#34;</span>:<span style=color:#b44>&#34;133434&#34;</span>}}<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>creationTimestamp</span>:<span style=color:#bbb> </span>2016-03-24T01:39:50Z<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>generateName</span>:<span style=color:#bbb> </span>nginx-deployment-1006230814-<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>app</span>:<span style=color:#bbb> </span>nginx<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>pod-template-hash</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;1006230814&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>nginx-deployment-1006230814-6winp<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>namespace</span>:<span style=color:#bbb> </span>default<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>resourceVersion</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;133447&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>uid</span>:<span style=color:#bbb> </span>4c879808-f161-11e5-9a78-42010af00005<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>nginx<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>imagePullPolicy</span>:<span style=color:#bbb> </span>Always<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>nginx<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>ports</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>containerPort</span>:<span style=color:#bbb> </span><span style=color:#666>80</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>protocol</span>:<span style=color:#bbb> </span>TCP<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>resources</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>limits</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>cpu</span>:<span style=color:#bbb> </span>500m<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>memory</span>:<span style=color:#bbb> </span>128Mi<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>requests</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>cpu</span>:<span style=color:#bbb> </span>500m<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>memory</span>:<span style=color:#bbb> </span>128Mi<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>terminationMessagePath</span>:<span style=color:#bbb> </span>/dev/termination-log<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>volumeMounts</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>mountPath</span>:<span style=color:#bbb> </span>/var/run/secrets/kubernetes.io/serviceaccount<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>default-token-4bcbi<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>readOnly</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>true</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>dnsPolicy</span>:<span style=color:#bbb> </span>ClusterFirst<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>nodeName</span>:<span style=color:#bbb> </span>kubernetes-node-wul5<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>restartPolicy</span>:<span style=color:#bbb> </span>Always<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>securityContext</span>:<span style=color:#bbb> </span>{}<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>serviceAccount</span>:<span style=color:#bbb> </span>default<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>serviceAccountName</span>:<span style=color:#bbb> </span>default<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>terminationGracePeriodSeconds</span>:<span style=color:#bbb> </span><span style=color:#666>30</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>volumes</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>default-token-4bcbi<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>secret</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>secretName</span>:<span style=color:#bbb> </span>default-token-4bcbi<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>status</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>conditions</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>lastProbeTime</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>null</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>lastTransitionTime</span>:<span style=color:#bbb> </span>2016-03-24T01:39:51Z<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>status</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;True&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>type</span>:<span style=color:#bbb> </span>Ready<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>containerStatuses</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>containerID</span>:<span style=color:#bbb> </span>docker://90315cc9f513c724e9957a4788d3e625a078de84750f244a40f97ae355eb1149<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>nginx<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>imageID</span>:<span style=color:#bbb> </span>docker://6f62f48c4e55d700cf3eb1b5e33fa051802986b77b874cc351cce539e5163707<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>lastState</span>:<span style=color:#bbb> </span>{}<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>nginx<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>ready</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>true</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>restartCount</span>:<span style=color:#bbb> </span><span style=color:#666>0</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>state</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>running</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>startedAt</span>:<span style=color:#bbb> </span>2016-03-24T01:39:51Z<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>hostIP</span>:<span style=color:#bbb> </span><span style=color:#666>10.240.0.9</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>phase</span>:<span style=color:#bbb> </span>Running<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>podIP</span>:<span style=color:#bbb> </span><span style=color:#666>10.244.0.6</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>startTime</span>:<span style=color:#bbb> </span>2016-03-24T01:39:49Z<span style=color:#bbb>
+</span></span></span></code></pre></div><h2 id=contoh-men-debug-node-yang-mati-tidak-terjangkau-down-unreachable>Contoh: Men-<em>debug</em> Node yang mati/tidak terjangkau (<em>down/unreachable</em>)</h2><p>Terkadang saat men-<em>debug</em> melihat status sebuah Node akan sangat berguna - misalnya, karena kamu telah melihat perilaku aneh dari sebuah Pod yang sedang berjalan pada Node tersebut, atau untuk mencari tahu mengapa sebuah Pod tidak dapat dijadwalkan ke dalam Node tersebut. Seperti pada Pod, kamu dapat menggunakan perintah <code>kubectl description node</code> dan <code>kubectl get node -o yaml</code> untuk mengambil informasi mendetil tentang Node. Misalnya, disini kamu akan melihat jika sebuah Node sedang mati (terputus dari jaringan, atau kubelet mati dan tidak mau restart, dll.). Perhatikan peristiwa yang menunjukkan Node tersebut NotReady, dan juga perhatikan bahwa Pod tidak lagi berjalan (mereka akan dikeluarkan setelah lima menit berstatus NotReady).</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get nodes
+</span></span></code></pre></div><pre tabindex=0><code class=language-none data-lang=none>NAME                     STATUS       ROLES     AGE     VERSION
+kubernetes-node-861h     NotReady     &lt;none&gt;    1h      v1.13.0
+kubernetes-node-bols     Ready        &lt;none&gt;    1h      v1.13.0
+kubernetes-node-st6x     Ready        &lt;none&gt;    1h      v1.13.0
+kubernetes-node-unaj     Ready        &lt;none&gt;    1h      v1.13.0
+</code></pre><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl describe node kubernetes-node-861h
+</span></span></code></pre></div><pre tabindex=0><code class=language-none data-lang=none>Name:			kubernetes-node-861h
+Role
+Labels:		 kubernetes.io/arch=amd64
+           kubernetes.io/os=linux
+           kubernetes.io/hostname=kubernetes-node-861h
+Annotations:        node.alpha.kubernetes.io/ttl=0
+                    volumes.kubernetes.io/controller-managed-attach-detach=true
+Taints:             &lt;none&gt;
+CreationTimestamp:	Mon, 04 Sep 2017 17:13:23 +0800
+Phase:
+Conditions:
+  Type		Status		LastHeartbeatTime			LastTransitionTime			Reason					Message
+  ----    ------    -----------------     ------------------      ------          -------
+  OutOfDisk             Unknown         Fri, 08 Sep 2017 16:04:28 +0800         Fri, 08 Sep 2017 16:20:58 +0800         NodeStatusUnknown       Kubelet stopped posting node status.
+  MemoryPressure        Unknown         Fri, 08 Sep 2017 16:04:28 +0800         Fri, 08 Sep 2017 16:20:58 +0800         NodeStatusUnknown       Kubelet stopped posting node status.
+  DiskPressure          Unknown         Fri, 08 Sep 2017 16:04:28 +0800         Fri, 08 Sep 2017 16:20:58 +0800         NodeStatusUnknown       Kubelet stopped posting node status.
+  Ready                 Unknown         Fri, 08 Sep 2017 16:04:28 +0800         Fri, 08 Sep 2017 16:20:58 +0800         NodeStatusUnknown       Kubelet stopped posting node status.
+Addresses:	10.240.115.55,104.197.0.26
+Capacity:
+ cpu:           2
+ hugePages:     0
+ memory:        4046788Ki
+ pods:          110
+Allocatable:
+ cpu:           1500m
+ hugePages:     0
+ memory:        1479263Ki
+ pods:          110
+System Info:
+ Machine ID:                    8e025a21a4254e11b028584d9d8b12c4
+ System UUID:                   349075D1-D169-4F25-9F2A-E886850C47E3
+ Boot ID:                       5cd18b37-c5bd-4658-94e0-e436d3f110e0
+ Kernel Version:                4.4.0-31-generic
+ OS Image:                      Debian GNU/Linux 8 (jessie)
+ Operating System:              linux
+ Architecture:                  amd64
+ Container Runtime Version:     docker://1.12.5
+ Kubelet Version:               v1.6.9+a3d1dfa6f4335
+ Kube-Proxy Version:            v1.6.9+a3d1dfa6f4335
+ExternalID:                     15233045891481496305
+Non-terminated Pods:            (9 in total)
+  Namespace                     Name                                            CPU Requests    CPU Limits      Memory Requests Memory Limits
+  ---------                     ----                                            ------------    ----------      --------------- -------------
+......
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  CPU Requests  CPU Limits      Memory Requests         Memory Limits
+  ------------  ----------      ---------------         -------------
+  900m (60%)    2200m (146%)    1009286400 (66%)        5681286400 (375%)
+Events:         &lt;none&gt;
+</code></pre><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get node kubernetes-node-861h -o yaml
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Node<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>creationTimestamp</span>:<span style=color:#bbb> </span>2015-07-10T21:32:29Z<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>kubernetes.io/hostname</span>:<span style=color:#bbb> </span>kubernetes-node-861h<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>kubernetes-node-861h<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>resourceVersion</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;757&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>uid</span>:<span style=color:#bbb> </span>2a69374e-274b-11e5-a234-42010af0d969<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>externalID</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;15233045891481496305&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>podCIDR</span>:<span style=color:#bbb> </span><span style=color:#666>10.244.0.0</span>/24<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>providerID</span>:<span style=color:#bbb> </span>gce://striped-torus-760/us-central1-b/kubernetes-node-861h<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>status</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>addresses</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>address</span>:<span style=color:#bbb> </span><span style=color:#666>10.240.115.55</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>type</span>:<span style=color:#bbb> </span>InternalIP<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>address</span>:<span style=color:#bbb> </span><span style=color:#666>104.197.0.26</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>type</span>:<span style=color:#bbb> </span>ExternalIP<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>capacity</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>cpu</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;1&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>memory</span>:<span style=color:#bbb> </span>3800808Ki<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>pods</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;100&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>conditions</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>lastHeartbeatTime</span>:<span style=color:#bbb> </span>2015-07-10T21:34:32Z<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>lastTransitionTime</span>:<span style=color:#bbb> </span>2015-07-10T21:35:15Z<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>reason</span>:<span style=color:#bbb> </span>Kubelet stopped posting node status.<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>status</span>:<span style=color:#bbb> </span>Unknown<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>type</span>:<span style=color:#bbb> </span>Ready<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>nodeInfo</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>bootID</span>:<span style=color:#bbb> </span><span style=color:#666>4e316776</span>-b40d-4f78-a4ea-ab0d73390897<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>containerRuntimeVersion</span>:<span style=color:#bbb> </span>docker://Unknown<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>kernelVersion</span>:<span style=color:#bbb> </span><span style=color:#666>3.16.0-0.</span>bpo.4-amd64<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>kubeProxyVersion</span>:<span style=color:#bbb> </span>v0.21.1-185-gffc5a86098dc01<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>kubeletVersion</span>:<span style=color:#bbb> </span>v0.21.1-185-gffc5a86098dc01<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>machineID</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>osImage</span>:<span style=color:#bbb> </span>Debian GNU/Linux 7 (wheezy)<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>systemUUID</span>:<span style=color:#bbb> </span>ABE5F6B4-D44B-108B-C46A-24CCE16C8B6E<span style=color:#bbb>
+</span></span></span></code></pre></div><h2 id=selanjutnya>Selanjutnya</h2><p>Pelajari tentang alat <em>debugging</em> tambahan, termasuk:</p><ul><li><a href=/id/docs/concepts/cluster-administration/logging/>Pencatatan (<em>logging</em>)</a></li><li><a href=/docs/tasks/debug-application-cluster/resource-usage-monitoring/>Monitoring</a></li><li><a href=/docs/tasks/debug-application-cluster/get-shell-running-container/>Masuk ke Container melalui <code>exec</code></a></li><li><a href=/docs/tasks/extend-kubernetes/http-proxy-access-api/>Masuk ke Container melalui <em>proxy</em></a></li><li><a href=/docs/tasks/access-application-cluster/port-forward-access-application-cluster/>Masuk ke Container melalui <em>port forwarding</em></a></li><li><a href=/docs/tasks/debug-application-cluster/crictl/>Inspeksi Node Kubernetes dengan menggunakan crictl</a></li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-9713ac27b6d9e3034033200d968221f2>2 - Mendapatkan Shell Untuk Masuk ke Container yang Sedang Berjalan</h1><p>Laman ini menunjukkan bagaimana cara menggunakan <code>kubectl exec</code> untuk
+mendapatkan <em>shell</em> untuk masuk ke dalam Container yang sedang berjalan.</p><h2 id=sebelum-kamu-memulai>Sebelum kamu memulai</h2><p><p>Kamu harus memiliki klaster Kubernetes, dan perangkat baris perintah kubectl
+juga harus dikonfigurasikan untuk berkomunikasi dengan klastermu. Jika kamu
+belum memiliki klaster, kamu dapat membuatnya dengan menggunakan
+<a href=/id/docs/tasks/tools/#minikube>minikube</a>,
+atau kamu juga dapat menggunakan salah satu dari tempat mencoba Kubernetes berikut ini:</p><ul><li><a href=https://killercoda.com/playgrounds/scenario/kubernetes>Killercoda</a></li><li><a href=http://labs.play-with-k8s.com/>Bermain dengan Kubernetes</a></li></ul>Untuk melihat versi, tekan <code>kubectl version</code>.</p><h2 id=mendapatkan-sebuah-shell-untuk-masuk-ke-sebuah-container>Mendapatkan sebuah <em>shell</em> untuk masuk ke sebuah Container</h2><p>Dalam latihan ini, kamu perlu membuat Pod yang hanya memiliki satu Container saja. Container
+tersebut menjalankan <em>image</em> nginx. Berikut ini adalah berkas konfigurasi untuk Pod tersebut:</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/id/examples/application/shell-demo.yaml download=application/shell-demo.yaml><code>application/shell-demo.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("application-shell-demo-yaml")' title="Copy application/shell-demo.yaml to clipboard"></img></div><div class=includecode id=application-shell-demo-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>shell-demo<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>volumes</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>shared-data<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>emptyDir</span>:<span style=color:#bbb> </span>{}<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>nginx<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>nginx<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>volumeMounts</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>shared-data<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>mountPath</span>:<span style=color:#bbb> </span>/usr/share/nginx/html<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>hostNetwork</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>true</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>dnsPolicy</span>:<span style=color:#bbb> </span>Default<span style=color:#bbb>
+</span></span></span></code></pre></div></div></div><p>Buatlah Pod tersebut:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -f https://k8s.io/examples/application/shell-demo.yaml
+</span></span></code></pre></div><p>Pastikan bahwa Container dalam Pod berjalan:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pod shell-demo
+</span></span></code></pre></div><p>Dapatkan <em>shell</em> untuk masuk ke dalam Container:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl <span style=color:#a2f>exec</span> -it shell-demo -- /bin/bash
+</span></span></code></pre></div><div class="alert alert-info note callout" role=alert><strong>Catatan:</strong> Simbol tanda hubung ganda "--" digunakan untuk memisahkan antara argumen perintah yang ingin kamu eksekusi pada Container dan argumen dari kubectl itu sendiri.</div><p>Di dalam <em>shell</em> kamu, perlihatkan isi dari direktori <em>root</em>:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>root@shell-demo:/# ls /
+</span></span></code></pre></div><p>Di dalam <em>shell</em> kamu, cobalah perintah-perintah yang lainnya. Berikut beberapa contohnya:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>root@shell-demo:/# ls /
+</span></span><span style=display:flex><span>root@shell-demo:/# cat /proc/mounts
+</span></span><span style=display:flex><span>root@shell-demo:/# cat /proc/1/maps
+</span></span><span style=display:flex><span>root@shell-demo:/# apt-get update
+</span></span><span style=display:flex><span>root@shell-demo:/# apt-get install -y tcpdump
+</span></span><span style=display:flex><span>root@shell-demo:/# tcpdump
+</span></span><span style=display:flex><span>root@shell-demo:/# apt-get install -y lsof
+</span></span><span style=display:flex><span>root@shell-demo:/# lsof
+</span></span><span style=display:flex><span>root@shell-demo:/# apt-get install -y procps
+</span></span><span style=display:flex><span>root@shell-demo:/# ps aux
+</span></span><span style=display:flex><span>root@shell-demo:/# ps aux | grep nginx
+</span></span></code></pre></div><h2 id=menulis-halaman-utama-root-untuk-nginx>Menulis halaman utama (<em>root</em>) untuk nginx</h2><p>Lihat kembali berkas konfigurasi untuk Pod kamu. Pod
+memiliki volume <code>emptyDir</code>, dan Container melakukan pemasangan (<em>mounting</em>) untuk volume tersebut
+pada <code>/usr/share/nginx/html</code>.</p><p>Pada <em>shell</em> kamu, buatlah berkas <code>index.html</code> dalam direktori <code>/usr/share/nginx/html</code>:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>root@shell-demo:/# <span style=color:#a2f>echo</span> Hello shell demo &gt; /usr/share/nginx/html/index.html
+</span></span></code></pre></div><p>Pada <em>shell</em> kamu, kirimkan sebuah permintaan (<em>request</em>) GET ke server nginx.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>root@shell-demo:/# apt-get update
+</span></span><span style=display:flex><span>root@shell-demo:/# apt-get install curl
+</span></span><span style=display:flex><span>root@shell-demo:/# curl localhost
+</span></span></code></pre></div><p>Keluarannya akan menunjukkan teks yang kamu tulis pada berkas <code>index.html</code>.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>Hello shell demo
+</span></span></code></pre></div><p>Setelah kamu selesai dengan <em>shell</em> kamu, ketiklah <code>exit</code>.</p><h2 id=menjalankan-perintah-individu-di-dalam-sebuah-container>Menjalankan perintah individu di dalam sebuah Container</h2><p>Pada jendela (<em>window</em>) perintah biasa, bukan pada <em>shell</em> kamu di dalam Container,
+lihatlah daftar variabel lingkungan (<em>environment variable</em>) pada Container yang sedang berjalan:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl <span style=color:#a2f>exec</span> shell-demo env
+</span></span></code></pre></div><p>Cobalah dengan menjalankan perintah lainnya. Berikut beberapa contohnya:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl <span style=color:#a2f>exec</span> shell-demo ps aux
+</span></span><span style=display:flex><span>kubectl <span style=color:#a2f>exec</span> shell-demo ls /
+</span></span><span style=display:flex><span>kubectl <span style=color:#a2f>exec</span> shell-demo cat /proc/1/mounts
+</span></span></code></pre></div><h2 id=membuka-sebuah-shell-ketika-sebuah-pod-memiliki-lebih-dari-satu-container>Membuka sebuah <em>shell</em> ketika sebuah Pod memiliki lebih dari satu Container</h2><p>Jika sebuah Pod memiliki lebih dari satu Container, gunakanlah <code>--container</code> atau <code>-c</code> untuk
+menentukan Container yang dimaksud pada perintah <code>kubectl exec</code>. Sebagai contoh,
+misalkan kamu memiliki Pod yang bernama my-pod, dan Pod tersebut memiliki dua Container
+yang bernama main-app dan helper-app. Perintah berikut ini akan membuka sebuah
+<em>shell</em> ke Container dengan nama main-app.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl <span style=color:#a2f>exec</span> -it my-pod --container main-app -- /bin/bash
+</span></span></code></pre></div><h2 id=selanjutnya>Selanjutnya</h2><ul><li><a href=/docs/reference/generated/kubectl/kubectl-commands/#exec>kubectl exec</a></li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-9e6e1b706f11386fe2c4b4ffda1409e4>3 - Perangkat untuk Memantau Sumber Daya</h1><p>Untuk melukan penyekalaan aplikasi dan memberikan Service yang handal, kamu perlu
+memahami bagaimana aplikasi berperilaku ketika aplikasi tersebut digelar (<em>deploy</em>). Kamu bisa memeriksa
+kinerja aplikasi dalam klaster Kubernetes dengan memeriksa Container,
+<a href=/docs/user-guide/pods>Pod</a>, <a href=/docs/user-guide/services>Service</a>, dan
+karakteristik klaster secara keseluruhan. Kubernetes memberikan detail
+informasi tentang penggunaan sumber daya dari aplikasi pada setiap level ini.
+Informasi ini memungkinkan kamu untuk mengevaluasi kinerja aplikasi kamu dan
+mengevaluasi di mana kemacetan dapat dihilangkan untuk meningkatkan kinerja secara keseluruhan.</p><p>Di Kubernetes, pemantauan aplikasi tidak bergantung pada satu solusi pemantauan saja. Pada klaster baru, kamu bisa menggunakan <em>pipeline</em> <a href=#pipeline-metrik-sumber-daya>metrik sumber daya</a> atau <em>pipeline</em> <a href=#pipeline-metrik-penuh>metrik penuh</a> untuk mengumpulkan statistik pemantauan.</p><h2 id=pipeline-metrik-sumber-daya><em>Pipeline</em> Metrik Sumber Daya</h2><p><em>Pipeline</em> metrik sumber daya menyediakan sekumpulan metrik terbatas yang terkait dengan
+komponen-komponen klaster seperti <em>controller</em> <a href=/id/docs/tasks/run-application/horizontal-pod-autoscaler>HorizontalPodAutoscaler</a>, begitu juga dengan utilitas <code>kubectl top</code>.
+Metrik ini dikumpulkan oleh memori yang ringan, jangka pendek, dalam
+<a href=https://github.com/kubernetes-incubator/metrics-server><em>metrics-server</em></a> dan
+diekspos ke API <code>metrics.k8s.io</code>.</p><p><em>Metrics-server</em> menemukan semua Node dalam klaster dan
+bertanya ke setiap
+<a href=/docs/reference/command-line-tools-reference/kubelet>kubelet</a> dari Node tentang penggunaan CPU dan
+memori. Kubelet bertindak sebagai jembatan antara <em>control plane</em> Kubernetes dan
+Node, mengelola Pod dan Container yang berjalan pada sebuah mesin. Kubelet
+menerjemahkan setiap Pod ke Container yang menyusunnya dan mengambil masing-masing
+statistik penggunaan untuk setiap Container dari <em>runtime</em> Container melalui
+antarmuka <em>runtime</em> Container. Kubelet mengambil informasi ini dari cAdvisor yang terintegrasi
+untuk pengintegrasian Docker yang lama. Hal ini yang kemudian memperlihatkan
+statistik penggunaan sumber daya dari kumpulan Pod melalui API sumber daya <em>metrics-server</em>.
+API ini disediakan pada <code>/metrics/resource/v1beta1</code> pada kubelet yang terautentikasi dan
+porta <em>read-only</em>.</p><h2 id=pipeline-metrik-penuh><em>Pipeline</em> Metrik Penuh</h2><p><em>Pipeline</em> metrik penuh memberi kamu akses ke metrik yang lebih banyak. Kubernetes bisa
+menanggapi metrik ini secara otomatis dengan mengubah skala atau mengadaptasi klaster
+berdasarkan kondisi saat ini, dengan menggunakan mekanisme seperti HorizontalPodAutoscaler.
+<em>Pipeline</em> pemantauan mengambil metrik dari kubelet dan
+kemudian memgekspos ke Kubernetes melalui adaptor dengan mengimplementasikan salah satu dari API
+<code>custom.metrics.k8s.io</code> atau API <code>external.metrics.k8s.io</code>.</p><p><a href=https://prometheus.io>Prometheus</a>, sebuah proyek CNCF, yang dapat secara alami memonitor Kubernetes, Node, dan Prometheus itu sendiri.
+Proyek <em>pipeline</em> metrik penuh yang bukan merupakan bagian dari CNCF berada di luar ruang lingkup dari dokumentasi Kubernetes.</p></div></main></div></div><footer class=d-print-none><div class=footer__links><nav><a class=text-white href=/id/docs/home/>Home</a>
+<a class=text-white href=/id/community/>Komunitas</a>
+<a class=text-white href=/id/case-studies/>Studi kasus</a></nav></div><div class=container-fluid><div class=row><div class="col-6 col-sm-2 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="User mailing list" aria-label="User mailing list"><a class=text-white target=_blank href=https://discuss.kubernetes.io><i class="fa fa-envelope"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank href=https://twitter.com/kubernetesio><i class="fab fa-twitter"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Calendar aria-label=Calendar><a class=text-white target=_blank href="https://calendar.google.com/calendar/embed?src=calendar%40kubernetes.io"><i class="fas fa-calendar-alt"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Youtube aria-label=Youtube><a class=text-white target=_blank href=https://youtube.com/kubernetescommunity><i class="fab fa-youtube"></i></a></li></ul></div><div class="col-6 col-sm-2 text-right text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank href=https://github.com/kubernetes/kubernetes><i class="fab fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Slack aria-label=Slack><a class=text-white target=_blank href=https://slack.k8s.io><i class="fab fa-slack"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Contribute aria-label=Contribute><a class=text-white target=_blank href=https://git.k8s.io/community/contributors/guide><i class="fas fa-edit"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="Stack Overflow" aria-label="Stack Overflow"><a class=text-white target=_blank href=https://stackoverflow.com/questions/tagged/kubernetes><i class="fab fa-stack-overflow"></i></a></li></ul></div><div class="col-12 col-sm-8 text-center order-sm-2"><small class=text-white>&copy; 2023 Para Pencipta Kubernetes | Dokumentasi didistribusikan di bawah <a href=https://git.k8s.io/website/LICENSE class=light-text>CC BY 4.0</a></small><br><small class=text-white>Copyright &copy; 2023 Linux Foundation &reg;. Hak cipta dilindungi. Linux Foundation telah mendaftarkan merek dagang dan pengunaannya. Perinciannya bisa dilihat pada <a href=https://www.linuxfoundation.org/trademark-usage class=light-text>halaman penggunaan merek dagang</a></small><br><small class=text-white>ICP license: 京ICP备17074266号-3</small></div></div></div></footer></div><script src=/js/jquery-3.6.0.min.js integrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script>
+<script src=/js/popper-1.16.1.min.js intregrity=sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN crossorigin=anonymous></script>
+<script src=/js/bootstrap-4.6.1.min.js integrity=sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2 crossorigin=anonymous></script>
+<script src=/js/script.js></script>
+<script async src=/js/mermaid-8.13.4.min.js integrity=sha384-5hHNvPeMrNH14oM3IcQofDoBhiclNK3g2+hnEinKzQ07C4AliMeVpnvxuiwEGpaO crossorigin=anonymous></script>
+<script src=/js/main.min.5c0bf7f21dc4f66485f74efbbeeff28a7e4f8cddaac1bae47043159c922ff3a3.js integrity="sha256-XAv38h3E9mSF9077vu/yin5PjN2qwbrkcEMVnJIv86M=" crossorigin=anonymous></script></body></html>

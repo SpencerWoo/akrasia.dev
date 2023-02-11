@@ -1,0 +1,258 @@
+<!doctype html><html lang=zh-cn class=no-js><head><meta name=robots content="noindex, nofollow"><link rel=alternate hreflang=en href=https://kubernetes.io/docs/concepts/containers/><link rel=alternate hreflang=ko href=https://kubernetes.io/ko/docs/concepts/containers/><link rel=alternate hreflang=ja href=https://kubernetes.io/ja/docs/concepts/containers/><link rel=alternate hreflang=fr href=https://kubernetes.io/fr/docs/concepts/containers/><link rel=alternate hreflang=it href=https://kubernetes.io/it/docs/concepts/containers/><link rel=alternate hreflang=de href=https://kubernetes.io/de/docs/concepts/containers/><link rel=alternate hreflang=es href=https://kubernetes.io/es/docs/concepts/containers/><link rel=alternate hreflang=pt-br href=https://kubernetes.io/pt-br/docs/concepts/containers/><link rel=alternate hreflang=id href=https://kubernetes.io/id/docs/concepts/containers/><link rel=alternate hreflang=vi href=https://kubernetes.io/vi/docs/concepts/containers/><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.110.0"><link rel=canonical type=text/html href=https://kubernetes.io/zh-cn/docs/concepts/containers/><link rel="shortcut icon" type=image/png href=/images/favicon.png><link rel=apple-touch-icon href=/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=manifest href=/manifest.webmanifest><link rel=apple-touch-icon href=/images/kubernetes-192x192.png><title>容器 | Kubernetes</title><meta property="og:title" content="容器"><meta property="og:description" content="打包应用及其运行依赖环境的技术。"><meta property="og:type" content="website"><meta property="og:url" content="https://kubernetes.io/zh-cn/docs/concepts/containers/"><meta property="og:site_name" content="Kubernetes"><meta itemprop=name content="容器"><meta itemprop=description content="打包应用及其运行依赖环境的技术。"><meta name=twitter:card content="summary"><meta name=twitter:title content="容器"><meta name=twitter:description content="打包应用及其运行依赖环境的技术。"><link href=/scss/main.css rel=stylesheet><script type=application/ld+json>{"@context":"https://schema.org","@type":"Organization","url":"https://kubernetes.io","logo":"https://kubernetes.io/images/favicon.png","potentialAction":{"@type":"SearchAction","target":"https://kubernetes.io/search/?q={search_term_string}","query-input":"required name=search_term_string"}}</script><meta name=theme-color content="#326ce5"><link rel=stylesheet href=/css/feature-states.css><meta name=description content="打包应用及其运行依赖环境的技术。"><meta property="og:description" content="打包应用及其运行依赖环境的技术。"><meta name=twitter:description content="打包应用及其运行依赖环境的技术。"><meta property="og:url" content="https://kubernetes.io/zh-cn/docs/concepts/containers/"><meta property="og:title" content="容器"><meta name=twitter:title content="容器"><meta name=twitter:image content="https://kubernetes.io/images/favicon.png"><meta name=twitter:image:alt content="Kubernetes"><meta property="og:image" content="/images/kubernetes-horizontal-color.png"><meta property="og:type" content="article"><script src=/js/jquery-3.6.0.min.js intregrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script></head><body class=td-section><header><nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar" data-auto-burger=primary><a class=navbar-brand href=/zh-cn/></a><div class="td-navbar-nav-scroll ml-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0"><li class="nav-item mr-2 mb-lg-0"><a class="nav-link active" href=/zh-cn/docs/>文档</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/blog/>Kubernetes 博客</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/training/>培训</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/partners/>合作伙伴</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/community/>社区</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/case-studies/>案例分析</a></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>版本列表</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/zh-cn/releases>Release Information</a>
+<a class=dropdown-item href=https://kubernetes.io/zh-cn/docs/concepts/containers/>v1.25</a>
+<a class=dropdown-item href=https://v1-24.docs.kubernetes.io/zh-cn/docs/concepts/containers/>v1.24</a>
+<a class=dropdown-item href=https://v1-23.docs.kubernetes.io/zh-cn/docs/concepts/containers/>v1.23</a>
+<a class=dropdown-item href=https://v1-22.docs.kubernetes.io/zh-cn/docs/concepts/containers/>v1.22</a>
+<a class=dropdown-item href=https://v1-21.docs.kubernetes.io/zh-cn/docs/concepts/containers/>v1.21</a></div></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdownMenuLink role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>中文 (Chinese)</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/docs/concepts/containers/>English</a>
+<a class=dropdown-item href=/ko/docs/concepts/containers/>한국어 (Korean)</a>
+<a class=dropdown-item href=/ja/docs/concepts/containers/>日本語 (Japanese)</a>
+<a class=dropdown-item href=/fr/docs/concepts/containers/>Français (French)</a>
+<a class=dropdown-item href=/it/docs/concepts/containers/>Italiano (Italian)</a>
+<a class=dropdown-item href=/de/docs/concepts/containers/>Deutsch (German)</a>
+<a class=dropdown-item href=/es/docs/concepts/containers/>Español (Spanish)</a>
+<a class=dropdown-item href=/pt-br/docs/concepts/containers/>Português (Portuguese)</a>
+<a class=dropdown-item href=/id/docs/concepts/containers/>Bahasa Indonesia</a>
+<a class=dropdown-item href=/vi/docs/concepts/containers/>Tiếng Việt (Vietnamese)</a></div></li></ul></div><button id=hamburger onclick=kub.toggleMenu() data-auto-burger-exclude><div></div></button></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><div class=td-content><div class="pageinfo pageinfo-primary d-print-none"><p>这是本节的多页打印视图。
+<a href=# onclick="return print(),!1">点击此处打印</a>.</p><p><a href=/zh-cn/docs/concepts/containers/>返回本页常规视图</a>.</p></div><h1 class=title>容器</h1><div class=lead>打包应用及其运行依赖环境的技术。</div><ul><li>1: <a href=#pg-16042b4652ad19e565c7263824029a43>镜像</a></li><li>2: <a href=#pg-643212488f778acf04bebed65ba34441>容器环境</a></li><li>3: <a href=#pg-a858027489648786a3b16264e451272b>容器运行时类（Runtime Class）</a></li><li>4: <a href=#pg-e6941d969d81540208a3e78bc56f43bc>容器生命周期回调</a></li></ul><div class=content><p>每个运行的容器都是可重复的；
+包含依赖环境在内的标准，意味着无论你在哪里运行它都会得到相同的行为。</p><p>容器将应用程序从底层的主机设施中解耦。
+这使得在不同的云或 OS 环境中部署更加容易。</p><p>Kubernetes 集群中的每个<a class=glossary-tooltip title='Kubernetes 中的工作机器称作节点。' data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/architecture/nodes/ target=_blank aria-label=节点>节点</a>都会运行容器，
+这些容器构成分配给该节点的 <a href=/zh-cn/docs/concepts/workloads/pods/>Pod</a>。
+单个 Pod 中的容器会在共同调度下，于同一位置运行在相同的节点上。</p><h2 id=container-images>容器镜像</h2><p><a href=/zh-cn/docs/concepts/containers/images/>容器镜像</a>是一个随时可以运行的软件包，
+包含运行应用程序所需的一切：代码和它需要的所有运行时、应用程序和系统库，以及一些基本设置的默认值。</p><p>容器旨在设计成无状态且<a href=https://glossary.cncf.io/immutable-infrastructure/>不可变的</a>：
+你不应更改已经运行的容器的代码。如果有一个容器化的应用程序需要修改，
+正确的流程是：先构建包含更改的新镜像，再基于新构建的镜像重新运行容器。</p><h2 id=container-runtimes>容器运行时</h2><p>容器运行环境是负责运行容器的软件。</p><p>Kubernetes 支持许多容器运行环境，例如
+<a class=glossary-tooltip title=强调简单性、健壮性和可移植性的一种容器运行时 data-toggle=tooltip data-placement=top href=https://containerd.io/docs/ target=_blank aria-label=containerd>containerd</a>、
+<a class=glossary-tooltip title='专用于 Kubernetes 的轻量级容器运行时软件' data-toggle=tooltip data-placement=top href=https://cri-o.io/#what-is-cri-o target=_blank aria-label=CRI-O>CRI-O</a>
+以及 <a href=https://github.com/kubernetes/community/blob/master/contributors/devel/sig-node/container-runtime-interface.md>Kubernetes CRI (容器运行环境接口)</a>
+的其他任何实现。</p><p>通常，你可以允许集群为一个 Pod 选择其默认的容器运行时。如果你需要在集群中使用多个容器运行时，
+你可以为一个 Pod 指定 <a href=/zh-cn/docs/concepts/containers/runtime-class/>RuntimeClass</a>，
+以确保 Kubernetes 会使用特定的容器运行时来运行这些容器。</p><p>你还可以通过 RuntimeClass，使用相同的容器运行时，但使用不同设定的配置来运行不同的 Pod。</p></div></div><div class=td-content style=page-break-before:always><h1 id=pg-16042b4652ad19e565c7263824029a43>1 - 镜像</h1><p>容器镜像（Image）所承载的是封装了应用程序及其所有软件依赖的二进制数据。
+容器镜像是可执行的软件包，可以单独运行；该软件包对所处的运行时环境具有良定（Well Defined）的假定。</p><p>你通常会创建应用的容器镜像并将其推送到某仓库（Registry），然后在
+<a class=glossary-tooltip title='Pod 表示你的集群上一组正在运行的容器。' data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/workloads/pods/ target=_blank aria-label=Pod>Pod</a> 中引用它。</p><p>本页概要介绍容器镜像的概念。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>如果你正在寻找 Kubernetes 某个发行版本（如最新次要版本 v1.25）
+的容器镜像，请访问<a href=/zh-cn/releases/download/>下载 Kubernetes</a>。</div><h2 id=image-names>镜像名称</h2><p>容器镜像通常会被赋予 <code>pause</code>、<code>example/mycontainer</code> 或者 <code>kube-apiserver</code> 这类的名称。
+镜像名称也可以包含所在仓库的主机名。例如：<code>fictional.registry.example/imagename</code>。
+还可以包含仓库的端口号，例如：<code>fictional.registry.example:10443/imagename</code>。</p><p>如果你不指定仓库的主机名，Kubernetes 认为你在使用 Docker 公共仓库。</p><p>在镜像名称之后，你可以添加一个标签（Tag）（与使用 <code>docker</code> 或 <code>podman</code> 等命令时的方式相同）。
+使用标签能让你辨识同一镜像序列中的不同版本。</p><p>镜像标签可以包含小写字母、大写字母、数字、下划线（<code>_</code>）、句点（<code>.</code>）和连字符（<code>-</code>）。
+关于在镜像标签中何处可以使用分隔字符（<code>_</code>、<code>-</code> 和 <code>.</code>）还有一些额外的规则。
+如果你不指定标签，Kubernetes 认为你想使用标签 <code>latest</code>。</p><h2 id=updating-images>更新镜像</h2><p>当你最初创建一个 <a class=glossary-tooltip title=管理集群上的多副本应用。 data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/workloads/controllers/deployment/ target=_blank aria-label=Deployment>Deployment</a>、
+<a class=glossary-tooltip title='StatefulSet 用来管理某 Pod 集合的部署和扩缩，并为这些 Pod 提供持久存储和持久标识符。' data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/workloads/controllers/statefulset/ target=_blank aria-label=StatefulSet>StatefulSet</a>、Pod
+或者其他包含 Pod 模板的对象时，如果没有显式设定的话，
+Pod 中所有容器的默认镜像拉取策略是 <code>IfNotPresent</code>。这一策略会使得
+<a class=glossary-tooltip title='一个在集群中每个节点上运行的代理。它保证容器都运行在 Pod 中。' data-toggle=tooltip data-placement=top href=/docs/reference/generated/kubelet target=_blank aria-label=kubelet>kubelet</a>
+在镜像已经存在的情况下直接略过拉取镜像的操作。</p><h3 id=image-pull-policy>镜像拉取策略</h3><p>容器的 <code>imagePullPolicy</code> 和镜像的标签会影响
+<a href=/zh-cn/docs/reference/command-line-tools-reference/kubelet/>kubelet</a> 尝试拉取（下载）指定的镜像。</p><p>以下列表包含了 <code>imagePullPolicy</code> 可以设置的值，以及这些值的效果：</p><dl><dt><code>IfNotPresent</code></dt><dd>只有当镜像在本地不存在时才会拉取。</dd><dt><code>Always</code></dt><dd>每当 kubelet 启动一个容器时，kubelet 会查询容器的镜像仓库，
+将名称解析为一个镜像<a href=https://docs.docker.com/engine/reference/commandline/pull/#pull-an-image-by-digest-immutable-identifier>摘要</a>。
+如果 kubelet 有一个容器镜像，并且对应的摘要已在本地缓存，kubelet 就会使用其缓存的镜像；
+否则，kubelet 就会使用解析后的摘要拉取镜像，并使用该镜像来启动容器。</dd><dt><code>Never</code></dt><dd>Kubelet 不会尝试获取镜像。如果镜像已经以某种方式存在本地，
+kubelet 会尝试启动容器；否则，会启动失败。
+更多细节见<a href=#pre-pulled-images>提前拉取镜像</a>。</dd></dl><p>只要能够可靠地访问镜像仓库，底层镜像提供者的缓存语义甚至可以使 <code>imagePullPolicy: Always</code> 高效。
+你的容器运行时可以注意到节点上已经存在的镜像层，这样就不需要再次下载。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>在生产环境中部署容器时，你应该避免使用 <code>:latest</code> 标签，因为这使得正在运行的镜像的版本难以追踪，并且难以正确地回滚。</p><p>相反，应指定一个有意义的标签，如 <code>v1.42.0</code>。</p></div><p>为了确保 Pod 总是使用相同版本的容器镜像，你可以指定镜像的摘要；
+将 <code>&lt;image-name>:&lt;tag></code> 替换为 <code>&lt;image-name>@&lt;digest></code>，例如 <code>image@sha256:45b23dee08af5e43a7fea6c4cf9c25ccf269ee113168c19722f87876677c5cb2</code>。</p><p>当使用镜像标签时，如果镜像仓库修改了代码所对应的镜像标签，可能会出现新旧代码混杂在 Pod 中运行的情况。
+镜像摘要唯一标识了镜像的特定版本，因此 Kubernetes 每次启动具有指定镜像名称和摘要的容器时，都会运行相同的代码。
+通过摘要指定镜像可固定你运行的代码，这样镜像仓库的变化就不会导致版本的混杂。</p><p>有一些第三方的<a href=/zh-cn/docs/reference/access-authn-authz/admission-controllers/>准入控制器</a>
+在创建 Pod（和 Pod 模板）时产生变更，这样运行的工作负载就是根据镜像摘要，而不是标签来定义的。
+无论镜像仓库上的标签发生什么变化，你都想确保你所有的工作负载都运行相同的代码，那么指定镜像摘要会很有用。</p><h4 id=imagepullpolicy-defaulting>默认镜像拉取策略</h4><p>当你（或控制器）向 API 服务器提交一个新的 Pod 时，你的集群会在满足特定条件时设置 <code>imagePullPolicy</code> 字段：</p><ul><li>如果你省略了 <code>imagePullPolicy</code> 字段，并且容器镜像的标签是 <code>:latest</code>，
+<code>imagePullPolicy</code> 会自动设置为 <code>Always</code>。</li><li>如果你省略了 <code>imagePullPolicy</code> 字段，并且没有指定容器镜像的标签，
+<code>imagePullPolicy</code> 会自动设置为 <code>Always</code>。</li><li>如果你省略了 <code>imagePullPolicy</code> 字段，并且为容器镜像指定了非 <code>:latest</code> 的标签，
+<code>imagePullPolicy</code> 就会自动设置为 <code>IfNotPresent</code>。</li></ul><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>容器的 <code>imagePullPolicy</code> 的值总是在对象初次 <em>创建</em> 时设置的，如果后来镜像的标签发生变化，则不会更新。</p><p>例如，如果你用一个 <strong>非</strong> <code>:latest</code> 的镜像标签创建一个 Deployment，
+并在随后更新该 Deployment 的镜像标签为 <code>:latest</code>，则 <code>imagePullPolicy</code> 字段 <strong>不会</strong> 变成 <code>Always</code>。
+你必须手动更改已经创建的资源的拉取策略。</p></div><h4 id=required-image-pull>必要的镜像拉取</h4><p>如果你想总是强制执行拉取，你可以使用下述的一中方式：</p><ul><li>设置容器的 <code>imagePullPolicy</code> 为 <code>Always</code>。</li><li>省略 <code>imagePullPolicy</code>，并使用 <code>:latest</code> 作为镜像标签；
+当你提交 Pod 时，Kubernetes 会将策略设置为 <code>Always</code>。</li><li>省略 <code>imagePullPolicy</code> 和镜像的标签；
+当你提交 Pod 时，Kubernetes 会将策略设置为 <code>Always</code>。</li><li>启用准入控制器 <a href=/zh-cn/docs/reference/access-authn-authz/admission-controllers/#alwayspullimages>AlwaysPullImages</a>。</li></ul><h3 id=imagepullbackoff>ImagePullBackOff</h3><p>当 kubelet 使用容器运行时创建 Pod 时，容器可能因为 <code>ImagePullBackOff</code> 导致状态为
+<a href=/zh-cn/docs/concepts/workloads/pods/pod-lifecycle/#container-state-waiting>Waiting</a>。</p><p><code>ImagePullBackOff</code> 状态意味着容器无法启动，
+因为 Kubernetes 无法拉取容器镜像（原因包括无效的镜像名称，或从私有仓库拉取而没有 <code>imagePullSecret</code>）。
+<code>BackOff</code> 部分表示 Kubernetes 将继续尝试拉取镜像，并增加回退延迟。</p><p>Kubernetes 会增加每次尝试之间的延迟，直到达到编译限制，即 300 秒（5 分钟）。</p><h2 id=multi-architecture-images-with-image-indexes>带镜像索引的多架构镜像</h2><p>除了提供二进制的镜像之外，
+容器仓库也可以提供<a href=https://github.com/opencontainers/image-spec/blob/master/image-index.md>容器镜像索引</a>。
+镜像索引可以指向镜像的多个<a href=https://github.com/opencontainers/image-spec/blob/master/manifest.md>镜像清单</a>，
+提供特定于体系结构版本的容器。
+这背后的理念是让你可以为镜像命名（例如：<code>pause</code>、<code>example/mycontainer</code>、<code>kube-apiserver</code>）
+的同时，允许不同的系统基于它们所使用的机器体系结构取回正确的二进制镜像。</p><p>Kubernetes 自身通常在命名容器镜像时添加后缀 <code>-$(ARCH)</code>。
+为了向前兼容，请在生成较老的镜像时也提供后缀。
+这里的理念是为某镜像（如 <code>pause</code>）生成针对所有平台都适用的清单时，
+生成 <code>pause-amd64</code> 这类镜像，以便较老的配置文件或者将镜像后缀硬编码到其中的
+YAML 文件也能兼容。</p><h2 id=using-a-private-registry>使用私有仓库</h2><p>从私有仓库读取镜像时可能需要密钥。
+凭证可以用以下方式提供:</p><ul><li>配置节点向私有仓库进行身份验证<ul><li>所有 Pod 均可读取任何已配置的私有仓库</li><li>需要集群管理员配置节点</li></ul></li><li>预拉镜像<ul><li>所有 Pod 都可以使用节点上缓存的所有镜像</li><li>需要所有节点的 root 访问权限才能进行设置</li></ul></li><li>在 Pod 中设置 ImagePullSecrets<ul><li>只有提供自己密钥的 Pod 才能访问私有仓库</li></ul></li><li>特定于厂商的扩展或者本地扩展<ul><li>如果你在使用定制的节点配置，你（或者云平台提供商）可以实现让节点向容器仓库认证的机制</li></ul></li></ul><p>下面将详细描述每一项。</p><h3 id=configuring-nodes-to-authenticate-to-a-private-registry>配置 Node 对私有仓库认证</h3><p>设置凭据的具体说明取决于你选择使用的容器运行时和仓库。
+你应该参考解决方案的文档来获取最准确的信息。</p><p>有关配置私有容器镜像仓库的示例，
+请参阅任务<a href=/zh-cn/docs/tasks/configure-pod-container/pull-image-private-registry>从私有镜像库中拉取镜像</a>。
+该示例使用 Docker Hub 中的私有注册表。</p><h3 id=config-json>config.json 说明</h3><p>对于 <code>config.json</code> 的解释在原始 Docker 实现和 Kubernetes 的解释之间有所不同。
+在 Docker 中，<code>auths</code> 键只能指定根 URL，而 Kubernetes 允许 glob URLs 以及前缀匹配的路径。
+这意味着，像这样的 <code>config.json</code> 是有效的：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;auths&#34;</span>: {
+</span></span><span style=display:flex><span>        <span style=color:green;font-weight:700>&#34;*my-registry.io/images&#34;</span>: {
+</span></span><span style=display:flex><span>            <span style=color:green;font-weight:700>&#34;auth&#34;</span>: <span style=color:#b44>&#34;…&#34;</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>使用以下语法匹配根 URL （<code>*my-registry.io</code>）：</p><pre tabindex=0><code>pattern:
+    { term }
+
+term:
+    &#39;*&#39;         匹配任何无分隔符字符序列
+    &#39;?&#39;         匹配任意单个非分隔符
+    &#39;[&#39; [ &#39;^&#39; ] 字符范围
+                  字符集（必须非空）
+    c           匹配字符 c （c 不为 &#39;*&#39;, &#39;?&#39;, &#39;\\&#39;, &#39;[&#39;）
+    &#39;\\&#39; c      匹配字符 c
+
+字符范围: 
+    c           匹配字符 c （c 不为 &#39;\\&#39;, &#39;?&#39;, &#39;-&#39;, &#39;]&#39;）
+    &#39;\\&#39; c      匹配字符 c
+    lo &#39;-&#39; hi   匹配字符范围在 lo 到 hi 之间字符
+</code></pre><p>现在镜像拉取操作会将每种有效模式的凭据都传递给 CRI 容器运行时。例如下面的容器镜像名称会匹配成功：</p><ul><li><code>my-registry.io/images</code></li><li><code>my-registry.io/images/my-image</code></li><li><code>my-registry.io/images/another-image</code></li><li><code>sub.my-registry.io/images/my-image</code></li><li><code>a.sub.my-registry.io/images/my-image</code></li></ul><p>kubelet 为每个找到的凭证的镜像按顺序拉取。这意味着在 <code>config.json</code> 中可能有多项：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:green;font-weight:700>&#34;auths&#34;</span>: {
+</span></span><span style=display:flex><span>        <span style=color:green;font-weight:700>&#34;my-registry.io/images&#34;</span>: {
+</span></span><span style=display:flex><span>            <span style=color:green;font-weight:700>&#34;auth&#34;</span>: <span style=color:#b44>&#34;…&#34;</span>
+</span></span><span style=display:flex><span>        },
+</span></span><span style=display:flex><span>        <span style=color:green;font-weight:700>&#34;my-registry.io/images/subpath&#34;</span>: {
+</span></span><span style=display:flex><span>            <span style=color:green;font-weight:700>&#34;auth&#34;</span>: <span style=color:#b44>&#34;…&#34;</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>如果一个容器指定了要拉取的镜像 <code>my-registry.io/images/subpath/my-image</code>，
+并且其中一个失败，kubelet 将尝试从另一个身份验证源下载镜像。</p><h3 id=pre-pulled-images>提前拉取镜像</h3><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>该方法适用于你能够控制节点配置的场合。
+如果你的云供应商负责管理节点并自动置换节点，这一方案无法可靠地工作。</div><p>默认情况下，<code>kubelet</code> 会尝试从指定的仓库拉取每个镜像。
+但是，如果容器属性 <code>imagePullPolicy</code> 设置为 <code>IfNotPresent</code> 或者 <code>Never</code>，
+则会优先使用（对应 <code>IfNotPresent</code>）或者一定使用（对应 <code>Never</code>）本地镜像。</p><p>如果你希望使用提前拉取镜像的方法代替仓库认证，就必须保证集群中所有节点提前拉取的镜像是相同的。</p><p>这一方案可以用来提前载入指定的镜像以提高速度，或者作为向私有仓库执行身份认证的一种替代方案。</p><p>所有的 Pod 都可以使用节点上提前拉取的镜像。</p><h3 id=specifying-imagepullsecrets-on-a-pod>在 Pod 上指定 ImagePullSecrets</h3><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>运行使用私有仓库中镜像的容器时，建议使用这种方法。</div><p>Kubernetes 支持在 Pod 中设置容器镜像仓库的密钥。
+<code>imagePullSecrets</code> 必须全部与 Pod 位于同一个名字空间中。
+引用的 Secret 必须是 <code>kubernetes.io/dockercfg</code> 或 <code>kubernetes.io/dockerconfigjson</code> 类型。</p><h4 id=creating-a-secret-with-docker-config>使用 Docker Config 创建 Secret</h4><p>你需要知道用于向仓库进行身份验证的用户名、密码和客户端电子邮件地址，以及它的主机名。
+运行以下命令，注意替换适当的大写值：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create secret docker-registry &lt;name&gt; --docker-server<span style=color:#666>=</span>DOCKER_REGISTRY_SERVER --docker-username<span style=color:#666>=</span>DOCKER_USER --docker-password<span style=color:#666>=</span>DOCKER_PASSWORD --docker-email<span style=color:#666>=</span>DOCKER_EMAIL
+</span></span></code></pre></div><p>如果你已经有 Docker 凭据文件，则可以将凭据文件导入为 Kubernetes
+<a class=glossary-tooltip title='Secret 用于存储敏感信息，如密码、 OAuth 令牌和 SSH 密钥。' data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/configuration/secret/ target=_blank aria-label=Secret>Secret</a>，
+而不是执行上面的命令。
+<a href=/zh-cn/docs/tasks/configure-pod-container/pull-image-private-registry/#registry-secret-existing-credentials>基于已有的 Docker 凭据创建 Secret</a>
+解释了如何完成这一操作。</p><p>如果你在使用多个私有容器仓库，这种技术将特别有用。
+原因是 <code>kubectl create secret docker-registry</code> 创建的是仅适用于某个私有仓库的 Secret。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>Pod 只能引用位于自身所在名字空间中的 Secret，因此需要针对每个名字空间重复执行上述过程。</div><h4 id=referring-to-an-imagepullsecrets-on-a-pod>在 Pod 中引用 ImagePullSecrets</h4><p>现在，在创建 Pod 时，可以在 Pod 定义中增加 <code>imagePullSecrets</code> 部分来引用该 Secret。
+<code>imagePullSecrets</code> 数组中的每一项只能引用同一名字空间中的 Secret。</p><p>例如：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>cat <span style=color:#b44>&lt;&lt;EOF &gt; pod.yaml
+</span></span></span><span style=display:flex><span><span style=color:#b44>apiVersion: v1
+</span></span></span><span style=display:flex><span><span style=color:#b44>kind: Pod
+</span></span></span><span style=display:flex><span><span style=color:#b44>metadata:
+</span></span></span><span style=display:flex><span><span style=color:#b44>  name: foo
+</span></span></span><span style=display:flex><span><span style=color:#b44>  namespace: awesomeapps
+</span></span></span><span style=display:flex><span><span style=color:#b44>spec:
+</span></span></span><span style=display:flex><span><span style=color:#b44>  containers:
+</span></span></span><span style=display:flex><span><span style=color:#b44>    - name: foo
+</span></span></span><span style=display:flex><span><span style=color:#b44>      image: janedoe/awesomeapp:v1
+</span></span></span><span style=display:flex><span><span style=color:#b44>  imagePullSecrets:
+</span></span></span><span style=display:flex><span><span style=color:#b44>    - name: myregistrykey
+</span></span></span><span style=display:flex><span><span style=color:#b44>EOF</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>cat <span style=color:#b44>&lt;&lt;EOF &gt;&gt; ./kustomization.yaml
+</span></span></span><span style=display:flex><span><span style=color:#b44>resources:
+</span></span></span><span style=display:flex><span><span style=color:#b44>- pod.yaml
+</span></span></span><span style=display:flex><span><span style=color:#b44>EOF</span>
+</span></span></code></pre></div><p>你需要对使用私有仓库的每个 Pod 执行以上操作。不过，
+设置该字段的过程也可以通过为<a href=/zh-cn/docs/tasks/configure-pod-container/configure-service-account/>服务账号</a>资源设置
+<code>imagePullSecrets</code> 来自动完成。
+有关详细指令，
+可参见<a href=/zh-cn/docs/tasks/configure-pod-container/configure-service-account/#add-imagepullsecrets-to-a-service-account>将 ImagePullSecrets 添加到服务账号</a>。</p><p>你也可以将此方法与节点级别的 <code>.docker/config.json</code> 配置结合使用。
+来自不同来源的凭据会被合并。</p><h2 id=use-cases>使用案例</h2><p>配置私有仓库有多种方案，以下是一些常用场景和建议的解决方案。</p><ol><li>集群运行非专有镜像（例如，开源镜像）。镜像不需要隐藏。<ul><li>使用来自公共仓库的公共镜像<ul><li>无需配置</li><li>某些云厂商会自动为公开镜像提供高速缓存，以便提升可用性并缩短拉取镜像所需时间</li></ul></li></ul></li></ol><ol start=2><li>集群运行一些专有镜像，这些镜像需要对公司外部隐藏，对所有集群用户可见<ul><li>使用托管的私有仓库<ul><li>在需要访问私有仓库的节点上可能需要手动配置</li></ul></li><li>或者，在防火墙内运行一个组织内部的私有仓库，并开放读取权限<ul><li>不需要配置 Kubernetes</li></ul></li><li>使用控制镜像访问的托管容器镜像仓库服务<ul><li>与手动配置节点相比，这种方案能更好地处理集群自动扩缩容</li></ul></li><li>或者，在不方便更改节点配置的集群中，使用 <code>imagePullSecrets</code></li></ul></li></ol><ol start=3><li>集群使用专有镜像，且有些镜像需要更严格的访问控制<ul><li>确保 <a href=/zh-cn/docs/reference/access-authn-authz/admission-controllers/#alwayspullimages>AlwaysPullImages 准入控制器</a>被启用。否则，所有 Pod 都可以使用所有镜像。</li><li>确保将敏感数据存储在 Secret 资源中，而不是将其打包在镜像里</li></ul></li></ol><ol start=4><li>集群是多租户的并且每个租户需要自己的私有仓库<ul><li>确保 <a href=/zh-cn/docs/reference/access-authn-authz/admission-controllers/#alwayspullimages>AlwaysPullImages 准入控制器</a>。否则，所有租户的所有的 Pod 都可以使用所有镜像。</li><li>为私有仓库启用鉴权</li><li>为每个租户生成访问仓库的凭据，放置在 Secret 中，并将 Secret 发布到各租户的名字空间下。</li><li>租户将 Secret 添加到每个名字空间中的 imagePullSecrets</li></ul></li></ol><p>如果你需要访问多个仓库，可以为每个仓库创建一个 Secret。</p><h2 id=接下来>接下来</h2><ul><li>阅读 <a href=https://github.com/opencontainers/image-spec/blob/master/manifest.md>OCI Image Manifest 规范</a>。</li><li>了解<a href=/zh-cn/docs/concepts/architecture/garbage-collection/#container-image-garbage-collection>容器镜像垃圾收集</a>。</li><li>了解<a href=/zh-cn/docs/tasks/configure-pod-container/pull-image-private-registry>从私有仓库拉取镜像</a>。</li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-643212488f778acf04bebed65ba34441>2 - 容器环境</h1><p>本页描述了在容器环境里容器可用的资源。</p><h2 id=container-environment>容器环境</h2><p>Kubernetes 的容器环境给容器提供了几个重要的资源：</p><ul><li>文件系统，其中包含一个<a href=/zh-cn/docs/concepts/containers/images/>镜像</a>
+和一个或多个的<a href=/zh-cn/docs/concepts/storage/volumes/>卷</a></li><li>容器自身的信息</li><li>集群中其他对象的信息</li></ul><h3 id=容器信息>容器信息</h3><p>一个容器的 <strong>hostname</strong> 是该容器运行所在的 Pod 的名称。通过 <code>hostname</code> 命令或者调用 libc 中的
+<a href=https://man7.org/linux/man-pages/man2/gethostname.2.html><code>gethostname</code></a> 函数可以获取该名称。</p><p>Pod 名称和命名空间可以通过
+<a href=/zh-cn/docs/tasks/inject-data-application/downward-api-volume-expose-pod-information/>下行 API</a>
+转换为环境变量。</p><p>Pod 定义中的用户所定义的环境变量也可在容器中使用，就像在 container 镜像中静态指定的任何环境变量一样。</p><h3 id=集群信息>集群信息</h3><p>创建容器时正在运行的所有服务都可用作该容器的环境变量。
+这里的服务仅限于新容器的 Pod 所在的名字空间中的服务，以及 Kubernetes 控制面的服务。</p><p>对于名为 <strong>foo</strong> 的服务，当映射到名为 <strong>bar</strong> 的容器时，定义了以下变量：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#b8860b>FOO_SERVICE_HOST</span><span style=color:#666>=</span>&lt;其上服务正运行的主机&gt;
+</span></span><span style=display:flex><span><span style=color:#b8860b>FOO_SERVICE_PORT</span><span style=color:#666>=</span>&lt;其上服务正运行的端口&gt;
+</span></span></code></pre></div><p>服务具有专用的 IP 地址。如果启用了
+<a href=https://releases.k8s.io/v1.25.0/cluster/addons/dns/>DNS 插件</a>，
+可以在容器中通过 DNS 来访问服务。</p><h2 id=接下来>接下来</h2><ul><li>学习更多有关<a href=/zh-cn/docs/concepts/containers/container-lifecycle-hooks/>容器生命周期回调</a>的知识。</li><li>动手<a href=/zh-cn/docs/tasks/configure-pod-container/attach-handler-lifecycle-event/>为容器的生命周期事件设置处理函数</a>。</li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-a858027489648786a3b16264e451272b>3 - 容器运行时类（Runtime Class）</h1><div style=margin-top:10px;margin-bottom:10px><b>特性状态：</b> <code>Kubernetes v1.20 [stable]</code></div><p>本页面描述了 RuntimeClass 资源和运行时的选择机制。</p><p>RuntimeClass 是一个用于选择容器运行时配置的特性，容器运行时配置用于运行 Pod 中的容器。</p><h2 id=motivation>动机</h2><p>你可以在不同的 Pod 设置不同的 RuntimeClass，以提供性能与安全性之间的平衡。
+例如，如果你的部分工作负载需要高级别的信息安全保证，你可以决定在调度这些 Pod
+时尽量使它们在使用硬件虚拟化的容器运行时中运行。
+这样，你将从这些不同运行时所提供的额外隔离中获益，代价是一些额外的开销。</p><p>你还可以使用 RuntimeClass 运行具有相同容器运行时但具有不同设置的 Pod。</p><h2 id=setup>设置</h2><ol><li>在节点上配置 CRI 的实现（取决于所选用的运行时）</li><li>创建相应的 RuntimeClass 资源</li></ol><h3 id=1-在节点上配置-cri-实现>1. 在节点上配置 CRI 实现</h3><p>RuntimeClass 的配置依赖于 运行时接口（CRI）的实现。
+根据你使用的 CRI 实现，查阅相关的文档（<a href=#cri-configuration>下方</a>）来了解如何配置。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>RuntimeClass 假设集群中的节点配置是同构的（换言之，所有的节点在容器运行时方面的配置是相同的）。
+如果需要支持异构节点，配置方法请参阅下面的 <a href=#scheduling>调度</a>。</div><p>所有这些配置都具有相应的 <code>handler</code> 名，并被 RuntimeClass 引用。
+handler 必须是有效的 <a href=/zh-cn/docs/concepts/overview/working-with-objects/names/#dns-label-names>DNS 标签名</a>。</p><h3 id=2-创建相应的-runtimeclass-资源>2. 创建相应的 RuntimeClass 资源</h3><p>在上面步骤 1 中，每个配置都需要有一个用于标识配置的 <code>handler</code>。
+针对每个 handler 需要创建一个 RuntimeClass 对象。</p><p>RuntimeClass 资源当前只有两个重要的字段：RuntimeClass 名 (<code>metadata.name</code>) 和 handler (<code>handler</code>)。
+对象定义如下所示：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#080;font-style:italic># RuntimeClass 定义于 node.k8s.io API 组</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>node.k8s.io/v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>RuntimeClass<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#080;font-style:italic># 用来引用 RuntimeClass 的名字</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#080;font-style:italic># RuntimeClass 是一个集群层面的资源</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>myclass<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#080;font-style:italic># 对应的 CRI 配置的名称</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>handler</span>:<span style=color:#bbb> </span>myconfiguration<span style=color:#bbb>
+</span></span></span></code></pre></div><p>RuntimeClass 对象的名称必须是有效的
+<a href=/zh-cn/docs/concepts/overview/working-with-objects/names#dns-subdomain-names>DNS 子域名</a>。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>建议将 RuntimeClass 写操作（create、update、patch 和 delete）限定于集群管理员使用。
+通常这是默认配置。参阅<a href=/zh-cn/docs/reference/access-authn-authz/authorization/>授权概述</a>了解更多信息。</div><h2 id=usage>使用说明</h2><p>一旦完成集群中 RuntimeClasses 的配置，
+你可以在 Pod spec 中指定 <code>runtimeClassName</code> 来使用它。例如:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>mypod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>runtimeClassName</span>:<span style=color:#bbb> </span>myclass<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#080;font-style:italic># ...</span><span style=color:#bbb>
+</span></span></span></code></pre></div><p>这一设置会告诉 kubelet 使用所指的 RuntimeClass 来运行该 pod。
+如果所指的 RuntimeClass 不存在或者 CRI 无法运行相应的 handler，
+那么 pod 将会进入 <code>Failed</code> 终止<a href=/zh-cn/docs/concepts/workloads/pods/pod-lifecycle/#pod-phase>阶段</a>。
+你可以查看相应的<a href=/zh-cn/docs/tasks/debug/debug-application/debug-running-pod/>事件</a>，
+获取执行过程中的错误信息。</p><p>如果未指定 <code>runtimeClassName</code>，则将使用默认的 RuntimeHandler，相当于禁用 RuntimeClass 功能特性。</p><h3 id=cri-configuration>CRI 配置</h3><p>关于如何安装 CRI 运行时，请查阅
+<a href=/zh-cn/docs/setup/production-environment/container-runtimes/>CRI 安装</a>。</p><h4 id=hahahugoshortcode-s3-hbhb><a class=glossary-tooltip title=强调简单性、健壮性和可移植性的一种容器运行时 data-toggle=tooltip data-placement=top href=https://containerd.io/docs/ target=_blank aria-label=containerd>containerd</a></h4><p>通过 containerd 的 <code>/etc/containerd/config.toml</code> 配置文件来配置运行时 handler。
+handler 需要配置在 runtimes 块中：</p><pre tabindex=0><code>[plugins.&#34;io.containerd.grpc.v1.cri&#34;.containerd.runtimes.${HANDLER_NAME}]
+</code></pre><p>更详细信息，请查阅 containerd 的<a href=https://github.com/containerd/containerd/blob/main/docs/cri/config.md>配置指南</a></p><h4 id=hahahugoshortcode-s4-hbhb><a class=glossary-tooltip title='专用于 Kubernetes 的轻量级容器运行时软件' data-toggle=tooltip data-placement=top href=https://cri-o.io/#what-is-cri-o target=_blank aria-label=CRI-O>CRI-O</a></h4><p>通过 CRI-O 的 <code>/etc/crio/crio.conf</code> 配置文件来配置运行时 handler。
+handler 需要配置在
+<a href=https://github.com/cri-o/cri-o/blob/master/docs/crio.conf.5.md#crioruntime-table>crio.runtime 表</a>之下：</p><pre tabindex=0><code>[crio.runtime.runtimes.${HANDLER_NAME}]
+  runtime_path = &#34;${PATH_TO_BINARY}&#34;
+</code></pre><p>更详细信息，请查阅 CRI-O <a href=https://github.com/cri-o/cri-o/blob/master/docs/crio.conf.5.md>配置文档</a>。</p><h2 id=scheduling>调度</h2><div style=margin-top:10px;margin-bottom:10px><b>特性状态：</b> <code>Kubernetes v1.16 [beta]</code></div><p>通过为 RuntimeClass 指定 <code>scheduling</code> 字段，
+你可以通过设置约束，确保运行该 RuntimeClass 的 Pod 被调度到支持该 RuntimeClass 的节点上。
+如果未设置 <code>scheduling</code>，则假定所有节点均支持此 RuntimeClass。</p><p>为了确保 pod 会被调度到支持指定运行时的 node 上，每个 node 需要设置一个通用的 label 用于被
+<code>runtimeclass.scheduling.nodeSelector</code> 挑选。在 admission 阶段，RuntimeClass 的 nodeSelector 将会与
+pod 的 nodeSelector 合并，取二者的交集。如果有冲突，pod 将会被拒绝。</p><p>如果 node 需要阻止某些需要特定 RuntimeClass 的 pod，可以在 <code>tolerations</code> 中指定。
+与 <code>nodeSelector</code> 一样，tolerations 也在 admission 阶段与 pod 的 tolerations 合并，取二者的并集。</p><p>更多有关 node selector 和 tolerations 的配置信息，请查阅
+<a href=/zh-cn/docs/concepts/scheduling-eviction/assign-pod-node/>将 Pod 分派到节点</a>。</p><h3 id=pod-overhead>Pod 开销</h3><div style=margin-top:10px;margin-bottom:10px><b>特性状态：</b> <code>Kubernetes v1.24 [stable]</code></div><p>你可以指定与运行 Pod 相关的 <em>开销</em> 资源。声明开销即允许集群（包括调度器）在决策 Pod 和资源时将其考虑在内。</p><p>Pod 开销通过 RuntimeClass 的 <code>overhead</code> 字段定义。
+通过使用这个字段，你可以指定使用该 RuntimeClass 运行 Pod 时的开销并确保 Kubernetes 将这些开销计算在内。</p><h2 id=接下来>接下来</h2><ul><li><a href=https://github.com/kubernetes/enhancements/blob/master/keps/sig-node/585-runtime-class/README.md>RuntimeClass 设计</a></li><li><a href=https://github.com/kubernetes/enhancements/blob/master/keps/sig-node/585-runtime-class/README.md#runtimeclass-scheduling>RuntimeClass 调度设计</a></li><li>阅读关于 <a href=/zh-cn/docs/concepts/scheduling-eviction/pod-overhead/>Pod 开销</a> 的概念</li><li><a href=https://github.com/kubernetes/enhancements/tree/master/keps/sig-node/688-pod-overhead>PodOverhead 特性设计</a></li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-e6941d969d81540208a3e78bc56f43bc>4 - 容器生命周期回调</h1><p>这个页面描述了 kubelet 管理的容器如何使用容器生命周期回调框架，
+藉由其管理生命周期中的事件触发，运行指定代码。</p><h2 id=概述>概述</h2><p>类似于许多具有生命周期回调组件的编程语言框架，例如 Angular、Kubernetes 为容器提供了生命周期回调。
+回调使容器能够了解其管理生命周期中的事件，并在执行相应的生命周期回调时运行在处理程序中实现的代码。</p><h2 id=container-hooks>容器回调</h2><p>有两个回调暴露给容器：</p><p><code>PostStart</code></p><p>这个回调在容器被创建之后立即被执行。
+但是，不能保证回调会在容器入口点（ENTRYPOINT）之前执行。
+没有参数传递给处理程序。</p><p><code>PreStop</code></p><p>在容器因 API 请求或者管理事件（诸如存活态探针、启动探针失败、资源抢占、资源竞争等）
+而被终止之前，此回调会被调用。
+如果容器已经处于已终止或者已完成状态，则对 preStop 回调的调用将失败。
+在用来停止容器的 TERM 信号被发出之前，回调必须执行结束。
+Pod 的终止宽限周期在 <code>PreStop</code> 回调被执行之前即开始计数，
+所以无论回调函数的执行结果如何，容器最终都会在 Pod 的终止宽限期内被终止。
+没有参数会被传递给处理程序。</p><p>有关终止行为的更详细描述，请参见
+<a href=/zh-cn/docs/concepts/workloads/pods/pod-lifecycle/#pod-termination>终止 Pod</a>。</p><h3 id=回调处理程序的实现>回调处理程序的实现</h3><p>容器可以通过实现和注册该回调的处理程序来访问该回调。
+针对容器，有两种类型的回调处理程序可供实现：</p><ul><li>Exec - 在容器的 cgroups 和名字空间中执行特定的命令（例如 <code>pre-stop.sh</code>）。
+命令所消耗的资源计入容器的资源消耗。</li><li>HTTP - 对容器上的特定端点执行 HTTP 请求。</li></ul><h3 id=回调处理程序执行>回调处理程序执行</h3><p>当调用容器生命周期管理回调时，Kubernetes 管理系统根据回调动作执行其处理程序，
+<code>httpGet</code> 和 <code>tcpSocket</code> 在 kubelet 进程执行，而 <code>exec</code> 则由容器内执行。</p><p>回调处理程序调用在包含容器的 Pod 上下文中是同步的。
+这意味着对于 <code>PostStart</code> 回调，容器入口点和回调异步触发。
+但是，如果回调运行或挂起的时间太长，则容器无法达到 <code>running</code> 状态。</p><p><code>PreStop</code> 回调并不会与停止容器的信号处理程序异步执行；回调必须在可以发送信号之前完成执行。
+如果 <code>PreStop</code> 回调在执行期间停滞不前，Pod 的阶段会变成 <code>Terminating</code>并且一直处于该状态，
+直到其 <code>terminationGracePeriodSeconds</code> 耗尽为止，这时 Pod 会被杀死。
+这一宽限期是针对 <code>PreStop</code> 回调的执行时间及容器正常停止时间的总和而言的。
+例如，如果 <code>terminationGracePeriodSeconds</code> 是 60，回调函数花了 55 秒钟完成执行，
+而容器在收到信号之后花了 10 秒钟来正常结束，那么容器会在其能够正常结束之前即被杀死，
+因为 <code>terminationGracePeriodSeconds</code> 的值小于后面两件事情所花费的总时间（55+10）。</p><p>如果 <code>PostStart</code> 或 <code>PreStop</code> 回调失败，它会杀死容器。</p><p>用户应该使他们的回调处理程序尽可能的轻量级。
+但也需要考虑长时间运行的命令也很有用的情况，比如在停止容器之前保存状态。</p><h3 id=回调递送保证>回调递送保证</h3><p>回调的递送应该是<strong>至少一次</strong>，这意味着对于任何给定的事件，
+例如 <code>PostStart</code> 或 <code>PreStop</code>，回调可以被调用多次。
+如何正确处理被多次调用的情况，是回调实现所要考虑的问题。</p><p>通常情况下，只会进行单次递送。
+例如，如果 HTTP 回调接收器宕机，无法接收流量，则不会尝试重新发送。
+然而，偶尔也会发生重复递送的可能。
+例如，如果 kubelet 在发送回调的过程中重新启动，回调可能会在 kubelet 恢复后重新发送。</p><h3 id=调试回调处理程序>调试回调处理程序</h3><p>回调处理程序的日志不会在 Pod 事件中公开。
+如果处理程序由于某种原因失败，它将播放一个事件。
+对于 <code>PostStart</code>，这是 <code>FailedPostStartHook</code> 事件，对于 <code>PreStop</code>，这是 <code>FailedPreStopHook</code> 事件。
+要自己生成失败的 <code>FailedPostStartHook</code> 事件，请修改
+<a href=https://raw.githubusercontent.com/kubernetes/website/main/content/en/examples/pods/lifecycle-events.yaml>lifecycle-events.yaml</a>
+文件将 postStart 命令更改为 “badcommand” 并应用它。
+以下是通过运行 <code>kubectl describe pod lifecycle-demo</code> 后你看到的一些结果事件的示例输出：</p><pre tabindex=0><code>Events:
+  Type     Reason               Age              From               Message
+  ----     ------               ----             ----               -------
+  Normal   Scheduled            7s               default-scheduler  Successfully assigned default/lifecycle-demo to ip-XXX-XXX-XX-XX.us-east-2...
+  Normal   Pulled               6s               kubelet            Successfully pulled image &#34;nginx&#34; in 229.604315ms
+  Normal   Pulling              4s (x2 over 6s)  kubelet            Pulling image &#34;nginx&#34;
+  Normal   Created              4s (x2 over 5s)  kubelet            Created container lifecycle-demo-container
+  Normal   Started              4s (x2 over 5s)  kubelet            Started container lifecycle-demo-container
+  Warning  FailedPostStartHook  4s (x2 over 5s)  kubelet            Exec lifecycle hook ([badcommand]) for Container &#34;lifecycle-demo-container&#34; in Pod &#34;lifecycle-demo_default(30229739-9651-4e5a-9a32-a8f1688862db)&#34; failed - error: command &#39;badcommand&#39; exited with 126: , message: &#34;OCI runtime exec failed: exec failed: container_linux.go:380: starting container process caused: exec: \&#34;badcommand\&#34;: executable file not found in $PATH: unknown\r\n&#34;
+  Normal   Killing              4s (x2 over 5s)  kubelet            FailedPostStartHook
+  Normal   Pulled               4s               kubelet            Successfully pulled image &#34;nginx&#34; in 215.66395ms
+  Warning  BackOff              2s (x2 over 3s)  kubelet            Back-off restarting failed container
+</code></pre><h2 id=接下来>接下来</h2><ul><li>进一步了解<a href=/zh-cn/docs/concepts/containers/container-environment/>容器环境</a>。</li><li>动手<a href=/zh-cn/docs/tasks/configure-pod-container/attach-handler-lifecycle-event/>为容器的生命周期事件设置处理函数</a>。</li></ul></div></main></div></div><footer class=d-print-none><div class=footer__links><nav><a class=text-white href=/zh-cn/docs/home/>主页</a>
+<a class=text-white href=/zh-cn/blog/>博客</a>
+<a class=text-white href=/zh-cn/training/>培训</a>
+<a class=text-white href=/zh-cn/partners/>合作伙伴</a>
+<a class=text-white href=/zh-cn/community/>社区</a>
+<a class=text-white href=/zh-cn/case-studies/>案例分析</a></nav></div><div class=container-fluid><div class=row><div class="col-6 col-sm-2 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="User mailing list" aria-label="User mailing list"><a class=text-white target=_blank href=https://discuss.kubernetes.io><i class="fa fa-envelope"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank href=https://twitter.com/kubernetesio><i class="fab fa-twitter"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Calendar aria-label=Calendar><a class=text-white target=_blank href="https://calendar.google.com/calendar/embed?src=calendar%40kubernetes.io"><i class="fas fa-calendar-alt"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Youtube aria-label=Youtube><a class=text-white target=_blank href=https://youtube.com/kubernetescommunity><i class="fab fa-youtube"></i></a></li></ul></div><div class="col-6 col-sm-2 text-right text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank href=https://github.com/kubernetes/kubernetes><i class="fab fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Slack aria-label=Slack><a class=text-white target=_blank href=https://slack.k8s.io><i class="fab fa-slack"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Contribute aria-label=Contribute><a class=text-white target=_blank href=https://git.k8s.io/community/contributors/guide><i class="fas fa-edit"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="Stack Overflow" aria-label="Stack Overflow"><a class=text-white target=_blank href=https://stackoverflow.com/questions/tagged/kubernetes><i class="fab fa-stack-overflow"></i></a></li></ul></div><div class="col-12 col-sm-8 text-center order-sm-2"><small class=text-white>&copy; 2023 The Kubernetes 作者 | 文档发布基于 <a href=https://git.k8s.io/website/LICENSE class=light-text>CC BY 4.0</a> 授权许可</small><br><small class=text-white>Copyright &copy; 2023 Linux 基金会&reg;。保留所有权利。Linux 基金会已注册并使用商标。如需了解 Linux 基金会的商标列表，请访问<a href=https://www.linuxfoundation.org/trademark-usage class=light-text>商标使用页面</a></small><br><small class=text-white>ICP license: 京ICP备17074266号-3</small></div></div></div></footer></div><script src=/js/jquery-3.6.0.min.js integrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script>
+<script src=/js/popper-1.16.1.min.js intregrity=sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN crossorigin=anonymous></script>
+<script src=/js/bootstrap-4.6.1.min.js integrity=sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2 crossorigin=anonymous></script>
+<script src=/js/script.js></script>
+<script async src=/js/mermaid-8.13.4.min.js integrity=sha384-5hHNvPeMrNH14oM3IcQofDoBhiclNK3g2+hnEinKzQ07C4AliMeVpnvxuiwEGpaO crossorigin=anonymous></script>
+<script src=/js/main.min.5c0bf7f21dc4f66485f74efbbeeff28a7e4f8cddaac1bae47043159c922ff3a3.js integrity="sha256-XAv38h3E9mSF9077vu/yin5PjN2qwbrkcEMVnJIv86M=" crossorigin=anonymous></script></body></html>

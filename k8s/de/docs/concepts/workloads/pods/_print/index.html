@@ -1,0 +1,229 @@
+<!doctype html><html lang=de class=no-js><head><meta name=robots content="noindex, nofollow"><link rel=alternate hreflang=en href=https://kubernetes.io/docs/concepts/workloads/pods/><link rel=alternate hreflang=zh-cn href=https://kubernetes.io/zh-cn/docs/concepts/workloads/pods/><link rel=alternate hreflang=ko href=https://kubernetes.io/ko/docs/concepts/workloads/pods/><link rel=alternate hreflang=ja href=https://kubernetes.io/ja/docs/concepts/workloads/pods/><link rel=alternate hreflang=fr href=https://kubernetes.io/fr/docs/concepts/workloads/pods/><link rel=alternate hreflang=es href=https://kubernetes.io/es/docs/concepts/workloads/pods/><link rel=alternate hreflang=id href=https://kubernetes.io/id/docs/concepts/workloads/pods/><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.110.0"><link rel=canonical type=text/html href=https://kubernetes.io/de/docs/concepts/workloads/pods/><link rel="shortcut icon" type=image/png href=/images/favicon.png><link rel=apple-touch-icon href=/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=manifest href=/manifest.webmanifest><link rel=apple-touch-icon href=/images/kubernetes-192x192.png><title>Pods | Kubernetes</title><meta property="og:title" content="Pods"><meta property="og:description" content="Produktionsreife Container-Orchestrierung"><meta property="og:type" content="website"><meta property="og:url" content="https://kubernetes.io/de/docs/concepts/workloads/pods/"><meta property="og:site_name" content="Kubernetes"><meta itemprop=name content="Pods"><meta itemprop=description content="Produktionsreife Container-Orchestrierung"><meta name=twitter:card content="summary"><meta name=twitter:title content="Pods"><meta name=twitter:description content="Produktionsreife Container-Orchestrierung"><link href=/scss/main.css rel=stylesheet><script type=application/ld+json>{"@context":"https://schema.org","@type":"Organization","url":"https://kubernetes.io","logo":"https://kubernetes.io/images/favicon.png","potentialAction":{"@type":"SearchAction","target":"https://kubernetes.io/search/?q={search_term_string}","query-input":"required name=search_term_string"}}</script><meta name=theme-color content="#326ce5"><link rel=stylesheet href=/css/feature-states.css><meta name=description content="Pods sind die kleinsten einsetzbaren Einheiten, die in Kubernetes erstellt und verwaltet werden können.
+Ein Pod (übersetzt Gruppe/Schote, wie z. B. eine Gruppe von Walen oder eine Erbsenschote) ist eine Gruppe von einem oder mehreren Containern mit gemeinsam genutzten Speicher- und Netzwerkressourcen und einer Spezifikation für die Ausführung der Container. Die Ressourcen eines Pods befinden sich immer auf dem gleichen (virtuellen) Server, werden gemeinsam geplant und in einem gemeinsamen Kontext ausgeführt."><meta property="og:description" content="Pods sind die kleinsten einsetzbaren Einheiten, die in Kubernetes erstellt und verwaltet werden können.
+Ein Pod (übersetzt Gruppe/Schote, wie z. B. eine Gruppe von Walen oder eine Erbsenschote) ist eine Gruppe von einem oder mehreren Containern mit gemeinsam genutzten Speicher- und Netzwerkressourcen und einer Spezifikation für die Ausführung der Container. Die Ressourcen eines Pods befinden sich immer auf dem gleichen (virtuellen) Server, werden gemeinsam geplant und in einem gemeinsamen Kontext ausgeführt."><meta name=twitter:description content="Pods sind die kleinsten einsetzbaren Einheiten, die in Kubernetes erstellt und verwaltet werden können.
+Ein Pod (übersetzt Gruppe/Schote, wie z. B. eine Gruppe von Walen oder eine Erbsenschote) ist eine Gruppe von einem oder mehreren Containern mit gemeinsam genutzten Speicher- und Netzwerkressourcen und einer Spezifikation für die Ausführung der Container. Die Ressourcen eines Pods befinden sich immer auf dem gleichen (virtuellen) Server, werden gemeinsam geplant und in einem gemeinsamen Kontext ausgeführt."><meta property="og:url" content="https://kubernetes.io/de/docs/concepts/workloads/pods/"><meta property="og:title" content="Pods"><meta name=twitter:title content="Pods"><meta name=twitter:image content="https://kubernetes.io/images/favicon.png"><meta name=twitter:image:alt content="Kubernetes"><meta property="og:image" content="/images/kubernetes-horizontal-color.png"><meta property="og:type" content="article"><script src=/js/jquery-3.6.0.min.js intregrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script></head><body class=td-section><header><nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar" data-auto-burger=primary><a class=navbar-brand href=/de/></a><div class="td-navbar-nav-scroll ml-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0"><li class="nav-item mr-2 mb-lg-0"><a class="nav-link active" href=/de/docs/>Dokumentation</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/de/blog/>Kubernetes Blog</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/de/training/>Schulungen</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/de/partners/>Partner</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/de/community/>Community</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/de/case-studies/>Fallstudien</a></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>Versions</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/de/releases>Release Information</a>
+<a class=dropdown-item href=https://kubernetes.io/de/docs/concepts/workloads/pods/>v1.25</a>
+<a class=dropdown-item href=https://v1-24.docs.kubernetes.io/de/docs/concepts/workloads/pods/>v1.24</a>
+<a class=dropdown-item href=https://v1-23.docs.kubernetes.io/de/docs/concepts/workloads/pods/>v1.23</a>
+<a class=dropdown-item href=https://v1-22.docs.kubernetes.io/de/docs/concepts/workloads/pods/>v1.22</a>
+<a class=dropdown-item href=https://v1-21.docs.kubernetes.io/de/docs/concepts/workloads/pods/>v1.21</a></div></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdownMenuLink role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>Deutsch (German)</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/docs/concepts/workloads/pods/>English</a>
+<a class=dropdown-item href=/zh-cn/docs/concepts/workloads/pods/>中文 (Chinese)</a>
+<a class=dropdown-item href=/ko/docs/concepts/workloads/pods/>한국어 (Korean)</a>
+<a class=dropdown-item href=/ja/docs/concepts/workloads/pods/>日本語 (Japanese)</a>
+<a class=dropdown-item href=/fr/docs/concepts/workloads/pods/>Français (French)</a>
+<a class=dropdown-item href=/es/docs/concepts/workloads/pods/>Español (Spanish)</a>
+<a class=dropdown-item href=/id/docs/concepts/workloads/pods/>Bahasa Indonesia</a></div></li></ul></div><button id=hamburger onclick=kub.toggleMenu() data-auto-burger-exclude><div></div></button></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><div class=td-content><div class="pageinfo pageinfo-primary d-print-none"><p>Das ist eine für den Ausdruck optimierte Ansicht des gesamten Kapitels inkl. Unterseiten.
+<a href=# onclick="return print(),!1">Druckvorgang starten</a>.</p><p><a href=/de/docs/concepts/workloads/pods/>Zur Standardansicht zurückkehren</a>.</p></div><h1 class=title>Pods</h1><ul></ul><div class=content><p><em>Pods</em> sind die kleinsten einsetzbaren Einheiten, die in Kubernetes
+erstellt und verwaltet werden können.</p><p>Ein <em>Pod</em> (übersetzt Gruppe/Schote, wie z. B. eine Gruppe von Walen oder eine
+Erbsenschote) ist eine Gruppe von einem oder mehreren
+<a class=glossary-tooltip title='A lightweight and portable executable image that contains software and all of its dependencies.' data-toggle=tooltip data-placement=top href=/docs/concepts/containers/ target=_blank aria-label=Containern>Containern</a> mit gemeinsam
+genutzten Speicher- und Netzwerkressourcen und einer Spezifikation für die
+Ausführung der Container. Die Ressourcen eines Pods befinden sich immer auf dem
+gleichen (virtuellen) Server, werden gemeinsam geplant und in einem
+gemeinsamen Kontext ausgeführt. Ein Pod modelliert einen anwendungsspezifischen
+"logischen Server": Er enthält eine oder mehrere containerisierte Anwendungen,
+die relativ stark voneinander abhängen.
+In Nicht-Cloud-Kontexten sind Anwendungen, die auf
+demselben physischen oder virtuellen Server ausgeführt werden, vergleichbar zu
+Cloud-Anwendungen, die auf demselben logischen Server ausgeführt werden.</p><p>Ein Pod kann neben Anwendungs-Containern auch sogenannte
+<a href=/docs/concepts/workloads/pods/init-containers/>Initialisierungs-Container</a>
+enthalten, die beim Starten des Pods ausgeführt werden.
+Es können auch
+kurzlebige/<a href=/docs/concepts/workloads/pods/ephemeral-containers/>ephemere Container</a>
+zum Debuggen gestartet werden, wenn dies der Cluster anbietet.</p><h2 id=was-ist-ein-pod>Was ist ein Pod?</h2><div class="alert alert-info note callout" role=alert><strong>Hinweis:</strong> Obwohl Kubernetes abgesehen von <a href=https://www.docker.com/>Docker</a> auch andere
+<a class=glossary-tooltip title='The container runtime is the software that is responsible for running containers.' data-toggle=tooltip data-placement=top href=/docs/setup/production-environment/container-runtimes target=_blank aria-label=Container-Laufzeitumgebungen>Container-Laufzeitumgebungen</a> unterstützt, ist Docker am bekanntesten und
+es ist hilfreich, Pods mit der Terminologie von Docker zu beschreiben.</div><p>Der gemeinsame Kontext eines Pods besteht aus einer Reihe von Linux-Namespaces,
+Cgroups und möglicherweise anderen Aspekten der Isolation, also die gleichen
+Dinge, die einen Dockercontainer isolieren. Innerhalb des Kontexts eines Pods
+können die einzelnen Anwendungen weitere Unterisolierungen haben.</p><p>Im Sinne von Docker-Konzepten ähnelt ein Pod einer Gruppe von Docker-Containern,
+die gemeinsame Namespaces und Dateisystem-Volumes nutzen.</p><h2 id=pods-verwenden>Pods verwenden</h2><p>Normalerweise müssen keine Pods erzeugt werden, auch keine Singleton-Pods.
+Stattdessen werden sie mit Workload-Ressourcen wie <a class=glossary-tooltip title='Manages a replicated application on your cluster.' data-toggle=tooltip data-placement=top href=/docs/concepts/workloads/controllers/deployment/ target=_blank aria-label=Deployment>Deployment</a> oder <a class=glossary-tooltip title='A finite or batch task that runs to completion.' data-toggle=tooltip data-placement=top href=/docs/concepts/workloads/controllers/job/ target=_blank aria-label=Job>Job</a> erzeugt. Für Pods, die von einem Systemzustand
+abhängen, ist die Nutzung von <a class=glossary-tooltip title='Manages deployment and scaling of a set of Pods, with durable storage and persistent identifiers for each Pod.' data-toggle=tooltip data-placement=top href=/docs/concepts/workloads/controllers/statefulset/ target=_blank aria-label=StatefulSet>StatefulSet</a>-Ressourcen zu erwägen.</p><p>Pods in einem Kubernetes-Cluster werden hauptsächlich auf zwei Arten verwendet:</p><ul><li><strong>Pods, die einen einzelnen Container ausführen</strong>. Das
+"Ein-Container-per-Pod"-Modell ist der häufigste Kubernetes-Anwendungsfall. In
+diesem Fall kannst du dir einen einen Pod als einen Behälter vorstellen, der einen
+einzelnen Container enthält; Kubernetes verwaltet die Pods anstatt die
+Container direkt zu verwalten.</li><li><strong>Pods, in denen mehrere Container ausgeführt werden, die zusammenarbeiten
+müssen</strong>. Wenn eine Softwareanwendung aus co-lokaliserten Containern besteht,
+die sich gemeinsame Ressourcen teilen und stark voneinander abhängen, kann ein
+Pod die Container verkapseln.
+Diese Container bilden eine einzelne zusammenhängende
+Serviceeinheit, z. B. ein Container, der Daten in einem gemeinsam genutzten
+Volume öffentlich verfügbar macht, während ein separater <em>Sidecar</em>-Container
+die Daten aktualisiert. Der Pod fasst die Container, die Speicherressourcen
+und eine kurzlebiges Netzwerk-Identität als eine Einheit zusammen.</li></ul><div class="alert alert-info note callout" role=alert><strong>Hinweis:</strong> Das Gruppieren mehrerer gemeinsam lokalisierter und gemeinsam verwalteter
+Container in einem einzigen Pod ist ein relativ fortgeschrittener
+Anwendungsfall. Du solltest diese Architektur nur in bestimmten Fällen
+verwenden, wenn deine Container stark voneinander abhängen.</div><p>Jeder Pod sollte eine einzelne Instanz einer gegebenen Anwendung ausführen. Wenn
+du deine Anwendung horizontal skalieren willst (um mehr Instanzen auszuführen
+und dadurch mehr Gesamtressourcen bereitstellen), solltest du mehrere Pods
+verwenden, einen für jede Instanz.
+In Kubernetes wird dies typischerweise als Replikation bezeichnet.
+Replizierte Pods werden normalerweise als eine Gruppe durch eine
+Workload-Ressource und deren
+<a class=glossary-tooltip title='A control loop that watches the shared state of the cluster through the apiserver and makes changes attempting to move the current state towards the desired state.' data-toggle=tooltip data-placement=top href=/docs/concepts/architecture/controller/ target=_blank aria-label=Controller>Controller</a> erstellt
+und verwaltet.</p><p>Der Abschnitt <a href=#pods-und-controller>Pods und Controller</a> beschreibt, wie
+Kubernetes Workload-Ressourcen und deren Controller verwendet, um Anwendungen
+zu skalieren und zu heilen.</p><h3 id=wie-pods-mehrere-container-verwalten>Wie Pods mehrere Container verwalten</h3><p>Pods unterstützen mehrere kooperierende Prozesse (als Container), die eine
+zusammenhängende Serviceeinheit bilden. Kubernetes plant und stellt automatisch
+sicher, dass sich die Container in einem Pod auf demselben physischen oder
+virtuellen Server im Cluster befinden. Die Container können Ressourcen und
+Abhängigkeiten gemeinsam nutzen, miteinander kommunizieren und
+ferner koordinieren wann und wie sie beendet werden.</p><p>Zum Beispiel könntest du einen Container haben, der als Webserver für Dateien in
+einem gemeinsamen Volume arbeitet. Und ein separater "Sidecar" -Container
+aktualisiert die Daten von einer externen Datenquelle, siehe folgenden
+Abbildung:</p><figure><img src=/images/docs/pod.svg alt=Pod-Beispieldiagramm width=50%></figure><p>Einige Pods haben sowohl <a class=glossary-tooltip title='One or more initialization containers that must run to completion before any app containers run.' data-toggle=tooltip data-placement=top href='/de/docs/reference/glossary/?all=true#term-init-container' target=_blank aria-label=Initialisierungs-Container>Initialisierungs-Container</a> als auch <a class=glossary-tooltip title='A container used to run part of a workload. Compare with init container.' data-toggle=tooltip data-placement=top href='/de/docs/reference/glossary/?all=true#term-app-container' target=_blank aria-label=Anwendungs-Container>Anwendungs-Container</a>.
+Initialisierungs-Container werden gestartet und beendet bevor die
+Anwendungs-Container gestartet werden.</p><p>Pods stellen standardmäßig zwei Arten von gemeinsam Ressourcen für die
+enthaltenen Container bereit:
+<a href=#pod-netzwerk>Netzwerk</a> und <a href=#datenspeicherung-in-pods>Speicher</a>.</p><h2 id=mit-pods-arbeiten>Mit Pods arbeiten</h2><p>Du wirst selten einzelne Pods direkt in Kubernetes erstellen, selbst
+Singleton-Pods. Das liegt daran, dass Pods als relativ kurzlebige
+Einweg-Einheiten konzipiert sind. Wenn ein Pod erstellt wird (entweder direkt
+von Ihnen oder indirekt von einem
+<a class=glossary-tooltip title='A control loop that watches the shared state of the cluster through the apiserver and makes changes attempting to move the current state towards the desired state.' data-toggle=tooltip data-placement=top href=/docs/concepts/architecture/controller/ target=_blank aria-label=Controller>Controller</a>), wird die
+Ausführung auf einem <a class=glossary-tooltip title='A node is a worker machine in Kubernetes.' data-toggle=tooltip data-placement=top href=/docs/concepts/architecture/nodes/ target=_blank aria-label=Node>Node</a> in Ihrem Cluster
+geplant. Der Pod bleibt auf diesem (virtuellen) Server, bis entweder der Pod die
+Ausführung beendet hat, das Pod-Objekt gelöscht wird, der Pod aufgrund
+mangelnder Ressourcen <em>evakuiert</em> wird oder der Node ausfällt.</p><div class="alert alert-info note callout" role=alert><strong>Hinweis:</strong> Das Neustarten eines Containers in einem Pod sollte nicht mit dem Neustarten
+eines Pods verwechselt werden. Ein Pod ist kein Prozess, sondern eine Umgebung
+zur Ausführung von Containern. Ein Pod bleibt bestehen bis er gelöscht wird.</div><p>Stelle beim Erstellen des Manifests für ein Pod-Objekt sicher, dass der
+angegebene Name ein gültiger
+<a href=/docs/concepts/overview/working-with-objects/names#dns-subdomain-names>DNS-Subdomain-Name</a>
+ist.</p><h3 id=pods-und-controller>Pods und Controller</h3><p>Mit Workload-Ressourcen kannst du mehrere Pods erstellen und verwalten. Ein
+Controller für die Ressource kümmert sich um Replikation, Roll-Out sowie
+automatische Wiederherstellung im Fall von versagenden Pods. Wenn beispielsweise ein Node
+ausfällt, bemerkt ein Controller, dass die Pods auf dem Node nicht mehr laufen
+und plant die Ausführung eines Ersatzpods auf einem funktionierenden Node.
+Hier sind einige Beispiele für Workload-Ressourcen, die einen oder mehrere Pods
+verwalten:</p><ul><li><a class=glossary-tooltip title='Manages a replicated application on your cluster.' data-toggle=tooltip data-placement=top href=/docs/concepts/workloads/controllers/deployment/ target=_blank aria-label=Deployment>Deployment</a></li><li><a class=glossary-tooltip title='Manages deployment and scaling of a set of Pods, with durable storage and persistent identifiers for each Pod.' data-toggle=tooltip data-placement=top href=/docs/concepts/workloads/controllers/statefulset/ target=_blank aria-label=StatefulSet>StatefulSet</a></li><li><a class=glossary-tooltip title='Ensures a copy of a Pod is running across a set of nodes in a cluster.' data-toggle=tooltip data-placement=top href=/docs/concepts/workloads/controllers/daemonset target=_blank aria-label=DaemonSet>DaemonSet</a></li></ul><h3 id=pod-vorlagen>Pod-Vorlagen</h3><p>Controller für
+<a class=glossary-tooltip title='A workload is an application running on Kubernetes.' data-toggle=tooltip data-placement=top href=/docs/concepts/workloads/ target=_blank aria-label=Workload>Workload</a>-Ressourcen
+erstellen Pods von einer <em>Pod-Vorlage</em> und verwalten diese Pods für dich.</p><p>Pod-Vorlagen sind Spezifikationen zum Erstellen von Pods und sind in
+Workload-Ressourcen enthalten wie z. B.
+<a href=/docs/concepts/workloads/controllers/deployment/>Deployments</a>,
+<a href=/docs/concepts/workloads/controllers/job/>Jobs</a>, and
+<a href=/docs/concepts/workloads/controllers/daemonset/>DaemonSets</a>.</p><p>Jeder Controller für eine Workload-Ressource verwendet die Pod-Vorlage innerhalb
+des Workload-Objektes, um Pods zu erzeugen. Die Pod-Vorlage ist Teil des
+gewünschten Zustands der Workload-Ressource, mit der du deine Anwendung
+ausgeführt hast.</p><p>Das folgende Beispiel ist ein Manifest für einen einfachen Job mit einer
+<code>Vorlage</code>, die einen Container startet. Der Container in diesem Pod druckt
+eine Nachricht und pausiert dann.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>batch/v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Job<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb> </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>hello<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb> </span><span style=color:green;font-weight:700>template</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb> </span><span style=color:#080;font-style:italic># Dies is the Pod-Vorlage</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb> </span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb> </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb> </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>hello<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb> </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>busybox<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb> </span><span style=color:green;font-weight:700>command</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#39;sh&#39;</span>,<span style=color:#bbb> </span><span style=color:#b44>&#39;-c&#39;</span>,<span style=color:#bbb> </span><span style=color:#b44>&#39;echo &#34;Hello, Kubernetes!&#34; &amp;&amp; sleep 3600&#39;</span>]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb> </span><span style=color:green;font-weight:700>restartPolicy</span>:<span style=color:#bbb> </span>OnFailure<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb> </span><span style=color:#080;font-style:italic># Die Pod-Vorlage endet hier</span><span style=color:#bbb>
+</span></span></span></code></pre></div><p>Das Ändern der Pod-Vorlage oder der Wechsel zu einer neuen Pod-Vorlage hat keine
+direkten Auswirkungen auf bereits existierende Pods. Wenn du die Pod-Vorlage für
+eine Workload-Ressource änderst, dann muss diese Ressource die Ersatz-Pods
+erstellen, welche die aktualisierte Vorlage verwenden.</p><p>Beispielsweise stellt der StatefulSet-Controller sicher, dass für jedes
+StatefulSet-Objekt die ausgeführten Pods mit der aktueller Pod-Vorlage
+übereinstimmen. Wenn du das StatefulSet bearbeitest und die Vorlage änderst,
+beginnt das StatefulSet mit der Erstellung neuer Pods basierend auf der
+aktualisierten Vorlage. Schließlich werden alle alten Pods durch neue Pods
+ersetzt, und das Update ist abgeschlossen.</p><p>Jede Workload-Ressource implementiert eigenen Regeln für die Umsetzung von
+Änderungen der Pod-Vorlage. Wenn du mehr über StatefulSet erfahren möchtest,
+dann lese die Seite
+<a href=/docs/tutorials/stateful-application/basic-stateful-set/#updating-statefulsets>Update-Strategien</a>
+im Tutorial StatefulSet Basics.</p><p>Auf Nodes beobachtet oder verwaltet das
+<a class=glossary-tooltip title='Ein Agent, der auf jedem Node im Cluster ausgeführt wird. Er stellt sicher, dass Container in einem Pod ausgeführt werden.' data-toggle=tooltip data-placement=top href=/docs/reference/generated/kubelet target=_blank aria-label=Kubelet>Kubelet</a>
+nicht direkt die Details zu Pod-Vorlagen und Updates. Diese Details sind
+abstrahiert. Die Abstraktion und Trennung von Aufgaben vereinfacht die
+Systemsemantik und ermöglicht so das Verhalten des Clusters zu ändern ohne
+vorhandenen Code zu ändern.</p><h2 id=pod-update-und-austausch>Pod Update und Austausch</h2><p>Wie im vorherigen Abschnitt erwähnt, erstellt der Controller neue Pods basierend
+auf der aktualisierten Vorlage, wenn die Pod-Vorlage für eine Workload-Ressource
+geändert wird anstatt die vorhandenen Pods zu aktualisieren oder zu patchen.</p><p>Kubernetes hindert dich nicht daran, Pods direkt zu verwalten. Es ist möglich,
+einige Felder eines laufenden Pods zu aktualisieren. Allerdings haben
+Pod-Aktualisierungsvorgänge wie zum Beispiel
+<a href=/docs/reference/generated/kubernetes-api/v1.25/#patch-pod-v1-core><code>patch</code></a>,
+und
+<a href=/docs/reference/generated/kubernetes-api/v1.25/#replace-pod-v1-core><code>replace</code></a>
+einige Einschränkungen:</p><ul><li><p>Die meisten Metadaten zu einem Pod können nicht verändert werden. Zum Beispiel kannst
+du nicht die Felder <code>namespace</code>, <code>name</code>, <code>uid</code>, oder <code>creationTimestamp</code>
+ändern. Das <code>generation</code>-Feld muss eindeutig sein. Es werden nur Aktualisierungen
+akzeptiert, die den Wert des Feldes inkrementieren.</p></li><li><p>Wenn das Feld <code>metadata.deletionTimestamp</code> gesetzt ist, kann kein neuer
+Eintrag zur Liste <code>metadata.finalizers</code> hinzugefügt werden.</p></li><li><p>Pod-Updates dürfen keine Felder ändern, die Ausnahmen sind
+<code>spec.containers[*].image</code>,
+<code>spec.initContainers[*].image</code>, <code>spec.activeDeadlineSeconds</code> oder
+<code>spec.tolerations</code>. Für <code>spec.tolerations</code> kannnst du nur neue Einträge
+hinzufügen.</p></li><li><p>Für <code>spec.activeDeadlineSeconds</code> sind nur zwei Änderungen erlaubt:</p><ol><li>ungesetztes Feld in eine positive Zahl</li><li>positive Zahl in eine kleinere positive Zahl, die nicht negativ ist</li></ol></li></ul><h2 id=gemeinsame-nutzung-von-ressourcen-und-kommunikation>Gemeinsame Nutzung von Ressourcen und Kommunikation</h2><p>Pods ermöglichen den Datenaustausch und die Kommunikation zwischen den
+Containern, die im Pod enthalten sind.</p><h3 id=datenspeicherung-in-pods>Datenspeicherung in Pods</h3><p>Ein Pod kann eine Reihe von gemeinsam genutzten Speicher-
+<a class=glossary-tooltip title='A directory containing data, accessible to the containers in a pod.' data-toggle=tooltip data-placement=top href=/docs/concepts/storage/volumes/ target=_blank aria-label=Volumes>Volumes</a> spezifizieren. Alle
+Container im Pod können auf die gemeinsamen Volumes zugreifen und dadurch Daten
+austauschen. Volumes ermöglichen auch, dass Daten ohne Verlust gespeichert
+werden, falls einer der Container neu gestartet werden muss.
+Im Kapitel <a href=/docs/concepts/storage/>Datenspeicherung</a> findest du weitere
+Informationen, wie Kubernetes gemeinsam genutzten Speicher implementiert und
+Pods zur Verfügung stellt.</p><h3 id=pod-netzwerk>Pod-Netzwerk</h3><p>Jedem Pod wird für jede Adressenfamilie eine eindeutige IP-Adresse zugewiesen.
+Jeder Container in einem Pod nutzt den gemeinsamen Netzwerk-Namespace,
+einschließlich der IP-Adresse und der Ports. In einem Pod (und <strong>nur</strong> dann)
+können die Container, die zum Pod gehören, über <code>localhost</code> miteinander
+kommunizieren. Wenn Container in einem Pod mit Entitäten <em>außerhalb des Pods</em>
+kommunizieren, müssen sie koordinieren, wie die gemeinsam genutzten
+Netzwerkressourcen (z. B. Ports) verwenden werden. Innerhalb eines Pods teilen
+sich Container eine IP-Adresse und eine Reihe von Ports und können sich
+gegenseitig über <code>localhost</code> finden. Die Container in einem Pod können auch die
+üblichen Kommunikationsverfahren zwischen Prozessen nutzen, wie z. B.
+SystemV-Semaphoren oder "POSIX Shared Memory". Container in verschiedenen Pods
+haben unterschiedliche IP-Adressen und können nicht per IPC ohne
+<a href=/docs/concepts/policy/pod-security-policy/>spezielle Konfiguration</a>
+kommunizieren. Container, die mit einem Container in einem anderen Pod
+interagieren möchten, müssen IP Netzwerke verwenden.</p><p>Für die Container innerhalb eines Pods stimmt der "hostname" mit dem
+konfigurierten <code>Namen</code> des Pods überein. Mehr dazu im Kapitel
+<a href=/docs/concepts/cluster-administration/networking/>Netzwerke</a>.</p><h2 id=privilegierter-modus-für-container>Privilegierter Modus für Container</h2><p>Jeder Container in einem Pod kann den privilegierten Modus aktivieren, indem
+das Flag <code>privileged</code> im
+<a href=/docs/tasks/configure-pod-container/security-context/>Sicherheitskontext</a>
+der Container-Spezifikation verwendet wird.
+Dies ist nützlich für Container, die Verwaltungsfunktionen des Betriebssystems
+verwenden möchten, z. B. das Manipulieren des Netzwerk-Stacks oder den Zugriff
+auf Hardware. Prozesse innerhalb eines privilegierten Containers erhalten fast
+die gleichen Rechte wie sie Prozessen außerhalb eines Containers zur Verfügung
+stehen.</p><div class="alert alert-info note callout" role=alert><strong>Hinweis:</strong> Ihre
+<a class=glossary-tooltip title='The container runtime is the software that is responsible for running containers.' data-toggle=tooltip data-placement=top href=/docs/setup/production-environment/container-runtimes target=_blank aria-label=Container-Umgebung>Container-Umgebung</a>
+muss das Konzept eines privilegierten Containers unterstützen, damit diese
+Einstellung relevant ist.</div><h2 id=statische-pods>Statische Pods</h2><p><em>Statische Pods</em> werden direkt vom Kubelet-Daemon auf einem bestimmten Node
+verwaltet ohne dass sie vom
+<a class=glossary-tooltip title='Komponente auf dem Master, der die Kubernetes-API verfügbar macht. Es ist das Frontend für die Kubernetes-Steuerebene.' data-toggle=tooltip data-placement=top href=/docs/reference/generated/kube-apiserver/ target=_blank aria-label='API Server'>API Server</a> überwacht
+werden.</p><p>Die meisten Pods werden von der Kontrollebene verwaltet (z. B.
+<a class=glossary-tooltip title='Manages a replicated application on your cluster.' data-toggle=tooltip data-placement=top href=/docs/concepts/workloads/controllers/deployment/ target=_blank aria-label=Deployment>Deployment</a>). Aber für
+statische Pods überwacht das Kubelet jeden statischen Pod direkt (und startet
+ihn neu, wenn er ausfällt).</p><p>Statische Pods sind immer an ein <a class=glossary-tooltip title='Ein Agent, der auf jedem Node im Cluster ausgeführt wird. Er stellt sicher, dass Container in einem Pod ausgeführt werden.' data-toggle=tooltip data-placement=top href=/docs/reference/generated/kubelet target=_blank aria-label=Kubelet>Kubelet</a> auf
+einem bestimmten Node gebunden. Der Hauptanwendungsfall für statische Pods
+besteht darin, eine selbst gehostete Steuerebene auszuführen. Mit anderen
+Worten: Das Kubelet dient zur Überwachung der einzelnen
+<a href=/docs/concepts/overview/components/#control-plane-components>Komponenten der Kontrollebene</a>.</p><p>Das Kubelet versucht automatisch auf dem Kubernetes API-Server für jeden
+statischen Pod einen spiegelbildlichen Pod
+(im Englischen: <a class=glossary-tooltip title='An object in the API server that tracks a static pod on a kubelet.' data-toggle=tooltip data-placement=top href='/de/docs/reference/glossary/?all=true#term-mirror-pod' target=_blank aria-label='mirror pod'>mirror pod</a>)
+zu erstellen.
+Das bedeutet, dass die auf einem Node ausgeführten Pods auf dem API-Server
+sichtbar sind jedoch von dort nicht gesteuert werden können.</p><h2 id=nächste-schritte>Nächste Schritte</h2><ul><li>Verstehe den
+<a href=/docs/concepts/workloads/pods/pod-lifecycle/>Lebenszyklus eines Pods</a>.</li><li>Erfahre mehr über <a href=/docs/concepts/containers/runtime-class/>RuntimeClass</a>
+und wie du damit verschiedene Pods mit unterschiedlichen
+Container-Laufzeitumgebungen konfigurieren kannst.</li><li>Mehr zum Thema
+<a href=/docs/concepts/workloads/pods/pod-topology-spread-constraints/>Restriktionen für die Verteilung von Pods</a>.</li><li>Lese
+<a href=/docs/concepts/workloads/pods/disruptions/>Pod-Disruption-Budget</a>
+und wie du es verwenden kannst, um die Verfügbarkeit von Anwendungen bei
+Störungen zu verwalten. Die
+<a href=/docs/reference/generated/kubernetes-api/v1.25/#pod-v1-core>Pod</a>
+-Objektdefinition beschreibt das Objekt im Detail.</li><li><a href=https://kubernetes.io/blog/2015/06/the-distributed-system-toolkit-patterns>The Distributed System Toolkit: Patterns for Composite Containers</a>
+erläutert allgemeine Layouts für Pods mit mehr als einem Container.</li></ul><p>Um den Hintergrund zu verstehen, warum Kubernetes eine gemeinsame Pod-API in
+andere Ressourcen, wie z. B.
+<a class=glossary-tooltip title='Manages deployment and scaling of a set of Pods, with durable storage and persistent identifiers for each Pod.' data-toggle=tooltip data-placement=top href=/docs/concepts/workloads/controllers/statefulset/ target=_blank aria-label=StatefulSets>StatefulSets</a>
+oder <a class=glossary-tooltip title='Manages a replicated application on your cluster.' data-toggle=tooltip data-placement=top href=/docs/concepts/workloads/controllers/deployment/ target=_blank aria-label=Deployments>Deployments</a> einbindet,
+kannst du Artikel zu früheren Technologien lesen, unter anderem:</p><ul><li><a href=https://aurora.apache.org/documentation/latest/reference/configuration/#job-schema>Aurora</a></li><li><a href=https://research.google.com/pubs/pub43438.html>Borg</a></li><li><a href=https://mesosphere.github.io/marathon/docs/rest-api.html>Marathon</a></li><li><a href=https://research.google/pubs/pub41684/>Omega</a></li><li><a href=https://engineering.fb.com/data-center-engineering/tupperware/>Tupperware</a>.</li></ul></div></div></main></div></div><footer class=d-print-none><div class=footer__links><nav><a class=text-white href=/de/docs/home/>Home</a>
+<a class=text-white href=/de/blog/>Blog</a>
+<a class=text-white href=/de/training/>Schulungen</a>
+<a class=text-white href=/de/partners/>Partner</a>
+<a class=text-white href=/de/community/>Community</a>
+<a class=text-white href=/de/case-studies/>Fallstudien</a></nav></div><div class=container-fluid><div class=row><div class="col-6 col-sm-2 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="User mailing list" aria-label="User mailing list"><a class=text-white target=_blank href=https://discuss.kubernetes.io><i class="fa fa-envelope"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank href=https://twitter.com/kubernetesio><i class="fab fa-twitter"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Calendar aria-label=Calendar><a class=text-white target=_blank href="https://calendar.google.com/calendar/embed?src=calendar%40kubernetes.io"><i class="fas fa-calendar-alt"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Youtube aria-label=Youtube><a class=text-white target=_blank href=https://youtube.com/kubernetescommunity><i class="fab fa-youtube"></i></a></li></ul></div><div class="col-6 col-sm-2 text-right text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank href=https://github.com/kubernetes/kubernetes><i class="fab fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Slack aria-label=Slack><a class=text-white target=_blank href=https://slack.k8s.io><i class="fab fa-slack"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Contribute aria-label=Contribute><a class=text-white target=_blank href=https://git.k8s.io/community/contributors/guide><i class="fas fa-edit"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="Stack Overflow" aria-label="Stack Overflow"><a class=text-white target=_blank href=https://stackoverflow.com/questions/tagged/kubernetes><i class="fab fa-stack-overflow"></i></a></li></ul></div><div class="col-12 col-sm-8 text-center order-sm-2"><small class=text-white>&copy; 2023 The Kubernetes Authors | Documentation Distributed under <a href=https://git.k8s.io/website/LICENSE class=light-text>CC BY 4.0</a></small><br><small class=text-white>Copyright &copy; 2023 The Linux Foundation &reg;. All rights reserved. The Linux Foundation has registered trademarks and uses trademarks. For a list of trademarks of The Linux Foundation, please see our <a href=https://www.linuxfoundation.org/trademark-usage class=light-text>Trademark Usage page</a></small><br><small class=text-white>ICP license: 京ICP备17074266号-3</small></div></div></div></footer></div><script src=/js/jquery-3.6.0.min.js integrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script>
+<script src=/js/popper-1.16.1.min.js intregrity=sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN crossorigin=anonymous></script>
+<script src=/js/bootstrap-4.6.1.min.js integrity=sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2 crossorigin=anonymous></script>
+<script src=/js/script.js></script>
+<script async src=/js/mermaid-8.13.4.min.js integrity=sha384-5hHNvPeMrNH14oM3IcQofDoBhiclNK3g2+hnEinKzQ07C4AliMeVpnvxuiwEGpaO crossorigin=anonymous></script>
+<script src=/js/main.min.5c0bf7f21dc4f66485f74efbbeeff28a7e4f8cddaac1bae47043159c922ff3a3.js integrity="sha256-XAv38h3E9mSF9077vu/yin5PjN2qwbrkcEMVnJIv86M=" crossorigin=anonymous></script></body></html>

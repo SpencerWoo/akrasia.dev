@@ -1,0 +1,957 @@
+<!doctype html><html lang=zh-cn class=no-js><head><meta name=robots content="noindex, nofollow"><link rel=alternate hreflang=en href=https://kubernetes.io/docs/tasks/access-application-cluster/><link rel=alternate hreflang=ko href=https://kubernetes.io/ko/docs/tasks/access-application-cluster/><link rel=alternate hreflang=ja href=https://kubernetes.io/ja/docs/tasks/access-application-cluster/><link rel=alternate hreflang=fr href=https://kubernetes.io/fr/docs/tasks/access-application-cluster/><link rel=alternate hreflang=de href=https://kubernetes.io/de/docs/tasks/access-application-cluster/><link rel=alternate hreflang=es href=https://kubernetes.io/es/docs/tasks/access-application-cluster/><link rel=alternate hreflang=id href=https://kubernetes.io/id/docs/tasks/access-application-cluster/><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.110.0"><link rel=canonical type=text/html href=https://kubernetes.io/zh-cn/docs/tasks/access-application-cluster/><link rel="shortcut icon" type=image/png href=/images/favicon.png><link rel=apple-touch-icon href=/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=manifest href=/manifest.webmanifest><link rel=apple-touch-icon href=/images/kubernetes-192x192.png><title>访问集群中的应用程序 | Kubernetes</title><meta property="og:title" content="访问集群中的应用程序"><meta property="og:description" content="配置负载平衡、端口转发或设置防火墙或 DNS 配置，以访问集群中的应用程序。"><meta property="og:type" content="website"><meta property="og:url" content="https://kubernetes.io/zh-cn/docs/tasks/access-application-cluster/"><meta property="og:site_name" content="Kubernetes"><meta itemprop=name content="访问集群中的应用程序"><meta itemprop=description content="配置负载平衡、端口转发或设置防火墙或 DNS 配置，以访问集群中的应用程序。"><meta name=twitter:card content="summary"><meta name=twitter:title content="访问集群中的应用程序"><meta name=twitter:description content="配置负载平衡、端口转发或设置防火墙或 DNS 配置，以访问集群中的应用程序。"><link href=/scss/main.css rel=stylesheet><script type=application/ld+json>{"@context":"https://schema.org","@type":"Organization","url":"https://kubernetes.io","logo":"https://kubernetes.io/images/favicon.png","potentialAction":{"@type":"SearchAction","target":"https://kubernetes.io/search/?q={search_term_string}","query-input":"required name=search_term_string"}}</script><meta name=theme-color content="#326ce5"><link rel=stylesheet href=/css/feature-states.css><meta name=description content="配置负载平衡、端口转发或设置防火墙或 DNS 配置，以访问集群中的应用程序。"><meta property="og:description" content="配置负载平衡、端口转发或设置防火墙或 DNS 配置，以访问集群中的应用程序。"><meta name=twitter:description content="配置负载平衡、端口转发或设置防火墙或 DNS 配置，以访问集群中的应用程序。"><meta property="og:url" content="https://kubernetes.io/zh-cn/docs/tasks/access-application-cluster/"><meta property="og:title" content="访问集群中的应用程序"><meta name=twitter:title content="访问集群中的应用程序"><meta name=twitter:image content="https://kubernetes.io/images/favicon.png"><meta name=twitter:image:alt content="Kubernetes"><meta property="og:image" content="/images/kubernetes-horizontal-color.png"><meta property="og:type" content="article"><script src=/js/jquery-3.6.0.min.js intregrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script></head><body class=td-section><header><nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar" data-auto-burger=primary><a class=navbar-brand href=/zh-cn/></a><div class="td-navbar-nav-scroll ml-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0"><li class="nav-item mr-2 mb-lg-0"><a class="nav-link active" href=/zh-cn/docs/>文档</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/blog/>Kubernetes 博客</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/training/>培训</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/partners/>合作伙伴</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/community/>社区</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/zh-cn/case-studies/>案例分析</a></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>版本列表</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/zh-cn/releases>Release Information</a>
+<a class=dropdown-item href=https://kubernetes.io/zh-cn/docs/tasks/access-application-cluster/>v1.25</a>
+<a class=dropdown-item href=https://v1-24.docs.kubernetes.io/zh-cn/docs/tasks/access-application-cluster/>v1.24</a>
+<a class=dropdown-item href=https://v1-23.docs.kubernetes.io/zh-cn/docs/tasks/access-application-cluster/>v1.23</a>
+<a class=dropdown-item href=https://v1-22.docs.kubernetes.io/zh-cn/docs/tasks/access-application-cluster/>v1.22</a>
+<a class=dropdown-item href=https://v1-21.docs.kubernetes.io/zh-cn/docs/tasks/access-application-cluster/>v1.21</a></div></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdownMenuLink role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>中文 (Chinese)</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/docs/tasks/access-application-cluster/>English</a>
+<a class=dropdown-item href=/ko/docs/tasks/access-application-cluster/>한국어 (Korean)</a>
+<a class=dropdown-item href=/ja/docs/tasks/access-application-cluster/>日本語 (Japanese)</a>
+<a class=dropdown-item href=/fr/docs/tasks/access-application-cluster/>Français (French)</a>
+<a class=dropdown-item href=/de/docs/tasks/access-application-cluster/>Deutsch (German)</a>
+<a class=dropdown-item href=/es/docs/tasks/access-application-cluster/>Español (Spanish)</a>
+<a class=dropdown-item href=/id/docs/tasks/access-application-cluster/>Bahasa Indonesia</a></div></li></ul></div><button id=hamburger onclick=kub.toggleMenu() data-auto-burger-exclude><div></div></button></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><div class=td-content><div class="pageinfo pageinfo-primary d-print-none"><p>这是本节的多页打印视图。
+<a href=# onclick="return print(),!1">点击此处打印</a>.</p><p><a href=/zh-cn/docs/tasks/access-application-cluster/>返回本页常规视图</a>.</p></div><h1 class=title>访问集群中的应用程序</h1><div class=lead>配置负载平衡、端口转发或设置防火墙或 DNS 配置，以访问集群中的应用程序。</div><ul><li>1: <a href=#pg-777447042cd4e81df3fa5beb3357a485>部署和访问 Kubernetes 仪表板（Dashboard）</a></li><li>2: <a href=#pg-6a8d9e9e05f2b6825afbb8889c957370>访问集群</a></li><li>3: <a href=#pg-5a233e14205d77fe1294917d2da6f876>配置对多集群的访问</a></li><li>4: <a href=#pg-72d3dddbc0c166c9a364e753d2b31ff0>使用端口转发来访问集群中的应用</a></li><li>5: <a href=#pg-312f29f850826b74618634cd877aa065>使用服务来访问集群中的应用</a></li><li>6: <a href=#pg-f3dac629bea950fc026d920306f09fb4>使用 Service 把前端连接到后端</a></li><li>7: <a href=#pg-21cd8f87563675fb0278d3694ba9ecb0>创建外部负载均衡器</a></li><li>8: <a href=#pg-48e8f306f919c5b81265e265a2b76ab4>列出集群中所有运行容器的镜像</a></li><li>9: <a href=#pg-1839d8468a083839ed1cc8d18fe1142e>在 Minikube 环境中使用 NGINX Ingress 控制器配置 Ingress</a></li><li>10: <a href=#pg-322786b38586b210fab68f785259c5f6>为集群配置 DNS</a></li><li>11: <a href=#pg-43591bb11cc02c39e278cf07f6546810>访问集群上运行的服务</a></li><li>12: <a href=#pg-7c319a9981586e5fbcfa21b392720650>同 Pod 内的容器使用共享卷通信</a></li></ul><div class=content></div></div><div class=td-content><h1 id=pg-777447042cd4e81df3fa5beb3357a485>1 - 部署和访问 Kubernetes 仪表板（Dashboard）</h1><p>Dashboard 是基于网页的 Kubernetes 用户界面。
+你可以使用 Dashboard 将容器应用部署到 Kubernetes 集群中，也可以对容器应用排错，还能管理集群资源。
+你可以使用 Dashboard 获取运行在集群中的应用的概览信息，也可以创建或者修改 Kubernetes 资源
+（如 Deployment，Job，DaemonSet 等等）。
+例如，你可以对 Deployment 实现弹性伸缩、发起滚动升级、重启 Pod 或者使用向导创建新的应用。</p><p>Dashboard 同时展示了 Kubernetes 集群中的资源状态信息和所有报错信息。</p><p><img src=/images/docs/ui-dashboard.png alt="Kubernetes Dashboard UI"></p><h2 id=部署-dashboard-ui>部署 Dashboard UI</h2><p>默认情况下不会部署 Dashboard。可以通过以下命令部署：</p><pre tabindex=0><code>kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.6.1/aio/deploy/recommended.yaml
+</code></pre><h2 id=访问-dashboard-用户界面>访问 Dashboard 用户界面</h2><p>为了保护你的集群数据，默认情况下，Dashboard 会使用最少的 RBAC 配置进行部署。
+当前，Dashboard 仅支持使用 Bearer 令牌登录。
+要为此样本演示创建令牌，你可以按照
+<a href=https://github.com/kubernetes/dashboard/wiki/Creating-sample-user>创建示例用户</a>
+上的指南进行操作。</p><div class="alert alert-danger warning callout" role=alert><strong>警告：</strong> 在教程中创建的样本用户将具有管理特权，并且仅用于教育目的。</div><h3 id=命令行代理>命令行代理</h3><p>你可以使用 <code>kubectl</code> 命令行工具来启用 Dashboard 访问，命令如下：</p><pre tabindex=0><code>kubectl proxy
+</code></pre><p>kubectl 会使得 Dashboard 可以通过 <a href=http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/>http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/</a> 访问。</p><p>UI <em>只能</em> 通过执行这条命令的机器进行访问。更多选项参见 <code>kubectl proxy --help</code>。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong> Kubeconfig 身份验证方法<strong>不</strong>支持外部身份提供程序或基于 x509 证书的身份验证。</div><h2 id=欢迎界面>欢迎界面</h2><p>当访问空集群的 Dashboard 时，你会看到欢迎界面。
+页面包含一个指向此文档的链接，以及一个用于部署第一个应用程序的按钮。
+此外，你可以看到在默认情况下有哪些默认系统应用运行在 <code>kube-system</code>
+<a href=/zh-cn/docs/tasks/administer-cluster/namespaces/>名字空间</a> 中，比如 Dashboard 自己。</p><p><img src=/images/docs/ui-dashboard-zerostate.png alt="Kubernetes Dashboard 欢迎页面"></p><h2 id=部署容器化应用>部署容器化应用</h2><p>通过一个简单的部署向导，你可以使用 Dashboard 将容器化应用作为一个 Deployment 和可选的
+Service 进行创建和部署。你可以手工指定应用的详细配置，或者上传一个包含应用配置的 YAML
+或 JSON _清单_文件。</p><p>点击任何页面右上角的 <strong>CREATE</strong> 按钮以开始。</p><h3 id=指定应用的详细配置>指定应用的详细配置</h3><p>部署向导需要你提供以下信息：</p><ul><li><p><strong>应用名称</strong>（必填）：应用的名称。内容为 <code>应用名称</code> 的
+<a href=/zh-cn/docs/concepts/overview/working-with-objects/labels/>标签</a>
+会被添加到任何将被部署的 Deployment 和 Service。</p><p>在选定的 Kubernetes <a href=/zh-cn/docs/tasks/administer-cluster/namespaces/>名字空间</a> 中，
+应用名称必须唯一。必须由小写字母开头，以数字或者小写字母结尾，
+并且只含有小写字母、数字和中划线（-）。小于等于24个字符。开头和结尾的空格会被忽略。</p></li></ul><ul><li><strong>容器镜像</strong>（必填）：公共镜像仓库上的 Docker
+<a href=/zh-cn/docs/concepts/containers/images/>容器镜像</a> 或者私有镜像仓库
+（通常是 Google Container Registry 或者 Docker Hub）的 URL。容器镜像参数说明必须以冒号结尾。</li></ul><ul><li><p><strong>Pod 的数量</strong>（必填）：你希望应用程序部署的 Pod 的数量。值必须为正整数。</p><p>系统会创建一个 <a href=/zh-cn/docs/concepts/workloads/controllers/deployment/>Deployment</a>
+以保证集群中运行期望的 Pod 数量。</p></li></ul><ul><li><p><strong>服务</strong>（可选）：对于部分应用（比如前端），你可能想对外暴露一个
+<a href=/zh-cn/docs/concepts/services-networking/service/>Service</a>，这个 Service
+可能用的是集群之外的公网 IP 地址（外部 Service）。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong> 对于外部服务，你可能需要开放一个或多个端口才行。</div><p>其它只能对集群内部可见的 Service 称为内部 Service。</p><p>不管哪种 Service 类型，如果你选择创建一个 Service，而且容器在一个端口上开启了监听（入向的），
+那么你需要定义两个端口。创建的 Service 会把（入向的）端口映射到容器可见的目标端口。
+该 Service 会把流量路由到你部署的 Pod。支持 TCP 协议和 UDP 协议。
+这个 Service 的内部 DNS 解析名就是之前你定义的应用名称的值。</p></li></ul><p>如果需要，你可以打开 <strong>Advanced Options</strong> 部分，这里你可以定义更多设置：</p><ul><li><strong>描述</strong>：这里你输入的文本会作为一个
+<a href=/zh-cn/docs/concepts/overview/working-with-objects/annotations/>注解</a>
+添加到 Deployment，并显示在应用的详细信息中。</li></ul><ul><li><p><strong>标签</strong>：应用默认使用的
+<a href=/zh-cn/docs/concepts/overview/working-with-objects/labels/>标签</a> 是应用名称和版本。
+你可以为 Deployment、Service（如果有）定义额外的标签，比如 release（版本）、
+environment（环境）、tier（层级）、partition（分区） 和 release track（版本跟踪）。</p><p>例子：</p><pre tabindex=0><code class=language-conf data-lang=conf>release=1.0
+tier=frontend
+environment=pod
+track=stable
+</code></pre></li></ul><ul><li><p><strong>名字空间</strong>：Kubernetes 支持多个虚拟集群依附于同一个物理集群。
+这些虚拟集群被称为
+<a href=/zh-cn/docs/tasks/administer-cluster/namespaces/>名字空间</a>，
+可以让你将资源划分为逻辑命名的组。</p><p>Dashboard 通过下拉菜单提供所有可用的名字空间，并允许你创建新的名字空间。
+名字空间的名称最长可以包含 63 个字母或数字和中横线（-），但是不能包含大写字母。</p><p>名字空间的名称不能只包含数字。如果名字被设置成一个数字，比如 10，pod 就</p><p>在名字空间创建成功的情况下，默认会使用新创建的名字空间。如果创建失败，那么第一个名字空间会被选中。</p></li></ul><ul><li><p><strong>镜像拉取 Secret</strong>：如果要使用私有的 Docker 容器镜像，需要拉取
+<a href=/zh-cn/docs/concepts/configuration/secret/>Secret</a> 凭证。</p><p>Dashboard 通过下拉菜单提供所有可用的 Secret，并允许你创建新的 Secret。
+Secret 名称必须遵循 DNS 域名语法，比如 <code>new.image-pull.secret</code>。
+Secret 的内容必须是 base64 编码的，并且在一个
+<a href=/zh-cn/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod><code>.dockercfg</code></a>
+文件中声明。Secret 名称最大可以包含 253 个字符。</p><p>在镜像拉取 Secret 创建成功的情况下，默认会使用新创建的 Secret。
+如果创建失败，则不会使用任何 Secret。</p></li></ul><ul><li><strong>CPU 需求（核数）</strong> 和 <strong>内存需求（MiB）</strong>：你可以为容器定义最小的
+<a href=/zh-cn/docs/tasks/administer-cluster/manage-resources/memory-default-namespace/>资源限制</a>。
+默认情况下，Pod 没有 CPU 和内存限制。</li></ul><ul><li><strong>运行命令</strong>和<strong>运行命令参数</strong>：默认情况下，你的容器会运行 Docker 镜像的默认
+<a href=/zh-cn/docs/tasks/inject-data-application/define-command-argument-container/>入口命令</a>。
+你可以使用 command 选项覆盖默认值。</li></ul><ul><li><strong>以特权模式运行</strong>：这个设置决定了在
+<a href=/zh-cn/docs/concepts/workloads/pods/#privileged-mode-for-containers>特权容器</a>
+中运行的进程是否像主机中使用 root 运行的进程一样。
+特权容器可以使用诸如操纵网络堆栈和访问设备的功能。</li></ul><ul><li><strong>环境变量</strong>：Kubernetes 通过
+<a href=/zh-cn/docs/tasks/inject-data-application/environment-variable-expose-pod-information/>环境变量</a>
+暴露 Service。你可以构建环境变量，或者将环境变量的值作为参数传递给你的命令。
+它们可以被应用用于查找 Service。值可以通过 <code>$(VAR_NAME)</code> 语法关联其他变量。</li></ul><h3 id=上传-yaml-或者-json-文件>上传 YAML 或者 JSON 文件</h3><p>Kubernetes 支持声明式配置。所有的配置都存储在清单文件
+（YAML 或者 JSON 配置文件）中。这些
+清单使用 Kubernetes <a href=/zh-cn/docs/concepts/overview/kubernetes-api/>API</a> 定义的资源模式。</p><p>作为一种替代在部署向导中指定应用详情的方式，你可以在一个或多个清单文件中定义应用，并且使用
+Dashboard 上传文件。</p><h2 id=使用-dashboard>使用 Dashboard</h2><p>以下各节描述了 Kubernetes Dashboard UI 视图；包括它们提供的内容，以及怎么使用它们。</p><h3 id=导航>导航</h3><p>当在集群中定义 Kubernetes 对象时，Dashboard 会在初始视图中显示它们。
+默认情况下只会显示 <em>默认</em> 名字空间中的对象，可以通过更改导航栏菜单中的名字空间筛选器进行改变。</p><p>Dashboard 展示大部分 Kubernetes 对象，并将它们分组放在几个菜单类别中。</p><h4 id=管理概述>管理概述</h4><p>集群和名字空间管理的视图，Dashboard 会列出节点、名字空间和持久卷，并且有它们的详细视图。
+节点列表视图包含从所有节点聚合的 CPU 和内存使用的度量值。
+详细信息视图显示了一个节点的度量值，它的规格、状态、分配的资源、事件和这个节点上运行的 Pod。</p><h4 id=负载>负载</h4><p>显示选中的名字空间中所有运行的应用。
+视图按照负载类型（如 Deployment、ReplicaSet、StatefulSet 等）罗列应用，并且每种负载都可以单独查看。
+列表总结了关于负载的可执行信息，比如一个 ReplicaSet 的就绪状态的 Pod 数量，或者目前一个 Pod 的内存用量。</p><p>工作负载的详情视图展示了对象的状态、详细信息和相互关系。
+例如，ReplicaSet 所控制的 Pod，或者 Deployment 所关联的新 ReplicaSet 和
+HorizontalPodAutoscalers。</p><h4 id=服务>服务</h4><p>展示允许暴露给外网服务和允许集群内部发现的 Kubernetes 资源。
+因此，Service 和 Ingress 视图展示他们关联的 Pod、给集群连接使用的内部端点和给外部用户使用的外部端点。</p><h4 id=存储>存储</h4><p>存储视图展示持久卷申领（PVC）资源，这些资源被应用程序用来存储数据。</p><h4 id=configmap-和-secret>ConfigMap 和 Secret</h4><p>展示的所有 Kubernetes 资源是在集群中运行的应用程序的实时配置。
+通过这个视图可以编辑和管理配置对象，并显示那些默认隐藏的 Secret。</p><h4 id=日志查看器>日志查看器</h4><p>Pod 列表和详细信息页面可以链接到 Dashboard 内置的日志查看器。
+查看器可以深入查看属于同一个 Pod 的不同容器的日志。</p><p><img src=/images/docs/ui-dashboard-logs-view.png alt=日志浏览></p><h2 id=接下来>接下来</h2><p>更多信息，参见 <a href=https://github.com/kubernetes/dashboard>Kubernetes Dashboard 项目页面</a>.</p></div><div class=td-content style=page-break-before:always><h1 id=pg-6a8d9e9e05f2b6825afbb8889c957370>2 - 访问集群</h1><p>本文阐述多种与集群交互的方法。</p><nav id=TableOfContents><ul><li><a href=#accessing-for-the-first-time-with-kubectl>使用 kubectl 完成集群的第一次访问</a></li><li><a href=#directly-accessing-the-rest-api>直接访问 REST API</a><ul><li><a href=#using-kubectl-proxy>使用 kubectl proxy</a></li><li><a href=#without-kubectl-proxy>不使用 kubectl proxy</a></li></ul></li><li><a href=#programmatic-access-to-the-api>以编程方式访问 API</a><ul><li><a href=#go-client>Go 客户端</a></li><li><a href=#python-client>Python 客户端</a></li><li><a href=#other-languages>其它语言</a></li><li><a href=#accessing-the-api-from-a-pod>从 Pod 中访问 API</a></li></ul></li><li><a href=#accessing-services-running-on-the-cluster>访问集群上运行的服务</a></li><li><a href=#requesting-redirects>请求重定向</a></li><li><a href=#so-many-proxies>多种代理</a></li></ul></nav><h2 id=accessing-for-the-first-time-with-kubectl>使用 kubectl 完成集群的第一次访问</h2><p>当你第一次访问 Kubernetes API 的时候，我们建议你使用 Kubernetes CLI 工具 <code>kubectl</code>。</p><p>访问集群时，你需要知道集群的地址并且拥有访问的凭证。通常，这些在你通过
+<a href=/zh-cn/docs/setup/>启动安装</a>安装集群时都是自动安装好的，或者其他人安装时
+也应该提供了凭证和集群地址。</p><p>通过以下命令检查 kubectl 是否知道集群地址及凭证：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl config view
+</span></span></code></pre></div><p>有许多<a href=/zh-cn/docs/reference/kubectl/cheatsheet/>例子</a>介绍了如何使用 kubectl，
+可以在 <a href=/zh-cn/docs/reference/kubectl/>kubectl 参考</a>中找到更完整的文档。</p><h2 id=directly-accessing-the-rest-api>直接访问 REST API</h2><p>Kubectl 处理 apiserver 的定位和身份验证。
+如果要使用 curl 或 wget 等 http 客户端或浏览器直接访问 REST API，可以通过
+多种方式查找和验证：</p><ul><li>以代理模式运行 kubectl。<ul><li>推荐此方式。</li><li>使用已存储的 apiserver 地址。</li><li>使用自签名的证书来验证 apiserver 的身份。杜绝 MITM 攻击。</li><li>对 apiserver 进行身份验证。</li><li>未来可能会实现智能化的客户端负载均衡和故障恢复。</li></ul></li><li>直接向 http 客户端提供位置和凭据。<ul><li>可选的方案。</li><li>适用于代理可能引起混淆的某些客户端类型。</li><li>需要引入根证书到你的浏览器以防止 MITM 攻击。</li></ul></li></ul><h3 id=using-kubectl-proxy>使用 kubectl proxy</h3><p>以下命令以反向代理的模式运行 kubectl。它处理 apiserver 的定位和验证。
+像这样运行：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl proxy --port<span style=color:#666>=</span><span style=color:#666>8080</span>
+</span></span></code></pre></div><p>参阅 <a href=/docs/reference/generated/kubectl/kubectl-commands/#proxy>kubectl proxy</a>
+获取更多详细信息。</p><p>然后，你可以使用 curl、wget 或浏览器访问 API，如果是 IPv6 则用 [::1] 替换 localhost，
+如下所示：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>curl http://localhost:8080/api/
+</span></span></code></pre></div><p>输出类似于：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;kind&#34;</span>: <span style=color:#b44>&#34;APIVersions&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;versions&#34;</span>: [
+</span></span><span style=display:flex><span>    <span style=color:#b44>&#34;v1&#34;</span>
+</span></span><span style=display:flex><span>  ],
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;serverAddressByClientCIDRs&#34;</span>: [
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;clientCIDR&#34;</span>: <span style=color:#b44>&#34;0.0.0.0/0&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;serverAddress&#34;</span>: <span style=color:#b44>&#34;10.0.1.149:443&#34;</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>  ]
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=without-kubectl-proxy>不使用 kubectl proxy</h3><p>使用 <code>kubectl apply</code> 和 <code>kubectl describe secret ...</code> 及 grep 和剪切操作来为 default 服务帐户创建令牌，如下所示：</p><p>首先，创建 Secret，请求默认 ServiceAccount 的令牌：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -f - <span style=color:#b44>&lt;&lt;EOF
+</span></span></span><span style=display:flex><span><span style=color:#b44>apiVersion: v1
+</span></span></span><span style=display:flex><span><span style=color:#b44>kind: Secret
+</span></span></span><span style=display:flex><span><span style=color:#b44>metadata:
+</span></span></span><span style=display:flex><span><span style=color:#b44>  name: default-token
+</span></span></span><span style=display:flex><span><span style=color:#b44>  annotations:
+</span></span></span><span style=display:flex><span><span style=color:#b44>    kubernetes.io/service-account.name: default
+</span></span></span><span style=display:flex><span><span style=color:#b44>type: kubernetes.io/service-account-token
+</span></span></span><span style=display:flex><span><span style=color:#b44>EOF</span>
+</span></span></code></pre></div><p>接下来，等待令牌控制器使用令牌填充 Secret：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f;font-weight:700>while</span> ! kubectl describe secret default-token | grep -E <span style=color:#b44>&#39;^token&#39;</span> &gt;/dev/null; <span style=color:#a2f;font-weight:700>do</span>
+</span></span><span style=display:flex><span>  <span style=color:#a2f>echo</span> <span style=color:#b44>&#34;waiting for token...&#34;</span> &gt;&amp;<span style=color:#666>2</span>
+</span></span><span style=display:flex><span>  sleep <span style=color:#666>1</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>done</span>
+</span></span></code></pre></div><p>捕获并使用生成的令牌：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#b8860b>APISERVER</span><span style=color:#666>=</span><span style=color:#a2f;font-weight:700>$(</span>kubectl config view --minify | grep server | cut -f 2- -d <span style=color:#b44>&#34;:&#34;</span> | tr -d <span style=color:#b44>&#34; &#34;</span><span style=color:#a2f;font-weight:700>)</span>
+</span></span><span style=display:flex><span><span style=color:#b8860b>TOKEN</span><span style=color:#666>=</span><span style=color:#a2f;font-weight:700>$(</span>kubectl describe secret default-token | grep -E <span style=color:#b44>&#39;^token&#39;</span> | cut -f2 -d<span style=color:#b44>&#39;:&#39;</span> | tr -d <span style=color:#b44>&#34; &#34;</span><span style=color:#a2f;font-weight:700>)</span>
+</span></span><span style=display:flex><span>curl <span style=color:#b8860b>$APISERVER</span>/api --header <span style=color:#b44>&#34;Authorization: Bearer </span><span style=color:#b8860b>$TOKEN</span><span style=color:#b44>&#34;</span> --insecure
+</span></span></code></pre></div><p>输出类似于：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;kind&#34;</span>: <span style=color:#b44>&#34;APIVersions&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;versions&#34;</span>: [
+</span></span><span style=display:flex><span>    <span style=color:#b44>&#34;v1&#34;</span>
+</span></span><span style=display:flex><span>  ],
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;serverAddressByClientCIDRs&#34;</span>: [
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;clientCIDR&#34;</span>: <span style=color:#b44>&#34;0.0.0.0/0&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;serverAddress&#34;</span>: <span style=color:#b44>&#34;10.0.1.149:443&#34;</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>  ]
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><code>jsonpath</code> 方法实现：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#b8860b>APISERVER</span><span style=color:#666>=</span><span style=color:#a2f;font-weight:700>$(</span>kubectl config view --minify -o <span style=color:#b8860b>jsonpath</span><span style=color:#666>=</span><span style=color:#b44>&#39;{.clusters[0].cluster.server}&#39;</span><span style=color:#a2f;font-weight:700>)</span>
+</span></span><span style=display:flex><span><span style=color:#b8860b>TOKEN</span><span style=color:#666>=</span><span style=color:#a2f;font-weight:700>$(</span>kubectl get secret default-token -o <span style=color:#b8860b>jsonpath</span><span style=color:#666>=</span><span style=color:#b44>&#39;{.data.token}&#39;</span> | base64 --decode<span style=color:#a2f;font-weight:700>)</span>
+</span></span><span style=display:flex><span>curl <span style=color:#b8860b>$APISERVER</span>/api --header <span style=color:#b44>&#34;Authorization: Bearer </span><span style=color:#b8860b>$TOKEN</span><span style=color:#b44>&#34;</span> --insecure
+</span></span></code></pre></div><p>输出类似于：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;kind&#34;</span>: <span style=color:#b44>&#34;APIVersions&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;versions&#34;</span>: [
+</span></span><span style=display:flex><span>    <span style=color:#b44>&#34;v1&#34;</span>
+</span></span><span style=display:flex><span>  ],
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;serverAddressByClientCIDRs&#34;</span>: [
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;clientCIDR&#34;</span>: <span style=color:#b44>&#34;0.0.0.0/0&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:green;font-weight:700>&#34;serverAddress&#34;</span>: <span style=color:#b44>&#34;10.0.1.149:443&#34;</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>  ]
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>上面的例子使用了 <code>--insecure</code> 参数，这使得它很容易受到 MITM 攻击。
+当 kubectl 访问集群时，它使用存储的根证书和客户端证书来访问服务器
+（它们安装在 <code>~/.kube</code> 目录中）。
+由于集群证书通常是自签名的，因此可能需要特殊配置才能让你的 http 客户端使用根证书。</p><p>在一些集群中，apiserver 不需要身份验证；它可能只服务于 localhost，或者被防火墙保护，
+这个没有一定的标准。
+<a href=/zh-cn/docs/concepts/security/controlling-access/>配置对 API 的访问</a>
+描述了集群管理员如何进行配置。此类方法可能与未来的高可用性支持相冲突。</p><h2 id=programmatic-access-to-the-api>以编程方式访问 API</h2><p>Kubernetes 官方提供对 <a href=#go-client>Go</a> 和 <a href=#python-client>Python</a> 的客户端库支持。</p><h3 id=go-client>Go 客户端</h3><ul><li>想要获得这个库，请运行命令：<code>go get k8s.io/client-go@kubernetes-&lt;kubernetes-version-number></code>，
+有关详细安装说明，请参阅 <a href=https://github.com/kubernetes/client-go/blob/master/INSTALL.md#for-the-casual-user>INSTALL.md</a>。
+请参阅 <a href=https://github.com/kubernetes/client-go#compatibility-matrix>https://github.com/kubernetes/client-go</a> 以查看支持的版本。</li><li>基于这个 client-go 客户端库编写应用程序。
+请注意，client-go 定义了自己的 API 对象，因此如果需要，请从 client-go 而不是从主存储库
+导入 API 定义，例如，<code>import "k8s.io/client-go/kubernetes"</code> 才是对的。</li></ul><p>Go 客户端可以像 kubectl CLI 一样使用相同的
+<a href=/zh-cn/docs/concepts/configuration/organize-cluster-access-kubeconfig/>kubeconfig 文件</a>
+来定位和验证 apiserver。可参阅
+<a href=https://git.k8s.io/client-go/examples/out-of-cluster-client-configuration/main.go>示例</a>。</p><p>如果应用程序以 Pod 的形式部署在集群中，那么请参阅
+<a href=#accessing-the-api-from-a-pod>下一章</a>。</p><h3 id=python-client>Python 客户端</h3><p>如果想要使用 <a href=https://github.com/kubernetes-client/python>Python 客户端</a>，
+请运行命令：<code>pip install kubernetes</code>。参阅
+<a href=https://github.com/kubernetes-client/python>Python Client Library page</a>
+以获得更详细的安装参数。</p><p>Python 客户端可以像 kubectl CLI 一样使用相同的
+<a href=/zh-cn/docs/concepts/configuration/organize-cluster-access-kubeconfig/>kubeconfig 文件</a>
+来定位和验证 apiserver，可参阅
+<a href=https://github.com/kubernetes-client/python/tree/master/examples>示例</a>。</p><h3 id=other-languages>其它语言</h3><p>目前有多个<a href=/zh-cn/docs/reference/using-api/client-libraries/>客户端库</a>
+为其它语言提供访问 API 的方法。
+参阅其它库的相关文档以获取他们是如何验证的。</p><h3 id=accessing-the-api-from-a-pod>从 Pod 中访问 API</h3><p>当你从 Pod 中访问 API 时，定位和验证 API 服务器会有些许不同。</p><p>请参阅<a href=/zh-cn/docs/tasks/run-application/access-api-from-pod/>从 Pod 中访问 API</a>
+了解更多详情。</p><h2 id=accessing-services-running-on-the-cluster>访问集群上运行的服务</h2><p>上一节介绍了如何连接到 Kubernetes API 服务器。
+有关连接到 Kubernetes 集群上运行的其他服务的信息，请参阅
+<a href=/zh-cn/docs/tasks/access-application-cluster/access-cluster-services/>访问集群服务</a>。</p><h2 id=requesting-redirects>请求重定向</h2><p>重定向功能已弃用并被删除。请改用代理（见下文）。</p><h2 id=so-many-proxies>多种代理</h2><p>使用 Kubernetes 时可能会遇到几种不同的代理：</p><ol><li><p><a href=#directly-accessing-the-rest-api>kubectl 代理</a>：</p><ul><li>在用户的桌面或 Pod 中运行</li><li>代理从本地主机地址到 Kubernetes apiserver</li><li>客户端到代理将使用 HTTP</li><li>代理到 apiserver 使用 HTTPS</li><li>定位 apiserver</li><li>添加身份验证头部</li></ul></li></ol><ol start=2><li><p><a href=/zh-cn/docs/tasks/access-application-cluster/access-cluster-services/#discovering-builtin-services>apiserver 代理</a>：</p><ul><li>内置于 apiserver 中</li><li>将集群外部的用户连接到集群 IP，否则这些 IP 可能无法访问</li><li>运行在 apiserver 进程中</li><li>客户端代理使用 HTTPS（也可配置为 http）</li><li>代理将根据可用的信息决定使用 HTTP 或者 HTTPS 代理到目标</li><li>可用于访问节点、Pod 或服务</li><li>在访问服务时进行负载平衡</li></ul></li></ol><ol start=3><li><p><a href=/zh-cn/docs/concepts/services-networking/service/#ips-and-vips>kube proxy</a>：</p><ul><li>运行在每个节点上</li><li>代理 UDP 和 TCP</li><li>不能代理 HTTP</li><li>提供负载均衡</li><li>只能用来访问服务</li></ul></li></ol><ol start=4><li><p>位于 apiserver 之前的 Proxy/Load-balancer：</p><ul><li>存在和实现因集群而异（例如 nginx）</li><li>位于所有客户和一个或多个 apiserver 之间</li><li>如果有多个 apiserver，则充当负载均衡器</li></ul></li></ol><ol start=5><li><p>外部服务上的云负载均衡器：</p><ul><li>由一些云提供商提供（例如 AWS ELB，Google Cloud Load Balancer）</li><li>当 Kubernetes 服务类型为 <code>LoadBalancer</code> 时自动创建</li><li>只使用 UDP/TCP</li><li>具体实现因云提供商而异。</li></ul></li></ol><p>除了前两种类型之外，Kubernetes 用户通常不需要担心任何其他问题。
+集群管理员通常会确保后者的正确配置。</p></div><div class=td-content style=page-break-before:always><h1 id=pg-5a233e14205d77fe1294917d2da6f876>3 - 配置对多集群的访问</h1><p>本文展示如何使用配置文件来配置对多个集群的访问。
+在将集群、用户和上下文定义在一个或多个配置文件中之后，用户可以使用
+<code>kubectl config use-context</code> 命令快速地在集群之间进行切换。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>用于配置集群访问的文件有时被称为 <strong>kubeconfig 文件</strong>。
+这是一种引用配置文件的通用方式，并不意味着存在一个名为 <code>kubeconfig</code> 的文件。</div><div class="alert alert-danger warning callout" role=alert><strong>警告：</strong><p>只使用来源可靠的 kubeconfig 文件。使用特制的 kubeconfig 文件可能会导致恶意代码执行或文件暴露。
+如果必须使用不受信任的 kubeconfig 文件，请首先像检查 shell 脚本一样仔细检查它。</div><h2 id=准备开始>准备开始</h2><p>你必须拥有一个 Kubernetes 的集群，同时你的 Kubernetes 集群必须带有 kubectl 命令行工具。
+建议在至少有两个节点的集群上运行本教程，且这些节点不作为控制平面主机。
+如果你还没有集群，你可以通过 <a href=https://minikube.sigs.k8s.io/docs/tutorials/multi_node/>Minikube</a>
+构建一个你自己的集群，或者你可以使用下面任意一个 Kubernetes 工具构建：</p><ul><li><a href=https://killercoda.com/playgrounds/scenario/kubernetes>Killercoda</a></li><li><a href=http://labs.play-with-k8s.com/>玩转 Kubernetes</a></li></ul><p>要检查 <a class=glossary-tooltip title='kubectl 是用来和 Kubernetes 集群进行通信的命令行工具。' data-toggle=tooltip data-placement=top href=/docs/user-guide/kubectl-overview/ target=_blank aria-label=kubectl>kubectl</a> 是否安装，
+执行 <code>kubectl version --client</code> 命令。
+kubectl 的版本应该与集群的 API
+服务器<a href=/zh-cn/releases/version-skew-policy/#kubectl>使用同一次版本号</a>。</p><h2 id=define-clusters-users-and-contexts>定义集群、用户和上下文</h2><p>假设用户有两个集群，一个用于正式开发工作，一个用于其它临时用途（scratch）。
+在 <code>development</code> 集群中，前端开发者在名为 <code>frontend</code> 的名字空间下工作，
+存储开发者在名为 <code>storage</code> 的名字空间下工作。在 <code>scratch</code> 集群中，
+开发人员可能在默认名字空间下工作，也可能视情况创建附加的名字空间。
+访问开发集群需要通过证书进行认证。
+访问其它临时用途的集群需要通过用户名和密码进行认证。</p><p>创建名为 <code>config-exercise</code> 的目录。在
+<code>config-exercise</code> 目录中，创建名为 <code>config-demo</code> 的文件，其内容为：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Config<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>preferences</span>:<span style=color:#bbb> </span>{}<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>clusters</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>cluster</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>development<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>cluster</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>scratch<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>users</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>developer<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>experimenter<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>contexts</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>context</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>dev-frontend<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>context</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>dev-storage<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>context</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>exp-scratch<span style=color:#bbb>
+</span></span></span></code></pre></div><p>配置文件描述了集群、用户名和上下文。<code>config-demo</code> 文件中含有描述两个集群、
+两个用户和三个上下文的框架。</p><p>进入 <code>config-exercise</code> 目录。输入以下命令，将集群详细信息添加到配置文件中：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl config --kubeconfig<span style=color:#666>=</span>config-demo set-cluster development --server<span style=color:#666>=</span>https://1.2.3.4 --certificate-authority<span style=color:#666>=</span>fake-ca-file
+</span></span><span style=display:flex><span>kubectl config --kubeconfig<span style=color:#666>=</span>config-demo set-cluster scratch --server<span style=color:#666>=</span>https://5.6.7.8 --insecure-skip-tls-verify
+</span></span></code></pre></div><p>将用户详细信息添加到配置文件中：</p><div class="alert alert-warning caution callout" role=alert><strong>注意：</strong><p>将密码保存到 Kubernetes 客户端配置中有风险。
+一个较好的替代方式是使用凭据插件并单独保存这些凭据。
+参阅 <a href=/zh-cn/docs/reference/access-authn-authz/authentication/#client-go-credential-plugins>client-go 凭据插件</a></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl config --kubeconfig<span style=color:#666>=</span>config-demo set-credentials developer --client-certificate<span style=color:#666>=</span>fake-cert-file --client-key<span style=color:#666>=</span>fake-key-seefile
+</span></span><span style=display:flex><span>kubectl config --kubeconfig<span style=color:#666>=</span>config-demo set-credentials experimenter --username<span style=color:#666>=</span>exp --password<span style=color:#666>=</span>some-password
+</span></span></code></pre></div><div class="alert alert-info note callout" role=alert><strong>说明：</strong><ul><li>要删除用户，可以运行 <code>kubectl --kubeconfig=config-demo config unset users.&lt;name></code></li><li>要删除集群，可以运行 <code>kubectl --kubeconfig=config-demo config unset clusters.&lt;name></code></li><li>要删除上下文，可以运行 <code>kubectl --kubeconfig=config-demo config unset contexts.&lt;name></code></li></ul></div><p>将上下文详细信息添加到配置文件中：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl config --kubeconfig<span style=color:#666>=</span>config-demo set-context dev-frontend --cluster<span style=color:#666>=</span>development --namespace<span style=color:#666>=</span>frontend --user<span style=color:#666>=</span>developer
+</span></span><span style=display:flex><span>kubectl config --kubeconfig<span style=color:#666>=</span>config-demo set-context dev-storage --cluster<span style=color:#666>=</span>development --namespace<span style=color:#666>=</span>storage --user<span style=color:#666>=</span>developer
+</span></span><span style=display:flex><span>kubectl config --kubeconfig<span style=color:#666>=</span>config-demo set-context exp-scratch --cluster<span style=color:#666>=</span>scratch --namespace<span style=color:#666>=</span>default --user<span style=color:#666>=</span>experimenter
+</span></span></code></pre></div><p>打开 <code>config-demo</code> 文件查看添加的详细信息。也可以使用 <code>config view</code>
+命令进行查看：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl config --kubeconfig<span style=color:#666>=</span>config-demo view
+</span></span></code></pre></div><p>输出展示了两个集群、两个用户和三个上下文：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>clusters</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>cluster</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>certificate-authority</span>:<span style=color:#bbb> </span>fake-ca-file<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>server</span>:<span style=color:#bbb> </span>https://1.2.3.4<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>development<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>cluster</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>insecure-skip-tls-verify</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>true</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>server</span>:<span style=color:#bbb> </span>https://5.6.7.8<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>scratch<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>contexts</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>context</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>cluster</span>:<span style=color:#bbb> </span>development<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>namespace</span>:<span style=color:#bbb> </span>frontend<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>user</span>:<span style=color:#bbb> </span>developer<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>dev-frontend<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>context</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>cluster</span>:<span style=color:#bbb> </span>development<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>namespace</span>:<span style=color:#bbb> </span>storage<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>user</span>:<span style=color:#bbb> </span>developer<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>dev-storage<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>context</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>cluster</span>:<span style=color:#bbb> </span>scratch<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>namespace</span>:<span style=color:#bbb> </span>default<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>user</span>:<span style=color:#bbb> </span>experimenter<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>exp-scratch<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>current-context</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Config<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>preferences</span>:<span style=color:#bbb> </span>{}<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>users</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>developer<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>user</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>client-certificate</span>:<span style=color:#bbb> </span>fake-cert-file<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>client-key</span>:<span style=color:#bbb> </span>fake-key-file<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>experimenter<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>user</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:#080;font-style:italic># 文档说明（本注释不属于命令输出）。</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:#080;font-style:italic># 将密码保存到 Kubernetes 客户端配置有风险。</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:#080;font-style:italic># 一个较好的替代方式是使用凭据插件并单独保存这些凭据。</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:#080;font-style:italic># 参阅 https://kubernetes.io/zh-cn/docs/reference/access-authn-authz/authentication/#client-go-credential-plugins</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>password</span>:<span style=color:#bbb> </span>some-password<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>username</span>:<span style=color:#bbb> </span>exp<span style=color:#bbb>
+</span></span></span></code></pre></div><p>其中的 <code>fake-ca-file</code>、<code>fake-cert-file</code> 和 <code>fake-key-file</code> 是证书文件路径名的占位符。
+你需要更改这些值，使之对应你的环境中证书文件的实际路径名。</p><p>有时你可能希望在这里使用 BASE64 编码的数据而不是一个个独立的证书文件。
+如果是这样，你需要在键名上添加 <code>-data</code> 后缀。例如，
+<code>certificate-authority-data</code>、<code>client-certificate-data</code> 和 <code>client-key-data</code>。</p><p>每个上下文包含三部分（集群、用户和名字空间），例如，
+<code>dev-frontend</code> 上下文表明：使用 <code>developer</code> 用户的凭证来访问 <code>development</code> 集群的
+<code>frontend</code> 名字空间。</p><p>设置当前上下文：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl config --kubeconfig<span style=color:#666>=</span>config-demo use-context dev-frontend
+</span></span></code></pre></div><p>现在当输入 <code>kubectl</code> 命令时，相应动作会应用于 <code>dev-frontend</code> 上下文中所列的集群和名字空间，
+同时，命令会使用 <code>dev-frontend</code> 上下文中所列用户的凭证。</p><p>使用 <code>--minify</code> 参数，来查看与当前上下文相关联的配置信息。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl config --kubeconfig<span style=color:#666>=</span>config-demo view --minify
+</span></span></code></pre></div><p>输出结果展示了 <code>dev-frontend</code> 上下文相关的配置信息：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>clusters</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>cluster</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>certificate-authority</span>:<span style=color:#bbb> </span>fake-ca-file<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>server</span>:<span style=color:#bbb> </span>https://1.2.3.4<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>development<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>contexts</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>context</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>cluster</span>:<span style=color:#bbb> </span>development<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>namespace</span>:<span style=color:#bbb> </span>frontend<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>user</span>:<span style=color:#bbb> </span>developer<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>dev-frontend<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>current-context</span>:<span style=color:#bbb> </span>dev-frontend<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Config<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>preferences</span>:<span style=color:#bbb> </span>{}<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>users</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>developer<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>user</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>client-certificate</span>:<span style=color:#bbb> </span>fake-cert-file<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>client-key</span>:<span style=color:#bbb> </span>fake-key-file<span style=color:#bbb>
+</span></span></span></code></pre></div><p>现在假设用户希望在其它临时用途集群中工作一段时间。</p><p>将当前上下文更改为 <code>exp-scratch</code>：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl config --kubeconfig<span style=color:#666>=</span>config-demo use-context exp-scratch
+</span></span></code></pre></div><p>现在你发出的所有 <code>kubectl</code> 命令都将应用于 <code>scratch</code> 集群的默认名字空间。
+同时，命令会使用 <code>exp-scratch</code> 上下文中所列用户的凭证。</p><p>查看更新后的当前上下文 <code>exp-scratch</code> 相关的配置：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl config --kubeconfig<span style=color:#666>=</span>config-demo view --minify
+</span></span></code></pre></div><p>最后，假设用户希望在 <code>development</code> 集群中的 <code>storage</code> 名字空间下工作一段时间。</p><p>将当前上下文更改为 <code>dev-storage</code>：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl config --kubeconfig<span style=color:#666>=</span>config-demo use-context dev-storage
+</span></span></code></pre></div><p>查看更新后的当前上下文 <code>dev-storage</code> 相关的配置：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl config --kubeconfig<span style=color:#666>=</span>config-demo view --minify
+</span></span></code></pre></div><h2 id=create-a-second-configuration-file>创建第二个配置文件</h2><p>在 <code>config-exercise</code> 目录中，创建名为 <code>config-demo-2</code> 的文件，其中包含以下内容：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Config<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>preferences</span>:<span style=color:#bbb> </span>{}<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>contexts</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>context</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>cluster</span>:<span style=color:#bbb> </span>development<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>namespace</span>:<span style=color:#bbb> </span>ramp<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>user</span>:<span style=color:#bbb> </span>developer<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>dev-ramp-up<span style=color:#bbb>
+</span></span></span></code></pre></div><p>上述配置文件定义了一个新的上下文，名为 <code>dev-ramp-up</code>。</p><h2 id=set-the-kubeconfig-environment-variable>设置 KUBECONFIG 环境变量</h2><p>查看是否有名为 <code>KUBECONFIG</code> 的环境变量。
+如有，保存 <code>KUBECONFIG</code> 环境变量当前的值，以便稍后恢复。
+例如：</p><h3 id=linux>Linux</h3><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f>export</span> <span style=color:#b8860b>KUBECONFIG_SAVED</span><span style=color:#666>=</span><span style=color:#b44>&#34;</span><span style=color:#b8860b>$KUBECONFIG</span><span style=color:#b44>&#34;</span>
+</span></span></code></pre></div><h3 id=windows-powershell>Windows PowerShell</h3><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-powershell data-lang=powershell><span style=display:flex><span><span style=color:#b8860b>$Env:KUBECONFIG_SAVED</span>=<span style=color:#b8860b>$ENV:KUBECONFIG</span>
+</span></span></code></pre></div><p><code>KUBECONFIG</code> 环境变量是配置文件路径的列表，该列表在 Linux 和 Mac 中以冒号分隔，
+在 Windows 中以分号分隔。
+如果有 <code>KUBECONFIG</code> 环境变量，请熟悉列表中的配置文件。</p><p>临时添加两条路径到 <code>KUBECONFIG</code> 环境变量中。例如：</p><h3 id=linux-1>Linux</h3><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f>export</span> <span style=color:#b8860b>KUBECONFIG</span><span style=color:#666>=</span><span style=color:#b44>&#34;</span><span style=color:#b68;font-weight:700>${</span><span style=color:#b8860b>KUBECONFIG</span><span style=color:#b68;font-weight:700>}</span><span style=color:#b44>:config-demo:config-demo-2&#34;</span>
+</span></span></code></pre></div><h3 id=windows-powershell-1>Windows PowerShell</h3><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-powershell data-lang=powershell><span style=display:flex><span><span style=color:#b8860b>$Env:KUBECONFIG</span>=(<span style=color:#b44>&#34;config-demo;config-demo-2&#34;</span>)
+</span></span></code></pre></div><p>在 <code>config-exercise</code> 目录中输入以下命令：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl config view
+</span></span></code></pre></div><p>输出展示了 <code>KUBECONFIG</code> 环境变量中所列举的所有文件合并后的信息。
+特别地，注意合并信息中包含来自 <code>config-demo-2</code> 文件的 <code>dev-ramp-up</code> 上下文和来自
+<code>config-demo</code> 文件的三个上下文：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>contexts</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>context</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>cluster</span>:<span style=color:#bbb> </span>development<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>namespace</span>:<span style=color:#bbb> </span>frontend<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>user</span>:<span style=color:#bbb> </span>developer<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>dev-frontend<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>context</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>cluster</span>:<span style=color:#bbb> </span>development<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>namespace</span>:<span style=color:#bbb> </span>ramp<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>user</span>:<span style=color:#bbb> </span>developer<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>dev-ramp-up<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>context</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>cluster</span>:<span style=color:#bbb> </span>development<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>namespace</span>:<span style=color:#bbb> </span>storage<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>user</span>:<span style=color:#bbb> </span>developer<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>dev-storage<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>context</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>cluster</span>:<span style=color:#bbb> </span>scratch<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>namespace</span>:<span style=color:#bbb> </span>default<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>user</span>:<span style=color:#bbb> </span>experimenter<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>exp-scratch<span style=color:#bbb>
+</span></span></span></code></pre></div><p>关于 kubeconfig 文件如何合并的更多信息，
+请参考<a href=/zh-cn/docs/concepts/configuration/organize-cluster-access-kubeconfig/>使用 kubeconfig 文件组织集群访问</a></p><h2 id=explore-the-home-kube-directory>探索 $HOME/.kube 目录</h2><p>如果用户已经拥有一个集群，可以使用 <code>kubectl</code> 与集群进行交互，
+那么很可能在 <code>$HOME/.kube</code> 目录下有一个名为 <code>config</code> 的文件。</p><p>进入 <code>$HOME/.kube</code> 目录，看看那里有什么文件。通常会有一个名为
+<code>config</code> 的文件，目录中可能还有其他配置文件。请简单地熟悉这些文件的内容。</p><h2 id=append-home-kube-config-to-your-kubeconfig-environment-variable>将 $HOME/.kube/config 追加到 KUBECONFIG 环境变量中</h2><p>如果有 <code>$HOME/.kube/config</code> 文件，并且还未列在 <code>KUBECONFIG</code> 环境变量中，
+那么现在将它追加到 <code>KUBECONFIG</code> 环境变量中。
+例如：</p><h3 id=linux-2>Linux</h3><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f>export</span> <span style=color:#b8860b>KUBECONFIG</span><span style=color:#666>=</span><span style=color:#b44>&#34;</span><span style=color:#b68;font-weight:700>${</span><span style=color:#b8860b>KUBECONFIG</span><span style=color:#b68;font-weight:700>}</span><span style=color:#b44>:</span><span style=color:#b8860b>$HOME</span><span style=color:#b44>/.kube/config&#34;</span>
+</span></span></code></pre></div><h3 id=windows-powershell-2>Windows Powershell</h3><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-powershell data-lang=powershell><span style=display:flex><span><span style=color:#b8860b>$Env:KUBECONFIG</span>=<span style=color:#b44>&#34;</span><span style=color:#b8860b>$Env:KUBECONFIG</span><span style=color:#b44>;</span><span style=color:#b8860b>$HOME</span><span style=color:#b44>\.kube\config&#34;</span>
+</span></span></code></pre></div><p>在配置练习目录中输入以下命令，查看当前 <code>KUBECONFIG</code> 环境变量中列举的所有文件合并后的配置信息：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl config view
+</span></span></code></pre></div><h2 id=clean-up>清理</h2><p>将 <code>KUBECONFIG</code> 环境变量还原为原始值。例如：</p><h3 id=linux-3>Linux</h3><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f>export</span> <span style=color:#b8860b>KUBECONFIG</span><span style=color:#666>=</span><span style=color:#b44>&#34;</span><span style=color:#b8860b>$KUBECONFIG_SAVED</span><span style=color:#b44>&#34;</span>
+</span></span></code></pre></div><h3 id=windows-powershell-3>Windows PowerShell</h3><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-powershell data-lang=powershell><span style=display:flex><span><span style=color:#b8860b>$Env:KUBECONFIG</span>=<span style=color:#b8860b>$ENV:KUBECONFIG_SAVED</span>
+</span></span></code></pre></div><h2 id=接下来>接下来</h2><ul><li><a href=/zh-cn/docs/concepts/configuration/organize-cluster-access-kubeconfig/>使用 kubeconfig 文件组织集群访问</a></li><li><a href=/docs/reference/generated/kubectl/kubectl-commands#config>kubectl config</a></li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-72d3dddbc0c166c9a364e753d2b31ff0>4 - 使用端口转发来访问集群中的应用</h1><p>本文展示如何使用 <code>kubectl port-forward</code> 连接到在 Kubernetes 集群中运行的 MongoDB 服务。
+这种类型的连接对数据库调试很有用。</p><h2 id=准备开始>准备开始</h2><ul><li><p>你必须拥有一个 Kubernetes 的集群，同时你的 Kubernetes 集群必须带有 kubectl 命令行工具。
+建议在至少有两个节点的集群上运行本教程，且这些节点不作为控制平面主机。
+如果你还没有集群，你可以通过 <a href=https://minikube.sigs.k8s.io/docs/tutorials/multi_node/>Minikube</a>
+构建一个你自己的集群，或者你可以使用下面任意一个 Kubernetes 工具构建：</p><ul><li><a href=https://killercoda.com/playgrounds/scenario/kubernetes>Killercoda</a></li><li><a href=http://labs.play-with-k8s.com/>玩转 Kubernetes</a></li></ul>你的 Kubernetes 服务器版本必须不低于版本 v1.10.
+要获知版本信息，请输入 <code>kubectl version</code>.</li></ul><ul><li>安装 <a href=https://www.mongodb.com/try/download/shell>MongoDB Shell</a>。</li></ul><h2 id=创建-mongodb-deployment-和服务>创建 MongoDB Deployment 和服务</h2><ol><li><p>创建一个运行 MongoDB 的 Deployment：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -f https://k8s.io/examples/application/mongodb/mongo-deployment.yaml
+</span></span></code></pre></div><p>成功执行的命令的输出可以证明创建了 Deployment：</p><pre tabindex=0><code>deployment.apps/mongo created
+</code></pre><p>查看 Pod 状态，检查其是否准备就绪：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pods
+</span></span></code></pre></div><p>输出显示创建的 Pod：</p><pre tabindex=0><code>NAME                     READY   STATUS    RESTARTS   AGE
+mongo-75f59d57f4-4nd6q   1/1     Running   0          2m4s
+</code></pre><p>查看 Deployment 状态：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get deployment
+</span></span></code></pre></div><p>输出显示创建的 Deployment：</p><pre tabindex=0><code>NAME    READY   UP-TO-DATE   AVAILABLE   AGE
+mongo   1/1     1            1           2m21s
+</code></pre><p>该 Deployment 自动管理一个 ReplicaSet。查看该 ReplicaSet 的状态：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get replicaset
+</span></span></code></pre></div><p>输出显示 ReplicaSet 已被创建：</p><pre tabindex=0><code>NAME               DESIRED   CURRENT   READY   AGE
+mongo-75f59d57f4   1         1         1       3m12s
+</code></pre></li></ol><ol start=2><li><p>创建一个在网络上公开的 MongoDB 服务：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -f https://k8s.io/examples/application/mongodb/mongo-service.yaml
+</span></span></code></pre></div><p>成功执行的命令的输出可以证明 Service 已经被创建：</p><pre tabindex=0><code>service/mongo created
+</code></pre><p>检查所创建的 Service：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get service mongo
+</span></span></code></pre></div><p>输出显示已被创建的 Service：</p><pre tabindex=0><code>NAME    TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)     AGE
+mongo   ClusterIP   10.96.41.183   &lt;none&gt;        27017/TCP   11s
+</code></pre></li></ol><ol start=3><li><p>验证 MongoDB 服务是否运行在 Pod 中并且在监听 27017 端口：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#080;font-style:italic># 将 mongo-75f59d57f4-4nd6q 改为 Pod 的名称</span>
+</span></span><span style=display:flex><span>kubectl get pod mongo-75f59d57f4-4nd6q --template<span style=color:#666>=</span><span style=color:#b44>&#39;{{(index (index .spec.containers 0).ports 0).containerPort}}{{&#34;\n&#34;}}&#39;</span>
+</span></span></code></pre></div><p>输出应该显示对应 Pod 中 MongoDB 的端口：</p><pre tabindex=0><code>27017
+</code></pre><p>27017 是分配给 MongoDB 的互联网 TCP 端口。</p></li></ol><h2 id=转发一个本地端口到-pod-端口>转发一个本地端口到 Pod 端口</h2><ol><li><p><code>kubectl port-forward</code> 允许使用资源名称
+（例如 Pod 名称）来选择匹配的 Pod 来进行端口转发。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#080;font-style:italic># 将 mongo-75f59d57f4-4nd6q 改为 Pod 的名称</span>
+</span></span><span style=display:flex><span>kubectl port-forward mongo-75f59d57f4-4nd6q 28015:27017
+</span></span></code></pre></div><p>这相当于</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl port-forward pods/mongo-75f59d57f4-4nd6q 28015:27017
+</span></span></code></pre></div><p>或者</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl port-forward deployment/mongo 28015:27017
+</span></span></code></pre></div><p>或者</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl port-forward replicaset/mongo-75f59d57f4 28015:27017
+</span></span></code></pre></div><p>或者</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl port-forward service/mongo 28015:27017
+</span></span></code></pre></div><p>以上所有命令都有效。输出类似于：</p><pre tabindex=0><code>Forwarding from 127.0.0.1:28015 -&gt; 27017
+Forwarding from [::1]:28015 -&gt; 27017
+</code></pre><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p><code>kubectl port-forward</code> 不会返回。你需要打开另一个终端来继续这个练习。</div></li></ol><ol start=2><li><p>启动 MongoDB 命令行接口：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>mongosh --port <span style=color:#666>28015</span>
+</span></span></code></pre></div></li></ol><ol start=3><li><p>在 MongoDB 命令行提示符下，输入 <code>ping</code> 命令：</p><pre tabindex=0><code>db.runCommand( { ping: 1 } )
+</code></pre><p>成功的 ping 请求应该返回：</p><pre tabindex=0><code>{ ok: 1 }
+</code></pre></li></ol><h3 id=let-kubectl-choose-local-port>（可选操作）让 <em>kubectl</em> 来选择本地端口</h3><p>如果你不需要指定特定的本地端口，你可以让 <code>kubectl</code> 来选择和分配本地端口，
+这样你就不需要管理本地端口冲突。该命令使用稍微不同的语法：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl port-forward deployment/mongo :27017
+</span></span></code></pre></div><p><code>kubectl</code> 工具会找到一个未被使用的本地端口号（避免使用低段位的端口号，
+因为他们可能会被其他应用程序使用）。输出类似于：</p><pre tabindex=0><code>Forwarding from 127.0.0.1:63753 -&gt; 27017
+Forwarding from [::1]:63753 -&gt; 27017
+</code></pre><h2 id=discussion>讨论</h2><p>与本地 28015 端口建立的连接将被转发到运行 MongoDB 服务器的 Pod 的 27017 端口。
+通过此连接，你可以使用本地工作站来调试在 Pod 中运行的数据库。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p><code>kubectl port-forward</code> 仅实现了 TCP 端口 支持。
+在 <a href=https://github.com/kubernetes/kubernetes/issues/47862>issue 47862</a>
+中跟踪了对 UDP 协议的支持。</div><h2 id=接下来>接下来</h2><p>进一步了解 <a href=/docs/reference/generated/kubectl/kubectl-commands/#port-forward>kubectl port-forward</a>。</p></div><div class=td-content style=page-break-before:always><h1 id=pg-312f29f850826b74618634cd877aa065>5 - 使用服务来访问集群中的应用</h1><p>本文展示如何创建一个 Kubernetes 服务对象，能让外部客户端访问在集群中运行的应用。
+该服务为一个应用的两个运行实例提供负载均衡。</p><h2 id=准备开始>准备开始</h2><p>你必须拥有一个 Kubernetes 的集群，同时你的 Kubernetes 集群必须带有 kubectl 命令行工具。
+建议在至少有两个节点的集群上运行本教程，且这些节点不作为控制平面主机。
+如果你还没有集群，你可以通过 <a href=https://minikube.sigs.k8s.io/docs/tutorials/multi_node/>Minikube</a>
+构建一个你自己的集群，或者你可以使用下面任意一个 Kubernetes 工具构建：</p><ul><li><a href=https://killercoda.com/playgrounds/scenario/kubernetes>Killercoda</a></li><li><a href=http://labs.play-with-k8s.com/>玩转 Kubernetes</a></li></ul><h2 id=教程目标>教程目标</h2><ul><li>运行 Hello World 应用的两个实例。</li><li>创建一个服务对象来暴露 NodePort。</li><li>使用服务对象来访问正在运行的应用。</li></ul><h2 id=creating-a-service-for-an-app-running-in-two-pods>为运行在两个 Pod 中的应用创建一个服务</h2><p>这是应用程序部署的配置文件：</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/zh-cn/examples/service/access/hello-application.yaml download=service/access/hello-application.yaml><code>service/access/hello-application.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("service-access-hello-application-yaml")' title="Copy service/access/hello-application.yaml to clipboard"></img></div><div class=includecode id=service-access-hello-application-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>apps/v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Deployment<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>hello-world<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>selector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>matchLabels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>run</span>:<span style=color:#bbb> </span>load-balancer-example<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>replicas</span>:<span style=color:#bbb> </span><span style=color:#666>2</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>template</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>run</span>:<span style=color:#bbb> </span>load-balancer-example<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>hello-world<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>gcr.io/google-samples/node-hello:1.0<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>ports</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span>- <span style=color:green;font-weight:700>containerPort</span>:<span style=color:#bbb> </span><span style=color:#666>8080</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>              </span><span style=color:green;font-weight:700>protocol</span>:<span style=color:#bbb> </span>TCP<span style=color:#bbb>
+</span></span></span></code></pre></div></div></div><ol><li><p>在你的集群中运行一个 Hello World 应用。
+使用上面的文件创建应用程序 Deployment：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -f https://k8s.io/examples/service/access/hello-application.yaml
+</span></span></code></pre></div><p>上面的命令创建一个
+<a class=glossary-tooltip title=管理集群上的多副本应用。 data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/workloads/controllers/deployment/ target=_blank aria-label=Deployment>Deployment</a> 对象
+和一个关联的 <a class=glossary-tooltip title='ReplicaSet 是下一代副本控制器。' data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/workloads/controllers/replicaset/ target=_blank aria-label=ReplicaSet>ReplicaSet</a> 对象。
+这个 ReplicaSet 有两个 <a class=glossary-tooltip title='Pod 表示你的集群上一组正在运行的容器。' data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/workloads/pods/ target=_blank aria-label=Pod>Pod</a>，
+每个 Pod 都运行着 Hello World 应用。</p></li></ol><ol start=2><li><p>展示 Deployment 的信息：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get deployments hello-world
+</span></span><span style=display:flex><span>kubectl describe deployments hello-world
+</span></span></code></pre></div></li></ol><ol start=3><li><p>展示你的 ReplicaSet 对象信息：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get replicasets
+</span></span><span style=display:flex><span>kubectl describe replicasets
+</span></span></code></pre></div></li></ol><ol start=4><li><p>创建一个服务对象来暴露 Deployment：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl expose deployment hello-world --type<span style=color:#666>=</span>NodePort --name<span style=color:#666>=</span>example-service
+</span></span></code></pre></div></li></ol><ol start=5><li><p>展示 Service 信息：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl describe services example-service
+</span></span></code></pre></div><p>输出类似于：</p><pre tabindex=0><code>Name:                   example-service
+Namespace:              default
+Labels:                 run=load-balancer-example
+Annotations:            &lt;none&gt;
+Selector:               run=load-balancer-example
+Type:                   NodePort
+IP:                     10.32.0.16
+Port:                   &lt;unset&gt; 8080/TCP
+TargetPort:             8080/TCP
+NodePort:               &lt;unset&gt; 31496/TCP
+Endpoints:              10.200.1.4:8080,10.200.2.5:8080
+Session Affinity:       None
+Events:                 &lt;none&gt;
+</code></pre><p>注意服务中的 NodePort 值。例如在上面的输出中，NodePort 值是 31496。</p></li></ol><ol start=6><li><p>列出运行 Hello World 应用的 Pod：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pods --selector<span style=color:#666>=</span><span style=color:#b44>&#34;run=load-balancer-example&#34;</span> --output<span style=color:#666>=</span>wide
+</span></span></code></pre></div><p>输出类似于：</p><pre tabindex=0><code>NAME                           READY   STATUS    ...  IP           NODE
+hello-world-2895499144-bsbk5   1/1     Running   ...  10.200.1.4   worker1
+hello-world-2895499144-m1pwt   1/1     Running   ...  10.200.2.5   worker2
+</code></pre></li></ol><ol start=7><li><p>获取运行 Hello World 的 pod 的其中一个节点的公共 IP 地址。如何获得此地址取决于你设置集群的方式。
+例如，如果你使用的是 Minikube，则可以通过运行 <code>kubectl cluster-info</code> 来查看节点地址。
+如果你使用的是 Google Compute Engine 实例，
+则可以使用 <code>gcloud compute instances list</code> 命令查看节点的公共地址。</p></li><li><p>在你选择的节点上，创建一个防火墙规则以开放节点端口上的 TCP 流量。
+例如，如果你的服务的 NodePort 值为 31568，请创建一个防火墙规则以允许 31568 端口上的 TCP 流量。
+不同的云提供商提供了不同方法来配置防火墙规则。</p></li><li><p>使用节点地址和 node port 来访问 Hello World 应用：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>curl http://&lt;public-node-ip&gt;:&lt;node-port&gt;
+</span></span></code></pre></div><p>这里的 <code>&lt;public-node-ip></code> 是你节点的公共 IP 地址，<code>&lt;node-port></code> 是你服务的 NodePort 值。
+对于请求成功的响应是一个 hello 消息：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>Hello Kubernetes!
+</span></span></code></pre></div></li></ol><h2 id=using-a-service-configuration-file>使用服务配置文件</h2><p>作为 <code>kubectl expose</code> 的替代方法，
+你可以使用<a href=/zh-cn/docs/concepts/services-networking/service/>服务配置文件</a>来创建服务。</p><h2 id=清理现场>清理现场</h2><p>想要删除服务，输入以下命令：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl delete services example-service
+</span></span></code></pre></div><p>想要删除运行 Hello World 应用的 Deployment、ReplicaSet 和 Pod，输入以下命令：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl delete deployment hello-world
+</span></span></code></pre></div><h2 id=接下来>接下来</h2><p>跟随教程<a href=/zh-cn/docs/tutorials/services/connect-applications-service/>使用 Service 连接到应用</a>。</p></div><div class=td-content style=page-break-before:always><h1 id=pg-f3dac629bea950fc026d920306f09fb4>6 - 使用 Service 把前端连接到后端</h1><p>本任务会描述如何创建前端（Frontend）微服务和后端（Backend）微服务。后端微服务是一个 hello 欢迎程序。
+前端通过 nginx 和一个 Kubernetes <a class=glossary-tooltip title='将运行在一组 Pods 上的应用程序公开为网络服务的抽象方法。' data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/services-networking/service/ target=_blank aria-label=服务>服务</a>
+暴露后端所提供的服务。</p><h2 id=教程目标>教程目标</h2><ul><li>使用部署对象（Deployment object）创建并运行一个 <code>hello</code> 后端微服务</li><li>使用一个 Service 对象将请求流量发送到后端微服务的多个副本</li><li>同样使用一个 Deployment 对象创建并运行一个 <code>nginx</code> 前端微服务</li><li>配置前端微服务将请求流量发送到后端微服务</li><li>使用 <code>type=LoadBalancer</code> 的 Service 对象将前端微服务暴露到集群外部</li></ul><h2 id=准备开始>准备开始</h2><p><p>你必须拥有一个 Kubernetes 的集群，同时你的 Kubernetes 集群必须带有 kubectl 命令行工具。
+建议在至少有两个节点的集群上运行本教程，且这些节点不作为控制平面主机。
+如果你还没有集群，你可以通过 <a href=https://minikube.sigs.k8s.io/docs/tutorials/multi_node/>Minikube</a>
+构建一个你自己的集群，或者你可以使用下面任意一个 Kubernetes 工具构建：</p><ul><li><a href=https://killercoda.com/playgrounds/scenario/kubernetes>Killercoda</a></li><li><a href=http://labs.play-with-k8s.com/>玩转 Kubernetes</a></li></ul>要获知版本信息，请输入 <code>kubectl version</code>.</p><p>本任务使用<a href=/zh-cn/docs/tasks/access-application-cluster/create-external-load-balancer/>外部负载均衡服务</a>，
+所以需要对应的可支持此功能的环境。如果你的环境不能支持，你可以使用
+<a href=/zh-cn/docs/concepts/services-networking/service/#type-nodeport>NodePort</a>
+类型的服务代替。</p><h3 id=使用部署对象-deployment-创建后端>使用部署对象（Deployment）创建后端</h3><p>后端是一个简单的 hello 欢迎微服务应用。这是后端应用的 Deployment 配置文件：</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/zh-cn/examples/service/access/backend-deployment.yaml download=service/access/backend-deployment.yaml><code>service/access/backend-deployment.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("service-access-backend-deployment-yaml")' title="Copy service/access/backend-deployment.yaml to clipboard"></img></div><div class=includecode id=service-access-backend-deployment-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#00f;font-weight:700>---</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>apps/v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Deployment<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>backend<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>selector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>matchLabels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>app</span>:<span style=color:#bbb> </span>hello<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>tier</span>:<span style=color:#bbb> </span>backend<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>track</span>:<span style=color:#bbb> </span>stable<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>replicas</span>:<span style=color:#bbb> </span><span style=color:#666>3</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>template</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>app</span>:<span style=color:#bbb> </span>hello<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>tier</span>:<span style=color:#bbb> </span>backend<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>track</span>:<span style=color:#bbb> </span>stable<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>hello<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;gcr.io/google-samples/hello-go-gke:1.0&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>ports</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>http<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>              </span><span style=color:green;font-weight:700>containerPort</span>:<span style=color:#bbb> </span><span style=color:#666>80</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#00f;font-weight:700>...</span></span></span></code></pre></div></div></div><p>创建后端 Deployment：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -f https://k8s.io/examples/service/access/backend-deployment.yaml
+</span></span></code></pre></div><p>查看后端的 Deployment 信息：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl describe deployment backend
+</span></span></code></pre></div><p>输出类似于：</p><pre tabindex=0><code>Name:                           backend
+Namespace:                      default
+CreationTimestamp:              Mon, 24 Oct 2016 14:21:02 -0700
+Labels:                         app=hello
+                                tier=backend
+                                track=stable
+Annotations:                    deployment.kubernetes.io/revision=1
+Selector:                       app=hello,tier=backend,track=stable
+Replicas:                       3 desired | 3 updated | 3 total | 3 available | 0 unavailable
+StrategyType:                   RollingUpdate
+MinReadySeconds:                0
+RollingUpdateStrategy:          1 max unavailable, 1 max surge
+Pod Template:
+  Labels:       app=hello
+                tier=backend
+                track=stable
+  Containers:
+   hello:
+    Image:              &#34;gcr.io/google-samples/hello-go-gke:1.0&#34;
+    Port:               80/TCP
+    Environment:        &lt;none&gt;
+    Mounts:             &lt;none&gt;
+  Volumes:              &lt;none&gt;
+Conditions:
+  Type          Status  Reason
+  ----          ------  ------
+  Available     True    MinimumReplicasAvailable
+  Progressing   True    NewReplicaSetAvailable
+OldReplicaSets:                 &lt;none&gt;
+NewReplicaSet:                  hello-3621623197 (3/3 replicas created)
+Events:
+...
+</code></pre><h3 id=创建-hello-service-对象>创建 <code>hello</code> Service 对象</h3><p>将请求从前端发送到后端的关键是后端 Service。Service 创建一个固定 IP 和 DNS 解析名入口，
+使得后端微服务总是可达。Service 使用
+<a class=glossary-tooltip title=选择算符允许用户通过标签对一组资源对象进行筛选过滤。 data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/overview/working-with-objects/labels/ target=_blank aria-label=选择算符>选择算符</a>
+来寻找目标 Pod。</p><p>首先，浏览 Service 的配置文件：</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/zh-cn/examples/service/access/backend-service.yaml download=service/access/backend-service.yaml><code>service/access/backend-service.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("service-access-backend-service-yaml")' title="Copy service/access/backend-service.yaml to clipboard"></img></div><div class=includecode id=service-access-backend-service-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#00f;font-weight:700>---</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Service<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>hello<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>selector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>app</span>:<span style=color:#bbb> </span>hello<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>tier</span>:<span style=color:#bbb> </span>backend<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>ports</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>protocol</span>:<span style=color:#bbb> </span>TCP<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>port</span>:<span style=color:#bbb> </span><span style=color:#666>80</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>targetPort</span>:<span style=color:#bbb> </span>http<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#00f;font-weight:700>...</span></span></span></code></pre></div></div></div><p>配置文件中，你可以看到名为 <code>hello</code> 的 Service 将流量路由到包含 <code>app: hello</code>
+和 <code>tier: backend</code> 标签的 Pod。</p><p>创建后端 Service：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -f https://k8s.io/examples/service/access/backend-service.yaml
+</span></span></code></pre></div><p>此时，你已经有了一个运行着 <code>hello</code> 应用的三个副本的 <code>backend</code> Deployment，你也有了
+一个 Service 用于路由网络流量。不过，这个服务在集群外部无法访问也无法解析。</p><h3 id=创建前端应用>创建前端应用</h3><p>现在你已经有了运行中的后端应用，你可以创建一个可在集群外部访问的前端，并通过代理
+前端的请求连接到后端。</p><p>前端使用被赋予后端 Service 的 DNS 名称将请求发送到后端工作 Pods。这一 DNS
+名称为 <code>hello</code>，也就是 <code>examples/service/access/backend-service.yaml</code> 配置
+文件中 <code>name</code> 字段的取值。</p><p>前端 Deployment 中的 Pods 运行一个 nginx 镜像，这个已经配置好的镜像会将请求转发
+给后端的 hello Service。下面是 nginx 的配置文件：</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/zh-cn/examples/service/access/frontend-nginx.conf download=service/access/frontend-nginx.conf><code>service/access/frontend-nginx.conf</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("service-access-frontend-nginx-conf")' title="Copy service/access/frontend-nginx.conf to clipboard"></img></div><div class=includecode id=service-access-frontend-nginx-conf><pre tabindex=0><code class=language-conf data-lang=conf># Backend 是 nginx 的内部标识符，用于命名以下特定的 upstream
+upstream Backend {
+    # hello 是 Kubernetes 中的后端服务所使用的内部 DNS 名称
+    server hello;
+}
+
+server {
+    listen 80;
+
+    location / {
+        # 以下语句将流量通过代理方式转发到名为 Backend 的上游
+        proxy_pass http://Backend;
+    }
+}
+</code></pre></div></div><p>与后端类似，前端用包含一个 Deployment 和一个 Service。后端与前端服务之间的一个
+重要区别是前端 Service 的配置文件包含了 <code>type: LoadBalancer</code>，也就是说，Service
+会使用你的云服务商的默认负载均衡设备，从而实现从集群外访问的目的。</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/zh-cn/examples/service/access/frontend-service.yaml download=service/access/frontend-service.yaml><code>service/access/frontend-service.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("service-access-frontend-service-yaml")' title="Copy service/access/frontend-service.yaml to clipboard"></img></div><div class=includecode id=service-access-frontend-service-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#00f;font-weight:700>---</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Service<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>frontend<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>selector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>app</span>:<span style=color:#bbb> </span>hello<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>tier</span>:<span style=color:#bbb> </span>frontend<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>ports</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>protocol</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;TCP&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>port</span>:<span style=color:#bbb> </span><span style=color:#666>80</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>targetPort</span>:<span style=color:#bbb> </span><span style=color:#666>80</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>type</span>:<span style=color:#bbb> </span>LoadBalancer<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#00f;font-weight:700>...</span></span></span></code></pre></div></div></div><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/zh-cn/examples/service/access/frontend-deployment.yaml download=service/access/frontend-deployment.yaml><code>service/access/frontend-deployment.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("service-access-frontend-deployment-yaml")' title="Copy service/access/frontend-deployment.yaml to clipboard"></img></div><div class=includecode id=service-access-frontend-deployment-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#00f;font-weight:700>---</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>apps/v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Deployment<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>frontend<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>selector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>matchLabels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>app</span>:<span style=color:#bbb> </span>hello<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>tier</span>:<span style=color:#bbb> </span>frontend<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>track</span>:<span style=color:#bbb> </span>stable<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>replicas</span>:<span style=color:#bbb> </span><span style=color:#666>1</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>template</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>labels</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>app</span>:<span style=color:#bbb> </span>hello<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>tier</span>:<span style=color:#bbb> </span>frontend<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>track</span>:<span style=color:#bbb> </span>stable<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>nginx<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;gcr.io/google-samples/hello-frontend:1.0&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>lifecycle</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>preStop</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>              </span><span style=color:green;font-weight:700>exec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>                </span><span style=color:green;font-weight:700>command</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;/usr/sbin/nginx&#34;</span>,<span style=color:#b44>&#34;-s&#34;</span>,<span style=color:#b44>&#34;quit&#34;</span>]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#00f;font-weight:700>...</span></span></span></code></pre></div></div></div><p>创建前端 Deployment 和 Service：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -f https://k8s.io/examples/service/access/frontend-deployment.yaml
+</span></span><span style=display:flex><span>kubectl apply -f https://k8s.io/examples/service/access/frontend-service.yaml
+</span></span></code></pre></div><p>通过输出确认两个资源都已经被创建：</p><pre tabindex=0><code>deployment.apps/frontend created
+service/frontend created
+</code></pre><div class="alert alert-info note callout" role=alert><strong>说明：</strong> 这个 nginx 配置文件是被打包在
+<a href=/examples/service/access/Dockerfile>容器镜像</a> 里的。
+更好的方法是使用
+<a href=/zh-cn/docs/tasks/configure-pod-container/configure-pod-configmap/>ConfigMap</a>，
+这样的话你可以更轻易地更改配置。</div><h3 id=interact-with-the-frontend-service>与前端 Service 交互</h3><p>一旦你创建了 LoadBalancer 类型的 Service，你可以使用这条命令查看外部 IP：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get service frontend
+</span></span></code></pre></div><p>外部 IP 字段的生成可能需要一些时间。如果是这种情况，外部 IP 会显示为 <code>&lt;pending></code>。</p><pre tabindex=0><code>NAME       CLUSTER-IP      EXTERNAL-IP   PORT(S)  AGE
+frontend   10.51.252.116   &lt;pending&gt;     80/TCP   10s
+</code></pre><p>当外部 IP 地址被分配可用时，配置会更新，在 <code>EXTERNAL-IP</code> 头部下显示新的 IP：</p><pre tabindex=0><code>NAME       CLUSTER-IP      EXTERNAL-IP        PORT(S)  AGE
+frontend   10.51.252.116   XXX.XXX.XXX.XXX    80/TCP   1m
+</code></pre><p>这一新的 IP 地址就可以用来从集群外与 <code>frontend</code> 服务交互了。</p><h3 id=通过前端发送流量>通过前端发送流量</h3><p>前端和后端已经完成连接了。你可以使用 curl 命令通过你的前端 Service 的外部
+IP 访问服务端点。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>curl http://<span style=color:#b68;font-weight:700>${</span><span style=color:#b8860b>EXTERNAL_IP</span><span style=color:#b68;font-weight:700>}</span> <span style=color:#080;font-style:italic># 将 EXTERNAL_P 替换为你之前看到的外部 IP</span>
+</span></span></code></pre></div><p>输出显示后端生成的消息：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{<span style=color:green;font-weight:700>&#34;message&#34;</span>:<span style=color:#b44>&#34;Hello&#34;</span>}
+</span></span></code></pre></div><h2 id=清理现场>清理现场</h2><p>要删除服务，输入下面的命令：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl delete services frontend backend
+</span></span></code></pre></div><p>要删除在前端和后端应用中运行的 Deployment、ReplicaSet 和 Pod，输入下面的命令：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl delete deployment frontend backend
+</span></span></code></pre></div><h2 id=接下来>接下来</h2><ul><li>进一步了解 <a href=/zh-cn/docs/concepts/services-networking/service/>Service</a></li><li>进一步了解 <a href=/zh-cn/docs/tasks/configure-pod-container/configure-pod-configmap/>ConfigMap</a></li><li>进一步了解 <a href=/zh-cn/docs/concepts/services-networking/dns-pod-service/>Service 和 Pods 的 DNS</a></li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-21cd8f87563675fb0278d3694ba9ecb0>7 - 创建外部负载均衡器</h1><p>本文展示如何创建一个外部负载均衡器。</p><p>创建<a class=glossary-tooltip title='将运行在一组 Pods 上的应用程序公开为网络服务的抽象方法。' data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/services-networking/service/ target=_blank aria-label=服务>服务</a>时，你可以选择自动创建云网络负载均衡器。
+负载均衡器提供外部可访问的 IP 地址，可将流量发送到集群节点上的正确端口上
+（<strong>假设集群在支持的环境中运行，并配置了正确的云负载均衡器驱动包</strong>）。</p><p>你还可以使用 <a class=glossary-tooltip title='Ingress 是对集群中服务的外部访问进行管理的 API 对象，典型的访问方式是 HTTP。' data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/services-networking/ingress/ target=_blank aria-label=Ingress>Ingress</a> 代替 Service。
+更多信息，请参阅 <a href=/zh-cn/docs/concepts/services-networking/ingress/>Ingress</a> 文档。</p><h2 id=准备开始>准备开始</h2><p>你必须拥有一个 Kubernetes 的集群，同时你的 Kubernetes 集群必须带有 kubectl 命令行工具。
+建议在至少有两个节点的集群上运行本教程，且这些节点不作为控制平面主机。
+如果你还没有集群，你可以通过 <a href=https://minikube.sigs.k8s.io/docs/tutorials/multi_node/>Minikube</a>
+构建一个你自己的集群，或者你可以使用下面任意一个 Kubernetes 工具构建：</p><ul><li><a href=https://killercoda.com/playgrounds/scenario/kubernetes>Killercoda</a></li><li><a href=http://labs.play-with-k8s.com/>玩转 Kubernetes</a></li></ul><p>你的集群必须在已经支持配置外部负载均衡器的云或其他环境中运行。</p><h2 id=create-a-service>创建服务</h2><h3 id=create-a-service-from-a-manifest>基于清单文件创建服务</h3><p>要创建外部负载均衡器，请将以下内容添加到你的 Service 清单文件：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>type</span>:<span style=color:#bbb> </span>LoadBalancer<span style=color:#bbb>
+</span></span></span></code></pre></div><p>你的清单文件可能会如下所示：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Service<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>example-service<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>selector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>app</span>:<span style=color:#bbb> </span>example<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>ports</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>port</span>:<span style=color:#bbb> </span><span style=color:#666>8765</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>targetPort</span>:<span style=color:#bbb> </span><span style=color:#666>9376</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>type</span>:<span style=color:#bbb> </span>LoadBalancer<span style=color:#bbb>
+</span></span></span></code></pre></div><h3 id=create-a-service-using-kubectl>使用 kubectl 创建 Service</h3><p>你也可以使用 <code>kubectl expose</code> 命令及其 <code>--type=LoadBalancer</code> 参数创建服务：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl expose deployment example --port<span style=color:#666>=</span><span style=color:#666>8765</span> --target-port<span style=color:#666>=</span><span style=color:#666>9376</span> <span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>        --name<span style=color:#666>=</span>example-service --type<span style=color:#666>=</span>LoadBalancer
+</span></span></code></pre></div><p>此命令通过使用与引用资源（在上面的示例的情况下，名为 <code>example</code> 的
+<a class=glossary-tooltip title=管理集群上的多副本应用。 data-toggle=tooltip data-placement=top href=/zh-cn/docs/concepts/workloads/controllers/deployment/ target=_blank aria-label=Deployment>Deployment</a>）
+相同的选择器来创建一个新的服务。</p><p>更多信息（包括更多的可选参数），请参阅
+<a href=/docs/reference/generated/kubectl/kubectl-commands/#expose><code>kubectl expose</code> 指南</a>。</p><h2 id=finding-your-ip-address>找到你的 IP 地址</h2><p>你可以通过 <code>kubectl</code> 获取服务信息，找到为你的服务创建的 IP 地址：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl describe services example-service
+</span></span></code></pre></div><p>这将获得类似如下输出：</p><pre tabindex=0><code>Name:                     example-service
+Namespace:                default
+Labels:                   app=example
+Annotations:              &lt;none&gt;
+Selector:                 app=example
+Type:                     LoadBalancer
+IP Families:              &lt;none&gt;
+IP:                       10.3.22.96
+IPs:                      10.3.22.96
+LoadBalancer Ingress:     192.0.2.89
+Port:                     &lt;unset&gt;  8765/TCP
+TargetPort:               9376/TCP
+NodePort:                 &lt;unset&gt;  30593/TCP
+Endpoints:                172.17.0.3:9376
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   &lt;none&gt;
+</code></pre><p>负载均衡器的 IP 地址列在 <code>LoadBalancer Ingress</code> 旁边。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong><p>如果你在 Minikube 上运行服务，你可以通过以下命令找到分配的 IP 地址和端口：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>minikube service example-service --url
+</span></span></code></pre></div></div><h2 id=preserving-the-client-source-ip>保留客户端源 IP</h2><p>默认情况下，目标容器中看到的源 IP 将<strong>不是客户端的原始源 IP</strong>。
+要启用保留客户端 IP，可以在服务的 <code>.spec</code> 中配置以下字段：</p><ul><li><code>.spec.externalTrafficPolicy</code> - 表示此 Service 是否希望将外部流量路由到节点本地或集群范围的端点。
+有两个可用选项：<code>Cluster</code>（默认）和 <code>Local</code>。
+<code>Cluster</code> 隐藏了客户端源 IP，可能导致第二跳到另一个节点，但具有良好的整体负载分布。
+<code>Local</code> 保留客户端源 IP 并避免 LoadBalancer 和 NodePort 类型服务的第二跳，
+但存在潜在的不均衡流量传播风险。</li></ul><ul><li><code>.spec.healthCheckNodePort</code> - 指定服务的 healthcheck nodePort（数字端口号）。
+如果你未指定 <code>healthCheckNodePort</code>，服务控制器从集群的 NodePort 范围内分配一个端口。
+你可以通过设置 API 服务器的命令行选项 <code>--service-node-port-range</code> 来配置上述范围。
+在服务 <code>type</code> 设置为 LoadBalancer 并且 <code>externalTrafficPolicy</code> 设置为 <code>Local</code> 时，
+Service 将会使用用户指定的 <code>healthCheckNodePort</code> 值（如果你指定了它）。</li></ul><p>可以通过在服务的清单文件中将 <code>externalTrafficPolicy</code> 设置为 Local 来激活此功能。比如：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Service<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>example-service<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>selector</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>app</span>:<span style=color:#bbb> </span>example<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>ports</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>port</span>:<span style=color:#bbb> </span><span style=color:#666>8765</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>targetPort</span>:<span style=color:#bbb> </span><span style=color:#666>9376</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>externalTrafficPolicy</span>:<span style=color:#bbb> </span>Local<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>type</span>:<span style=color:#bbb> </span>LoadBalancer<span style=color:#bbb>
+</span></span></span></code></pre></div><h3 id=caveats-and-limitations-when-preserving-source-ips>保留源 IP 时的注意事项和限制</h3><p>一些云服务供应商的负载均衡服务不允许你为每个目标配置不同的权重。</p><p>由于每个目标在向节点发送流量方面的权重相同，因此外部流量不会在不同 Pod 之间平均负载。
+外部负载均衡器不知道每个节点上用作目标的 Pod 数量。</p><p>在 <code>NumServicePods &lt;&lt; _NumNodes</code> 或 <code>NumServicePods >> NumNodes</code> 时，
+即使没有权重，也会看到接近相等的分布。</p><p>内部 Pod 到 Pod 的流量应该与 ClusterIP 服务类似，所有 Pod 的概率相同。</p><h2 id=garbage-collecting-load-balancers>回收负载均衡器</h2><div style=margin-top:10px;margin-bottom:10px><b>特性状态：</b> <code>Kubernetes v1.17 [stable]</code></div><p>在通常情况下，应在删除 LoadBalancer 类型 Service 后立即清除云服务供应商中的相关负载均衡器资源。
+但是，众所周知，在删除关联的服务后，云资源被孤立的情况很多。
+引入了针对服务负载均衡器的终结器保护，以防止这种情况发生。
+通过使用终结器，在删除相关的负载均衡器资源之前，也不会删除服务资源。</p><p>具体来说，如果服务具有 <code>type</code> LoadBalancer，则服务控制器将附加一个名为
+<code>service.kubernetes.io/load-balancer-cleanup</code> 的终结器。
+仅在清除负载均衡器资源后才能删除终结器。
+即使在诸如服务控制器崩溃之类的极端情况下，这也可以防止负载均衡器资源悬空。</p><h2 id=external-load-balancer-providers>外部负载均衡器供应商</h2><p>请务必注意，此功能的数据路径由 Kubernetes 集群外部的负载均衡器提供。</p><p>当服务 <code>type</code> 设置为 LoadBalancer 时，Kubernetes 向集群中的 Pod 提供的功能等同于
+<code>type</code> 设置为 ClusterIP，并通过使用托管了相关 Kubernetes Pod 的节点作为条目对负载均衡器
+（从外部到 Kubernetes）进行编程来扩展它。
+Kubernetes 控制平面自动创建外部负载均衡器、健康检查（如果需要）和包过滤规则（如果需要）。
+一旦云服务供应商为负载均衡器分配了 IP 地址，控制平面就会查找该外部 IP 地址并将其填充到 Service 对象中。</p><h2 id=接下来>接下来</h2><ul><li>遵循教程<a href=/zh-cn/docs/tutorials/services/connect-applications-service/>使用 Service 连接到应用</a></li><li>阅读<a href=/zh-cn/docs/concepts/services-networking/service/>服务</a></li><li>阅读 <a href=/zh-cn/docs/concepts/services-networking/ingress/>Ingress</a></li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-48e8f306f919c5b81265e265a2b76ab4>8 - 列出集群中所有运行容器的镜像</h1><p>本文展示如何使用 kubectl 来列出集群中所有运行 Pod 的容器的镜像</p><h2 id=准备开始>准备开始</h2><p><p>你必须拥有一个 Kubernetes 的集群，同时你的 Kubernetes 集群必须带有 kubectl 命令行工具。
+建议在至少有两个节点的集群上运行本教程，且这些节点不作为控制平面主机。
+如果你还没有集群，你可以通过 <a href=https://minikube.sigs.k8s.io/docs/tutorials/multi_node/>Minikube</a>
+构建一个你自己的集群，或者你可以使用下面任意一个 Kubernetes 工具构建：</p><ul><li><a href=https://killercoda.com/playgrounds/scenario/kubernetes>Killercoda</a></li><li><a href=http://labs.play-with-k8s.com/>玩转 Kubernetes</a></li></ul>要获知版本信息，请输入 <code>kubectl version</code>.</p><p>在本练习中，你将使用 kubectl 来获取集群中运行的所有 Pod，并格式化输出来提取每个 Pod 中的容器列表。</p><h2 id=列出所有命名空间下的所有容器>列出所有命名空间下的所有容器</h2><ul><li>使用 <code>kubectl get pods --all-namespaces</code> 获取所有命名空间下的所有 Pod</li><li>使用 <code>-o jsonpath={.items[*].spec.containers[*].image}</code> 来格式化输出，以仅包含容器镜像名称。
+这将以递归方式从返回的 json 中解析出 <code>image</code> 字段。<ul><li>参阅 <a href=/zh-cn/docs/reference/kubectl/jsonpath/>jsonpath 说明</a>
+获取更多关于如何使用 jsonpath 的信息。</li></ul></li><li>使用标准化工具来格式化输出：<code>tr</code>, <code>sort</code>, <code>uniq</code><ul><li>使用 <code>tr</code> 以用换行符替换空格</li><li>使用 <code>sort</code> 来对结果进行排序</li><li>使用 <code>uniq</code> 来聚合镜像计数</li></ul></li></ul><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pods --all-namespaces -o <span style=color:#b8860b>jsonpath</span><span style=color:#666>=</span><span style=color:#b44>&#34;{.items[*].spec.containers[*].image}&#34;</span> |<span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>tr -s <span style=color:#b44>&#39;[[:space:]]&#39;</span> <span style=color:#b44>&#39;\n&#39;</span> |<span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>sort |<span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>uniq -c
+</span></span></code></pre></div><p>jsonpath 解释如下：</p><ul><li><code>.items[*]</code>: 对于每个返回的值</li><li><code>.spec</code>: 获取 spec</li><li><code>.containers[*]</code>: 对于每个容器</li><li><code>.image</code>: 获取镜像</li></ul><div class="alert alert-info note callout" role=alert><strong>说明：</strong> 按名字获取单个 Pod 时，例如 <code>kubectl get pod nginx</code>，路径的 <code>.items[*]</code> 部分应该省略，
+因为返回的是一个 Pod 而不是一个项目列表。</div><h2 id=按-pod-列出容器镜像>按 Pod 列出容器镜像</h2><p>可以使用 <code>range</code> 操作进一步控制格式化，以单独操作每个元素。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pods --all-namespaces -o <span style=color:#b8860b>jsonpath</span><span style=color:#666>=</span><span style=color:#b44>&#39;{range .items[*]}{&#34;\n&#34;}{.metadata.name}{&#34;:\t&#34;}{range .spec.containers[*]}{.image}{&#34;, &#34;}{end}{end}&#39;</span> |<span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>sort
+</span></span></code></pre></div><h2 id=列出以标签过滤后的-pod-的所有容器>列出以标签过滤后的 Pod 的所有容器</h2><p>要获取匹配特定标签的 Pod，请使用 -l 参数。以下匹配仅与标签 <code>app=nginx</code> 相符的 Pod。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pods --all-namespaces -o <span style=color:#b8860b>jsonpath</span><span style=color:#666>=</span><span style=color:#b44>&#34;{.items[*].spec.containers[*].image}&#34;</span> -l <span style=color:#b8860b>app</span><span style=color:#666>=</span>nginx
+</span></span></code></pre></div><h2 id=列出以命名空间过滤后的-pod-的所有容器>列出以命名空间过滤后的 Pod 的所有容器</h2><p>要获取匹配特定命名空间的 Pod，请使用 namespace 参数。以下仅匹配 <code>kube-system</code> 命名空间下的 Pod。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pods --namespace kube-system -o <span style=color:#b8860b>jsonpath</span><span style=color:#666>=</span><span style=color:#b44>&#34;{.items[*].spec.containers[*].image}&#34;</span>
+</span></span></code></pre></div><h2 id=使用-go-template-代替-jsonpath-来获取容器>使用 go-template 代替 jsonpath 来获取容器</h2><p>作为 jsonpath 的替代，Kubectl 支持使用 <a href=https://golang.org/pkg/text/template/>go-templates</a> 来格式化输出：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pods --all-namespaces -o go-template --template<span style=color:#666>=</span><span style=color:#b44>&#34;{{range .items}}{{range .spec.containers}}{{.image}} {{end}}{{end}}&#34;</span>
+</span></span></code></pre></div><h2 id=接下来>接下来</h2><h3 id=参考>参考</h3><ul><li><a href=/zh-cn/docs/reference/kubectl/jsonpath/>Jsonpath</a> 参考指南</li><li><a href=https://golang.org/pkg/text/template/>Go template</a> 参考指南</li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-1839d8468a083839ed1cc8d18fe1142e>9 - 在 Minikube 环境中使用 NGINX Ingress 控制器配置 Ingress</h1><p><a href=/zh-cn/docs/concepts/services-networking/ingress/>Ingress</a>是一种 API 对象，其中定义了一些规则使得集群中的
+服务可以从集群外访问。
+<a href=/zh-cn/docs/concepts/services-networking/ingress-controllers/>Ingress 控制器</a>
+负责满足 Ingress 中所设置的规则。</p><p>本节为你展示如何配置一个简单的 Ingress，根据 HTTP URI 将服务请求路由到
+服务 <code>web</code> 或 <code>web2</code>。</p><h2 id=准备开始>准备开始</h2><p><p>你必须拥有一个 Kubernetes 的集群，同时你的 Kubernetes 集群必须带有 kubectl 命令行工具。
+建议在至少有两个节点的集群上运行本教程，且这些节点不作为控制平面主机。
+如果你还没有集群，你可以通过 <a href=https://minikube.sigs.k8s.io/docs/tutorials/multi_node/>Minikube</a>
+构建一个你自己的集群，或者你可以使用下面任意一个 Kubernetes 工具构建：</p><ul><li><a href=https://killercoda.com/playgrounds/scenario/kubernetes>Killercoda</a></li><li><a href=http://labs.play-with-k8s.com/>玩转 Kubernetes</a></li></ul>你的 Kubernetes 服务器版本必须不低于版本 1.19.
+要获知版本信息，请输入 <code>kubectl version</code>.
+如果你使用的是较早的 Kubernetes 版本，请切换到该版本的文档。</p><h3 id=创建一个-minikube-集群>创建一个 Minikube 集群</h3><dl><dt>使用 Katacoda</dt><dd><script defer src=https://katacoda.com/embed.js></script>
+<button class=button onclick=window.katacoda.init()>Launch Terminal</button></dd><dt>本地</dt><dd>如果已经在本地<a href=/zh-cn/docs/tasks/tools/#minikube>安装Minikube</a>，
+请运行 <code>minikube start</code> 创建一个集群。</dd></dl><h2 id=启用-ingress-控制器>启用 Ingress 控制器</h2><ol><li><p>为了启用 NGINIX Ingress 控制器，可以运行下面的命令：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>minikube addons <span style=color:#a2f>enable</span> ingress
+</span></span></code></pre></div></li></ol><ol start=2><li><p>检查验证 NGINX Ingress 控制器处于运行状态：</p><ul class="nav nav-tabs" id=tab-with-md role=tablist><li class=nav-item><a data-toggle=tab class="nav-link active" href=#tab-with-md-0 role=tab aria-controls=tab-with-md-0 aria-selected=true>minikube v1.19 或更高版本</a></li><li class=nav-item><a data-toggle=tab class=nav-link href=#tab-with-md-1 role=tab aria-controls=tab-with-md-1>minikube v1.18.1 或更早版本</a></li></ul><div class=tab-content id=tab-with-md><div id=tab-with-md-0 class="tab-pane show active" role=tabpanel aria-labelledby=tab-with-md-0><p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pods -n ingress-nginx
+</span></span></code></pre></div><div class="alert alert-info note callout" role=alert><strong>说明：</strong> 最多可能需要等待一分钟才能看到这些 Pod 运行正常。</div><p>输出类似于：</p><pre tabindex=0><code>NAME                                        READY   STATUS      RESTARTS    AGE
+ingress-nginx-admission-create-g9g49        0/1     Completed   0          11m
+ingress-nginx-admission-patch-rqp78         0/1     Completed   1          11m
+ingress-nginx-controller-59b45fb494-26npt   1/1     Running     0          11m
+</code></pre></div><div id=tab-with-md-1 class=tab-pane role=tabpanel aria-labelledby=tab-with-md-1><p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pods -n kube-system
+</span></span></code></pre></div><div class="alert alert-info note callout" role=alert><strong>说明：</strong> 最多可能需要等待一分钟才能看到这些 Pod 运行正常。</div><p>输出类似于：</p><pre tabindex=0><code>NAME                                        READY     STATUS    RESTARTS   AGE
+default-http-backend-59868b7dd6-xb8tq       1/1       Running   0          1m
+kube-addon-manager-minikube                 1/1       Running   0          3m
+kube-dns-6dcb57bcc8-n4xd4                   3/3       Running   0          2m
+kubernetes-dashboard-5498ccf677-b8p5h       1/1       Running   0          2m
+nginx-ingress-controller-5984b97644-rnkrg   1/1       Running   0          1m
+storage-provisioner                         1/1       Running   0          2m
+</code></pre><p>请确保可以在输出中看到一个名称以 <code>nginx-ingress-controller-</code> 为前缀的 Pod。</p></div></div></li></ol><h2 id=部署一个-hello-world-应用>部署一个 Hello World 应用</h2><ol><li><p>使用下面的命令创建一个 Deployment：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create deployment web --image<span style=color:#666>=</span>gcr.io/google-samples/hello-app:1.0
+</span></span></code></pre></div><p>输出：</p><pre tabindex=0><code>deployment.apps/web created
+</code></pre></li></ol><ol start=2><li><p>将 Deployment 暴露出来：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl expose deployment web --type<span style=color:#666>=</span>NodePort --port<span style=color:#666>=</span><span style=color:#666>8080</span>
+</span></span></code></pre></div><p>输出：</p><pre tabindex=0><code>service/web exposed
+</code></pre></li></ol><ol start=3><li><p>验证 Service 已经创建，并且可以从节点端口访问：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get service web
+</span></span></code></pre></div><p>输出类似于：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>NAME      TYPE       CLUSTER-IP       EXTERNAL-IP   PORT<span style=color:#666>(</span>S<span style=color:#666>)</span>          AGE
+</span></span><span style=display:flex><span>web       NodePort   10.104.133.249   &lt;none&gt;        8080:31637/TCP   12m
+</span></span></code></pre></div></li></ol><ol start=4><li><p>使用节点端口信息访问服务：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>minikube service web --url
+</span></span></code></pre></div><p>输出类似于：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>http://172.17.0.15:31637
+</span></span></code></pre></div><div class="alert alert-info note callout" role=alert><strong>说明：</strong> 如果使用的是 Katacoda 环境，在终端面板顶端，请点击加号标志。
+然后点击 <strong>Select port to view on Host 1</strong>。
+输入节点和端口号（这里是<code>31637</code>），之后点击 <strong>Display Port</strong>。</div><p>输出类似于：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>Hello, world!
+</span></span><span style=display:flex><span>Version: 1.0.0
+</span></span><span style=display:flex><span>Hostname: web-55b8c6998d-8k564
+</span></span></code></pre></div><p>你现在应该可以通过 Minikube 的 IP 地址和节点端口来访问示例应用了。
+下一步是让自己能够通过 Ingress 资源来访问应用。</p></li></ol><h2 id=创建一个-ingress>创建一个 Ingress</h2><p>下面是一个定义 Ingress 的配置文件，负责通过 <code>hello-world.info</code> 将请求
+转发到你的服务。</p><ol><li><p>根据下面的 YAML 创建文件 <code>example-ingress.yaml</code>：</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/zh-cn/examples/service/networking/example-ingress.yaml download=service/networking/example-ingress.yaml><code>service/networking/example-ingress.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("service-networking-example-ingress-yaml")' title="Copy service/networking/example-ingress.yaml to clipboard"></img></div><div class=includecode id=service-networking-example-ingress-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>networking.k8s.io/v1<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Ingress<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>example-ingress<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>annotations</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>nginx.ingress.kubernetes.io/rewrite-target</span>:<span style=color:#bbb> </span>/$1<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>rules</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>host</span>:<span style=color:#bbb> </span>hello-world.info<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>http</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>paths</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>          </span>- <span style=color:green;font-weight:700>path</span>:<span style=color:#bbb> </span>/<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>pathType</span>:<span style=color:#bbb> </span>Prefix<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:green;font-weight:700>backend</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>              </span><span style=color:green;font-weight:700>service</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>                </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>web<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>                </span><span style=color:green;font-weight:700>port</span>:<span style=color:#bbb>
+   </span></span></span><span style=display:flex><span><span style=color:#bbb>                  </span><span style=color:green;font-weight:700>number</span>:<span style=color:#bbb> </span><span style=color:#666>8080</span></span></span></code></pre></div></div></div></li></ol><ol start=2><li><p>通过运行下面的命令创建 Ingress 对象：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -f https://k8s.io/examples/service/networking/example-ingress.yaml
+</span></span></code></pre></div><p>输出：</p><pre tabindex=0><code>ingress.networking.k8s.io/example-ingress created
+</code></pre></li></ol><ol start=3><li><p>验证 IP 地址已被设置：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get ingress
+</span></span></code></pre></div><div class="alert alert-info note callout" role=alert><strong>说明：</strong> 此操作可能需要几分钟时间。</div><p>接下来你将会在ADDRESS列中看到IPv4地址，例如：</p><pre tabindex=0><code>NAME              CLASS    HOSTS              ADDRESS        PORTS   AGE
+example-ingress   &lt;none&gt;   hello-world.info   172.17.0.15    80      38s
+</code></pre></li></ol><ol start=4><li><p>在 <code>/etc/hosts</code> 文件的末尾添加以下内容（需要管理员访问权限）：</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong> 如果你在本地运行 Minikube 环境，需要使用 <code>minikube ip</code> 获得外部 IP 地址。
+Ingress 列表中显示的 IP 地址会是内部 IP 地址。</div><pre tabindex=0><code>172.17.0.15 hello-world.info
+</code></pre><p>添加完成后，在浏览器中访问URL <code>hello-world.info</code>，请求将被发送到 Minikube。</p></li></ol><ol start=5><li><p>验证 Ingress 控制器能够转发请求流量：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>curl hello-world.info
+</span></span></code></pre></div><p>你应该看到类似输出：</p><pre tabindex=0><code>Hello, world!
+Version: 1.0.0
+Hostname: web-55b8c6998d-8k564
+</code></pre><div class="alert alert-info note callout" role=alert><strong>说明：</strong> 如果你在使用本地 Minikube 环境，你可以从浏览器中访问 hello-world.info。</div></li></ol><h2 id=创建第二个-deployment>创建第二个 Deployment</h2><ol><li><p>使用下面的命令创建第二个 Deployment：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create deployment web2 --image<span style=color:#666>=</span>gcr.io/google-samples/hello-app:2.0
+</span></span></code></pre></div><p>输出：</p><pre tabindex=0><code>deployment.apps/web2 created
+</code></pre></li></ol><ol start=2><li><p>将第二个 Deployment 暴露出来：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl expose deployment web2 --port<span style=color:#666>=</span><span style=color:#666>8080</span> --type<span style=color:#666>=</span>NodePort
+</span></span></code></pre></div><p>输出：</p><pre tabindex=0><code>service/web2 exposed
+</code></pre></li></ol><h2 id=edit-ingress>编辑现有的 Ingress</h2><ol><li><p>编辑现有的 <code>example-ingress.yaml</code>，在文件最后添加以下行：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#bbb>           </span>- <span style=color:green;font-weight:700>path</span>:<span style=color:#bbb> </span>/v2<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>             </span><span style=color:green;font-weight:700>pathType</span>:<span style=color:#bbb> </span>Prefix<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>             </span><span style=color:green;font-weight:700>backend</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>               </span><span style=color:green;font-weight:700>service</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>                 </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>web2<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>                 </span><span style=color:green;font-weight:700>port</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>                   </span><span style=color:green;font-weight:700>number</span>:<span style=color:#bbb> </span><span style=color:#666>8080</span><span style=color:#bbb>
+</span></span></span></code></pre></div></li></ol><ol start=2><li><p>应用变更：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -f example-ingress.yaml
+</span></span></code></pre></div><p>输出：</p><pre tabindex=0><code>ingress.networking/example-ingress configured
+</code></pre></li></ol><h2 id=测试你的-ingress>测试你的 Ingress</h2><ol><li><p>访问 HelloWorld 应用的第一个版本：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>curl hello-world.info
+</span></span></code></pre></div><p>输出类似于：</p><pre tabindex=0><code>Hello, world!
+Version: 1.0.0
+Hostname: web-55b8c6998d-8k564
+</code></pre></li></ol><ol start=2><li><p>访问 HelloWorld 应用的第二个版本：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>curl hello-world.info/v2
+</span></span></code></pre></div><p>输出类似于：</p><pre tabindex=0><code>Hello, world!
+Version: 2.0.0
+Hostname: web2-75cd47646f-t8cjk
+</code></pre><div class="alert alert-info note callout" role=alert><strong>说明：</strong> 如果你在本地运行 Minikube 环境，你可以使用浏览器来访问
+hello-world.info 和 hello-world.info/v2。</div></li></ol><h2 id=接下来>接下来</h2><ul><li>进一步了解 <a href=/zh-cn/docs/concepts/services-networking/ingress/>Ingress</a>。</li><li>进一步了解 <a href=/zh-cn/docs/concepts/services-networking/ingress-controllers/>Ingress 控制器</a></li><li>进一步了解 <a href=/zh-cn/docs/concepts/services-networking/service/>服务</a></li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-322786b38586b210fab68f785259c5f6>10 - 为集群配置 DNS</h1><p>Kubernetes 提供 DNS 集群插件，大多数支持的环境默认情况下都会启用。
+在 Kubernetes 1.11 及其以后版本中，推荐使用 CoreDNS，
+kubeadm 默认会安装 CoreDNS。</p><p>要了解关于如何为 Kubernetes 集群配置 CoreDNS 的更多信息，参阅
+<a href=/zh-cn/docs/tasks/administer-cluster/dns-custom-nameservers/>定制 DNS 服务</a>。
+关于如何利用 kube-dns 配置 kubernetes DNS 的演示例子，参阅
+<a href=https://github.com/kubernetes/examples/tree/master/staging/cluster-dns>Kubernetes DNS 插件示例</a>。</p></div><div class=td-content style=page-break-before:always><h1 id=pg-43591bb11cc02c39e278cf07f6546810>11 - 访问集群上运行的服务</h1><p>本文展示了如何连接 Kubernetes 集群上运行的服务。</p><h2 id=准备开始>准备开始</h2><p><p>你必须拥有一个 Kubernetes 的集群，同时你的 Kubernetes 集群必须带有 kubectl 命令行工具。
+建议在至少有两个节点的集群上运行本教程，且这些节点不作为控制平面主机。
+如果你还没有集群，你可以通过 <a href=https://minikube.sigs.k8s.io/docs/tutorials/multi_node/>Minikube</a>
+构建一个你自己的集群，或者你可以使用下面任意一个 Kubernetes 工具构建：</p><ul><li><a href=https://killercoda.com/playgrounds/scenario/kubernetes>Killercoda</a></li><li><a href=http://labs.play-with-k8s.com/>玩转 Kubernetes</a></li></ul>要获知版本信息，请输入 <code>kubectl version</code>.</p><h2 id=accessing-services-running-on-the-cluster>访问集群上运行的服务</h2><p>在 Kubernetes 里，<a href=/zh-cn/docs/concepts/architecture/nodes/>节点</a>、
+<a href=/zh-cn/docs/concepts/workloads/pods/>Pod</a> 和
+<a href=/zh-cn/docs/concepts/services-networking/service/>服务</a> 都有自己的 IP。
+许多情况下，集群上的节点 IP、Pod IP 和某些服务 IP 是路由不可达的，
+所以不能从集群之外访问它们，例如从你自己的台式机。</p><h3 id=ways-to-connect>连接方式</h3><p>你有多种可选方式从集群外连接节点、Pod 和服务：</p><ul><li>通过公网 IP 访问服务<ul><li>使用类型为 <code>NodePort</code> 或 <code>LoadBalancer</code> 的服务，可以从外部访问它们。
+请查阅<a href=/zh-cn/docs/concepts/services-networking/service/>服务</a> 和
+<a href=/docs/reference/generated/kubectl/kubectl-commands/#expose>kubectl expose</a> 文档。</li><li>取决于你的集群环境，你可以仅把服务暴露在你的企业网络环境中，也可以将其暴露在
+因特网上。需要考虑暴露的服务是否安全，它是否有自己的用户认证？</li><li>将 Pod 放置于服务背后。如果要访问一个副本集合中特定的 Pod，例如用于调试目的，
+请给 Pod 指定一个独特的标签并创建一个新服务选择该标签。</li><li>大部分情况下，都不需要应用开发者通过节点 IP 直接访问节点。</li></ul></li></ul><ul><li>通过 Proxy 动词访问服务、节点或者 Pod<ul><li>在访问远程服务之前，利用 API 服务器执行身份认证和鉴权。
+如果你的服务不够安全，无法暴露到因特网中，或者需要访问节点 IP 上的端口，
+又或者出于调试目的，可使用这种方式。</li><li>代理可能给某些应用带来麻烦</li><li>此方式仅适用于 HTTP/HTTPS</li><li>进一步的描述在<a href=#manually-constructing-apiserver-proxy-urls>这里</a></li><li>从集群中的 node 或者 pod 访问。</li></ul></li></ul><ul><li>从集群中的一个节点或 Pod 访问<ul><li>运行一个 Pod，然后使用
+<a href=/docs/reference/generated/kubectl/kubectl-commands/#exec>kubectl exec</a>
+连接到它的 Shell。从那个 Shell 连接其他的节点、Pod 和 服务</li><li>某些集群可能允许你 SSH 到集群中的节点。你可能可以从那儿访问集群服务。
+这是一个非标准的方式，可能在一些集群上能工作，但在另一些上却不能。
+浏览器和其他工具可能已经安装也可能没有安装。集群 DNS 可能不会正常工作。</li></ul></li></ul><h3 id=discovering-builtin-services>发现内置服务</h3><p>典型情况下，kube-system 名字空间中会启动集群的几个服务。
+使用 <code>kubectl cluster-info</code> 命令获取这些服务的列表：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl cluster-info
+</span></span></code></pre></div><p>输出类似于：</p><pre tabindex=0><code>Kubernetes master is running at https://192.0.2.1
+elasticsearch-logging is running at https://192.0.2.1/api/v1/namespaces/kube-system/services/elasticsearch-logging/proxy
+kibana-logging is running at https://192.0.2.1/api/v1/namespaces/kube-system/services/kibana-logging/proxy
+kube-dns is running at https://192.0.2.1/api/v1/namespaces/kube-system/services/kube-dns/proxy
+grafana is running at https://192.0.2.1/api/v1/namespaces/kube-system/services/monitoring-grafana/proxy
+heapster is running at https://192.0.2.1/api/v1/namespaces/kube-system/services/monitoring-heapster/proxy
+</code></pre><p>这一输出显示了用 proxy 动词访问每个服务时可用的 URL。例如，此集群
+（使用 Elasticsearch）启用了集群层面的日志。如果提供合适的凭据，可以通过
+<code>https://192.0.2.1/api/v1/namespaces/kube-system/services/elasticsearch-logging/proxy/</code>
+访问，或通过一个 <code>kubectl proxy</code> 来访问：
+<code>http://localhost:8080/api/v1/namespaces/kube-system/services/elasticsearch-logging/proxy/</code>。</p><div class="alert alert-info note callout" role=alert><strong>说明：</strong> 请参阅<a href=/zh-cn/docs/tasks/administer-cluster/access-cluster-api/#accessing-the-cluster-api>使用 Kubernetes API 访问集群</a>
+了解如何传递凭据或如何使用 <code>kubectl proxy</code>。</div><h4 id=manually-constructing-apiserver-proxy-urls>手动构建 API 服务器代理 URLs</h4><p>如前所述，你可以使用 <code>kubectl cluster-info</code> 命令取得服务的代理 URL。
+为了创建包含服务末端、后缀和参数的代理 URLs，你可以在服务的代理 URL 中添加：
+<code>http://</code><em><code>kubernetes_master_address</code></em><code>/api/v1/namespaces/</code><em><code>namespace_name</code></em><code>/services/</code><em><code>service_name[:port_name]</code></em><code>/proxy</code></p><p>如果还没有为你的端口指定名称，你可以不用在 URL 中指定 <em>port_name</em>。
+对于命名和未命名端口，你还可以使用端口号代替 <em>port_name</em>。</p><p>默认情况下，API 服务器使用 HTTP 为你的服务提供代理。 要使用 HTTPS，请在服务名称前加上 <code>https:</code>：
+<code>http://&lt;kubernetes_master_address>/api/v1/namespaces/&lt;namespace_name>/services/&lt;service_name>/proxy</code>
+URL 的 <code>&lt;service_name></code> 段支持的格式为：</p><ul><li><code>&lt;service_name></code> - 使用 http 代理到默认或未命名端口</li><li><code>&lt;service_name>:&lt;port_name></code> - 使用 http 代理到指定的端口名称或端口号</li><li><code>https:&lt;service_name>:</code> - 使用 https 代理到默认或未命名端口（注意尾随冒号）</li><li><code>https:&lt;service_name>:&lt;port_name></code> - 使用 https 代理到指定的端口名称或端口号</li></ul><h5 id=examples>示例</h5><ul><li><p>如要访问 Elasticsearch 服务末端 <code>_search?q=user:kimchy</code>，你可以使用以下地址：</p><pre tabindex=0><code>http://192.0.2.1/api/v1/namespaces/kube-system/services/elasticsearch-logging/proxy/_search?q=user:kimchy
+</code></pre></li></ul><ul><li><p>如要访问 Elasticsearch 集群健康信息<code>_cluster/health?pretty=true</code>，你可以使用以下地址：</p><pre tabindex=0><code>https://192.0.2.1/api/v1/namespaces/kube-system/services/elasticsearch-logging/proxy/_cluster/health?pretty=true
+</code></pre><pre><code>健康信息与下面的例子类似：
+</code></pre><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;cluster_name&#34;</span> : <span style=color:#b44>&#34;kubernetes_logging&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;status&#34;</span> : <span style=color:#b44>&#34;yellow&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;timed_out&#34;</span> : <span style=color:#a2f;font-weight:700>false</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;number_of_nodes&#34;</span> : <span style=color:#666>1</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;number_of_data_nodes&#34;</span> : <span style=color:#666>1</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;active_primary_shards&#34;</span> : <span style=color:#666>5</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;active_shards&#34;</span> : <span style=color:#666>5</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;relocating_shards&#34;</span> : <span style=color:#666>0</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;initializing_shards&#34;</span> : <span style=color:#666>0</span>,
+</span></span><span style=display:flex><span>  <span style=color:green;font-weight:700>&#34;unassigned_shards&#34;</span> : <span style=color:#666>5</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div></li></ul><ul><li><p>如要访问 <strong>https</strong> Elasticsearch 服务健康信息 <code>_cluster/health?pretty=true</code>，你可以使用以下地址：</p><pre tabindex=0><code>https://192.0.2.1/api/v1/namespaces/kube-system/services/https:elasticsearch-logging:/proxy/_cluster/health?pretty=true
+</code></pre></li></ul><h4 id=uusing-web-browsers-to-access-services-running-on-the-cluster>通过 Web 浏览器访问集群中运行的服务</h4><p>你或许能够将 API 服务器代理的 URL 放入浏览器的地址栏，然而：</p><ul><li>Web 服务器通常不能传递令牌，所以你可能需要使用基本（密码）认证。
+API 服务器可以配置为接受基本认证，但你的集群可能并没有这样配置。</li><li>某些 Web 应用可能无法工作，特别是那些使用客户端 Javascript 构造 URL 的
+应用，所构造的 URL 可能并不支持代理路径前缀。</li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-7c319a9981586e5fbcfa21b392720650>12 - 同 Pod 内的容器使用共享卷通信</h1><p>本文旨在说明如何让一个 Pod 内的两个容器使用一个卷（Volume）进行通信。
+参阅如何让两个进程跨容器通过
+<a href=/zh-cn/docs/tasks/configure-pod-container/share-process-namespace/>共享进程名字空间</a>。</p><h2 id=准备开始>准备开始</h2><p><p>你必须拥有一个 Kubernetes 的集群，同时你的 Kubernetes 集群必须带有 kubectl 命令行工具。
+建议在至少有两个节点的集群上运行本教程，且这些节点不作为控制平面主机。
+如果你还没有集群，你可以通过 <a href=https://minikube.sigs.k8s.io/docs/tutorials/multi_node/>Minikube</a>
+构建一个你自己的集群，或者你可以使用下面任意一个 Kubernetes 工具构建：</p><ul><li><a href=https://killercoda.com/playgrounds/scenario/kubernetes>Killercoda</a></li><li><a href=http://labs.play-with-k8s.com/>玩转 Kubernetes</a></li></ul>要获知版本信息，请输入 <code>kubectl version</code>.</p><h2 id=创建一个包含两个容器的-pod>创建一个包含两个容器的 Pod</h2><p>在这个练习中，你会创建一个包含两个容器的 Pod。两个容器共享一个卷用于他们之间的通信。
+Pod 的配置文件如下：</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/zh-cn/examples/pods/two-container-pod.yaml download=pods/two-container-pod.yaml><code>pods/two-container-pod.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("pods-two-container-pod-yaml")' title="Copy pods/two-container-pod.yaml to clipboard"></img></div><div class=includecode id=pods-two-container-pod-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>two-containers<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>restartPolicy</span>:<span style=color:#bbb> </span>Never<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>volumes</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>shared-data<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>emptyDir</span>:<span style=color:#bbb> </span>{}<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>nginx-container<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>nginx<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>volumeMounts</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>shared-data<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>mountPath</span>:<span style=color:#bbb> </span>/usr/share/nginx/html<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>debian-container<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>debian<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>volumeMounts</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>shared-data<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>mountPath</span>:<span style=color:#bbb> </span>/pod-data<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>command</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;/bin/sh&#34;</span>]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>args</span>:<span style=color:#bbb> </span>[<span style=color:#b44>&#34;-c&#34;</span>,<span style=color:#bbb> </span><span style=color:#b44>&#34;echo Hello from the debian container &gt; /pod-data/index.html&#34;</span>]<span style=color:#bbb>
+</span></span></span></code></pre></div></div></div><p>在配置文件中，你可以看到 Pod 有一个共享卷，名为 <code>shared-data</code>。</p><p>配置文件中的第一个容器运行了一个 nginx 服务器。共享卷的挂载路径是 <code>/usr/share/nginx/html</code>。
+第二个容器是基于 debian 镜像的，有一个 <code>/pod-data</code> 的挂载路径。第二个容器运行了下面的命令然后终止。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#a2f>echo</span> Hello from the debian container &gt; /pod-data/index.html
+</span></span></code></pre></div><p>注意，第二个容器在 nginx 服务器的根目录下写了 <code>index.html</code> 文件。</p><p>创建一个包含两个容器的 Pod：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -f https://k8s.io/examples/pods/two-container-pod.yaml
+</span></span></code></pre></div><p>查看 Pod 和容器的信息：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get pod two-containers --output<span style=color:#666>=</span>yaml
+</span></span></code></pre></div><p>这是输出的一部分：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>...<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>two-containers<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>namespace</span>:<span style=color:#bbb> </span>default<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>...<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>...<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>containerStatuses</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>containerID</span>:<span style=color:#bbb> </span>docker://c1d8abd1 ...<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>debian<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>...<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>lastState</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>terminated</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span>...<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>debian-container<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>...<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>containerID</span>:<span style=color:#bbb> </span>docker://96c1ff2c5bb ...<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>nginx<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>...<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>nginx-container<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>...<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>state</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>running</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>...<span style=color:#bbb>
+</span></span></span></code></pre></div><p>你可以看到 debian 容器已经被终止了，而 nginx 服务器依然在运行。</p><p>进入 nginx 容器的 shell：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl <span style=color:#a2f>exec</span> -it two-containers -c nginx-container -- /bin/bash
+</span></span></code></pre></div><p>在 shell 中，确认 nginx 还在运行。</p><pre tabindex=0><code>root@two-containers:/# apt-get update
+root@two-containers:/# apt-get install curl procps
+root@two-containers:/# ps aux
+</code></pre><p>输出类似于这样：</p><pre tabindex=0><code>USER       PID  ...  STAT START   TIME COMMAND
+root         1  ...  Ss   21:12   0:00 nginx: master process nginx -g daemon off;
+</code></pre><p>回忆一下，debian 容器在 nginx 的根目录下创建了 <code>index.html</code> 文件。
+使用 <code>curl</code> 向 nginx 服务器发送一个 GET 请求：</p><pre tabindex=0><code>root@two-containers:/# curl localhost
+</code></pre><p>输出表示 nginx 提供了 debian 容器写的页面：</p><pre tabindex=0><code>Hello from the debian container
+</code></pre><h2 id=讨论>讨论</h2><p>Pod 能有多个容器的主要原因是为了支持辅助应用（helper applications），以协助主应用（primary application）。
+辅助应用的典型例子是数据抽取，数据推送和代理。辅助应用和主应用经常需要相互通信。
+就如这个练习所示，通信通常是通过共享文件系统完成的，或者，也通过回环网络接口 localhost 完成。
+举个网络接口的例子，web 服务器带有一个协助程序用于拉取 Git 仓库的更新。</p><p>在本练习中的卷为 Pod 生命周期中的容器相互通信提供了一种方法。如果 Pod 被删除或者重建了，
+任何共享卷中的数据都会丢失。</p><h2 id=接下来>接下来</h2><ul><li>进一步了解<a href=/blog/2015/06/the-distributed-system-toolkit-patterns/>复合容器的模式</a></li><li>学习<a href=https://www.slideshare.net/Docker/slideshare-burns>模块化架构中的复合容器</a></li><li>参见<a href=/zh-cn/docs/tasks/configure-pod-container/configure-volume-storage/>配置 Pod 使用卷来存储数据</a></li><li>参考<a href=/zh-cn/docs/tasks/configure-pod-container/share-process-namespace/>在 Pod 中的容器之间共享进程命名空间</a></li><li>参考 <a href=/docs/reference/generated/kubernetes-api/v1.25/#volume-v1-core>Volume</a></li><li>参考 <a href=/docs/reference/generated/kubernetes-api/v1.25/#pod-v1-core>Pod</a></li></ul></div></main></div></div><footer class=d-print-none><div class=footer__links><nav><a class=text-white href=/zh-cn/docs/home/>主页</a>
+<a class=text-white href=/zh-cn/blog/>博客</a>
+<a class=text-white href=/zh-cn/training/>培训</a>
+<a class=text-white href=/zh-cn/partners/>合作伙伴</a>
+<a class=text-white href=/zh-cn/community/>社区</a>
+<a class=text-white href=/zh-cn/case-studies/>案例分析</a></nav></div><div class=container-fluid><div class=row><div class="col-6 col-sm-2 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="User mailing list" aria-label="User mailing list"><a class=text-white target=_blank href=https://discuss.kubernetes.io><i class="fa fa-envelope"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank href=https://twitter.com/kubernetesio><i class="fab fa-twitter"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Calendar aria-label=Calendar><a class=text-white target=_blank href="https://calendar.google.com/calendar/embed?src=calendar%40kubernetes.io"><i class="fas fa-calendar-alt"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Youtube aria-label=Youtube><a class=text-white target=_blank href=https://youtube.com/kubernetescommunity><i class="fab fa-youtube"></i></a></li></ul></div><div class="col-6 col-sm-2 text-right text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank href=https://github.com/kubernetes/kubernetes><i class="fab fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Slack aria-label=Slack><a class=text-white target=_blank href=https://slack.k8s.io><i class="fab fa-slack"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Contribute aria-label=Contribute><a class=text-white target=_blank href=https://git.k8s.io/community/contributors/guide><i class="fas fa-edit"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="Stack Overflow" aria-label="Stack Overflow"><a class=text-white target=_blank href=https://stackoverflow.com/questions/tagged/kubernetes><i class="fab fa-stack-overflow"></i></a></li></ul></div><div class="col-12 col-sm-8 text-center order-sm-2"><small class=text-white>&copy; 2023 The Kubernetes 作者 | 文档发布基于 <a href=https://git.k8s.io/website/LICENSE class=light-text>CC BY 4.0</a> 授权许可</small><br><small class=text-white>Copyright &copy; 2023 Linux 基金会&reg;。保留所有权利。Linux 基金会已注册并使用商标。如需了解 Linux 基金会的商标列表，请访问<a href=https://www.linuxfoundation.org/trademark-usage class=light-text>商标使用页面</a></small><br><small class=text-white>ICP license: 京ICP备17074266号-3</small></div></div></div></footer></div><script src=/js/jquery-3.6.0.min.js integrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script>
+<script src=/js/popper-1.16.1.min.js intregrity=sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN crossorigin=anonymous></script>
+<script src=/js/bootstrap-4.6.1.min.js integrity=sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2 crossorigin=anonymous></script>
+<script src=/js/script.js></script>
+<script async src=/js/mermaid-8.13.4.min.js integrity=sha384-5hHNvPeMrNH14oM3IcQofDoBhiclNK3g2+hnEinKzQ07C4AliMeVpnvxuiwEGpaO crossorigin=anonymous></script>
+<script src=/js/main.min.5c0bf7f21dc4f66485f74efbbeeff28a7e4f8cddaac1bae47043159c922ff3a3.js integrity="sha256-XAv38h3E9mSF9077vu/yin5PjN2qwbrkcEMVnJIv86M=" crossorigin=anonymous></script></body></html>

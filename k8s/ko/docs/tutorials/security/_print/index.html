@@ -1,0 +1,460 @@
+<!doctype html><html lang=ko class=no-js><head><meta name=robots content="noindex, nofollow"><link rel=alternate hreflang=en href=https://kubernetes.io/docs/tutorials/security/><link rel=alternate hreflang=zh-cn href=https://kubernetes.io/zh-cn/docs/tutorials/security/><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.110.0"><link rel=canonical type=text/html href=https://kubernetes.io/ko/docs/tutorials/security/><link rel="shortcut icon" type=image/png href=/images/favicon.png><link rel=apple-touch-icon href=/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=manifest href=/manifest.webmanifest><link rel=apple-touch-icon href=/images/kubernetes-192x192.png><title>보안 | Kubernetes</title><meta property="og:title" content="보안"><meta property="og:description" content="운영 수준의 컨테이너 오케스트레이션"><meta property="og:type" content="website"><meta property="og:url" content="https://kubernetes.io/ko/docs/tutorials/security/"><meta property="og:site_name" content="Kubernetes"><meta itemprop=name content="보안"><meta itemprop=description content="운영 수준의 컨테이너 오케스트레이션"><meta name=twitter:card content="summary"><meta name=twitter:title content="보안"><meta name=twitter:description content="운영 수준의 컨테이너 오케스트레이션"><link href=/scss/main.css rel=stylesheet><script type=application/ld+json>{"@context":"https://schema.org","@type":"Organization","url":"https://kubernetes.io","logo":"https://kubernetes.io/images/favicon.png","potentialAction":{"@type":"SearchAction","target":"https://kubernetes.io/search/?q={search_term_string}","query-input":"required name=search_term_string"}}</script><meta name=theme-color content="#326ce5"><link rel=stylesheet href=/css/feature-states.css><meta name=description content><meta property="og:description" content><meta name=twitter:description content><meta property="og:url" content="https://kubernetes.io/ko/docs/tutorials/security/"><meta property="og:title" content="보안"><meta name=twitter:title content="보안"><meta name=twitter:image content="https://kubernetes.io/images/favicon.png"><meta name=twitter:image:alt content="Kubernetes"><meta property="og:image" content="/images/kubernetes-horizontal-color.png"><meta property="og:type" content="article"><script src=/js/jquery-3.6.0.min.js intregrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script></head><body class=td-section><header><nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar" data-auto-burger=primary><a class=navbar-brand href=/ko/></a><div class="td-navbar-nav-scroll ml-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0"><li class="nav-item mr-2 mb-lg-0"><a class="nav-link active" href=/ko/docs/>문서</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ko/blog/>쿠버네티스 블로그</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ko/training/>교육</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ko/partners/>파트너</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ko/community/>Community</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/ko/case-studies/>사례 연구</a></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>버전</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/ko/releases>Release Information</a>
+<a class=dropdown-item href=https://kubernetes.io/ko/docs/tutorials/security/>v1.25</a>
+<a class=dropdown-item href=https://v1-24.docs.kubernetes.io/ko/docs/tutorials/security/>v1.24</a>
+<a class=dropdown-item href=https://v1-23.docs.kubernetes.io/ko/docs/tutorials/security/>v1.23</a>
+<a class=dropdown-item href=https://v1-22.docs.kubernetes.io/ko/docs/tutorials/security/>v1.22</a>
+<a class=dropdown-item href=https://v1-21.docs.kubernetes.io/ko/docs/tutorials/security/>v1.21</a></div></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdownMenuLink role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>한국어 (Korean)</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/docs/tutorials/security/>English</a>
+<a class=dropdown-item href=/zh-cn/docs/tutorials/security/>中文 (Chinese)</a></div></li></ul></div><button id=hamburger onclick=kub.toggleMenu() data-auto-burger-exclude><div></div></button></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><div class=td-content><div class="pageinfo pageinfo-primary d-print-none"><p>이 섹션의 다중 페이지 출력 화면임.
+<a href=# onclick="return print(),!1">여기를 클릭하여 프린트</a>.</p><p><a href=/ko/docs/tutorials/security/>이 페이지의 일반 화면으로 돌아가기</a>.</p></div><h1 class=title>보안</h1><ul><li>1: <a href=#pg-fca078b8ac6b82352ed52187a2da91b7>AppArmor를 사용하여 리소스에 대한 컨테이너의 접근 제한</a></li><li>2: <a href=#pg-31a6c137cfc5bfea9d88f4b109109465>파드 시큐리티 스탠다드를 네임스페이스 수준에 적용하기</a></li><li>3: <a href=#pg-d5f847bcdb6f7efbfc9c8a180d73e29a>파드 시큐리티 스탠다드를 클러스터 수준에 적용하기</a></li></ul><div class=content></div></div><div class=td-content><h1 id=pg-fca078b8ac6b82352ed52187a2da91b7>1 - AppArmor를 사용하여 리소스에 대한 컨테이너의 접근 제한</h1><div style=margin-top:10px;margin-bottom:10px><b>기능 상태:</b> <code>Kubernetes v1.4 [beta]</code></div><p>AppArmor는 표준 리눅스 사용자와 그룹 기반의 권한을 보완하여, 한정된 리소스 집합으로
+프로그램을 제한하는 리눅스 커널 보안 모듈이다. AppArmor는 임의의 애플리케이션에 대해서
+잠재적인 공격 범위를 줄이고 더욱 심층적인 방어를 제공하도록 구성할 수 있다.
+이 기능은 특정 프로그램이나 컨테이너에서 필요한 리눅스 기능, 네트워크 사용, 파일 권한 등에 대한
+접근을 허용하는 프로파일로 구성한다. 각 프로파일은
+허용하지 않은 리소스 접근을 차단하는 <em>강제(enforcing)</em> 모드 또는
+위반만을 보고하는 <em>불평(complain)</em> 모드로 실행할 수 있다.</p><p>AppArmor를 이용하면 컨테이너가 수행할 수 있는 작업을 제한하고 또는
+시스템 로그를 통해 더 나은 감사를 제공하여 더 안전한 배포를 실행할 수 있다.
+그러나 AppArmor가 은탄환(언제나 통하는 무적의 방법)이 아니며,
+애플리케이션 코드 취약점을 보호하기 위한 여러 조치를 할 수 있는 것 뿐임을 잊으면 안된다.
+양호하고 제한적인 프로파일을 제공하고, 애플리케이션과 클러스터를 여러 측면에서 강화하는 것이 중요하다.</p><h2 id=목적>목적</h2><ul><li>노드에 프로파일을 어떻게 적재하는지 예시를 본다.</li><li>파드에 프로파일을 어떻게 강제 적용하는지 배운다.</li><li>프로파일이 적재되었는지 확인하는 방법을 배운다.</li><li>프로파일을 위반하는 경우를 살펴본다.</li><li>프로파일을 적재할 수 없을 경우를 살펴본다.</li></ul><h2 id=시작하기-전에>시작하기 전에</h2><p>다음을 보장해야 한다.</p><ol><li><p>쿠버네티스 버전은 최소 1.4 이다. -- 쿠버네티스 v1.4부터 AppArmor 지원을 추가했다.
+v1.4 이전 쿠버네티스 컴포넌트는 새로운 AppArmor 어노테이션을 인식하지 못하고
+제공되는 AppArmor 설정을 <strong>조용히 무시</strong>할 것이다. 파드에서 예상하는 보호를 받고 있는지 확인하려면
+해당 노드의 Kubelet 버전을 확인하는 것이 중요하다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>$ kubectl get nodes -o<span style=color:#666>=</span><span style=color:#b8860b>jsonpath</span><span style=color:#666>=</span><span style=color:#b44>$&#39;{range .items[*]}{@.metadata.name}: {@.status.nodeInfo.kubeletVersion}\n{end}&#39;</span>
+</span></span></code></pre></div><pre tabindex=0><code>gke-test-default-pool-239f5d02-gyn2: v1.4.0
+gke-test-default-pool-239f5d02-x1kf: v1.4.0
+gke-test-default-pool-239f5d02-xwux: v1.4.0
+</code></pre></li><li><p>AppArmor 커널 모듈을 사용 가능해야 한다. -- 리눅스 커널에 AppArmor 프로파일을 강제 적용하기 위해 AppArmor 커널 모듈은 반드시 설치되어 있고
+사용 가능해야 한다. 예를 들어 Ubuntu 및 SUSE 같은 배포판은 모듈을 기본값으로 지원하고, 그 외 많은 다른 배포판들은 선택적으로 지원한다.
+모듈이 사용 가능한지 확인하려면
+<code>/sys/module/apparmor/parameters/enabled</code> 파일을 확인한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>$ cat /sys/module/apparmor/parameters/enabled
+</span></span><span style=display:flex><span>Y
+</span></span></code></pre></div><p>Kubelet(>=v1.4)이 AppArmor 기능 지원을 포함하지만, 커널 모듈을 사용할 수 없으면
+파드에서 AppArmor 옵션을 실행하는 것이 거부된다.</p></li></ol><div class="alert alert-info note callout" role=alert><strong>참고:</strong> 우분투에는 추가적인 훅(hook)이나 추가 기능 패치를 포함한 리눅스 커널의 상위 스트림에 머지되지 않은
+많은 AppArmor 패치를 가지고 있다. 쿠버네티스는
+상위 스트림 버전에서 테스트한 패치만을 가지고 있어서 다른 기능은 지원을 보장하지 않는다.</div><ol start=3><li><p>컨테이너 런타임이 AppArmor을 지원한다. -- 현재 모든 일반적인 쿠버네티스를 지원하는
+<a class=glossary-tooltip title='Docker는 운영 시스템 수준의 가상화를 제공하는 소프트웨어 기술이며, 컨테이너로도 알려져 있다.' data-toggle=tooltip data-placement=top href=https://docs.docker.com/engine/ target=_blank aria-label=도커(Docker)>도커(Docker)</a>, <a class=glossary-tooltip title='A lightweight container runtime specifically for Kubernetes' data-toggle=tooltip data-placement=top href=https://cri-o.io/#what-is-cri-o target=_blank aria-label=CRI-O>CRI-O</a> 또는
+<a class=glossary-tooltip title='A container runtime with an emphasis on simplicity, robustness and portability' data-toggle=tooltip data-placement=top href=https://containerd.io/docs/ target=_blank aria-label=containerd>containerd</a> 와 같은 컨테이너 런타임들은 AppArmor를 지원해야 한다.
+이 런타임 설명서를 참조해서 클러스터가 AppArmor를 사용하기 위한
+요구 사항을 충족하는지 확인해야 한다.</p></li><li><p>프로파일이 적재되어 있다. -- AppArmor는 각 컨테이너와 함께 실행해야 하는 AppArmor 프로파일을 지정하여 파드에 적용한다.
+커널에 지정한 프로파일이 적재되지 않았다면, Kubelet(>= v1.4)은 파드를 거부한다. 해당 노드에 어떤 프로파일이 적재되었는지는
+<code>/sys/kernel/security/apparmor/profiles</code> 파일을 통해 확인할 수 있다.
+예를 들어,</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>$ ssh gke-test-default-pool-239f5d02-gyn2 <span style=color:#b44>&#34;sudo cat /sys/kernel/security/apparmor/profiles | sort&#34;</span>
+</span></span></code></pre></div><pre tabindex=0><code>apparmor-test-deny-write (enforce)
+apparmor-test-audit-write (enforce)
+docker-default (enforce)
+k8s-nginx (enforce)
+</code></pre><p>노드에 프로파일을 적재하는 것에 대해 더 자세한 내용은
+<a href=#setting-up-nodes-with-profiles>프로파일과 함께 노드 설정하기</a>.</p></li></ol><p>AppArmor 지원이 포함된 Kubelet (>= v1.4)이면
+어떤 전제 조건이 충족되지 않으면 AppArmor와 함께한 파드를 거부한다.
+노드 상에 AppArmor 지원 여부는
+노드 준비 조건 메시지를 확인하여(이후 릴리스에서는 삭제될 것 같지만) 검증할 수 있다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get nodes -o<span style=color:#666>=</span><span style=color:#b8860b>jsonpath</span><span style=color:#666>=</span><span style=color:#b44>&#39;{range .items[*]}{@.metadata.name}: {.status.conditions[?(@.reason==&#34;KubeletReady&#34;)].message}{&#34;\n&#34;}{end}&#39;</span>
+</span></span></code></pre></div><pre tabindex=0><code>gke-test-default-pool-239f5d02-gyn2: kubelet is posting ready status. AppArmor enabled
+gke-test-default-pool-239f5d02-x1kf: kubelet is posting ready status. AppArmor enabled
+gke-test-default-pool-239f5d02-xwux: kubelet is posting ready status. AppArmor enabled
+</code></pre><h2 id=파드-보안-강화하기>파드 보안 강화하기</h2><div class="alert alert-info note callout" role=alert><strong>참고:</strong> AppArmor는 현재 베타이며, 이 때문에 옵션은 어노테이션 형식으로 지정한다. 일반 사용자 버전이 되면,
+어노테이션은 최상위 종류의 필드로 대체될 것이다(자세한 내용은
+<a href=#upgrade-path-to-general-availability>일반 사용자 버전으로 업그레이드 방법</a> 참고)</div><p>AppArmor 프로파일은 <em>컨테이너마다</em> 지정된다. 함께 실행할 파드 컨테이너에 AppArmor 프로파일을 지정하려면
+파드의 메타데이터에 어노테이션을 추가한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>container.apparmor.security.beta.kubernetes.io/&lt;container_name&gt;</span>:<span style=color:#bbb> </span>&lt;profile_ref&gt;<span style=color:#bbb>
+</span></span></span></code></pre></div><p><code>&lt;container_name></code>은 프로파일을 적용하는 컨테이너 이름이고, <code>&lt;profile_ref></code>는
+적용할 프로파일을 지정한다. <code>profile_ref</code>는 다음 중에 하나이다.</p><ul><li>런타임의 기본 프로파일을 적용하기 위한 <code>runtime/default</code></li><li><code>&lt;profile_name></code>로 이름한 호스트에 적재되는 프로파일을 적용하기 위한 <code>localhost/&lt;profile_name></code></li><li>적재할 프로파일이 없음을 나타내는 <code>unconfined</code></li></ul><p>어노테이션과 프로파일 이름 형식의 자세한 내용은 <a href=#api-reference>API 참조</a>를 살펴본다.</p><p>쿠버네티스 AppArmor 의 작동 순서는 모든 선행 조건이 충족되었는지 확인하고,
+적용을 위해 선택한 프로파일을 컨테이너 런타임으로 전달하여 이루어진다.
+만약 선행 조건이 충족되지 않으면 파드는 거부되고 실행되지 않는다.</p><p>프로파일이 적용되었는지 확인하기 위해, 컨테이너 생성 이벤트에 나열된 AppArmor 보안 옵션을 찾아 볼 수 있다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get events | grep Created
+</span></span></code></pre></div><pre tabindex=0><code>22s        22s         1         hello-apparmor     Pod       spec.containers{hello}   Normal    Created     {kubelet e2e-test-stclair-node-pool-31nt}   Created container with docker id 269a53b202d3; Security:[seccomp=unconfined apparmor=k8s-apparmor-example-deny-write]apparmor=k8s-apparmor-example-deny-write]
+</code></pre><p>컨테이너의 루트 프로세스가 올바른 프로파일로 실행되는지는 proc attr을 확인하여 직접 검증할 수 있다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl <span style=color:#a2f>exec</span> &lt;pod_name&gt; cat /proc/1/attr/current
+</span></span></code></pre></div><pre tabindex=0><code>k8s-apparmor-example-deny-write (enforce)
+</code></pre><h2 id=예시>예시</h2><p><em>이 예시는 AppArmor를 지원하는 클러스터를 이미 구성하였다고 가정한다.</em></p><p>먼저 노드에서 사용하려는 프로파일을 적재해야 한다. 사용할 프로파일은 파일 쓰기를 거부한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#080;font-style:italic>#include &lt;tunables/global&gt;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>profile k8s-apparmor-example-deny-write <span style=color:#b8860b>flags</span><span style=color:#666>=(</span>attach_disconnected<span style=color:#666>)</span> <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>  <span style=color:#080;font-style:italic>#include &lt;abstractions/base&gt;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  file,
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#080;font-style:italic># Deny all file writes.</span>
+</span></span><span style=display:flex><span>  deny /** w,
+</span></span><span style=display:flex><span><span style=color:#666>}</span>
+</span></span></code></pre></div><p>파드를 언제 스케줄할지 알지 못하므로 모든 노드에 프로파일을 적재해야 한다.
+이 예시에서는 SSH를 이용하여 프로파일을 설치할 것이나 다른 방법은
+<a href=#setting-up-nodes-with-profiles>프로파일과 함께 노드 설정하기</a>에서 논의한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#b8860b>NODES</span><span style=color:#666>=(</span>
+</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic># The SSH-accessible domain names of your nodes</span>
+</span></span><span style=display:flex><span>    gke-test-default-pool-239f5d02-gyn2.us-central1-a.my-k8s
+</span></span><span style=display:flex><span>    gke-test-default-pool-239f5d02-x1kf.us-central1-a.my-k8s
+</span></span><span style=display:flex><span>    gke-test-default-pool-239f5d02-xwux.us-central1-a.my-k8s<span style=color:#666>)</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>for</span> NODE in <span style=color:#b68;font-weight:700>${</span><span style=color:#b8860b>NODES</span>[*]<span style=color:#b68;font-weight:700>}</span>; <span style=color:#a2f;font-weight:700>do</span> ssh <span style=color:#b8860b>$NODE</span> <span style=color:#b44>&#39;sudo apparmor_parser -q &lt;&lt;EOF
+</span></span></span><span style=display:flex><span><span style=color:#b44>#include &lt;tunables/global&gt;
+</span></span></span><span style=display:flex><span><span style=color:#b44>
+</span></span></span><span style=display:flex><span><span style=color:#b44>profile k8s-apparmor-example-deny-write flags=(attach_disconnected) {
+</span></span></span><span style=display:flex><span><span style=color:#b44>  #include &lt;abstractions/base&gt;
+</span></span></span><span style=display:flex><span><span style=color:#b44>
+</span></span></span><span style=display:flex><span><span style=color:#b44>  file,
+</span></span></span><span style=display:flex><span><span style=color:#b44>
+</span></span></span><span style=display:flex><span><span style=color:#b44>  # Deny all file writes.
+</span></span></span><span style=display:flex><span><span style=color:#b44>  deny /** w,
+</span></span></span><span style=display:flex><span><span style=color:#b44>}
+</span></span></span><span style=display:flex><span><span style=color:#b44>EOF&#39;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>done</span>
+</span></span></code></pre></div><p>다음으로 쓰기 금지 프로파일된 "Hello AppArmor" 파드를 실행한다.</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/ko/examples/pods/security/hello-apparmor.yaml download=pods/security/hello-apparmor.yaml><code>pods/security/hello-apparmor.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("pods-security-hello-apparmor-yaml")' title="Copy pods/security/hello-apparmor.yaml to clipboard"></img></div><div class=includecode id=pods-security-hello-apparmor-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>hello-apparmor<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>annotations</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:#080;font-style:italic># 쿠버네티스에 &#39;k8s-apparmor-example-deny-write&#39; AppArmor 프로파일을 적용함을 알린다.</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:#080;font-style:italic># 잊지 말 것은 쿠버네티스 노드에서 실행 중인 버전이 1.4 이상이 아닌 경우에는 이 설정은 무시된다는 것이다.</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>container.apparmor.security.beta.kubernetes.io/hello</span>:<span style=color:#bbb> </span>localhost/k8s-apparmor-example-deny-write<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>hello<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>busybox:1.28<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>command</span>:<span style=color:#bbb> </span>[<span style=color:#bbb> </span><span style=color:#b44>&#34;sh&#34;</span>,<span style=color:#bbb> </span><span style=color:#b44>&#34;-c&#34;</span>,<span style=color:#bbb> </span><span style=color:#b44>&#34;echo &#39;Hello AppArmor!&#39; &amp;&amp; sleep 1h&#34;</span><span style=color:#bbb> </span>]<span style=color:#bbb>
+</span></span></span></code></pre></div></div></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create -f ./hello-apparmor.yaml
+</span></span></code></pre></div><p>파드 이벤트를 살펴보면, 'k8s-apparmor-example-deny-write' AppArmor 프로파일로 생성된 파드 컨테이너를
+확인할 수 있다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get events | grep hello-apparmor
+</span></span></code></pre></div><pre tabindex=0><code>14s        14s         1         hello-apparmor   Pod                                Normal    Scheduled   {default-scheduler }                           Successfully assigned hello-apparmor to gke-test-default-pool-239f5d02-gyn2
+14s        14s         1         hello-apparmor   Pod       spec.containers{hello}   Normal    Pulling     {kubelet gke-test-default-pool-239f5d02-gyn2}   pulling image &#34;busybox&#34;
+13s        13s         1         hello-apparmor   Pod       spec.containers{hello}   Normal    Pulled      {kubelet gke-test-default-pool-239f5d02-gyn2}   Successfully pulled image &#34;busybox&#34;
+13s        13s         1         hello-apparmor   Pod       spec.containers{hello}   Normal    Created     {kubelet gke-test-default-pool-239f5d02-gyn2}   Created container with docker id 06b6cd1c0989; Security:[seccomp=unconfined apparmor=k8s-apparmor-example-deny-write]
+13s        13s         1         hello-apparmor   Pod       spec.containers{hello}   Normal    Started     {kubelet gke-test-default-pool-239f5d02-gyn2}   Started container with docker id 06b6cd1c0989
+</code></pre><p>proc attr을 확인하여 컨테이너가 실제로 해당 프로파일로 실행 중인지 확인할 수 있다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl <span style=color:#a2f>exec</span> hello-apparmor -- cat /proc/1/attr/current
+</span></span></code></pre></div><pre tabindex=0><code>k8s-apparmor-example-deny-write (enforce)
+</code></pre><p>마지막으로 파일 쓰기를 통해 프로파일을 위반하면 어떻게 되는지 확인할 수 있다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl <span style=color:#a2f>exec</span> hello-apparmor -- touch /tmp/test
+</span></span></code></pre></div><pre tabindex=0><code>touch: /tmp/test: Permission denied
+error: error executing remote command: command terminated with non-zero exit code: Error executing in Docker Container: 1
+</code></pre><p>이제 정리하면서, 적재되지 않은 프로파일을 지정하면 어떻게 되는지 살펴본다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create -f /dev/stdin &lt;&lt;EOF
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>hello-apparmor-2<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>annotations</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>container.apparmor.security.beta.kubernetes.io/hello</span>:<span style=color:#bbb> </span>localhost/k8s-apparmor-example-allow-write<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>hello<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>busybox:1.28<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>command</span>:<span style=color:#bbb> </span>[<span style=color:#bbb> </span><span style=color:#b44>&#34;sh&#34;</span>,<span style=color:#bbb> </span><span style=color:#b44>&#34;-c&#34;</span>,<span style=color:#bbb> </span><span style=color:#b44>&#34;echo &#39;Hello AppArmor!&#39; &amp;&amp; sleep 1h&#34;</span><span style=color:#bbb> </span>]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>EOF<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>pod/hello-apparmor-2 created<span style=color:#bbb>
+</span></span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl describe pod hello-apparmor-2
+</span></span></code></pre></div><pre tabindex=0><code>Name:          hello-apparmor-2
+Namespace:     default
+Node:          gke-test-default-pool-239f5d02-x1kf/
+Start Time:    Tue, 30 Aug 2016 17:58:56 -0700
+Labels:        &lt;none&gt;
+Annotations:   container.apparmor.security.beta.kubernetes.io/hello=localhost/k8s-apparmor-example-allow-write
+Status:        Pending
+Reason:        AppArmor
+Message:       Pod Cannot enforce AppArmor: profile &#34;k8s-apparmor-example-allow-write&#34; is not loaded
+IP:
+Controllers:   &lt;none&gt;
+Containers:
+  hello:
+    Container ID:
+    Image:     busybox
+    Image ID:
+    Port:
+    Command:
+      sh
+      -c
+      echo &#39;Hello AppArmor!&#39; &amp;&amp; sleep 1h
+    State:              Waiting
+      Reason:           Blocked
+    Ready:              False
+    Restart Count:      0
+    Environment:        &lt;none&gt;
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-dnz7v (ro)
+Conditions:
+  Type          Status
+  Initialized   True
+  Ready         False
+  PodScheduled  True
+Volumes:
+  default-token-dnz7v:
+    Type:    Secret (a volume populated by a Secret)
+    SecretName:    default-token-dnz7v
+    Optional:   false
+QoS Class:      BestEffort
+Node-Selectors: &lt;none&gt;
+Tolerations:    &lt;none&gt;
+Events:
+  FirstSeen    LastSeen    Count    From                        SubobjectPath    Type        Reason        Message
+  ---------    --------    -----    ----                        -------------    --------    ------        -------
+  23s          23s         1        {default-scheduler }                         Normal      Scheduled     Successfully assigned hello-apparmor-2 to e2e-test-stclair-minion-group-t1f5
+  23s          23s         1        {kubelet e2e-test-stclair-node-pool-t1f5}             Warning        AppArmor    Cannot enforce AppArmor: profile &#34;k8s-apparmor-example-allow-write&#34; is not loaded
+</code></pre><p>파드 상태는 Pending이며, 오류 메시지는 <code>Pod Cannot enforce AppArmor: profile "k8s-apparmor-example-allow-write" is not loaded</code>이다. 이벤트도 동일한 메시지로 기록되었다.</p><h2 id=관리>관리</h2><h3 id=프로파일과-함께-노드-설정하기>프로파일과 함께 노드 설정하기</h3><p>현재 쿠버네티스는 AppArmor 프로파일을 노드에 적재하기 위한 네이티브 메커니즘을 제공하지 않는다.
+프로파일을 설정하는 여러 방법이 있다. 예를 들면 다음과 같다.</p><ul><li>각 노드에서 파드를 실행하는 <a href=/ko/docs/concepts/workloads/controllers/daemonset/>데몬셋</a>을 통해서
+올바른 프로파일이 적재되었는지 확인한다. 예시 구현은
+<a href=https://git.k8s.io/kubernetes/test/images/apparmor-loader>여기</a>에서 찾아볼 수 있다.</li><li>노드 초기화 시간에 노드 초기화 스크립트(예를 들어 Salt, Ansible 등)나
+이미지를 이용</li><li><a href=#example>예시</a>에서 보여준 것처럼,
+프로파일을 각 노드에 복사하고 SSH를 통해 적재한다.</li></ul><p>스케줄러는 어떤 프로파일이 어떤 노드에 적재되는지 고려하지 않으니, 프로파일 전체 집합이
+모든 노드에 적재되어야 한다. 대안적인 방법은
+각 프로파일(혹은 프로파일의 클래스)을 위한 노드 레이블을 노드에 추가하고,
+<a href=/ko/docs/concepts/scheduling-eviction/assign-pod-node/>노드 셀렉터</a>를 이용하여
+파드가 필요한 프로파일이 있는 노드에서 실행되도록 한다.</p><h3 id=apparmor-비활성화>AppArmor 비활성화</h3><p>클러스터에서 AppArmor를 사용하지 않으려면, 커맨드라인 플래그로 비활성화 할 수 있다.</p><pre tabindex=0><code>--feature-gates=AppArmor=false
+</code></pre><p>비활성화되면, AppArmor 프로파일을 포함한 파드는
+"Forbidden" 오류로 검증 실패한다.</p><div class="alert alert-info note callout" role=alert><strong>참고:</strong> 쿠버네티스 기능이 비활성화되어 있어도, 런타임이 계속 기본 프로파일을 강제할 수도 있다.
+AppArmor가 general availability (GA) 상태로 바뀌면
+AppArmor 기능을 비활성화하는 옵션은 제거될 것이다.</div><h2 id=프로파일-제작>프로파일 제작</h2><p>AppArmor 프로파일을 만들고 올바르게 지정하는 것은 매우 까다로울 수 있다.
+다행히 이 작업에 도움 되는 도구가 있다.</p><ul><li><code>aa-genprof</code>와 <code>aa-logprof</code>는 애플리케이션 활동과 로그와 수행에 필요한 행동을 모니터링하여
+일반 프로파일 규칙을 생성한다. 자세한 사용방법은
+<a href=https://gitlab.com/apparmor/apparmor/wikis/Profiling_with_tools>AppArmor 문서</a>에서 제공한다.</li><li><a href=https://github.com/jfrazelle/bane>bane</a>은 단순화된 프로파일 언어를 이용하는 도커를 위한
+AppArmor 프로파일 생성기이다.</li></ul><p>AppArmor 문제를 디버깅하기 위해서 거부된 것으로 보이는 시스템 로그를 확인할 수 있다.
+AppArmor 로그는 <code>dmesg</code>에서 보이며, 오류는 보통 시스템 로그나
+<code>journalctl</code>에서 볼 수 있다. 더 많은 정보는
+<a href=https://gitlab.com/apparmor/apparmor/wikis/AppArmor_Failures>AppArmor 실패</a>에서 제공한다.</p><h2 id=api-참조>API 참조</h2><h3 id=파드-어노테이션>파드 어노테이션</h3><p>컨테이너를 실행할 프로파일을 지정한다.</p><ul><li><strong>키</strong>: <code>container.apparmor.security.beta.kubernetes.io/&lt;container_name></code>
+<code>&lt;container_name></code>는 파드 내에 컨테이너 이름과 일치한다.
+분리된 프로파일은 파드 내에 각 컨테이너로 지정할 수 있다.</li><li><strong>값</strong>: 아래 기술된 프로파일 참조</li></ul><h3 id=프로파일-참조>프로파일 참조</h3><ul><li><code>runtime/default</code>: 기본 런타임 프로파일을 참조한다.<ul><li>(기본 파드시큐리티폴리시 없이) 프로파일을 지정하지 않고
+AppArmor를 사용하는 것과 동등하다.</li><li>실제로는, 많은 컨테이너 런타임은 동일한 OCI 기본 프로파일을 사용하며, 이는
+<a href=https://github.com/containers/common/blob/main/pkg/apparmor/apparmor_linux_template.go>https://github.com/containers/common/blob/main/pkg/apparmor/apparmor_linux_template.go</a> 에 정의되어 있다.</li></ul></li><li><code>localhost/&lt;profile_name></code>: 노드(localhost)에 적재된 프로파일을 이름으로 참조한다.<ul><li>가용한 프로파일 이름의 상세 내용은
+<a href=https://gitlab.com/apparmor/apparmor/wikis/AppArmor_Core_Policy_Reference#profile-names-and-attachment-specifications>핵심 정책 참조</a>에 설명되어 있다.</li></ul></li><li><code>unconfined</code>: 이것은 컨테이너에서 AppArmor를 효과적으로 비활성시킨다.</li></ul><p>다른 어떤 프로파일 참조 형식도 유효하지 않다.</p><h2 id=다음-내용>다음 내용</h2><p>참고 자료</p><ul><li><a href=https://gitlab.com/apparmor/apparmor/wikis/QuickProfileLanguage>퀵 가이드 AppArmor 프로파일 언어</a></li><li><a href=https://gitlab.com/apparmor/apparmor/wikis/Policy_Layout>AppArmor 코어 정책 참고</a></li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-31a6c137cfc5bfea9d88f4b109109465>2 - 파드 시큐리티 스탠다드를 네임스페이스 수준에 적용하기</h1><div class="alert alert-primary" role=alert><h4 class=alert-heading>Note</h4>이 튜토리얼은 새로운 클러스터에만 적용할 수 있다.</div><p>파드 시큐리티 어드미션(PSA, Pod Security Admission)은
+<a href=/blog/2021/12/09/pod-security-admission-beta/>베타로 변경</a>되어 v1.23 이상에서 기본적으로 활성화되어 있다.
+파드 시큐리티 어드미션은 파드가 생성될 때
+<a href=/ko/docs/concepts/security/pod-security-standards/>파드 시큐리티 스탠다드(Pod Security Standards)</a>를 적용하는 어드미션 컨트롤러이다.
+이 튜토리얼에서는,
+각 네임스페이스별로 <code>baseline</code> 파드 시큐리티 스탠다드를 강제(enforce)할 것이다.</p><p>파드 시큐리티 스탠다드를 클러스터 수준에서 여러 네임스페이스에 한 번에 적용할 수도 있다.
+이에 대한 안내는
+<a href=/ko/docs/tutorials/security/cluster-level-pss/>파드 시큐리티 스탠다드를 클러스터 수준에 적용하기</a>를 참고한다.</p><h2 id=시작하기-전에>시작하기 전에</h2><p>워크스테이션에 다음을 설치한다.</p><ul><li><a href=https://kind.sigs.k8s.io/docs/user/quick-start/#installation>KinD</a></li><li><a href=/ko/docs/tasks/tools/>kubectl</a></li></ul><h2 id=클러스터-생성하기>클러스터 생성하기</h2><ol><li><p>다음과 같이 <code>KinD</code> 클러스터를 생성한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kind create cluster --name psa-ns-level --image kindest/node:v1.23.0
+</span></span></code></pre></div><p>다음과 비슷하게 출력될 것이다.</p><pre tabindex=0><code>Creating cluster &#34;psa-ns-level&#34; ...
+ ✓ Ensuring node image (kindest/node:v1.23.0) 🖼 
+ ✓ Preparing nodes 📦  
+ ✓ Writing configuration 📜 
+ ✓ Starting control-plane 🕹️ 
+ ✓ Installing CNI 🔌 
+ ✓ Installing StorageClass 💾 
+Set kubectl context to &#34;kind-psa-ns-level&#34;
+You can now use your cluster with:
+
+kubectl cluster-info --context kind-psa-ns-level
+
+Not sure what to do next? 😅  Check out https://kind.sigs.k8s.io/docs/user/quick-start/
+</code></pre></li><li><p>kubectl context를 새로 생성한 클러스터로 설정한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl cluster-info --context kind-psa-ns-level
+</span></span></code></pre></div><p>다음과 비슷하게 출력될 것이다.</p><pre tabindex=0><code>Kubernetes control plane is running at https://127.0.0.1:50996
+CoreDNS is running at https://127.0.0.1:50996/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use &#39;kubectl cluster-info dump&#39;.
+</code></pre></li></ol><h2 id=네임스페이스-생성하기>네임스페이스 생성하기</h2><p><code>example</code>이라는 네임스페이스를 생성한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl create ns example
+</span></span></code></pre></div><p>다음과 비슷하게 출력될 것이다.</p><pre tabindex=0><code>namespace/example created
+</code></pre><h2 id=파드-시큐리티-스탠다드-적용하기>파드 시큐리티 스탠다드 적용하기</h2><ol><li><p>내장 파드 시큐리티 어드미션이 지원하는 레이블을 사용하여
+이 네임스페이스에 파드 시큐리티 스탠다드를 활성화한다.
+이 단계에서는 <code>latest</code> 버전(기본값)에 따라 <code>baseline(기준)</code> 파드 시큐리티 스탠다드에 대해 경고를 설정한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl label --overwrite ns example <span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>   pod-security.kubernetes.io/warn<span style=color:#666>=</span>baseline <span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>   pod-security.kubernetes.io/warn-version<span style=color:#666>=</span>latest
+</span></span></code></pre></div></li><li><p>어떠한 네임스페이스에도 복수 개의 파드 시큐리티 스탠다드를 활성화할 수 있으며,
+이는 레이블을 이용하여 가능하다.
+다음 명령어는 최신 버전(기본값)에 따라, <code>baseline(기준)</code> 파드 시큐리티 스탠다드는 <code>enforce(강제)</code>하지만
+<code>restricted(제한된)</code> 파드 시큐리티 스탠다드에 대해서는 <code>warn(경고)</code> 및 <code>audit(감사)</code>하도록 설정한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl label --overwrite ns example <span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>  pod-security.kubernetes.io/enforce<span style=color:#666>=</span>baseline <span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>  pod-security.kubernetes.io/enforce-version<span style=color:#666>=</span>latest <span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>  pod-security.kubernetes.io/warn<span style=color:#666>=</span>restricted <span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>  pod-security.kubernetes.io/warn-version<span style=color:#666>=</span>latest <span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>  pod-security.kubernetes.io/audit<span style=color:#666>=</span>restricted <span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>  pod-security.kubernetes.io/audit-version<span style=color:#666>=</span>latest
+</span></span></code></pre></div></li></ol><h2 id=파드-시큐리티-스탠다드-검증하기>파드 시큐리티 스탠다드 검증하기</h2><ol><li><p><code>example</code> 네임스페이스에 최소한의 파드를 생성한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>cat <span style=color:#b44>&lt;&lt;EOF &gt; /tmp/pss/nginx-pod.yaml
+</span></span></span><span style=display:flex><span><span style=color:#b44>apiVersion: v1
+</span></span></span><span style=display:flex><span><span style=color:#b44>kind: Pod
+</span></span></span><span style=display:flex><span><span style=color:#b44>metadata:
+</span></span></span><span style=display:flex><span><span style=color:#b44>  name: nginx
+</span></span></span><span style=display:flex><span><span style=color:#b44>spec:
+</span></span></span><span style=display:flex><span><span style=color:#b44>  containers:
+</span></span></span><span style=display:flex><span><span style=color:#b44>    - image: nginx
+</span></span></span><span style=display:flex><span><span style=color:#b44>      name: nginx
+</span></span></span><span style=display:flex><span><span style=color:#b44>      ports:
+</span></span></span><span style=display:flex><span><span style=color:#b44>        - containerPort: 80
+</span></span></span><span style=display:flex><span><span style=color:#b44>EOF</span>
+</span></span></code></pre></div></li><li><p>클러스터의 <code>example</code> 네임스페이스에 해당 파드 스펙을 적용한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -n example -f /tmp/pss/nginx-pod.yaml
+</span></span></code></pre></div><p>다음과 비슷하게 출력될 것이다.</p><pre tabindex=0><code>Warning: would violate PodSecurity &#34;restricted:latest&#34;: allowPrivilegeEscalation != false (container &#34;nginx&#34; must set securityContext.allowPrivilegeEscalation=false), unrestricted capabilities (container &#34;nginx&#34; must set securityContext.capabilities.drop=[&#34;ALL&#34;]), runAsNonRoot != true (pod or container &#34;nginx&#34; must set securityContext.runAsNonRoot=true), seccompProfile (pod or container &#34;nginx&#34; must set securityContext.seccompProfile.type to &#34;RuntimeDefault&#34; or &#34;Localhost&#34;)
+pod/nginx created
+</code></pre></li><li><p>클러스터의 <code>default</code> 네임스페이스에 해당 파드 스펙을 적용한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -n default -f /tmp/pss/nginx-pod.yaml
+</span></span></code></pre></div><p>다음과 비슷하게 출력될 것이다.</p><pre tabindex=0><code>pod/nginx created
+</code></pre></li></ol><p>파드 시큐리티 스탠다드는 <code>example</code> 네임스페이스에만 적용되었다.
+동일한 파드를 <code>default</code> 네임스페이스에 생성하더라도
+경고가 발생하지 않는다.</p><h2 id=정리하기>정리하기</h2><p><code>kind delete cluster -name psa-ns-level</code> 명령을 실행하여 생성했던 클러스터를 삭제한다.</p><h2 id=다음-내용>다음 내용</h2><ul><li><p>다음의 모든 단계를 한 번에 수행하려면
+<a href=/examples/security/kind-with-namespace-level-baseline-pod-security.sh>셸 스크립트</a>를
+실행한다.</p><ol><li>KinD 클러스터를 생성</li><li>새로운 네임스페이스를 생성</li><li><code>baseline</code> 파드 시큐리티 스탠다드는 <code>enforce</code> 모드로 적용하고
+<code>restricted</code> 파드 시큐리티 스탠다드는 <code>warn</code> 및 <code>audit</code> 모드로 적용</li><li>해당 파드 시큐리티 스탠다드가 적용된 상태에서 새로운 파드를 생성</li></ol></li><li><p><a href=/docs/concepts/security/pod-security-admission/>파드 시큐리티 어드미션</a></p></li><li><p><a href=/ko/docs/concepts/security/pod-security-standards/>파드 시큐리티 스탠다드</a></p></li><li><p><a href=/ko/docs/tutorials/security/cluster-level-pss/>파드 시큐리티 스탠다드를 클러스터 수준에 적용하기</a></p></li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-d5f847bcdb6f7efbfc9c8a180d73e29a>3 - 파드 시큐리티 스탠다드를 클러스터 수준에 적용하기</h1><div class="alert alert-primary" role=alert><h4 class=alert-heading>Note</h4>이 튜토리얼은 새로운 클러스터에만 적용할 수 있다.</div><p>파드 시큐리티 어드미션(PSA, Pod Security Admission)은
+<a href=/blog/2021/12/09/pod-security-admission-beta/>베타로 변경</a>되어 v1.23 이상에서 기본적으로 활성화되어 있다.
+파드 시큐리티 어드미션은 파드가 생성될 때
+<a href=/ko/docs/concepts/security/pod-security-standards/>파드 시큐리티 스탠다드(Pod Security Standards)</a>를
+적용하는 어드미션 컨트롤러이다.
+이 튜토리얼은
+<code>baseline</code> 파드 시큐리티 스탠다드를 클러스터 수준(level)에 적용하여
+표준 구성을 클러스터의 모든 네임스페이스에 적용하는 방법을 보여 준다.</p><p>파드 시큐리티 스탠다드를 특정 네임스페이스에 적용하려면,
+<a href=/ko/docs/tutorials/security/ns-level-pss/>파드 시큐리티 스탠다드를 네임스페이스 수준에 적용하기</a>를 참고한다.</p><p>만약 쿠버네티스 버전이 v1.25이 아니라면,
+해당 버전의 문서를 확인하자.</p><h2 id=시작하기-전에>시작하기 전에</h2><p>워크스테이션에 다음을 설치한다.</p><ul><li><a href=https://kind.sigs.k8s.io/docs/user/quick-start/#installation>KinD</a></li><li><a href=/ko/docs/tasks/tools/>kubectl</a></li></ul><h2 id=적용할-알맞은-파드-시큐리티-스탠다드-선택하기>적용할 알맞은 파드 시큐리티 스탠다드 선택하기</h2><p><a href=/docs/concepts/security/pod-security-admission/>파드 시큐리티 어드미션</a>을 이용하여
+<code>enforce</code>, <code>audit</code>, 또는 <code>warn</code> 모드 중 하나로
+내장 <a href=/ko/docs/concepts/security/pod-security-standards/>파드 시큐리티 스탠다드</a>를 적용할 수 있다.</p><p>현재 구성에 가장 적합한 파드 시큐리티 스탠다드를 고르는 데
+도움이 되는 정보를 수집하려면, 다음을 수행한다.</p><ol><li><p>파드 시큐리티 스탠다드가 적용되지 않은 클러스터를 생성한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kind create cluster --name psa-wo-cluster-pss --image kindest/node:v1.24.0
+</span></span></code></pre></div><p>다음과 비슷하게 출력될 것이다.</p><pre tabindex=0><code>Creating cluster &#34;psa-wo-cluster-pss&#34; ...
+✓ Ensuring node image (kindest/node:v1.24.0) 🖼
+✓ Preparing nodes 📦  
+✓ Writing configuration 📜
+✓ Starting control-plane 🕹️
+✓ Installing CNI 🔌
+✓ Installing StorageClass 💾
+Set kubectl context to &#34;kind-psa-wo-cluster-pss&#34;
+You can now use your cluster with:
+
+kubectl cluster-info --context kind-psa-wo-cluster-pss
+
+Thanks for using kind! 😊
+</code></pre></li><li><p>kubectl context를 새로 생성한 클러스터로 설정한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl cluster-info --context kind-psa-wo-cluster-pss
+</span></span></code></pre></div><p>다음과 비슷하게 출력될 것이다.</p><pre tabindex=0><code> Kubernetes control plane is running at https://127.0.0.1:61350
+
+CoreDNS is running at https://127.0.0.1:61350/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use &#39;kubectl cluster-info dump&#39;.
+</code></pre></li><li><p>클러스터의 네임스페이스 목록을 조회한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl get ns
+</span></span></code></pre></div><p>다음과 비슷하게 출력될 것이다.</p><pre tabindex=0><code>NAME                 STATUS   AGE
+default              Active   9m30s
+kube-node-lease      Active   9m32s
+kube-public          Active   9m32s
+kube-system          Active   9m32s
+local-path-storage   Active   9m26s
+</code></pre></li><li><p><code>--dry-run=server</code>를 사용하여 다른 파드 시큐리티 스탠다드가 적용되었을 때
+어떤 것이 변경되는지 확인한다.</p><ol><li>Privileged<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl label --dry-run<span style=color:#666>=</span>server --overwrite ns --all <span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>pod-security.kubernetes.io/enforce<span style=color:#666>=</span>privileged
+</span></span></code></pre></div></li></ol><p>다음과 비슷하게 출력될 것이다.</p><pre tabindex=0><code>namespace/default labeled
+namespace/kube-node-lease labeled
+namespace/kube-public labeled
+namespace/kube-system labeled
+namespace/local-path-storage labeled
+</code></pre><ol start=2><li>Baseline<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl label --dry-run<span style=color:#666>=</span>server --overwrite ns --all <span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span>pod-security.kubernetes.io/enforce<span style=color:#666>=</span>baseline
+</span></span></code></pre></div></li></ol><p>다음과 비슷하게 출력될 것이다.</p><pre tabindex=0><code>namespace/default labeled
+namespace/kube-node-lease labeled
+namespace/kube-public labeled
+Warning: existing pods in namespace &#34;kube-system&#34; violate the new PodSecurity enforce level &#34;baseline:latest&#34;
+Warning: etcd-psa-wo-cluster-pss-control-plane (and 3 other pods): host namespaces, hostPath volumes
+Warning: kindnet-vzj42: non-default capabilities, host namespaces, hostPath volumes
+Warning: kube-proxy-m6hwf: host namespaces, hostPath volumes, privileged
+namespace/kube-system labeled
+namespace/local-path-storage labeled
+</code></pre><ol start=3><li>Restricted</li></ol><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span> kubectl label --dry-run<span style=color:#666>=</span>server --overwrite ns --all <span style=color:#b62;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#b62;font-weight:700></span> pod-security.kubernetes.io/enforce<span style=color:#666>=</span>restricted
+</span></span></code></pre></div><p>다음과 비슷하게 출력될 것이다.</p><pre tabindex=0><code>namespace/default labeled
+namespace/kube-node-lease labeled
+namespace/kube-public labeled
+Warning: existing pods in namespace &#34;kube-system&#34; violate the new PodSecurity enforce level &#34;restricted:latest&#34;
+Warning: coredns-7bb9c7b568-hsptc (and 1 other pod): unrestricted capabilities, runAsNonRoot != true, seccompProfile
+Warning: etcd-psa-wo-cluster-pss-control-plane (and 3 other pods): host namespaces, hostPath volumes, allowPrivilegeEscalation != false, unrestricted capabilities, restricted volume types, runAsNonRoot != true
+Warning: kindnet-vzj42: non-default capabilities, host namespaces, hostPath volumes, allowPrivilegeEscalation != false, unrestricted capabilities, restricted volume types, runAsNonRoot != true, seccompProfile
+Warning: kube-proxy-m6hwf: host namespaces, hostPath volumes, privileged, allowPrivilegeEscalation != false, unrestricted capabilities, restricted volume types, runAsNonRoot != true, seccompProfile
+namespace/kube-system labeled
+Warning: existing pods in namespace &#34;local-path-storage&#34; violate the new PodSecurity enforce level &#34;restricted:latest&#34;
+Warning: local-path-provisioner-d6d9f7ffc-lw9lh: allowPrivilegeEscalation != false, unrestricted capabilities, runAsNonRoot != true, seccompProfile
+namespace/local-path-storage labeled
+</code></pre></li></ol><p>위의 출력에서, <code>privileged</code> 파드 시큐리티 스탠다드를 적용하면 모든 네임스페이스에서 경고가 발생하지 않는 것을 볼 수 있다.
+그러나 <code>baseline</code> 및 <code>restricted</code> 파드 시큐리티 스탠다드에 대해서는
+<code>kube-system</code> 네임스페이스에서 경고가 발생한다.</p><h2 id=모드-버전-및-파드-시큐리티-스탠다드-설정>모드, 버전, 및 파드 시큐리티 스탠다드 설정</h2><p>이 섹션에서는, 다음의 파드 시큐리티 스탠다드를 <code>latest</code> 버전에 적용한다.</p><ul><li><code>baseline</code> 파드 시큐리티 스탠다드는 <code>enforce</code> 모드로 적용</li><li><code>restricted</code> 파드 시큐리티 스탠다드는 <code>warn</code> 및 <code>audit</code> 모드로 적용</li></ul><p><code>baseline</code> 파드 시큐리티 스탠다드는
+예외 목록을 간결하게 유지하고 알려진 권한 상승(privilege escalations)을 방지할 수 있는
+편리한 절충안을 제공한다.</p><p>추가적으로, <code>kube-system</code> 내의 파드가 실패하는 것을 방지하기 위해,
+해당 네임스페이스는 파드 시큐리티 스탠다드가 적용되지 않도록 제외할 것이다.</p><p>사용 중인 환경에 파드 시큐리티 어드미션을 적용할 때에는
+다음의 사항을 고려한다.</p><ol><li><p>클러스터에 적용된 위험 상태에 따라,
+<code>restricted</code>와 같은 더 엄격한 파드 시큐리티 스탠다드가 더 좋을 수도 있다.</p></li><li><p><code>kube-system</code> 네임스페이스를 적용 대상에서 제외하면
+이 네임스페이스의 파드가 <code>privileged</code>로 실행될 수 있다.
+실제 사용 환경에서는,
+최소 권한 원칙을 준수하도록,
+접근을 <code>kube-system</code> 네임스페이스로 제한하는
+엄격한 RBAC 정책을 적용할 것을 강력히 권장한다.</p></li><li><p>파드 시큐리티 어드미션 컨트롤러가 이러한 파드 시큐리티 스탠다드를 구현하는 데 사용할 수 있는
+구성 파일을 생성한다.</p><pre tabindex=0><code>mkdir -p /tmp/pss
+cat &lt;&lt;EOF &gt; /tmp/pss/cluster-level-pss.yaml 
+apiVersion: apiserver.config.k8s.io/v1
+kind: AdmissionConfiguration
+plugins:
+- name: PodSecurity
+  configuration:
+    apiVersion: pod-security.admission.config.k8s.io/v1beta1
+    kind: PodSecurityConfiguration
+    defaults:
+      enforce: &#34;baseline&#34;
+      enforce-version: &#34;latest&#34;
+      audit: &#34;restricted&#34;
+      audit-version: &#34;latest&#34;
+      warn: &#34;restricted&#34;
+      warn-version: &#34;latest&#34;
+    exemptions:
+      usernames: []
+      runtimeClasses: []
+      namespaces: [kube-system]
+EOF
+</code></pre></li><li><p>API 서버가 클러스터 생성 과정에서 이 파일을 처리할 수 있도록 구성한다.</p><pre tabindex=0><code>cat &lt;&lt;EOF &gt; /tmp/pss/cluster-config.yaml 
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  kubeadmConfigPatches:
+  - |
+    kind: ClusterConfiguration
+    apiServer:
+        extraArgs:
+          admission-control-config-file: /etc/config/cluster-level-pss.yaml
+        extraVolumes:
+          - name: accf
+            hostPath: /etc/config
+            mountPath: /etc/config
+            readOnly: false
+            pathType: &#34;DirectoryOrCreate&#34;
+  extraMounts:
+  - hostPath: /tmp/pss
+    containerPath: /etc/config
+    # optional: if set, the mount is read-only.
+    # default false
+    readOnly: false
+    # optional: if set, the mount needs SELinux relabeling.
+    # default false
+    selinuxRelabel: false
+    # optional: set propagation mode (None, HostToContainer or Bidirectional)
+    # see https://kubernetes.io/ko/docs/concepts/storage/volumes/#마운트-전파-propagation
+    # default None
+    propagation: None
+EOF
+</code></pre><div class="alert alert-info note callout" role=alert><strong>참고:</strong> macOS에서 Docker Desktop과 KinD를 사용하고 있다면,
+<strong>Preferences > Resources > File Sharing</strong> 메뉴에서
+<code>/tmp</code>를 Shared Directory로 추가할 수 있다.</div></li><li><p>이러한 파드 시큐리티 스탠다드를 적용하기 위해
+파드 시큐리티 어드미션을 사용하는 클러스터를 생성한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span> kind create cluster --name psa-with-cluster-pss --image kindest/node:v1.24.0 --config /tmp/pss/cluster-config.yaml
+</span></span></code></pre></div><p>다음과 비슷하게 출력될 것이다.</p><pre tabindex=0><code> Creating cluster &#34;psa-with-cluster-pss&#34; ...
+  ✓ Ensuring node image (kindest/node:v1.24.0) 🖼 
+  ✓ Preparing nodes 📦  
+  ✓ Writing configuration 📜 
+  ✓ Starting control-plane 🕹️ 
+  ✓ Installing CNI 🔌 
+  ✓ Installing StorageClass 💾 
+ Set kubectl context to &#34;kind-psa-with-cluster-pss&#34;
+ You can now use your cluster with:
+
+ kubectl cluster-info --context kind-psa-with-cluster-pss
+
+ Have a question, bug, or feature request? Let us know! https://kind.sigs.k8s.io/#community 🙂
+</code></pre></li><li><p>kubectl context를 새로 생성한 클러스터로 설정한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span> kubectl cluster-info --context kind-psa-with-cluster-pss
+</span></span></code></pre></div><p>다음과 비슷하게 출력될 것이다.</p><pre tabindex=0><code> Kubernetes control plane is running at https://127.0.0.1:63855
+ CoreDNS is running at https://127.0.0.1:63855/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+ To further debug and diagnose cluster problems, use &#39;kubectl cluster-info dump&#39;.
+</code></pre></li><li><p>기본 네임스페이스에 생성할 최소한의 구성에 대한 파드 명세를 다음과 같이 생성한다.</p><pre tabindex=0><code>cat &lt;&lt;EOF &gt; /tmp/pss/nginx-pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers:
+    - image: nginx
+      name: nginx
+      ports:
+        - containerPort: 80
+EOF
+</code></pre></li><li><p>클러스터에 해당 파드를 생성한다.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span> kubectl apply -f /tmp/pss/nginx-pod.yaml
+</span></span></code></pre></div><p>다음과 비슷하게 출력될 것이다.</p><pre tabindex=0><code> Warning: would violate PodSecurity &#34;restricted:latest&#34;: allowPrivilegeEscalation != false (container &#34;nginx&#34; must set securityContext.allowPrivilegeEscalation=false), unrestricted capabilities (container &#34;nginx&#34; must set securityContext.capabilities.drop=[&#34;ALL&#34;]), runAsNonRoot != true (pod or container &#34;nginx&#34; must set securityContext.runAsNonRoot=true), seccompProfile (pod or container &#34;nginx&#34; must set securityContext.seccompProfile.type to &#34;RuntimeDefault&#34; or &#34;Localhost&#34;)
+ pod/nginx created
+</code></pre></li></ol><h2 id=정리하기>정리하기</h2><p><code>kind delete cluster --name psa-with-cluster-pss</code> 및
+<code>kind delete cluster --name psa-wo-cluster-pss</code> 명령을 실행하여
+생성했던 클러스터를 삭제한다.</p><h2 id=다음-내용>다음 내용</h2><ul><li>다음의 모든 단계를 한 번에 수행하려면
+<a href=/examples/security/kind-with-cluster-level-baseline-pod-security.sh>셸 스크립트</a>를
+실행한다.<ol><li>파드 시큐리티 스탠다드 기반의 클러스터 수준 구성(configuration)을 생성</li><li>API 서버가 이 구성을 사용할 수 있도록 파일을 생성</li><li>이 구성을 사용하는 API 서버를 포함하는 클러스터를 생성</li><li>kubectl context를 새로 생성한 클러스터에 설정</li><li>최소한의 파드 구성을 위한 yaml 파일을 생성</li><li>해당 파일을 적용하여 새 클러스터에 파드를 생성</li></ol></li><li><a href=/docs/concepts/security/pod-security-admission/>파드 시큐리티 어드미션</a></li><li><a href=/ko/docs/concepts/security/pod-security-standards/>파드 시큐리티 스탠다드</a></li><li><a href=/ko/docs/tutorials/security/ns-level-pss/>파드 시큐리티 스탠다드를 네임스페이스 수준에 적용하기</a></li></ul></div></main></div></div><footer class=d-print-none><div class=footer__links><nav><a class=text-white href=/ko/docs/home/>홈</a>
+<a class=text-white href=/ko/blog/>블로그</a>
+<a class=text-white href=/ko/training/>교육</a>
+<a class=text-white href=/ko/partners/>파트너</a>
+<a class=text-white href=/ko/community/>Community</a>
+<a class=text-white href=/ko/case-studies/>사례 연구</a></nav></div><div class=container-fluid><div class=row><div class="col-6 col-sm-2 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="User mailing list" aria-label="User mailing list"><a class=text-white target=_blank href=https://discuss.kubernetes.io><i class="fa fa-envelope"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank href=https://twitter.com/kubernetesio><i class="fab fa-twitter"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Calendar aria-label=Calendar><a class=text-white target=_blank href="https://calendar.google.com/calendar/embed?src=calendar%40kubernetes.io"><i class="fas fa-calendar-alt"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Youtube aria-label=Youtube><a class=text-white target=_blank href=https://youtube.com/kubernetescommunity><i class="fab fa-youtube"></i></a></li></ul></div><div class="col-6 col-sm-2 text-right text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank href=https://github.com/kubernetes/kubernetes><i class="fab fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Slack aria-label=Slack><a class=text-white target=_blank href=https://slack.k8s.io><i class="fab fa-slack"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Contribute aria-label=Contribute><a class=text-white target=_blank href=https://git.k8s.io/community/contributors/guide><i class="fas fa-edit"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="Stack Overflow" aria-label="Stack Overflow"><a class=text-white target=_blank href=https://stackoverflow.com/questions/tagged/kubernetes><i class="fab fa-stack-overflow"></i></a></li></ul></div><div class="col-12 col-sm-8 text-center order-sm-2"><small class=text-white>&copy; 2023 The Kubernetes Authors | Documentation Distributed under <a href=https://git.k8s.io/website/LICENSE class=light-text>CC BY 4.0</a></small><br><small class=text-white>Copyright &copy; 2023 The Linux Foundation &reg;. All rights reserved. The Linux Foundation has registered trademarks and uses trademarks. For a list of trademarks of The Linux Foundation, please see our <a href=https://www.linuxfoundation.org/trademark-usage class=light-text>Trademark Usage page</a></small><br><small class=text-white>ICP license: 京ICP备17074266号-3</small></div></div></div></footer></div><script src=/js/jquery-3.6.0.min.js integrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script>
+<script src=/js/popper-1.16.1.min.js intregrity=sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN crossorigin=anonymous></script>
+<script src=/js/bootstrap-4.6.1.min.js integrity=sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2 crossorigin=anonymous></script>
+<script src=/js/script.js></script>
+<script async src=/js/mermaid-8.13.4.min.js integrity=sha384-5hHNvPeMrNH14oM3IcQofDoBhiclNK3g2+hnEinKzQ07C4AliMeVpnvxuiwEGpaO crossorigin=anonymous></script>
+<script src=/js/main.min.5c0bf7f21dc4f66485f74efbbeeff28a7e4f8cddaac1bae47043159c922ff3a3.js integrity="sha256-XAv38h3E9mSF9077vu/yin5PjN2qwbrkcEMVnJIv86M=" crossorigin=anonymous></script></body></html>

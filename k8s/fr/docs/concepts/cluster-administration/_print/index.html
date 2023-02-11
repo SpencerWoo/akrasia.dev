@@ -1,0 +1,493 @@
+<!doctype html><html lang=fr class=no-js><head><meta name=robots content="noindex, nofollow"><link rel=alternate hreflang=en href=https://kubernetes.io/docs/concepts/cluster-administration/><link rel=alternate hreflang=zh-cn href=https://kubernetes.io/zh-cn/docs/concepts/cluster-administration/><link rel=alternate hreflang=ko href=https://kubernetes.io/ko/docs/concepts/cluster-administration/><link rel=alternate hreflang=ja href=https://kubernetes.io/ja/docs/concepts/cluster-administration/><link rel=alternate hreflang=it href=https://kubernetes.io/it/docs/concepts/cluster-administration/><link rel=alternate hreflang=de href=https://kubernetes.io/de/docs/concepts/cluster-administration/><link rel=alternate hreflang=es href=https://kubernetes.io/es/docs/concepts/cluster-administration/><link rel=alternate hreflang=pt-br href=https://kubernetes.io/pt-br/docs/concepts/cluster-administration/><link rel=alternate hreflang=id href=https://kubernetes.io/id/docs/concepts/cluster-administration/><link rel=alternate hreflang=ru href=https://kubernetes.io/ru/docs/concepts/cluster-administration/><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=generator content="Hugo 0.110.0"><link rel=canonical type=text/html href=https://kubernetes.io/fr/docs/concepts/cluster-administration/><link rel="shortcut icon" type=image/png href=/images/favicon.png><link rel=apple-touch-icon href=/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=manifest href=/manifest.webmanifest><link rel=apple-touch-icon href=/images/kubernetes-192x192.png><title>Administration d'un cluster | Kubernetes</title><meta property="og:title" content="Administration d'un cluster"><meta property="og:description" content="Administration cluster Kubernetes"><meta property="og:type" content="website"><meta property="og:url" content="https://kubernetes.io/fr/docs/concepts/cluster-administration/"><meta property="og:site_name" content="Kubernetes"><meta itemprop=name content="Administration d'un cluster"><meta itemprop=description content="Administration cluster Kubernetes"><meta name=twitter:card content="summary"><meta name=twitter:title content="Administration d'un cluster"><meta name=twitter:description content="Administration cluster Kubernetes"><link href=/scss/main.css rel=stylesheet><script type=application/ld+json>{"@context":"https://schema.org","@type":"Organization","url":"https://kubernetes.io","logo":"https://kubernetes.io/images/favicon.png","potentialAction":{"@type":"SearchAction","target":"https://kubernetes.io/search/?q={search_term_string}","query-input":"required name=search_term_string"}}</script><meta name=theme-color content="#326ce5"><link rel=stylesheet href=/css/feature-states.css><meta name=description content="Administration cluster Kubernetes"><meta property="og:description" content="Administration cluster Kubernetes"><meta name=twitter:description content="Administration cluster Kubernetes"><meta property="og:url" content="https://kubernetes.io/fr/docs/concepts/cluster-administration/"><meta property="og:title" content="Administration d'un cluster"><meta name=twitter:title content="Administration d'un cluster"><meta name=twitter:image content="https://kubernetes.io/images/favicon.png"><meta name=twitter:image:alt content="Kubernetes"><meta property="og:image" content="/images/kubernetes-horizontal-color.png"><meta property="og:type" content="article"><script src=/js/jquery-3.6.0.min.js intregrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script></head><body class=td-section><header><nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar" data-auto-burger=primary><a class=navbar-brand href=/fr/></a><div class="td-navbar-nav-scroll ml-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0"><li class="nav-item mr-2 mb-lg-0"><a class="nav-link active" href=/fr/docs/>Documentation</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/fr/blog/>Blog de Kubernetes</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/fr/partners/>Partenaires</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/fr/community/>Communauté</a></li><li class="nav-item mr-2 mb-lg-0"><a class=nav-link href=/fr/case-studies/>Études de cas</a></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdown role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>Versions</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/fr/releases>Release Information</a>
+<a class=dropdown-item href=https://kubernetes.io/fr/docs/concepts/cluster-administration/>v1.25</a>
+<a class=dropdown-item href=https://v1-24.docs.kubernetes.io/fr/docs/concepts/cluster-administration/>v1.24</a>
+<a class=dropdown-item href=https://v1-23.docs.kubernetes.io/fr/docs/concepts/cluster-administration/>v1.23</a>
+<a class=dropdown-item href=https://v1-22.docs.kubernetes.io/fr/docs/concepts/cluster-administration/>v1.22</a>
+<a class=dropdown-item href=https://v1-21.docs.kubernetes.io/fr/docs/concepts/cluster-administration/>v1.21</a></div></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# id=navbarDropdownMenuLink role=button data-toggle=dropdown aria-haspopup=true aria-expanded=false>Français (French)</a><div class="dropdown-menu dropdown-menu-right" aria-labelledby=navbarDropdownMenuLink><a class=dropdown-item href=/docs/concepts/cluster-administration/>English</a>
+<a class=dropdown-item href=/zh-cn/docs/concepts/cluster-administration/>中文 (Chinese)</a>
+<a class=dropdown-item href=/ko/docs/concepts/cluster-administration/>한국어 (Korean)</a>
+<a class=dropdown-item href=/ja/docs/concepts/cluster-administration/>日本語 (Japanese)</a>
+<a class=dropdown-item href=/it/docs/concepts/cluster-administration/>Italiano (Italian)</a>
+<a class=dropdown-item href=/de/docs/concepts/cluster-administration/>Deutsch (German)</a>
+<a class=dropdown-item href=/es/docs/concepts/cluster-administration/>Español (Spanish)</a>
+<a class=dropdown-item href=/pt-br/docs/concepts/cluster-administration/>Português (Portuguese)</a>
+<a class=dropdown-item href=/id/docs/concepts/cluster-administration/>Bahasa Indonesia</a>
+<a class=dropdown-item href=/ru/docs/concepts/cluster-administration/>Русский (Russian)</a></div></li></ul></div><button id=hamburger onclick=kub.toggleMenu() data-auto-burger-exclude><div></div></button></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><div class=td-content><div class="pageinfo pageinfo-primary d-print-none"><p>Version imprimable multipages.
+<a href=# onclick="return print(),!1">Cliquer ici pour imprimer</a>.</p><p><a href=/fr/docs/concepts/cluster-administration/>Retour à la version par défaut</a>.</p></div><h1 class=title>Administration d'un cluster</h1><div class=lead>Administration cluster Kubernetes</div><ul><li>1: <a href=#pg-fb494ea3b1874bd753dcd11c3f35c2dc>Vue d'ensemble de l'administration d'un cluster</a></li><li>2: <a href=#pg-2bf9a93ab5ba014fb6ff70b22c29d432>Certificats</a></li><li>3: <a href=#pg-c4b1e87a84441f8a90699a345ce48d68>Architecture de Journalisation d'évènements (logging)</a></li></ul><div class=content></div></div><div class=td-content><h1 id=pg-fb494ea3b1874bd753dcd11c3f35c2dc>1 - Vue d'ensemble de l'administration d'un cluster</h1><div class=lead>Administration cluster Kubernetes</div><p>La vue d'ensemble de l'administration d'un cluster est destinée à toute personne créant ou administrant un cluster Kubernetes.
+Il suppose une certaine familiarité avec les <a href=/docs/concepts/>concepts</a> de Kubernetes.</p><h2 id=planifier-le-déploiement-d-un-cluster>Planifier le déploiement d'un cluster</h2><p>Voir le guide: <a href=/fr/docs/setup/pick-right-solution/>choisir la bonne solution</a> pour des exemples de planification, de mise en place et de configuration de clusters Kubernetes. Les solutions répertoriées dans cet article s'appellent des <em>distributions</em>.</p><p>Avant de choisir un guide, voici quelques considérations:</p><ul><li>Voulez-vous simplement essayer Kubernetes sur votre machine ou voulez-vous créer un cluster haute disponibilité à plusieurs nœuds? Choisissez les distributions les mieux adaptées à vos besoins.</li><li><strong>Si vous recherchez la haute disponibilité</strong>, apprenez à configurer des <a href=/docs/concepts/cluster-administration/federation/>clusters multi zones</a>.</li><li>Utiliserez-vous <strong>un cluster Kubernetes hébergé</strong>, comme <a href=https://cloud.google.com/kubernetes-engine/>Google Kubernetes Engine</a>, ou <strong>hébergerez-vous votre propre cluster</strong>?</li><li>Votre cluster sera-t-il <strong>on-premises</strong>, ou <strong>sur un cloud (IaaS)</strong>? Kubernetes ne prend pas directement en charge les clusters hybrides. Cependant, vous pouvez configurer plusieurs clusters.</li><li><strong>Si vous configurez Kubernetes on-premises</strong>, choisissez le <a href=/docs/concepts/cluster-administration/networking/>modèle réseau</a> qui vous convient le mieux.</li><li>Voulez-vous faire tourner Kubernetes sur du <strong>bare metal</strong> ou sur des <strong>machines virtuelles (VMs)</strong>?</li><li>Voulez-vous <strong>simplement faire tourner un cluster</strong>, ou vous attendez-vous à faire du <strong>développement actif sur le code du projet Kubernetes</strong>? Dans ce dernier cas, choisissez une distribution activement développée. Certaines distributions n’utilisent que des versions binaires, mais offrent une plus grande variété de choix.</li><li>Familiarisez-vous avec les <a href=/docs/admin/cluster-components/>composants</a> nécessaires pour faire tourner un cluster.</li></ul><p>A noter: Toutes les distributions ne sont pas activement maintenues. Choisissez des distributions qui ont été testées avec une version récente de Kubernetes.</p><h2 id=gérer-un-cluster>Gérer un cluster</h2><ul><li><p><a href=/docs/tasks/administer-cluster/cluster-management/>Gérer un cluster</a> décrit plusieurs rubriques relatives au cycle de vie d’un cluster: création d’un nouveau cluster, mise à niveau des nœuds maître et des workers de votre cluster, maintenance des nœuds (mises à niveau du noyau, par exemple) et mise à niveau de la version de l’API Kubernetes d’un cluster en cours d’exécution.</p></li><li><p>Apprenez comment <a href=/docs/concepts/nodes/node/>gérer les nœuds</a>.</p></li><li><p>Apprenez à configurer et gérer les <a href=/docs/concepts/policy/resource-quotas/>quotas de ressources</a> pour les clusters partagés.</p></li></ul><h2 id=sécuriser-un-cluster>Sécuriser un cluster</h2><ul><li><p>La rubrique <a href=/docs/concepts/cluster-administration/certificates/>Certificats</a> décrit les étapes à suivre pour générer des certificats à l’aide de différentes suites d'outils.</p></li><li><p>L' <a href=/docs/concepts/containers/container-environment/>Environnement de conteneur dans Kubernetes</a> décrit l'environnement des conteneurs gérés par Kubelet sur un nœud Kubernetes.</p></li><li><p>Le <a href=/docs/reference/access-authn-authz/controlling-access/>Contrôle de l'accès à l'API Kubernetes</a> explique comment configurer les autorisations pour les utilisateurs et les comptes de service.</p></li><li><p>La rubrique <a href=/docs/reference/access-authn-authz/authentication/>Authentification</a> explique l'authentification dans Kubernetes, y compris les différentes options d'authentification.</p></li><li><p><a href=/docs/reference/access-authn-authz/authorization/>Autorisations</a> est distinct de l'authentification et contrôle le traitement des appels HTTP.</p></li><li><p><a href=/docs/reference/access-authn-authz/admission-controllers/>Utiliser les Admission Controllers</a> explique les plug-ins qui interceptent les requêtes adressées au serveur d'API Kubernetes après authentification et autorisation.</p></li><li><p><a href=/docs/concepts/cluster-administration/sysctl-cluster/>Utiliser Sysctls dans un cluster Kubernetes</a> explique aux administrateurs comment utiliser l'outil de ligne de commande <code>sysctl</code> pour définir les paramètres du noyau.</p></li><li><p><a href=/docs/tasks/debug-application-cluster/audit/>Auditer</a> explique comment interagir avec les journaux d'audit de Kubernetes.</p></li></ul><h3 id=sécuriser-la-kubelet>Sécuriser la Kubelet</h3><ul><li><a href=/docs/concepts/architecture/master-node-communication/>Communication Master-Node</a></li><li><a href=/docs/reference/command-line-tools-reference/kubelet-tls-bootstrapping/>TLS bootstrapping</a></li><li><a href=/docs/admin/kubelet-authentication-authorization/>Kubelet authentification/autorisations</a></li></ul><h2 id=services-de-cluster-optionnels>Services de cluster optionnels</h2><ul><li><p><a href=/docs/concepts/services-networking/dns-pod-service/>Integration DNS</a> décrit comment résoudre un nom DNS directement vers un service Kubernetes.</p></li><li><p><a href=/docs/concepts/cluster-administration/logging/>Journalisation des évènements et surveillance de l'activité du cluster</a> explique le fonctionnement de la journalisation des évènements dans Kubernetes et son implémentation.</p></li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-2bf9a93ab5ba014fb6ff70b22c29d432>2 - Certificats</h1><div class=lead>Certifications cluster Kubernetes</div><p>Lorsque vous utilisez l'authentification par certificats client, vous pouvez générer des certificats
+manuellement grâce à <code>easyrsa</code>, <code>openssl</code> ou <code>cfssl</code>.</p><h3 id=easyrsa>easyrsa</h3><p><strong>easyrsa</strong> peut générer manuellement des certificats pour votre cluster.</p><ol><li><p>Téléchargez, décompressez et initialisez la version corrigée de easyrsa3.</p><pre><code>curl -LO https://storage.googleapis.com/kubernetes-release/easy-rsa/easy-rsa.tar.gz
+tar xzf easy-rsa.tar.gz
+cd easy-rsa-master/easyrsa3
+./easyrsa init-pki
+</code></pre></li><li><p>Générez une CA. (<code>--batch</code> pour le mode automatique. <code>--req-cn</code> CN par défaut à utiliser)</p><pre><code>./easyrsa --batch &quot;--req-cn=${MASTER_IP}@`date +%s`&quot; build-ca nopass
+</code></pre></li><li><p>Générer un certificat de serveur et une clé.
+L' argument <code>--subject-alt-name</code> définit les adresses IP et noms DNS possibles par lesquels l'API
+serveur peut être atteind. La <code>MASTER_CLUSTER_IP</code> est généralement la première adresse IP du CIDR des services
+qui est spécifié en tant qu'argument <code>--service-cluster-ip-range</code> pour l'API Server et
+le composant controller manager. L'argument <code>--days</code> est utilisé pour définir le nombre de jours
+après lesquels le certificat expire.
+L’exemple ci-dessous suppose également que vous utilisez <code>cluster.local</code> par défaut comme
+nom de domaine DNS.</p><pre><code>./easyrsa --subject-alt-name=&quot;IP:${MASTER_IP},&quot;\
+&quot;IP:${MASTER_CLUSTER_IP},&quot;\
+&quot;DNS:kubernetes,&quot;\
+&quot;DNS:kubernetes.default,&quot;\
+&quot;DNS:kubernetes.default.svc,&quot;\
+&quot;DNS:kubernetes.default.svc.cluster,&quot;\
+&quot;DNS:kubernetes.default.svc.cluster.local&quot; \
+--days=10000 \
+build-server-full server nopass
+</code></pre></li><li><p>Copiez <code>pki/ca.crt</code>, <code>pki/issued/server.crt</code>, et <code>pki/private/server.key</code> dans votre répertoire.</p></li><li><p>Personnalisez et ajoutez les lignes suivantes aux paramètres de démarrage de l'API Server:</p><pre><code>--client-ca-file=/yourdirectory/ca.crt
+--tls-cert-file=/yourdirectory/server.crt
+--tls-private-key-file=/yourdirectory/server.key
+</code></pre></li></ol><h3 id=openssl>openssl</h3><p><strong>openssl</strong> peut générer manuellement des certificats pour votre cluster.</p><ol><li><p>Générez ca.key en 2048bit:</p><pre><code>openssl genrsa -out ca.key 2048
+</code></pre></li><li><p>A partir de la clé ca.key générez ca.crt (utilisez -days pour définir la durée du certificat):</p><pre><code>openssl req -x509 -new -nodes -key ca.key -subj &quot;/CN=${MASTER_IP}&quot; -days 10000 -out ca.crt
+</code></pre></li><li><p>Générez server.key en 2048bit:</p><pre><code>openssl genrsa -out server.key 2048
+</code></pre></li><li><p>Créez un fichier de configuration pour générer une demande de signature de certificat (CSR).
+Assurez-vous de remplacer les valeurs marquées par des "&lt; >" (par exemple, <code>&lt;MASTER_IP></code>)
+avec des valeurs réelles avant de l'enregistrer dans un fichier (par exemple, <code>csr.conf</code>).
+Notez que la valeur de <code>MASTER_CLUSTER_IP</code> est celle du service Cluster IP pour l'
+API Server comme décrit dans la sous-section précédente.
+L’exemple ci-dessous suppose également que vous utilisez <code>cluster.local</code> par défaut comme
+nom de domaine DNS.</p><pre><code>[ req ]
+default_bits = 2048
+prompt = no
+default_md = sha256
+req_extensions = req_ext
+distinguished_name = dn
+
+[ dn ]
+C = &lt;country&gt;
+ST = &lt;state&gt;
+L = &lt;city&gt;
+O = &lt;organization&gt;
+OU = &lt;organization unit&gt;
+CN = &lt;MASTER_IP&gt;
+
+[ req_ext ]
+subjectAltName = @alt_names
+
+[ alt_names ]
+DNS.1 = kubernetes
+DNS.2 = kubernetes.default
+DNS.3 = kubernetes.default.svc
+DNS.4 = kubernetes.default.svc.cluster
+DNS.5 = kubernetes.default.svc.cluster.local
+IP.1 = &lt;MASTER_IP&gt;
+IP.2 = &lt;MASTER_CLUSTER_IP&gt;
+
+[ v3_ext ]
+authorityKeyIdentifier=keyid,issuer:always
+basicConstraints=CA:FALSE
+keyUsage=keyEncipherment,dataEncipherment
+extendedKeyUsage=serverAuth,clientAuth
+subjectAltName=@alt_names
+</code></pre></li><li><p>Générez la demande de signature de certificat basée sur le fichier de configuration:</p><pre><code>openssl req -new -key server.key -out server.csr -config csr.conf
+</code></pre></li><li><p>Générez le certificat de serveur en utilisant ca.key, ca.crt et server.csr:</p><pre><code>openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key \
+-CAcreateserial -out server.crt -days 10000 \
+-extensions v3_ext -extfile csr.conf
+</code></pre></li><li><p>Vérifiez le certificat:</p><pre><code>openssl x509  -noout -text -in ./server.crt
+</code></pre></li></ol><p>Enfin, ajoutez les mêmes paramètres aux paramètres de démarrage de l'API Server.</p><h3 id=cfssl>cfssl</h3><p><strong>cfssl</strong> est un autre outil pour la génération de certificat.</p><ol><li><p>Téléchargez, décompressez et préparez les outils de ligne de commande comme indiqué ci-dessous.
+Notez que vous devrez peut-être adapter les exemples de commandes en fonction du matériel,
+de l'architecture et de la version de cfssl que vous utilisez.</p><pre><code>curl -L https://pkg.cfssl.org/R1.2/cfssl_linux-amd64 -o cfssl
+chmod +x cfssl
+curl -L https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64 -o cfssljson
+chmod +x cfssljson
+curl -L https://pkg.cfssl.org/R1.2/cfssl-certinfo_linux-amd64 -o cfssl-certinfo
+chmod +x cfssl-certinfo
+</code></pre></li><li><p>Créez un répertoire pour contenir les artefacts et initialiser cfssl:</p><pre><code>mkdir cert
+cd cert
+../cfssl print-defaults config &gt; config.json
+../cfssl print-defaults csr &gt; csr.json
+</code></pre></li><li><p>Créez un fichier JSON pour générer le fichier d'autorité de certification, par exemple, <code>ca-config.json</code>:</p><pre><code>{
+  &quot;signing&quot;: {
+    &quot;default&quot;: {
+      &quot;expiry&quot;: &quot;8760h&quot;
+    },
+    &quot;profiles&quot;: {
+      &quot;kubernetes&quot;: {
+        &quot;usages&quot;: [
+          &quot;signing&quot;,
+          &quot;key encipherment&quot;,
+          &quot;server auth&quot;,
+          &quot;client auth&quot;
+        ],
+        &quot;expiry&quot;: &quot;8760h&quot;
+      }
+    }
+  }
+}
+</code></pre></li><li><p>Créez un fichier JSON pour la demande de signature de certificat de l'autorité de certification, par exemple,
+<code>ca-csr.json</code>. Assurez-vous de remplacer les valeurs marquées par des "&lt; >" par
+les vraies valeurs que vous voulez utiliser.</p><pre><code>{
+  &quot;CN&quot;: &quot;kubernetes&quot;,
+  &quot;key&quot;: {
+    &quot;algo&quot;: &quot;rsa&quot;,
+    &quot;size&quot;: 2048
+  },
+  &quot;names&quot;:[{
+    &quot;C&quot;: &quot;&lt;country&gt;&quot;,
+    &quot;ST&quot;: &quot;&lt;state&gt;&quot;,
+    &quot;L&quot;: &quot;&lt;city&gt;&quot;,
+    &quot;O&quot;: &quot;&lt;organization&gt;&quot;,
+    &quot;OU&quot;: &quot;&lt;organization unit&gt;&quot;
+  }]
+}
+</code></pre></li><li><p>Générez la clé de CA (<code>ca-key.pem</code>) et le certificat (<code>ca.pem</code>):</p><pre><code>../cfssl gencert -initca ca-csr.json | ../cfssljson -bare ca
+</code></pre></li><li><p>Créer un fichier JSON pour générer des clés et des certificats pour l'API Server,
+par exemple, <code>server-csr.json</code>. Assurez-vous de remplacer les valeurs entre "&lt; >" par
+les vraies valeurs que vous voulez utiliser. <code>MASTER_CLUSTER_IP</code> est le service Cluster IP
+de l'API Server, comme décrit dans la sous-section précédente.
+L’exemple ci-dessous suppose également que vous utilisez <code>cluster.local</code> par défaut comme
+nom de domaine DNS.</p><pre><code>{
+  &quot;CN&quot;: &quot;kubernetes&quot;,
+  &quot;hosts&quot;: [
+    &quot;127.0.0.1&quot;,
+    &quot;&lt;MASTER_IP&gt;&quot;,
+    &quot;&lt;MASTER_CLUSTER_IP&gt;&quot;,
+    &quot;kubernetes&quot;,
+    &quot;kubernetes.default&quot;,
+    &quot;kubernetes.default.svc&quot;,
+    &quot;kubernetes.default.svc.cluster&quot;,
+    &quot;kubernetes.default.svc.cluster.local&quot;
+  ],
+  &quot;key&quot;: {
+    &quot;algo&quot;: &quot;rsa&quot;,
+    &quot;size&quot;: 2048
+  },
+  &quot;names&quot;: [{
+    &quot;C&quot;: &quot;&lt;country&gt;&quot;,
+    &quot;ST&quot;: &quot;&lt;state&gt;&quot;,
+    &quot;L&quot;: &quot;&lt;city&gt;&quot;,
+    &quot;O&quot;: &quot;&lt;organization&gt;&quot;,
+    &quot;OU&quot;: &quot;&lt;organization unit&gt;&quot;
+  }]
+}
+</code></pre></li><li><p>Générez la clé et le certificat pour l'API Server, qui sont par défaut
+sauvegardés respectivement dans les fichiers <code>server-key.pem</code> et<code> server.pem</code>:</p><pre><code>../cfssl gencert -ca=ca.pem -ca-key=ca-key.pem \
+--config=ca-config.json -profile=kubernetes \
+server-csr.json | ../cfssljson -bare server
+</code></pre></li></ol><h2 id=distribuer-un-certificat-auto-signé>Distribuer un certificat auto-signé</h2><p>Un client peut refuser de reconnaître un certificat auto-signé comme valide.
+Pour un déploiement hors production ou pour un déploiement exécuté derrière un
+pare-feu d'entreprise, vous pouvez distribuer un certificat auto-signé à tous les clients et
+actualiser la liste locale pour les certificats valides.</p><p>Sur chaque client, effectuez les opérations suivantes:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>$ sudo cp ca.crt /usr/local/share/ca-certificates/kubernetes.crt
+</span></span><span style=display:flex><span>$ sudo update-ca-certificates
+</span></span><span style=display:flex><span>Updating certificates in /etc/ssl/certs...
+</span></span><span style=display:flex><span><span style=color:#666>1</span> added, <span style=color:#666>0</span> removed; <span style=color:#a2f;font-weight:700>done</span>.
+</span></span><span style=display:flex><span>Running hooks in /etc/ca-certificates/update.d....
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>done</span>.
+</span></span></code></pre></div><h2 id=api-pour-les-certificats>API pour les certificats</h2><p>Vous pouvez utiliser l’API <code>certificates.k8s.io</code> pour faire créer des
+Certificats x509 à utiliser pour l'authentification, comme documenté
+<a href=/docs/tasks/tls/managing-tls-in-a-cluster>ici</a>.</p></div><div class=td-content style=page-break-before:always><h1 id=pg-c4b1e87a84441f8a90699a345ce48d68>3 - Architecture de Journalisation d'évènements (logging)</h1><p>La journalisation des évènements systèmes et d'applications peut aider à
+comprendre ce qui se passe dans un cluster. Les journaux sont particulièrement
+utiles pour débogguer les problèmes et surveiller l'activité du cluster. La
+plupart des applications modernes ont un mécanisme de journalisation
+d'évènements, et la plupart des environnements d'exécution de conteneurs ont été
+conçus pour supporter la journalisation des évènements. La méthode de
+journalisation la plus facile et la plus répandue pour des applications
+conteneurisées est d'écrire dans les flux de sortie standard et d'erreur
+(<code>stdout</code> et <code>stderr</code>).</p><p>Malgré cela, la fonctionnalité de journalisation fournie nativement par
+l'environnement d'exécution de conteneurs n'est pas suffisante comme solution
+complète de journalisation. Quand un conteneur crashe, quand un Pod est expulsé
+ou quand un nœud disparaît, il est utile de pouvoir accéder au journal
+d'événements de l'application. C'est pourquoi les journaux doivent avoir leur
+propre espace de stockage et un cycle de vie indépendamment des nœuds, Pods ou
+conteneurs. Ce concept est appelé <em>journalisation des évènements au niveau du
+cluster</em> (cluster-level-logging). Un backend dédié pour stocker, analyser et
+faire des requêtes est alors nécessaire. Kubernetes n'offre pas nativement de
+solution de stockage pour les journaux mais il est possible d'intégrer de
+nombreuses solutions de journalisation d'évènements dans un cluster Kubernetes.</p><p>L'architecture de journalisation des évènements au niveau du cluster est décrite
+en considérant qu'un backend de journalisation est présent à l'intérieur ou à
+l'extérieur du cluster. Même sans avoir l'intention de journaliser les
+évènements au niveau du cluster, il est intéressant de savoir comment les
+journaux sont conservés et gérés au niveau d'un nœud.</p><h2 id=journalisation-simple-d-évènements-dans-kubernetes>Journalisation simple d'évènements dans Kubernetes</h2><p>Dans cette section, on va utiliser un exemple simple de journalisation
+d'évènements avec le flux de sortie standard. Cette démonstration utilise un
+manifeste pour un Pod avec un seul conteneur qui écrit du texte sur le flux
+de sortie standard toutes les secondes.</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/fr/examples/debug/counter-pod.yaml download=debug/counter-pod.yaml><code>debug/counter-pod.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("debug-counter-pod-yaml")' title="Copy debug/counter-pod.yaml to clipboard"></img></div><div class=includecode id=debug-counter-pod-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>counter<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>count<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>busybox<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>args</span>:<span style=color:#bbb> </span>[/bin/sh, -c,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>            </span><span style=color:#b44>&#39;i=0; while true; do echo &#34;$i: $(date)&#34;; i=$((i+1)); sleep 1; done&#39;</span>]<span style=color:#bbb>
+</span></span></span></code></pre></div></div></div><p>Pour lancer ce Pod, utilisez la commande suivante :</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl apply -f https://k8s.io/examples/debug/counter-pod.yaml
+</span></span></code></pre></div><p>Le résultat est :</p><pre tabindex=0><code>pod/counter created
+</code></pre><p>Pour récupérer les événements du conteneur d'un pod, utilisez la commande
+<code>kubectl logs</code> de la manière suivante :</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl logs counter
+</span></span></code></pre></div><p>Le résultat est :</p><pre tabindex=0><code>0: Mon Jan  1 00:00:00 UTC 2001
+1: Mon Jan  1 00:00:01 UTC 2001
+2: Mon Jan  1 00:00:02 UTC 2001
+...
+</code></pre><p>Utilisez <code>kubectl logs</code> pour récupérer les évènements de l'instanciation
+précédente d'un Pod en utilisant l'option <code>--previous</code> quand par exemple le
+conteneur a crashé.</p><p>Si le Pod a plusieurs conteneurs, il faut spécifier le nom du conteneur dont on
+veut récupérer le journal d'évènement. Dans notre exemple le conteneur s'appelle
+<code>count</code> donc vous pouvez utiliser <code>kubectl logs counter count</code>. Plus de détails
+dans la [documentation de <code>kubectl logs</code>] (/docs/reference/generated/kubectl/kubectl-commands#logs)</p><h2 id=journalisation-d-évènements-au-niveau-du-nœud>Journalisation d'évènements au niveau du nœud</h2><p><img src=/images/docs/user-guide/logging/logging-node-level.png alt="Journalisation d'évènements au niveau dunœud"></p><p>Tout ce qu'une application conteneurisée écrit sur <code>stdout</code> ou <code>stderr</code> est pris
+en compte et redirigé par l'environnement d'exécution des conteneurs. Par exemple,
+Docker redirige ces deux flux vers un <a href=https://docs.docker.com/config/containers/logging/configure/>driver de journalisation
+(EN)</a> qui est
+configuré dans Kubernetes pour écrire dans un fichier au format json.</p><div class="alert alert-info note callout" role=alert><strong>Note:</strong> Le driver json de Docker traite chaque ligne comme un message
+différent. Avec ce driver il n'y a pas de support direct pour des messages
+multi-lignes. Il faut donc traiter les messages multi-lignes au niveau de
+l'agent de journalisation ou plus en amont encore.</div><p>Par défaut quand un conteneur redémarre, le kubelet ne conserve le journal que
+du dernier conteneur terminé. Quand un Pod est expulsé d'un nœud, tous ses
+conteneurs sont aussi expulsés avec leurs journaux d'évènements.</p><p>Quand on utilise la journalisation d'évènements au niveau du nœud, il faut
+prendre garde à mettre en place une politique de rotation des journaux adéquate
+afin qu'ils n'utilisent pas tout l'espace de stockage du nœud. Kubernetes n'a
+pas en charge la rotation des journaux, c'est à l'outil de déploiement de le
+prendre en compte.</p><p>Par exemple, dans les clusters Kubernetes déployés avec le script <code>kube-up.sh</code>
+<a href=https://linux.die.net/man/8/logrotate><code>logrotate</code></a> est configuré pour
+s'exécuter toutes les heures. Il est aussi possible de configurer
+l'environnement d'exécution des conteneurs pour que la rotation des journaux
+s'exécute automatiquement, e.g. en utilisant le paramètre <code>log-opt</code> de Docker.
+Dans le script <code>kube-up.sh</code>, c'est cette méthode qui est utilisée pour des
+images COS sur GCP et sinon c'est la première méthode dans tous les autres cas.
+Quelle que soit la méthode choisie par <code>kube-up.sh</code> la rotation est configurée par
+défaut quand la taille d'un journal atteint 10 Mo.</p><p>Ce <a href=https://github.com/kubernetes/kubernetes/blob/main/cluster/gce/gci/configure-helper.sh>script</a> montre de manière détaillée comment <code>kube-up.sh</code>
+met en place la journalisation d'évènements pour des images COS sur GCP.</p><p>Quand <a href=/docs/reference/generated/kubectl/kubectl-commands#logs><code>kubectl logs</code></a>
+s'exécute comme dans le premier exemple de journalisation simple le kubelet du
+nœud gère la requête et lit directement depuis le fichier de journal et retourne
+son contenu dans la réponse.</p><div class="alert alert-info note callout" role=alert><strong>Note:</strong> Si un système externe a effectué la rotation des journaux, seul le
+contenu du dernier fichier journal sera disponible avec <code>kubectl logs</code>. Par
+exemple quand le journal atteint 10 Mo, <code>logrotate</code> effectue une rotation, il y a
+alors 2 fichers, un de 10 Mo et un de vide, à ce moment là <code>kubectl logs</code>
+retournera une réponse vide.</div><h3 id=journalisation-des-évènements-des-composants-système>Journalisation des évènements des composants système</h3><p>Il y a deux types de composants système selon qu'ils s'exécutent dans un
+conteneur ou pas.</p><p>Par exemple :</p><ul><li>Le scheduler Kubernetes et kube-proxy s'exécutent dans un conteneur.</li><li>Kubelet et l'environnement d'exécution de conteneurs, comme par exemple
+Docker, ne s'exécutent pas dans un conteneur.</li></ul><p>Sur les systèmes avec systemd, kubelet et l'environnement d'exécution de
+conteneurs écrivent dans journald. Si systemd n'est pas présent, ils écrivent
+dans un fichier <code>.log</code> dans le répertoire <code>/var/log</code>.</p><p>Les composants système qui s'exécutent dans un conteneur écrivent toujours dans
+le répertoire <code>/var/log</code>, en contournant le mécanisme de journalisation par
+défaut. Ils utilisent la bibliothèque de journalisation <a href=https://github.com/kubernetes/klog>klog</a>. Les
+conventions pour la sévérité des évènements pour ces composants se trouvent dans
+cette [documentation sur les conventions de journalisation des évènements dans
+kubernetes]
+(<a href=https://github.com/kubernetes/community/blob/master/contributors/devel/sig-instrumentation/logging.md)>https://github.com/kubernetes/community/blob/master/contributors/devel/sig-instrumentation/logging.md)</a>.</p><p>De la même manière que les journaux des conteneurs, les journaux des composants
+systèmes doivent avoir une politique de rotation. Dans un cluster créé avec
+le script <code>kube-up.sh</code>, les journaux ont une rotation journalière ou quand leur
+taille atteint 100 Mo.</p><h2 id=architecture-de-journalisation-des-évènements-au-niveau-du-cluster>Architecture de journalisation des évènements au niveau du cluster</h2><p>Kubernetes ne fournit pas de solution native pour la journalisation des
+évènements au niveau du cluster. Mais il y a différentes approches qui peuvent
+être considérées :</p><ul><li>Utiliser un agent de journalisation au niveau du nœud sur chacun des nœuds.</li><li>Inclure un conteneur side-car pour journaliser les évènements du Pod
+applicatif.</li><li>Envoyer les évènements directement a un backend depuis l'application.</li></ul><h3 id=utiliser-un-agent-de-journalisation-au-niveau-du-nœud>Utiliser un agent de journalisation au niveau du nœud</h3><p><img src=/images/docs/user-guide/logging/logging-with-node-agent.png alt="Utiliser un agent de journalisation au niveau dunœud"></p><p>Vous pouvez implémenter une journalisation au niveau du cluster en incluant un
+<em>agent de journalisation au niveau du nœud</em> sur chacun des nœuds. L'agent de
+journalisation est un outil dédié qui met à disposition ou envoie les journaux à
+un backend. Communément l'agent de journalisation est un conteneur qui a accès
+au répertoire qui contient les journaux des conteneurs applicatifs sur ce nœud.</p><p>Comme l'agent de journalisation doit s'exécuter sur chacun des nœuds, on utilise
+soit un DaemonSet, soit un manifeste de Pod, soit un processus dédié natif sur
+le nœud. Ces deux dernières options sont obsolètes et fortement découragées.</p><p>Utiliser un agent de journalisation au niveau du nœud est l'approche la plus
+commune et recommandée pour un cluster Kubernetes parce qu'un seul agent par
+nœud est créé et qu'aucune modification dans l'application n'est nécessaire.
+Mais cette approche <em>ne fonctionne correctement que pour les flux standards de
+sortie et d'erreurs des applications</em>.</p><p>Kubernetes ne définit pas d'agent de journalisation, mais deux agents de
+journalisation optionnels sont fournis avec la version de Kubernetes :
+<a href=/docs/user-guide/logging/stackdriver>Stackdriver (EN)</a> pour utiliser sur
+Google Cloud Platform, et <a href=/docs/user-guide/logging/elasticsearch>Elasticsearch
+(EN)</a>. Les deux utilisent
+<a href=http://www.fluentd.org/>fluentd</a> avec une configuration spécifique comme agent
+sur le nœud. Les liens précédents fournissent plus d'informations et les
+instructions pour les utiliser et configurer.</p><h3 id=inclure-un-conteneur-side-car-pour-journaliser-les-évènements-du-pod-applicatif>Inclure un conteneur side-car pour journaliser les évènements du Pod applicatif</h3><p>Vous pouvez utiliser un conteneur side-car d'une des manières suivantes :</p><ul><li>Le conteneur side-car diffuse les journaux de l'application sur son propre
+<code>stdout</code>.</li><li>Le conteneur side-car exécute un agent de journalisation qui est configuré
+pour récupérer les journaux du conteneur applicatif.</li></ul><h4 id=conteneur-side-car-diffusant-streaming-sidecar-container>Conteneur side-car diffusant (Streaming sidecar container)</h4><p><img src=/images/docs/user-guide/logging/logging-with-streaming-sidecar.png alt="Conteneur side-cardiffusant"></p><p>Comme le conteneur side-car diffuse les journaux sur ses propres flux <code>stdout</code>
+et <code>stderr</code>, on peut bénéficier du kubelet et de l'agent de journalisation qui
+s'exécute déjà sur chaque nœud. Les conteneurs side-car lisent les journaux
+depuis un fichier, un socket ou bien journald. Chaque conteneur side-car écrit
+son journal sur son propre flux <code>stdout</code> ou <code>stderr</code>.</p><p>Cette méthode permet de séparer les flux de journaux de différentes
+parties de votre application même si elles ne supportent pas d'écrire sur
+<code>stdout</code> ou <code>stderr</code>. La logique de rediriger les journaux est minime et
+le surcoût est non significatif. De plus comme les flux standards <code>stdout</code> et
+<code>stderr</code> sont gérés par kubelet, les outils natifs comme <code>kubectl logs</code> peuvent
+être utilisés.</p><p>Regardez l'exemple qui suit.</p><p>Un Pod exécute un unique conteneur et ce conteneur écrit dans deux fichiers de
+journaux différents en utilisant deux format différents. Voici le manifeste du
+Pod :</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/fr/examples/admin/logging/two-files-counter-pod.yaml download=admin/logging/two-files-counter-pod.yaml><code>admin/logging/two-files-counter-pod.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("admin-logging-two-files-counter-pod-yaml")' title="Copy admin/logging/two-files-counter-pod.yaml to clipboard"></img></div><div class=includecode id=admin-logging-two-files-counter-pod-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>counter<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>count<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>busybox<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>args</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- /bin/sh<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- -c<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- &gt;<span style=color:#b44;font-style:italic>
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>      i=0;
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>      while true;
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>      do
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>        echo &#34;$i: $(date)&#34; &gt;&gt; /var/log/1.log;
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>        echo &#34;$(date) INFO $i&#34; &gt;&gt; /var/log/2.log;
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>        i=$((i+1));
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>        sleep 1;
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>      done</span><span style=color:#bbb>      
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>volumeMounts</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>varlog<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>mountPath</span>:<span style=color:#bbb> </span>/var/log<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>volumes</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>varlog<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>emptyDir</span>:<span style=color:#bbb> </span>{}<span style=color:#bbb>
+</span></span></span></code></pre></div></div></div><p>Il serait très désordonné d'avoir des évènements avec des formats différents
+dans le même journal en redirigeant les évènements dans le flux de sortie
+<code>stdout</code> d'un seul conteneur. Il est plutôt souhaitable d'utiliser deux
+conteneurs side-car, un pour chaque type de journaux. Chaque conteneur side-car
+suit un des fichiers et renvoie les évènements sur son propre <code>stdout</code>.</p><p>Ci-dessous se trouve le manifeste pour un Pod avec deux conteneurs side-car.</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/fr/examples/admin/logging/two-files-counter-pod-streaming-sidecar.yaml download=admin/logging/two-files-counter-pod-streaming-sidecar.yaml><code>admin/logging/two-files-counter-pod-streaming-sidecar.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("admin-logging-two-files-counter-pod-streaming-sidecar-yaml")' title="Copy admin/logging/two-files-counter-pod-streaming-sidecar.yaml to clipboard"></img></div><div class=includecode id=admin-logging-two-files-counter-pod-streaming-sidecar-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>counter<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>count<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>busybox<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>args</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- /bin/sh<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- -c<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- &gt;<span style=color:#b44;font-style:italic>
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>      i=0;
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>      while true;
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>      do
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>        echo &#34;$i: $(date)&#34; &gt;&gt; /var/log/1.log;
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>        echo &#34;$(date) INFO $i&#34; &gt;&gt; /var/log/2.log;
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>        i=$((i+1));
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>        sleep 1;
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>      done</span><span style=color:#bbb>      
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>volumeMounts</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>varlog<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>mountPath</span>:<span style=color:#bbb> </span>/var/log<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>count-log-1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>busybox<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>args</span>:<span style=color:#bbb> </span>[/bin/sh, -c, &#39;tail -n+1 -f /var/log/1.log&#39;]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>volumeMounts</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>varlog<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>mountPath</span>:<span style=color:#bbb> </span>/var/log<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>count-log-2<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>busybox<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>args</span>:<span style=color:#bbb> </span>[/bin/sh, -c, &#39;tail -n+1 -f /var/log/2.log&#39;]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>volumeMounts</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>varlog<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>mountPath</span>:<span style=color:#bbb> </span>/var/log<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>volumes</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>varlog<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>emptyDir</span>:<span style=color:#bbb> </span>{}<span style=color:#bbb>
+</span></span></span></code></pre></div></div></div><p>Quand ce Pod s'exécute, chaque journal peut être diffusé séparément en
+utilisant les commandes suivantes :</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl logs counter count-log-1
+</span></span></code></pre></div><pre tabindex=0><code>0: Mon Jan  1 00:00:00 UTC 2001
+1: Mon Jan  1 00:00:01 UTC 2001
+2: Mon Jan  1 00:00:02 UTC 2001
+...
+</code></pre><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>kubectl logs counter count-log-2
+</span></span></code></pre></div><pre tabindex=0><code>Mon Jan  1 00:00:00 UTC 2001 INFO 0
+Mon Jan  1 00:00:01 UTC 2001 INFO 1
+Mon Jan  1 00:00:02 UTC 2001 INFO 2
+...
+</code></pre><p>L'agent au niveau du nœud installé dans le cluster récupère les deux flux de
+journaux sans aucune configuration supplémentaire. Il est possible de configurer
+l'agent pour qu'il analyse syntaxiquement les évènements en fonction du
+conteneur source.</p><p>Notez que bien que la consommation en CPU et mémoire soit faible ( de l'ordre de
+quelques milicores pour la CPU et quelques mégaoctets pour la mémoire), ecrire
+les évènements dans un fichier et les envoyer ensuite dans <code>stdout</code> peut doubler
+l'espace disque utilisé. Quand une application écrit dans un seul fichier de
+journal, il est préférable de configurer <code>/dev/stdout</code> comme destination plutôt
+que d'implémenter un conteneur side-car diffusant.</p><p>Les conteneurs side-car peuvent être utilisés pour faire la rotation des
+journaux quand l'application n'en est pas capable elle-même. Un exemple serait
+un petit conteneur side-car qui effectuerait cette rotation périodiquement.
+Toutefois, il est recommandé d'utiliser <code>stdout</code> et <code>stderr</code> directement et de
+laisser la rotation et les politiques de rétentions au kubelet.</p><h3 id=conteneur-side-car-avec-un-agent-de-journalisation>Conteneur side-car avec un agent de journalisation</h3><p><img src=/images/docs/user-guide/logging/logging-with-sidecar-agent.png alt="Conteneur side-car avec un agent dejournalisation"></p><p>Quand un agent de journalisation au niveau du nœud n'est pas assez flexible pour
+votre utilisation, vous pouvez créer un conteneur side-car avec un agent de
+journalisation séparé que vous avez configuré spécialement pour qu'il s'exécute
+avec votre application.</p><div class="alert alert-info note callout" role=alert><strong>Note:</strong> Utiliser un agent de journalisation dans un conteneur side-car peut entraîner
+une consommation de ressources significative. De plus vous n'avez plus accès aux
+journaux avec la commande <code>kubectl</code> parce qu'ils ne sont plus gérés par
+kubelet.</div><p>Comme exemple, vous pouvez utiliser
+<a href=/docs/tasks/debug-application-cluster/logging-stackdriver/>Stackdriver</a> où
+fluentd est l'agent de journalisation. Ci-dessous se trouvent deux
+configurations qui implémentent cette méthode.</p><p>Le premier fichier contient un
+<a href=/docs/tasks/configure-pod-container/configure-pod-configmap/>ConfigMap</a> pour
+configurer fluentd.</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/fr/examples/admin/logging/fluentd-sidecar-config.yaml download=admin/logging/fluentd-sidecar-config.yaml><code>admin/logging/fluentd-sidecar-config.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("admin-logging-fluentd-sidecar-config-yaml")' title="Copy admin/logging/fluentd-sidecar-config.yaml to clipboard"></img></div><div class=includecode id=admin-logging-fluentd-sidecar-config-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>ConfigMap<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>fluentd-config<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>data</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>fluentd.conf</span>:<span style=color:#bbb> </span>|<span style=color:#b44;font-style:italic>
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>    &lt;source&gt;
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>      type tail
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>      format none
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>      path /var/log/1.log
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>      pos_file /var/log/1.log.pos
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>      tag count.format1
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>    &lt;/source&gt;
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>    &lt;source&gt;
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>      type tail
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>      format none
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>      path /var/log/2.log
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>      pos_file /var/log/2.log.pos
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>      tag count.format2
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>    &lt;/source&gt;
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>    &lt;match **&gt;
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>      type google_cloud
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>    &lt;/match&gt;</span><span style=color:#bbb>    
+</span></span></span></code></pre></div></div></div><div class="alert alert-info note callout" role=alert><strong>Note:</strong> La configuration de fluentd est hors du cadre de cet article. Vous trouverez
+des informations pour configurer fluentd dans la <a href=http://docs.fluentd.org/>documentation officielle de
+fluentd</a>.</div><p>Le second fichier est un manifeste pour un Pod avec un conteneur side-car qui
+exécute fluentd. Le Pod monte un volume où fluentd peut récupérer sa
+configuration.</p><div class=highlight><div class=copy-code-icon style=text-align:right><a href=https://raw.githubusercontent.com/kubernetes/website/main/content/fr/examples/admin/logging/two-files-counter-pod-agent-sidecar.yaml download=admin/logging/two-files-counter-pod-agent-sidecar.yaml><code>admin/logging/two-files-counter-pod-agent-sidecar.yaml</code></a>
+<img src=/images/copycode.svg style=max-height:24px;cursor:pointer onclick='copyCode("admin-logging-two-files-counter-pod-agent-sidecar-yaml")' title="Copy admin/logging/two-files-counter-pod-agent-sidecar.yaml to clipboard"></img></div><div class=includecode id=admin-logging-two-files-counter-pod-agent-sidecar-yaml><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:green;font-weight:700>apiVersion</span>:<span style=color:#bbb> </span>v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>kind</span>:<span style=color:#bbb> </span>Pod<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>metadata</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>counter<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>spec</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>containers</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>count<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>busybox<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>args</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- /bin/sh<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- -c<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- &gt;<span style=color:#b44;font-style:italic>
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>      i=0;
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>      while true;
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>      do
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>        echo &#34;$i: $(date)&#34; &gt;&gt; /var/log/1.log;
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>        echo &#34;$(date) INFO $i&#34; &gt;&gt; /var/log/2.log;
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>        i=$((i+1));
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>        sleep 1;
+</span></span></span><span style=display:flex><span><span style=color:#b44;font-style:italic>      done</span><span style=color:#bbb>      
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>volumeMounts</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>varlog<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>mountPath</span>:<span style=color:#bbb> </span>/var/log<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>count-agent<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>image</span>:<span style=color:#bbb> </span>k8s.gcr.io/fluentd-gcp:1.30<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>env</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>FLUENTD_ARGS<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>value</span>:<span style=color:#bbb> </span>-c /etc/fluentd-config/fluentd.conf<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>volumeMounts</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>varlog<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>mountPath</span>:<span style=color:#bbb> </span>/var/log<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>config-volume<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>mountPath</span>:<span style=color:#bbb> </span>/etc/fluentd-config<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>volumes</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>varlog<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>emptyDir</span>:<span style=color:#bbb> </span>{}<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>config-volume<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>configMap</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>fluentd-config<span style=color:#bbb>
+</span></span></span></code></pre></div></div></div><p>Apres quelques minutes, les évènements apparaîtront dans l'interface de
+Stackdriver.</p><p>Ce n'est qu'un exemple et vous pouvez remplacer fluentd par n'importe quel
+agent de journalisation qui lit depuis n'importe quelle source de votre
+application.</p><h3 id=envoyer-les-évènements-directement-depuis-l-application>Envoyer les évènements directement depuis l'application.</h3><p><img src=/images/docs/user-guide/logging/logging-from-application.png alt="Envoyer les évènements directement a un backend depuisl'application."></p><p>Vous pouvez implémenter la journalisation au niveau cluster en mettant à
+disposition ou en envoyant les journaux directement depuis chaque application;
+Toutefois l'implémentation de ce mécanisme de journalisation est hors du cadre
+de Kubernetes.</p></div></main></div></div><footer class=d-print-none><div class=footer__links><nav><a class=text-white href=/fr/docs/home/>Accueil</a>
+<a class=text-white href=/fr/blog/>Blog</a>
+<a class=text-white href=/fr/partners/>Partenaires</a>
+<a class=text-white href=/fr/community/>Communauté</a>
+<a class=text-white href=/fr/case-studies/>Études de cas</a></nav></div><div class=container-fluid><div class=row><div class="col-6 col-sm-2 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="User mailing list" aria-label="User mailing list"><a class=text-white target=_blank href=https://discuss.kubernetes.io><i class="fa fa-envelope"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Twitter aria-label=Twitter><a class=text-white target=_blank href=https://twitter.com/kubernetesio><i class="fab fa-twitter"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Calendar aria-label=Calendar><a class=text-white target=_blank href="https://calendar.google.com/calendar/embed?src=calendar%40kubernetes.io"><i class="fas fa-calendar-alt"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Youtube aria-label=Youtube><a class=text-white target=_blank href=https://youtube.com/kubernetescommunity><i class="fab fa-youtube"></i></a></li></ul></div><div class="col-6 col-sm-2 text-right text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank href=https://github.com/kubernetes/kubernetes><i class="fab fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Slack aria-label=Slack><a class=text-white target=_blank href=https://slack.k8s.io><i class="fab fa-slack"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Contribute aria-label=Contribute><a class=text-white target=_blank href=https://git.k8s.io/community/contributors/guide><i class="fas fa-edit"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="Stack Overflow" aria-label="Stack Overflow"><a class=text-white target=_blank href=https://stackoverflow.com/questions/tagged/kubernetes><i class="fab fa-stack-overflow"></i></a></li></ul></div><div class="col-12 col-sm-8 text-center order-sm-2"><small class=text-white>&copy; 2023 The Kubernetes Authors | Documentation Distributed under <a href=https://git.k8s.io/website/LICENSE class=light-text>CC BY 4.0</a></small><br><small class=text-white>Copyright &copy; 2023 The Linux Foundation &reg;. All rights reserved. The Linux Foundation has registered trademarks and uses trademarks. For a list of trademarks of The Linux Foundation, please see our <a href=https://www.linuxfoundation.org/trademark-usage class=light-text>Trademark Usage page</a></small><br><small class=text-white>ICP license: 京ICP备17074266号-3</small></div></div></div></footer></div><script src=/js/jquery-3.6.0.min.js integrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script>
+<script src=/js/popper-1.16.1.min.js intregrity=sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN crossorigin=anonymous></script>
+<script src=/js/bootstrap-4.6.1.min.js integrity=sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2 crossorigin=anonymous></script>
+<script src=/js/script.js></script>
+<script async src=/js/mermaid-8.13.4.min.js integrity=sha384-5hHNvPeMrNH14oM3IcQofDoBhiclNK3g2+hnEinKzQ07C4AliMeVpnvxuiwEGpaO crossorigin=anonymous></script>
+<script src=/js/main.min.5c0bf7f21dc4f66485f74efbbeeff28a7e4f8cddaac1bae47043159c922ff3a3.js integrity="sha256-XAv38h3E9mSF9077vu/yin5PjN2qwbrkcEMVnJIv86M=" crossorigin=anonymous></script></body></html>
