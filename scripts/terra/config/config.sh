@@ -50,3 +50,10 @@ sudo ln -s $block /etc/nginx/sites-enabled/
 sudo nginx -t && sudo service nginx reload
 
 # systemctl restart nginx
+
+mkdir "/var/www/cyberchef/"
+mkdir "/var/www/k8s/"
+mkdir "/var/www/metaljs/"
+mkdir "/var/www/prng/"
+mkdir "/var/www/sennajs/"
+mkdir "/var/www/talon/"

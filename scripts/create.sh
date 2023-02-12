@@ -14,11 +14,11 @@ echo '
 		Creating DO droplet.
 		'
 
-# ======================
-# 2) APPLY PLAN
+# # ======================
+# # 2) APPLY PLAN
 terraform -chdir=terra apply -input=false tfplan
 
-sleep 90
+sleep 180
 
 ipv4=$(terraform -chdir=terra output -raw droplet_ipv4_address)
 ipv6=$(terraform -chdir=terra output -raw droplet_ipv6_address)
@@ -49,9 +49,7 @@ echo '
 (cd cf && ./run-add.sh $ipv4 talon $type)
 
 echo '
-		Successfully added A record : 
-			${ip} ${domain}
-			${ip} cyberchef
+		Successfully added A records.
 		'
 
 # ======================

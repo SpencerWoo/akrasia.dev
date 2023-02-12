@@ -1,0 +1,12 @@
+{
+  "name": "cf-dns-records",
+  "version": "1.0.0",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "dotenv": "8.1.0"
+  },
+  "scripts": {
+    "delete": "node cf-delete-dns-records.js",
+    "add": "node cf-add-dns-records.js"
+  }
+}

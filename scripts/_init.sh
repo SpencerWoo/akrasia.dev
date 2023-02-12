@@ -14,6 +14,7 @@ if [[ -z "${D_PAT}" ]]; then
 	exit 1
 fi
 
+source ~/.nvm/nvm.sh
 command -v nvm >/dev/null 2>&1 || { echo >&2 "nvm is required, but it's not installed.  Aborting."; exit 1; }
 
 if [[ "$OSTYPE" =~ ^msys ]]; then
@@ -37,7 +38,7 @@ else
 	pip3 install -r requirements.txt
 fi
 
-terraform -chdir=terra init 
+terraform -chdir=terra init
 
 nvm install 17.3.0
 nvm use 17.3.0

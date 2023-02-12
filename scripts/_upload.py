@@ -117,7 +117,9 @@ def upload(sftp_dir, local_dir):
 def upload_compiled_dirs(base_dir, base_ftp_dir, dirs):
     for d in dirs:
         compiled_dir = f'{base_dir}/{d}/'
-        ftp_dir = f'{base_ftp_dir}/{d}'
+        ftp_dir = f'{base_ftp_dir}/{d}/'
+
+        # print(ftp_dir, compiled_dir)
 
         upload(ftp_dir, compiled_dir)
 
@@ -133,7 +135,7 @@ def upload_compiled_sites(base_dir):
 @log
 def upload_nginx(base_dir):
     ftp_dir = '/etc/nginx/sites-available/'
-    nginx_dir = f'{base_dir}/nginx/'
+    nginx_dir = f'{base_dir}/scripts/nginx/'
     upload(ftp_dir, nginx_dir)
 
     # sudo ln -s /etc/nginx/sites-available/api.akrasia.dev /etc/nginx/sites-enabled/
@@ -157,7 +159,7 @@ def upload_akrasiadev(base_dir):
     upload_compiled_sites(base_dir)
 
     # 2)
-    upload_nginx(base_dir)
+    # upload_nginx(base_dir)
 
 # todo:
 # separate action items:
