@@ -4,8 +4,12 @@
 
 # sub-domains
 
-1. talon.akrasia.dev
-2. prng.akrasia.dev
+1. cyberchef.akrasia.dev
+2. k8s.akrasia.dev
+3. metaljs.akrasia.dev
+4. sennajs.akrasia.dev
+5. prng.akrasia.dev
+6. talon.akrasia.dev
 
 # config
 
@@ -13,17 +17,28 @@
 
 2. Deploy websites
 ```sh
-./scripts/setup.sh prng prng-be akrasia.dev ../prng/public
-./scripts/setup.sh talon talon-be akrasia.dev ../talon
+cd scripts
+./create.sh
 ```
 
-# deploy
+3. Update websites
 
-* Configure GCP CLI auth
-* run `./scripts/deploy.sh BUCKET LOCALSRC`
+```sh
+./connect.sh
+./update.sh
+```
+
+3. Destroy websites
+```sh
+./destroy.sh
+```
 
 # notes
 
 Compiled websites from
-1. [prng](https://github.com/spencermwoo/randomness-in-programming-languages)
-2. [talon](https://github.com/chaosparrot/talon_practice)
+1. [cyberchef](https://github.com/gchq/CyberChef)
+2. [kubernetes](https://github.com/kubernetes/website)
+3. [metaljs](https://github.com/liferay/metaljs.com)
+4. [prng](https://github.com/spencermwoo/randomness-in-programming-languages)
+5. [sennajs](https://github.com/liferay/sennajs.com)
+6. [talon](https://github.com/chaosparrot/talon_practice)
