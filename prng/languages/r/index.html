@@ -1,6 +1,3066 @@
-<!DOCTYPE html><html><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="ie=edge"/><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><meta name="generator" content="Gatsby 5.3.3"/><style data-href="/styles.9285da63698596427870.css" data-identity="gatsby-global-css">.layout-module--container--78b04{font-family:sans-serif;margin:auto;max-width:500px}.layout-module--heading--f158c{color:#639}.layout-module--nav-links--1113b{display:flex;list-style:none;padding-left:0}.layout-module--nav-link-item--a5f0a{padding-right:2rem}.layout-module--nav-link-text--69cda{color:#000}.layout-module--site-title--e4dea{color:gray;font-size:3rem;font-weight:700;margin:3rem 0}</style><title data-gatsby-head="true">TODO | PRNG Analysis</title><style>.gatsby-image-wrapper{position:relative;overflow:hidden}.gatsby-image-wrapper picture.object-fit-polyfill{position:static!important}.gatsby-image-wrapper img{bottom:0;height:100%;left:0;margin:0;max-width:none;padding:0;position:absolute;right:0;top:0;width:100%;object-fit:cover}.gatsby-image-wrapper [data-main-image]{opacity:0;transform:translateZ(0);transition:opacity .25s linear;will-change:opacity}.gatsby-image-wrapper-constrained{display:inline-block;vertical-align:top}</style><noscript><style>.gatsby-image-wrapper noscript [data-main-image]{opacity:1!important}.gatsby-image-wrapper [data-placeholder-image]{opacity:0!important}</style></noscript><script type="module">const e="undefined"!=typeof HTMLImageElement&&"loading"in HTMLImageElement.prototype;e&&document.body.addEventListener("load",(function(e){const t=e.target;if(void 0===t.dataset.mainImage)return;if(void 0===t.dataset.gatsbyImageSsr)return;let a=null,n=t;for(;null===a&&n;)void 0!==n.parentNode.dataset.gatsbyImageWrapper&&(a=n.parentNode),n=n.parentNode;const o=a.querySelector("[data-placeholder-image]"),r=new Image;r.src=t.currentSrc,r.decode().catch((()=>{})).then((()=>{t.style.opacity=1,o&&(o.style.opacity=0,o.style.transition="opacity 500ms linear")}))}),!0);</script><link rel="preconnect" href="YOUR_SELF_HOSTED_ORIGIN"/><link rel="dns-prefetch" href="YOUR_SELF_HOSTED_ORIGIN"/></head><body><div id="___gatsby"><div style="outline:none" tabindex="-1" id="gatsby-focus-wrapper"><div class="layout-module--container--78b04"><header class="layout-module--site-title--e4dea">PRNG Analysis</header><nav><ul class="layout-module--nav-links--1113b"><li class="layout-module--nav-link-item--a5f0a"><a class="layout-module--nav-link-text--69cda" href="/">Introduction</a></li><li class="layout-module--nav-link-item--a5f0a"><a class="layout-module--nav-link-text--69cda" href="/methodology/">Methodology</a></li><li class="layout-module--nav-link-item--a5f0a"><a class="layout-module--nav-link-text--69cda" href="/results/">Results</a></li><li class="layout-module--nav-link-item--a5f0a"><a class="layout-module--nav-link-text--69cda" href="/languages/">Languages</a></li><li class="layout-module--nav-link-item--a5f0a"><a class="layout-module--nav-link-text--69cda" href="/history/">History</a></li></ul></nav><main><h1 class="layout-module--heading--f158c">r</h1><hr/><pre><code></code></pre><hr/><pre><code># Set the number of random numbers to generate and the upper bound for the numbers
-n &lt;- 10
-x &lt;- 100
+<!DOCTYPE html><html><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="ie=edge"/><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><meta name="generator" content="Gatsby 5.3.3"/><style data-href="/styles.9285da63698596427870.css" data-identity="gatsby-global-css">.layout-module--container--78b04{font-family:sans-serif;margin:auto;max-width:500px}.layout-module--heading--f158c{color:#639}.layout-module--nav-links--1113b{display:flex;list-style:none;padding-left:0}.layout-module--nav-link-item--a5f0a{padding-right:2rem}.layout-module--nav-link-text--69cda{color:#000}.layout-module--site-title--e4dea{color:gray;font-size:3rem;font-weight:700;margin:3rem 0}</style><title data-gatsby-head="true">TODO | PRNG Analysis</title><style>.gatsby-image-wrapper{position:relative;overflow:hidden}.gatsby-image-wrapper picture.object-fit-polyfill{position:static!important}.gatsby-image-wrapper img{bottom:0;height:100%;left:0;margin:0;max-width:none;padding:0;position:absolute;right:0;top:0;width:100%;object-fit:cover}.gatsby-image-wrapper [data-main-image]{opacity:0;transform:translateZ(0);transition:opacity .25s linear;will-change:opacity}.gatsby-image-wrapper-constrained{display:inline-block;vertical-align:top}</style><noscript><style>.gatsby-image-wrapper noscript [data-main-image]{opacity:1!important}.gatsby-image-wrapper [data-placeholder-image]{opacity:0!important}</style></noscript><script type="module">const e="undefined"!=typeof HTMLImageElement&&"loading"in HTMLImageElement.prototype;e&&document.body.addEventListener("load",(function(e){const t=e.target;if(void 0===t.dataset.mainImage)return;if(void 0===t.dataset.gatsbyImageSsr)return;let a=null,n=t;for(;null===a&&n;)void 0!==n.parentNode.dataset.gatsbyImageWrapper&&(a=n.parentNode),n=n.parentNode;const o=a.querySelector("[data-placeholder-image]"),r=new Image;r.src=t.currentSrc,r.decode().catch((()=>{})).then((()=>{t.style.opacity=1,o&&(o.style.opacity=0,o.style.transition="opacity 500ms linear")}))}),!0);</script><link rel="preconnect" href="YOUR_SELF_HOSTED_ORIGIN"/><link rel="dns-prefetch" href="YOUR_SELF_HOSTED_ORIGIN"/></head><body><div id="___gatsby"><div style="outline:none" tabindex="-1" id="gatsby-focus-wrapper"><div class="layout-module--container--78b04"><header class="layout-module--site-title--e4dea">PRNG Analysis</header><nav><ul class="layout-module--nav-links--1113b"><li class="layout-module--nav-link-item--a5f0a"><a class="layout-module--nav-link-text--69cda" href="/">Introduction</a></li><li class="layout-module--nav-link-item--a5f0a"><a class="layout-module--nav-link-text--69cda" href="/methodology/">Methodology</a></li><li class="layout-module--nav-link-item--a5f0a"><a class="layout-module--nav-link-text--69cda" href="/results/">Results</a></li><li class="layout-module--nav-link-item--a5f0a"><a class="layout-module--nav-link-text--69cda" href="/languages/">Languages</a></li><li class="layout-module--nav-link-item--a5f0a"><a class="layout-module--nav-link-text--69cda" href="/history/">History</a></li></ul></nav><main><h1 class="layout-module--heading--f158c">r</h1><div data-gatsby-image-wrapper="" class="gatsby-image-wrapper gatsby-image-wrapper-constrained"><div style="max-width:594px;display:block"><img alt="" role="presentation" aria-hidden="true" src="data:image/svg+xml;charset=utf-8,%3Csvg height=&#x27;453&#x27; width=&#x27;594&#x27; xmlns=&#x27;http://www.w3.org/2000/svg&#x27; version=&#x27;1.1&#x27;%3E%3C/svg%3E" style="max-width:100%;display:block;position:static"/></div><div aria-hidden="true" data-placeholder-image="" style="opacity:1;transition:opacity 500ms linear;background-color:#f8f8f8;position:absolute;top:0;left:0;bottom:0;right:0"></div><picture><source type="image/webp" data-srcset="/static/9c34fc631e1d005496499f2aa414dcc3/02297/rust_10_1000000.webp 149w,/static/9c34fc631e1d005496499f2aa414dcc3/fe8d7/rust_10_1000000.webp 297w,/static/9c34fc631e1d005496499f2aa414dcc3/3c77c/rust_10_1000000.webp 594w" sizes="(min-width: 594px) 594px, 100vw"/><img data-gatsby-image-ssr="" data-main-image="" style="opacity:0" sizes="(min-width: 594px) 594px, 100vw" decoding="async" loading="lazy" data-src="/static/9c34fc631e1d005496499f2aa414dcc3/9bdc4/rust_10_1000000.png" data-srcset="/static/9c34fc631e1d005496499f2aa414dcc3/54d99/rust_10_1000000.png 149w,/static/9c34fc631e1d005496499f2aa414dcc3/a531a/rust_10_1000000.png 297w,/static/9c34fc631e1d005496499f2aa414dcc3/9bdc4/rust_10_1000000.png 594w" alt=""/></picture><noscript><picture><source type="image/webp" srcSet="/static/9c34fc631e1d005496499f2aa414dcc3/02297/rust_10_1000000.webp 149w,/static/9c34fc631e1d005496499f2aa414dcc3/fe8d7/rust_10_1000000.webp 297w,/static/9c34fc631e1d005496499f2aa414dcc3/3c77c/rust_10_1000000.webp 594w" sizes="(min-width: 594px) 594px, 100vw"/><img data-gatsby-image-ssr="" data-main-image="" style="opacity:0" sizes="(min-width: 594px) 594px, 100vw" decoding="async" loading="lazy" src="/static/9c34fc631e1d005496499f2aa414dcc3/9bdc4/rust_10_1000000.png" srcSet="/static/9c34fc631e1d005496499f2aa414dcc3/54d99/rust_10_1000000.png 149w,/static/9c34fc631e1d005496499f2aa414dcc3/a531a/rust_10_1000000.png 297w,/static/9c34fc631e1d005496499f2aa414dcc3/9bdc4/rust_10_1000000.png 594w" alt=""/></picture></noscript><script type="module">const t="undefined"!=typeof HTMLImageElement&&"loading"in HTMLImageElement.prototype;if(t){const t=document.querySelectorAll("img[data-main-image]");for(let e of t){e.dataset.src&&(e.setAttribute("src",e.dataset.src),e.removeAttribute("data-src")),e.dataset.srcset&&(e.setAttribute("srcset",e.dataset.srcset),e.removeAttribute("data-srcset"));const t=e.parentNode.querySelectorAll("source[data-srcset]");for(let e of t)e.setAttribute("srcset",e.dataset.srcset),e.removeAttribute("data-srcset");e.complete&&(e.style.opacity=1,e.parentNode.parentNode.querySelector("[data-placeholder-image]").style.opacity=0)}}</script></div><div data-gatsby-image-wrapper="" class="gatsby-image-wrapper gatsby-image-wrapper-constrained"><div style="max-width:579px;display:block"><img alt="" role="presentation" aria-hidden="true" src="data:image/svg+xml;charset=utf-8,%3Csvg height=&#x27;452.99999999999994&#x27; width=&#x27;579&#x27; xmlns=&#x27;http://www.w3.org/2000/svg&#x27; version=&#x27;1.1&#x27;%3E%3C/svg%3E" style="max-width:100%;display:block;position:static"/></div><div aria-hidden="true" data-placeholder-image="" style="opacity:1;transition:opacity 500ms linear;background-color:#f8f8f8;position:absolute;top:0;left:0;bottom:0;right:0"></div><picture><source type="image/webp" data-srcset="/static/ff79baccef0351a0312446612f9e62cb/f8387/rust_10_1000000000.webp 145w,/static/ff79baccef0351a0312446612f9e62cb/d2e61/rust_10_1000000000.webp 290w,/static/ff79baccef0351a0312446612f9e62cb/02b1c/rust_10_1000000000.webp 579w" sizes="(min-width: 579px) 579px, 100vw"/><img data-gatsby-image-ssr="" data-main-image="" style="opacity:0" sizes="(min-width: 579px) 579px, 100vw" decoding="async" loading="lazy" data-src="/static/ff79baccef0351a0312446612f9e62cb/7d11c/rust_10_1000000000.png" data-srcset="/static/ff79baccef0351a0312446612f9e62cb/8c784/rust_10_1000000000.png 145w,/static/ff79baccef0351a0312446612f9e62cb/1713b/rust_10_1000000000.png 290w,/static/ff79baccef0351a0312446612f9e62cb/7d11c/rust_10_1000000000.png 579w" alt=""/></picture><noscript><picture><source type="image/webp" srcSet="/static/ff79baccef0351a0312446612f9e62cb/f8387/rust_10_1000000000.webp 145w,/static/ff79baccef0351a0312446612f9e62cb/d2e61/rust_10_1000000000.webp 290w,/static/ff79baccef0351a0312446612f9e62cb/02b1c/rust_10_1000000000.webp 579w" sizes="(min-width: 579px) 579px, 100vw"/><img data-gatsby-image-ssr="" data-main-image="" style="opacity:0" sizes="(min-width: 579px) 579px, 100vw" decoding="async" loading="lazy" src="/static/ff79baccef0351a0312446612f9e62cb/7d11c/rust_10_1000000000.png" srcSet="/static/ff79baccef0351a0312446612f9e62cb/8c784/rust_10_1000000000.png 145w,/static/ff79baccef0351a0312446612f9e62cb/1713b/rust_10_1000000000.png 290w,/static/ff79baccef0351a0312446612f9e62cb/7d11c/rust_10_1000000000.png 579w" alt=""/></picture></noscript><script type="module">const t="undefined"!=typeof HTMLImageElement&&"loading"in HTMLImageElement.prototype;if(t){const t=document.querySelectorAll("img[data-main-image]");for(let e of t){e.dataset.src&&(e.setAttribute("src",e.dataset.src),e.removeAttribute("data-src")),e.dataset.srcset&&(e.setAttribute("srcset",e.dataset.srcset),e.removeAttribute("data-srcset"));const t=e.parentNode.querySelectorAll("source[data-srcset]");for(let e of t)e.setAttribute("srcset",e.dataset.srcset),e.removeAttribute("data-srcset");e.complete&&(e.style.opacity=1,e.parentNode.parentNode.querySelector("[data-placeholder-image]").style.opacity=0)}}</script></div><div data-gatsby-image-wrapper="" class="gatsby-image-wrapper gatsby-image-wrapper-constrained"><div style="max-width:611px;display:block"><img alt="" role="presentation" aria-hidden="true" src="data:image/svg+xml;charset=utf-8,%3Csvg height=&#x27;453&#x27; width=&#x27;611&#x27; xmlns=&#x27;http://www.w3.org/2000/svg&#x27; version=&#x27;1.1&#x27;%3E%3C/svg%3E" style="max-width:100%;display:block;position:static"/></div><div aria-hidden="true" data-placeholder-image="" style="opacity:1;transition:opacity 500ms linear;background-color:#f8f8f8;position:absolute;top:0;left:0;bottom:0;right:0"></div><picture><source type="image/webp" data-srcset="/static/9452bde947d57db0bf0570f72e738707/aef1b/rust_1000_1000000.webp 153w,/static/9452bde947d57db0bf0570f72e738707/f144b/rust_1000_1000000.webp 306w,/static/9452bde947d57db0bf0570f72e738707/ef9cf/rust_1000_1000000.webp 611w" sizes="(min-width: 611px) 611px, 100vw"/><img data-gatsby-image-ssr="" data-main-image="" style="opacity:0" sizes="(min-width: 611px) 611px, 100vw" decoding="async" loading="lazy" data-src="/static/9452bde947d57db0bf0570f72e738707/4623e/rust_1000_1000000.png" data-srcset="/static/9452bde947d57db0bf0570f72e738707/ede9a/rust_1000_1000000.png 153w,/static/9452bde947d57db0bf0570f72e738707/a4ab8/rust_1000_1000000.png 306w,/static/9452bde947d57db0bf0570f72e738707/4623e/rust_1000_1000000.png 611w" alt=""/></picture><noscript><picture><source type="image/webp" srcSet="/static/9452bde947d57db0bf0570f72e738707/aef1b/rust_1000_1000000.webp 153w,/static/9452bde947d57db0bf0570f72e738707/f144b/rust_1000_1000000.webp 306w,/static/9452bde947d57db0bf0570f72e738707/ef9cf/rust_1000_1000000.webp 611w" sizes="(min-width: 611px) 611px, 100vw"/><img data-gatsby-image-ssr="" data-main-image="" style="opacity:0" sizes="(min-width: 611px) 611px, 100vw" decoding="async" loading="lazy" src="/static/9452bde947d57db0bf0570f72e738707/4623e/rust_1000_1000000.png" srcSet="/static/9452bde947d57db0bf0570f72e738707/ede9a/rust_1000_1000000.png 153w,/static/9452bde947d57db0bf0570f72e738707/a4ab8/rust_1000_1000000.png 306w,/static/9452bde947d57db0bf0570f72e738707/4623e/rust_1000_1000000.png 611w" alt=""/></picture></noscript><script type="module">const t="undefined"!=typeof HTMLImageElement&&"loading"in HTMLImageElement.prototype;if(t){const t=document.querySelectorAll("img[data-main-image]");for(let e of t){e.dataset.src&&(e.setAttribute("src",e.dataset.src),e.removeAttribute("data-src")),e.dataset.srcset&&(e.setAttribute("srcset",e.dataset.srcset),e.removeAttribute("data-srcset"));const t=e.parentNode.querySelectorAll("source[data-srcset]");for(let e of t)e.setAttribute("srcset",e.dataset.srcset),e.removeAttribute("data-srcset");e.complete&&(e.style.opacity=1,e.parentNode.parentNode.querySelector("[data-placeholder-image]").style.opacity=0)}}</script></div><div data-gatsby-image-wrapper="" class="gatsby-image-wrapper gatsby-image-wrapper-constrained"><div style="max-width:579px;display:block"><img alt="" role="presentation" aria-hidden="true" src="data:image/svg+xml;charset=utf-8,%3Csvg height=&#x27;452.99999999999994&#x27; width=&#x27;579&#x27; xmlns=&#x27;http://www.w3.org/2000/svg&#x27; version=&#x27;1.1&#x27;%3E%3C/svg%3E" style="max-width:100%;display:block;position:static"/></div><div aria-hidden="true" data-placeholder-image="" style="opacity:1;transition:opacity 500ms linear;background-color:#f8f8f8;position:absolute;top:0;left:0;bottom:0;right:0"></div><picture><source type="image/webp" data-srcset="/static/6b7f1488b764e248dd4529a9eb0ff2d3/f8387/ruby_10_1000000000.webp 145w,/static/6b7f1488b764e248dd4529a9eb0ff2d3/d2e61/ruby_10_1000000000.webp 290w,/static/6b7f1488b764e248dd4529a9eb0ff2d3/02b1c/ruby_10_1000000000.webp 579w" sizes="(min-width: 579px) 579px, 100vw"/><img data-gatsby-image-ssr="" data-main-image="" style="opacity:0" sizes="(min-width: 579px) 579px, 100vw" decoding="async" loading="lazy" data-src="/static/6b7f1488b764e248dd4529a9eb0ff2d3/7d11c/ruby_10_1000000000.png" data-srcset="/static/6b7f1488b764e248dd4529a9eb0ff2d3/8c784/ruby_10_1000000000.png 145w,/static/6b7f1488b764e248dd4529a9eb0ff2d3/1713b/ruby_10_1000000000.png 290w,/static/6b7f1488b764e248dd4529a9eb0ff2d3/7d11c/ruby_10_1000000000.png 579w" alt=""/></picture><noscript><picture><source type="image/webp" srcSet="/static/6b7f1488b764e248dd4529a9eb0ff2d3/f8387/ruby_10_1000000000.webp 145w,/static/6b7f1488b764e248dd4529a9eb0ff2d3/d2e61/ruby_10_1000000000.webp 290w,/static/6b7f1488b764e248dd4529a9eb0ff2d3/02b1c/ruby_10_1000000000.webp 579w" sizes="(min-width: 579px) 579px, 100vw"/><img data-gatsby-image-ssr="" data-main-image="" style="opacity:0" sizes="(min-width: 579px) 579px, 100vw" decoding="async" loading="lazy" src="/static/6b7f1488b764e248dd4529a9eb0ff2d3/7d11c/ruby_10_1000000000.png" srcSet="/static/6b7f1488b764e248dd4529a9eb0ff2d3/8c784/ruby_10_1000000000.png 145w,/static/6b7f1488b764e248dd4529a9eb0ff2d3/1713b/ruby_10_1000000000.png 290w,/static/6b7f1488b764e248dd4529a9eb0ff2d3/7d11c/ruby_10_1000000000.png 579w" alt=""/></picture></noscript><script type="module">const t="undefined"!=typeof HTMLImageElement&&"loading"in HTMLImageElement.prototype;if(t){const t=document.querySelectorAll("img[data-main-image]");for(let e of t){e.dataset.src&&(e.setAttribute("src",e.dataset.src),e.removeAttribute("data-src")),e.dataset.srcset&&(e.setAttribute("srcset",e.dataset.srcset),e.removeAttribute("data-srcset"));const t=e.parentNode.querySelectorAll("source[data-srcset]");for(let e of t)e.setAttribute("srcset",e.dataset.srcset),e.removeAttribute("data-srcset");e.complete&&(e.style.opacity=1,e.parentNode.parentNode.querySelector("[data-placeholder-image]").style.opacity=0)}}</script></div><div data-gatsby-image-wrapper="" class="gatsby-image-wrapper gatsby-image-wrapper-constrained"><div style="max-width:594px;display:block"><img alt="" role="presentation" aria-hidden="true" src="data:image/svg+xml;charset=utf-8,%3Csvg height=&#x27;453&#x27; width=&#x27;594&#x27; xmlns=&#x27;http://www.w3.org/2000/svg&#x27; version=&#x27;1.1&#x27;%3E%3C/svg%3E" style="max-width:100%;display:block;position:static"/></div><div aria-hidden="true" data-placeholder-image="" style="opacity:1;transition:opacity 500ms linear;background-color:#f8f8f8;position:absolute;top:0;left:0;bottom:0;right:0"></div><picture><source type="image/webp" data-srcset="/static/dd1379aed945f0a6beee9d7083095158/02297/ruby_10_1000000.webp 149w,/static/dd1379aed945f0a6beee9d7083095158/fe8d7/ruby_10_1000000.webp 297w,/static/dd1379aed945f0a6beee9d7083095158/3c77c/ruby_10_1000000.webp 594w" sizes="(min-width: 594px) 594px, 100vw"/><img data-gatsby-image-ssr="" data-main-image="" style="opacity:0" sizes="(min-width: 594px) 594px, 100vw" decoding="async" loading="lazy" data-src="/static/dd1379aed945f0a6beee9d7083095158/9bdc4/ruby_10_1000000.png" data-srcset="/static/dd1379aed945f0a6beee9d7083095158/54d99/ruby_10_1000000.png 149w,/static/dd1379aed945f0a6beee9d7083095158/a531a/ruby_10_1000000.png 297w,/static/dd1379aed945f0a6beee9d7083095158/9bdc4/ruby_10_1000000.png 594w" alt=""/></picture><noscript><picture><source type="image/webp" srcSet="/static/dd1379aed945f0a6beee9d7083095158/02297/ruby_10_1000000.webp 149w,/static/dd1379aed945f0a6beee9d7083095158/fe8d7/ruby_10_1000000.webp 297w,/static/dd1379aed945f0a6beee9d7083095158/3c77c/ruby_10_1000000.webp 594w" sizes="(min-width: 594px) 594px, 100vw"/><img data-gatsby-image-ssr="" data-main-image="" style="opacity:0" sizes="(min-width: 594px) 594px, 100vw" decoding="async" loading="lazy" src="/static/dd1379aed945f0a6beee9d7083095158/9bdc4/ruby_10_1000000.png" srcSet="/static/dd1379aed945f0a6beee9d7083095158/54d99/ruby_10_1000000.png 149w,/static/dd1379aed945f0a6beee9d7083095158/a531a/ruby_10_1000000.png 297w,/static/dd1379aed945f0a6beee9d7083095158/9bdc4/ruby_10_1000000.png 594w" alt=""/></picture></noscript><script type="module">const t="undefined"!=typeof HTMLImageElement&&"loading"in HTMLImageElement.prototype;if(t){const t=document.querySelectorAll("img[data-main-image]");for(let e of t){e.dataset.src&&(e.setAttribute("src",e.dataset.src),e.removeAttribute("data-src")),e.dataset.srcset&&(e.setAttribute("srcset",e.dataset.srcset),e.removeAttribute("data-srcset"));const t=e.parentNode.querySelectorAll("source[data-srcset]");for(let e of t)e.setAttribute("srcset",e.dataset.srcset),e.removeAttribute("data-srcset");e.complete&&(e.style.opacity=1,e.parentNode.parentNode.querySelector("[data-placeholder-image]").style.opacity=0)}}</script></div><div data-gatsby-image-wrapper="" class="gatsby-image-wrapper gatsby-image-wrapper-constrained"><div style="max-width:594px;display:block"><img alt="" role="presentation" aria-hidden="true" src="data:image/svg+xml;charset=utf-8,%3Csvg height=&#x27;453&#x27; width=&#x27;594&#x27; xmlns=&#x27;http://www.w3.org/2000/svg&#x27; version=&#x27;1.1&#x27;%3E%3C/svg%3E" style="max-width:100%;display:block;position:static"/></div><div aria-hidden="true" data-placeholder-image="" style="opacity:1;transition:opacity 500ms linear;background-color:#f8f8f8;position:absolute;top:0;left:0;bottom:0;right:0"></div><picture><source type="image/webp" data-srcset="/static/e4cb0871128c92bf9c7614f41bfc86d3/02297/r_10_1000000.webp 149w,/static/e4cb0871128c92bf9c7614f41bfc86d3/fe8d7/r_10_1000000.webp 297w,/static/e4cb0871128c92bf9c7614f41bfc86d3/3c77c/r_10_1000000.webp 594w" sizes="(min-width: 594px) 594px, 100vw"/><img data-gatsby-image-ssr="" data-main-image="" style="opacity:0" sizes="(min-width: 594px) 594px, 100vw" decoding="async" loading="lazy" data-src="/static/e4cb0871128c92bf9c7614f41bfc86d3/9bdc4/r_10_1000000.png" data-srcset="/static/e4cb0871128c92bf9c7614f41bfc86d3/54d99/r_10_1000000.png 149w,/static/e4cb0871128c92bf9c7614f41bfc86d3/a531a/r_10_1000000.png 297w,/static/e4cb0871128c92bf9c7614f41bfc86d3/9bdc4/r_10_1000000.png 594w" alt=""/></picture><noscript><picture><source type="image/webp" srcSet="/static/e4cb0871128c92bf9c7614f41bfc86d3/02297/r_10_1000000.webp 149w,/static/e4cb0871128c92bf9c7614f41bfc86d3/fe8d7/r_10_1000000.webp 297w,/static/e4cb0871128c92bf9c7614f41bfc86d3/3c77c/r_10_1000000.webp 594w" sizes="(min-width: 594px) 594px, 100vw"/><img data-gatsby-image-ssr="" data-main-image="" style="opacity:0" sizes="(min-width: 594px) 594px, 100vw" decoding="async" loading="lazy" src="/static/e4cb0871128c92bf9c7614f41bfc86d3/9bdc4/r_10_1000000.png" srcSet="/static/e4cb0871128c92bf9c7614f41bfc86d3/54d99/r_10_1000000.png 149w,/static/e4cb0871128c92bf9c7614f41bfc86d3/a531a/r_10_1000000.png 297w,/static/e4cb0871128c92bf9c7614f41bfc86d3/9bdc4/r_10_1000000.png 594w" alt=""/></picture></noscript><script type="module">const t="undefined"!=typeof HTMLImageElement&&"loading"in HTMLImageElement.prototype;if(t){const t=document.querySelectorAll("img[data-main-image]");for(let e of t){e.dataset.src&&(e.setAttribute("src",e.dataset.src),e.removeAttribute("data-src")),e.dataset.srcset&&(e.setAttribute("srcset",e.dataset.srcset),e.removeAttribute("data-srcset"));const t=e.parentNode.querySelectorAll("source[data-srcset]");for(let e of t)e.setAttribute("srcset",e.dataset.srcset),e.removeAttribute("data-srcset");e.complete&&(e.style.opacity=1,e.parentNode.parentNode.querySelector("[data-placeholder-image]").style.opacity=0)}}</script></div><div data-gatsby-image-wrapper="" class="gatsby-image-wrapper gatsby-image-wrapper-constrained"><div style="max-width:579px;display:block"><img alt="" role="presentation" aria-hidden="true" src="data:image/svg+xml;charset=utf-8,%3Csvg height=&#x27;452.99999999999994&#x27; width=&#x27;579&#x27; xmlns=&#x27;http://www.w3.org/2000/svg&#x27; version=&#x27;1.1&#x27;%3E%3C/svg%3E" style="max-width:100%;display:block;position:static"/></div><div aria-hidden="true" data-placeholder-image="" style="opacity:1;transition:opacity 500ms linear;background-color:#f8f8f8;position:absolute;top:0;left:0;bottom:0;right:0"></div><picture><source type="image/webp" data-srcset="/static/b4723e5846ad9cbba5a3502e22a8a0e1/f8387/r_10_1000000000.webp 145w,/static/b4723e5846ad9cbba5a3502e22a8a0e1/d2e61/r_10_1000000000.webp 290w,/static/b4723e5846ad9cbba5a3502e22a8a0e1/02b1c/r_10_1000000000.webp 579w" sizes="(min-width: 579px) 579px, 100vw"/><img data-gatsby-image-ssr="" data-main-image="" style="opacity:0" sizes="(min-width: 579px) 579px, 100vw" decoding="async" loading="lazy" data-src="/static/b4723e5846ad9cbba5a3502e22a8a0e1/7d11c/r_10_1000000000.png" data-srcset="/static/b4723e5846ad9cbba5a3502e22a8a0e1/8c784/r_10_1000000000.png 145w,/static/b4723e5846ad9cbba5a3502e22a8a0e1/1713b/r_10_1000000000.png 290w,/static/b4723e5846ad9cbba5a3502e22a8a0e1/7d11c/r_10_1000000000.png 579w" alt=""/></picture><noscript><picture><source type="image/webp" srcSet="/static/b4723e5846ad9cbba5a3502e22a8a0e1/f8387/r_10_1000000000.webp 145w,/static/b4723e5846ad9cbba5a3502e22a8a0e1/d2e61/r_10_1000000000.webp 290w,/static/b4723e5846ad9cbba5a3502e22a8a0e1/02b1c/r_10_1000000000.webp 579w" sizes="(min-width: 579px) 579px, 100vw"/><img data-gatsby-image-ssr="" data-main-image="" style="opacity:0" sizes="(min-width: 579px) 579px, 100vw" decoding="async" loading="lazy" src="/static/b4723e5846ad9cbba5a3502e22a8a0e1/7d11c/r_10_1000000000.png" srcSet="/static/b4723e5846ad9cbba5a3502e22a8a0e1/8c784/r_10_1000000000.png 145w,/static/b4723e5846ad9cbba5a3502e22a8a0e1/1713b/r_10_1000000000.png 290w,/static/b4723e5846ad9cbba5a3502e22a8a0e1/7d11c/r_10_1000000000.png 579w" alt=""/></picture></noscript><script type="module">const t="undefined"!=typeof HTMLImageElement&&"loading"in HTMLImageElement.prototype;if(t){const t=document.querySelectorAll("img[data-main-image]");for(let e of t){e.dataset.src&&(e.setAttribute("src",e.dataset.src),e.removeAttribute("data-src")),e.dataset.srcset&&(e.setAttribute("srcset",e.dataset.srcset),e.removeAttribute("data-srcset"));const t=e.parentNode.querySelectorAll("source[data-srcset]");for(let e of t)e.setAttribute("srcset",e.dataset.srcset),e.removeAttribute("data-srcset");e.complete&&(e.style.opacity=1,e.parentNode.parentNode.querySelector("[data-placeholder-image]").style.opacity=0)}}</script></div><div data-gatsby-image-wrapper="" class="gatsby-image-wrapper gatsby-image-wrapper-constrained"><div style="max-width:611px;display:block"><img alt="" role="presentation" aria-hidden="true" src="data:image/svg+xml;charset=utf-8,%3Csvg height=&#x27;453&#x27; width=&#x27;611&#x27; xmlns=&#x27;http://www.w3.org/2000/svg&#x27; version=&#x27;1.1&#x27;%3E%3C/svg%3E" style="max-width:100%;display:block;position:static"/></div><div aria-hidden="true" data-placeholder-image="" style="opacity:1;transition:opacity 500ms linear;background-color:#f8f8f8;position:absolute;top:0;left:0;bottom:0;right:0"></div><picture><source type="image/webp" data-srcset="/static/fa4380e6f7f6253945578eb2c60cbaa4/aef1b/r_1000_1000000.webp 153w,/static/fa4380e6f7f6253945578eb2c60cbaa4/f144b/r_1000_1000000.webp 306w,/static/fa4380e6f7f6253945578eb2c60cbaa4/ef9cf/r_1000_1000000.webp 611w" sizes="(min-width: 611px) 611px, 100vw"/><img data-gatsby-image-ssr="" data-main-image="" style="opacity:0" sizes="(min-width: 611px) 611px, 100vw" decoding="async" loading="lazy" data-src="/static/fa4380e6f7f6253945578eb2c60cbaa4/4623e/r_1000_1000000.png" data-srcset="/static/fa4380e6f7f6253945578eb2c60cbaa4/ede9a/r_1000_1000000.png 153w,/static/fa4380e6f7f6253945578eb2c60cbaa4/a4ab8/r_1000_1000000.png 306w,/static/fa4380e6f7f6253945578eb2c60cbaa4/4623e/r_1000_1000000.png 611w" alt=""/></picture><noscript><picture><source type="image/webp" srcSet="/static/fa4380e6f7f6253945578eb2c60cbaa4/aef1b/r_1000_1000000.webp 153w,/static/fa4380e6f7f6253945578eb2c60cbaa4/f144b/r_1000_1000000.webp 306w,/static/fa4380e6f7f6253945578eb2c60cbaa4/ef9cf/r_1000_1000000.webp 611w" sizes="(min-width: 611px) 611px, 100vw"/><img data-gatsby-image-ssr="" data-main-image="" style="opacity:0" sizes="(min-width: 611px) 611px, 100vw" decoding="async" loading="lazy" src="/static/fa4380e6f7f6253945578eb2c60cbaa4/4623e/r_1000_1000000.png" srcSet="/static/fa4380e6f7f6253945578eb2c60cbaa4/ede9a/r_1000_1000000.png 153w,/static/fa4380e6f7f6253945578eb2c60cbaa4/a4ab8/r_1000_1000000.png 306w,/static/fa4380e6f7f6253945578eb2c60cbaa4/4623e/r_1000_1000000.png 611w" alt=""/></picture></noscript><script type="module">const t="undefined"!=typeof HTMLImageElement&&"loading"in HTMLImageElement.prototype;if(t){const t=document.querySelectorAll("img[data-main-image]");for(let e of t){e.dataset.src&&(e.setAttribute("src",e.dataset.src),e.removeAttribute("data-src")),e.dataset.srcset&&(e.setAttribute("srcset",e.dataset.srcset),e.removeAttribute("data-srcset"));const t=e.parentNode.querySelectorAll("source[data-srcset]");for(let e of t)e.setAttribute("srcset",e.dataset.srcset),e.removeAttribute("data-srcset");e.complete&&(e.style.opacity=1,e.parentNode.parentNode.querySelector("[data-placeholder-image]").style.opacity=0)}}</script></div><div data-gatsby-image-wrapper="" class="gatsby-image-wrapper gatsby-image-wrapper-constrained"><div style="max-width:611px;display:block"><img alt="" role="presentation" aria-hidden="true" src="data:image/svg+xml;charset=utf-8,%3Csvg height=&#x27;453&#x27; width=&#x27;611&#x27; xmlns=&#x27;http://www.w3.org/2000/svg&#x27; version=&#x27;1.1&#x27;%3E%3C/svg%3E" style="max-width:100%;display:block;position:static"/></div><div aria-hidden="true" data-placeholder-image="" style="opacity:1;transition:opacity 500ms linear;background-color:#f8f8f8;position:absolute;top:0;left:0;bottom:0;right:0"></div><picture><source type="image/webp" data-srcset="/static/0ffac1867a21c30b0eb681f77adf0a5a/aef1b/ruby_1000_1000000.webp 153w,/static/0ffac1867a21c30b0eb681f77adf0a5a/f144b/ruby_1000_1000000.webp 306w,/static/0ffac1867a21c30b0eb681f77adf0a5a/ef9cf/ruby_1000_1000000.webp 611w" sizes="(min-width: 611px) 611px, 100vw"/><img data-gatsby-image-ssr="" data-main-image="" style="opacity:0" sizes="(min-width: 611px) 611px, 100vw" decoding="async" loading="lazy" data-src="/static/0ffac1867a21c30b0eb681f77adf0a5a/4623e/ruby_1000_1000000.png" data-srcset="/static/0ffac1867a21c30b0eb681f77adf0a5a/ede9a/ruby_1000_1000000.png 153w,/static/0ffac1867a21c30b0eb681f77adf0a5a/a4ab8/ruby_1000_1000000.png 306w,/static/0ffac1867a21c30b0eb681f77adf0a5a/4623e/ruby_1000_1000000.png 611w" alt=""/></picture><noscript><picture><source type="image/webp" srcSet="/static/0ffac1867a21c30b0eb681f77adf0a5a/aef1b/ruby_1000_1000000.webp 153w,/static/0ffac1867a21c30b0eb681f77adf0a5a/f144b/ruby_1000_1000000.webp 306w,/static/0ffac1867a21c30b0eb681f77adf0a5a/ef9cf/ruby_1000_1000000.webp 611w" sizes="(min-width: 611px) 611px, 100vw"/><img data-gatsby-image-ssr="" data-main-image="" style="opacity:0" sizes="(min-width: 611px) 611px, 100vw" decoding="async" loading="lazy" src="/static/0ffac1867a21c30b0eb681f77adf0a5a/4623e/ruby_1000_1000000.png" srcSet="/static/0ffac1867a21c30b0eb681f77adf0a5a/ede9a/ruby_1000_1000000.png 153w,/static/0ffac1867a21c30b0eb681f77adf0a5a/a4ab8/ruby_1000_1000000.png 306w,/static/0ffac1867a21c30b0eb681f77adf0a5a/4623e/ruby_1000_1000000.png 611w" alt=""/></picture></noscript><script type="module">const t="undefined"!=typeof HTMLImageElement&&"loading"in HTMLImageElement.prototype;if(t){const t=document.querySelectorAll("img[data-main-image]");for(let e of t){e.dataset.src&&(e.setAttribute("src",e.dataset.src),e.removeAttribute("data-src")),e.dataset.srcset&&(e.setAttribute("srcset",e.dataset.srcset),e.removeAttribute("data-srcset"));const t=e.parentNode.querySelectorAll("source[data-srcset]");for(let e of t)e.setAttribute("srcset",e.dataset.srcset),e.removeAttribute("data-srcset");e.complete&&(e.style.opacity=1,e.parentNode.parentNode.querySelector("[data-placeholder-image]").style.opacity=0)}}</script></div><hr/><pre><code>1: 0.000978
+2: 0.00095
+3: 0.000959
+4: 0.001056
+5: 0.001003
+6: 0.001009
+7: 0.000988
+8: 0.000979
+9: 0.001039
+10: 0.001042
+11: 0.000982
+12: 0.001026
+13: 0.00096
+14: 0.001005
+15: 0.00101
+16: 0.001001
+17: 0.000954
+18: 0.000994
+19: 0.000954
+20: 0.000999
+21: 0.001033
+22: 0.000993
+23: 0.001003
+24: 0.001004
+25: 0.001001
+26: 0.00097
+27: 0.000981
+28: 0.001023
+29: 0.001006
+30: 0.001089
+31: 0.00106
+32: 0.000992
+33: 0.000994
+34: 0.001035
+35: 0.001005
+36: 0.001009
+37: 0.001035
+38: 0.001005
+39: 0.000994
+40: 0.000987
+41: 0.001022
+42: 0.001066
+43: 0.00102
+44: 0.001067
+45: 0.000969
+46: 0.001017
+47: 0.001027
+48: 0.001058
+49: 0.000987
+50: 0.000943
+51: 0.000968
+52: 0.001028
+53: 0.001034
+54: 0.000977
+55: 0.001021
+56: 0.000996
+57: 0.00104
+58: 0.001087
+59: 0.000973
+60: 0.000987
+61: 0.000958
+62: 0.001004
+63: 0.000987
+64: 0.001037
+65: 0.000964
+66: 0.000973
+67: 0.00099
+68: 0.000957
+69: 0.000999
+70: 0.000984
+71: 0.000996
+72: 0.000961
+73: 0.001048
+74: 0.00101
+75: 0.001023
+76: 0.001034
+77: 0.000983
+78: 0.001011
+79: 0.00101
+80: 0.000991
+81: 0.000986
+82: 0.001038
+83: 0.00102
+84: 0.000982
+85: 0.001
+86: 0.000975
+87: 0.001057
+88: 0.001014
+89: 0.00101
+90: 0.00102
+91: 0.000983
+92: 0.001009
+93: 0.000992
+94: 0.001002
+95: 0.000995
+96: 0.000994
+97: 0.000963
+98: 0.001015
+99: 0.001032
+100: 0.001012
+101: 0.00103
+102: 0.001032
+103: 0.000974
+104: 0.001002
+105: 0.001004
+106: 0.001028
+107: 0.001
+108: 0.000983
+109: 0.001006
+110: 0.001025
+111: 0.000989
+112: 0.000961
+113: 0.000987
+114: 0.001037
+115: 0.001074
+116: 0.000989
+117: 0.000991
+118: 0.000974
+119: 0.000976
+120: 0.000987
+121: 0.000979
+122: 0.000964
+123: 0.00097
+124: 0.00103
+125: 0.000958
+126: 0.001059
+127: 0.000981
+128: 0.001019
+129: 0.000956
+130: 0.001014
+131: 0.000995
+132: 0.000968
+133: 0.000948
+134: 0.001033
+135: 0.000959
+136: 0.001044
+137: 0.001005
+138: 0.001044
+139: 0.000993
+140: 0.000997
+141: 0.001036
+142: 0.000982
+143: 0.000973
+144: 0.001043
+145: 0.001003
+146: 0.00098
+147: 0.000996
+148: 0.001032
+149: 0.001006
+150: 0.000965
+151: 0.001014
+152: 0.000961
+153: 0.000954
+154: 0.001024
+155: 0.000951
+156: 0.001008
+157: 0.000975
+158: 0.000978
+159: 0.001023
+160: 0.000974
+161: 0.001021
+162: 0.001016
+163: 0.000997
+164: 0.00102
+165: 0.001014
+166: 0.001039
+167: 0.001005
+168: 0.00098
+169: 0.001012
+170: 0.001016
+171: 0.000986
+172: 0.00098
+173: 0.001047
+174: 0.001026
+175: 0.000967
+176: 0.000989
+177: 0.000989
+178: 0.000996
+179: 0.000975
+180: 0.000955
+181: 0.001036
+182: 0.000985
+183: 0.000973
+184: 0.001013
+185: 0.001001
+186: 0.001051
+187: 0.001075
+188: 0.001026
+189: 0.000958
+190: 0.001019
+191: 0.00101
+192: 0.001041
+193: 0.000976
+194: 0.000947
+195: 0.001036
+196: 0.000999
+197: 0.001
+198: 0.001012
+199: 0.000951
+200: 0.001021
+201: 0.001036
+202: 0.00097
+203: 0.000971
+204: 0.000974
+205: 0.00098
+206: 0.001004
+207: 0.001009
+208: 0.000971
+209: 0.001015
+210: 0.001031
+211: 0.000993
+212: 0.000985
+213: 0.000958
+214: 0.000988
+215: 0.001006
+216: 0.001038
+217: 0.001
+218: 0.000985
+219: 0.000939
+220: 0.001
+221: 0.000973
+222: 0.000985
+223: 0.001022
+224: 0.001028
+225: 0.000953
+226: 0.000969
+227: 0.000923
+228: 0.001046
+229: 0.001023
+230: 0.001014
+231: 0.000977
+232: 0.000945
+233: 0.001042
+234: 0.001047
+235: 0.000983
+236: 0.000973
+237: 0.000987
+238: 0.00105
+239: 0.000983
+240: 0.001021
+241: 0.001046
+242: 0.000984
+243: 0.001054
+244: 0.00098
+245: 0.001052
+246: 0.000981
+247: 0.000981
+248: 0.001023
+249: 0.000993
+250: 0.000939
+251: 0.000976
+252: 0.000972
+253: 0.000956
+254: 0.001001
+255: 0.000986
+256: 0.001012
+257: 0.001022
+258: 0.001038
+259: 0.001004
+260: 0.00095
+261: 0.000962
+262: 0.000946
+263: 0.001015
+264: 0.001002
+265: 0.000947
+266: 0.000949
+267: 0.000986
+268: 0.001002
+269: 0.000964
+270: 0.001033
+271: 0.00096
+272: 0.000987
+273: 0.00106
+274: 0.001021
+275: 0.001028
+276: 0.001006
+277: 0.00101
+278: 0.001006
+279: 0.001036
+280: 0.001017
+281: 0.000996
+282: 0.000972
+283: 0.001028
+284: 0.000956
+285: 0.001013
+286: 0.001042
+287: 0.001036
+288: 0.000981
+289: 0.001082
+290: 0.000995
+291: 0.001029
+292: 0.001002
+293: 0.000994
+294: 0.001032
+295: 0.001
+296: 0.00101
+297: 0.001044
+298: 0.000989
+299: 0.001005
+300: 0.000996
+301: 0.000953
+302: 0.000985
+303: 0.000997
+304: 0.00099
+305: 0.001029
+306: 0.000961
+307: 0.000998
+308: 0.001014
+309: 0.001042
+310: 0.001046
+311: 0.000957
+312: 0.001007
+313: 0.001043
+314: 0.00097
+315: 0.001004
+316: 0.001015
+317: 0.000979
+318: 0.000988
+319: 0.001009
+320: 0.000986
+321: 0.001053
+322: 0.000997
+323: 0.001075
+324: 0.000948
+325: 0.000987
+326: 0.000976
+327: 0.000976
+328: 0.001009
+329: 0.001027
+330: 0.001043
+331: 0.001051
+332: 0.001043
+333: 0.000979
+334: 0.001003
+335: 0.001005
+336: 0.001028
+337: 0.001064
+338: 0.000966
+339: 0.001041
+340: 0.001051
+341: 0.000995
+342: 0.001005
+343: 0.001004
+344: 0.000986
+345: 0.000982
+346: 0.001011
+347: 0.001022
+348: 0.000974
+349: 0.000931
+350: 0.001002
+351: 0.00098
+352: 0.000999
+353: 0.00094
+354: 0.000977
+355: 0.001022
+356: 0.001041
+357: 0.000993
+358: 0.000997
+359: 0.00094
+360: 0.000991
+361: 0.001036
+362: 0.001004
+363: 0.000981
+364: 0.000971
+365: 0.001032
+366: 0.000991
+367: 0.001006
+368: 0.000989
+369: 0.000936
+370: 0.000967
+371: 0.001035
+372: 0.000971
+373: 0.000996
+374: 0.001042
+375: 0.000966
+376: 0.00097
+377: 0.000946
+378: 0.000998
+379: 0.000932
+380: 0.000943
+381: 0.000988
+382: 0.000969
+383: 0.000943
+384: 0.000996
+385: 0.001035
+386: 0.000963
+387: 0.001026
+388: 0.000989
+389: 0.000982
+390: 0.00102
+391: 0.001009
+392: 0.00103
+393: 0.001054
+394: 0.000979
+395: 0.000995
+396: 0.000984
+397: 0.000989
+398: 0.001007
+399: 0.000996
+400: 0.000987
+401: 0.000983
+402: 0.001056
+403: 0.001056
+404: 0.000987
+405: 0.001016
+406: 0.000958
+407: 0.001022
+408: 0.00099
+409: 0.000923
+410: 0.001006
+411: 0.000972
+412: 0.000978
+413: 0.001032
+414: 0.001022
+415: 0.000969
+416: 0.001034
+417: 0.000941
+418: 0.001003
+419: 0.001064
+420: 0.000946
+421: 0.000998
+422: 0.001064
+423: 0.001023
+424: 0.001008
+425: 0.000955
+426: 0.00097
+427: 0.000969
+428: 0.000977
+429: 0.000968
+430: 0.001025
+431: 0.00102
+432: 0.001031
+433: 0.000988
+434: 0.000997
+435: 0.000959
+436: 0.001081
+437: 0.001001
+438: 0.000986
+439: 0.001034
+440: 0.000977
+441: 0.001012
+442: 0.000966
+443: 0.001015
+444: 0.000956
+445: 0.00099
+446: 0.000998
+447: 0.001023
+448: 0.000995
+449: 0.001033
+450: 0.000963
+451: 0.001016
+452: 0.001002
+453: 0.001031
+454: 0.00101
+455: 0.001051
+456: 0.000951
+457: 0.001009
+458: 0.000986
+459: 0.000988
+460: 0.001023
+461: 0.001007
+462: 0.000954
+463: 0.000968
+464: 0.001016
+465: 0.000982
+466: 0.001022
+467: 0.000999
+468: 0.001066
+469: 0.001026
+470: 0.00104
+471: 0.001068
+472: 0.00097
+473: 0.001016
+474: 0.000991
+475: 0.000968
+476: 0.000986
+477: 0.000973
+478: 0.000998
+479: 0.00099
+480: 0.001037
+481: 0.000989
+482: 0.001037
+483: 0.000988
+484: 0.000988
+485: 0.001005
+486: 0.00095
+487: 0.000995
+488: 0.001016
+489: 0.000962
+490: 0.001026
+491: 0.001093
+492: 0.000995
+493: 0.001024
+494: 0.00102
+495: 0.000953
+496: 0.000993
+497: 0.000991
+498: 0.000983
+499: 0.001038
+500: 0.000987
+501: 0.000964
+502: 0.000944
+503: 0.000988
+504: 0.001008
+505: 0.000999
+506: 0.001002
+507: 0.000926
+508: 0.000913
+509: 0.001046
+510: 0.00099
+511: 0.001019
+512: 0.001007
+513: 0.001012
+514: 0.000989
+515: 0.000959
+516: 0.000992
+517: 0.000954
+518: 0.001018
+519: 0.000977
+520: 0.001026
+521: 0.000971
+522: 0.001002
+523: 0.001038
+524: 0.001037
+525: 0.000964
+526: 0.001067
+527: 0.000973
+528: 0.000952
+529: 0.000964
+530: 0.001001
+531: 0.001001
+532: 0.001023
+533: 0.001019
+534: 0.001011
+535: 0.001011
+536: 0.00098
+537: 0.001039
+538: 0.000943
+539: 0.000988
+540: 0.000991
+541: 0.000964
+542: 0.00102
+543: 0.001
+544: 0.001024
+545: 0.000931
+546: 0.000967
+547: 0.001068
+548: 0.001052
+549: 0.001053
+550: 0.001004
+551: 0.001001
+552: 0.000986
+553: 0.000981
+554: 0.001013
+555: 0.000933
+556: 0.000994
+557: 0.000957
+558: 0.000994
+559: 0.001033
+560: 0.00099
+561: 0.000979
+562: 0.001022
+563: 0.001013
+564: 0.000963
+565: 0.001025
+566: 0.001026
+567: 0.00097
+568: 0.000997
+569: 0.001041
+570: 0.000992
+571: 0.001029
+572: 0.001004
+573: 0.000974
+574: 0.001003
+575: 0.000988
+576: 0.001006
+577: 0.000991
+578: 0.001013
+579: 0.000937
+580: 0.000966
+581: 0.000998
+582: 0.000915
+583: 0.001029
+584: 0.000987
+585: 0.00101
+586: 0.00101
+587: 0.001038
+588: 0.001008
+589: 0.000989
+590: 0.00106
+591: 0.000967
+592: 0.001025
+593: 0.000957
+594: 0.001002
+595: 0.001009
+596: 0.001023
+597: 0.000992
+598: 0.00097
+599: 0.001031
+600: 0.000943
+601: 0.00098
+602: 0.001014
+603: 0.001006
+604: 0.000988
+605: 0.001002
+606: 0.000951
+607: 0.001014
+608: 0.001053
+609: 0.001029
+610: 0.000973
+611: 0.000943
+612: 0.000976
+613: 0.001045
+614: 0.00097
+615: 0.000999
+616: 0.001015
+617: 0.000926
+618: 0.000968
+619: 0.001012
+620: 0.001029
+621: 0.000992
+622: 0.000998
+623: 0.001006
+624: 0.000954
+625: 0.000988
+626: 0.001043
+627: 0.001005
+628: 0.00093
+629: 0.000963
+630: 0.000964
+631: 0.000985
+632: 0.001039
+633: 0.000971
+634: 0.000968
+635: 0.000945
+636: 0.001033
+637: 0.000992
+638: 0.000992
+639: 0.001013
+640: 0.000967
+641: 0.00095
+642: 0.000954
+643: 0.001009
+644: 0.001004
+645: 0.001039
+646: 0.001028
+647: 0.000961
+648: 0.001025
+649: 0.000979
+650: 0.001024
+651: 0.000988
+652: 0.000991
+653: 0.000963
+654: 0.00102
+655: 0.001034
+656: 0.00104
+657: 0.000972
+658: 0.001003
+659: 0.001059
+660: 0.000995
+661: 0.001013
+662: 0.000998
+663: 0.000962
+664: 0.001012
+665: 0.000991
+666: 0.001003
+667: 0.001038
+668: 0.00105
+669: 0.001016
+670: 0.000952
+671: 0.001049
+672: 0.000987
+673: 0.000999
+674: 0.001035
+675: 0.00104
+676: 0.001043
+677: 0.001005
+678: 0.000985
+679: 0.000961
+680: 0.000926
+681: 0.000936
+682: 0.000983
+683: 0.000981
+684: 0.001074
+685: 0.000983
+686: 0.001072
+687: 0.001017
+688: 0.001002
+689: 0.001031
+690: 0.000979
+691: 0.000942
+692: 0.000991
+693: 0.001036
+694: 0.001035
+695: 0.00101
+696: 0.000979
+697: 0.001014
+698: 0.00103
+699: 0.001035
+700: 0.001008
+701: 0.001011
+702: 0.000989
+703: 0.001048
+704: 0.001033
+705: 0.000947
+706: 0.001031
+707: 0.000945
+708: 0.000956
+709: 0.000966
+710: 0.000974
+711: 0.001019
+712: 0.001018
+713: 0.000981
+714: 0.000993
+715: 0.00097
+716: 0.001005
+717: 0.000983
+718: 0.001057
+719: 0.001025
+720: 0.000999
+721: 0.000978
+722: 0.001018
+723: 0.000984
+724: 0.000967
+725: 0.00097
+726: 0.000951
+727: 0.000975
+728: 0.000983
+729: 0.001024
+730: 0.000957
+731: 0.001036
+732: 0.000986
+733: 0.001004
+734: 0.000943
+735: 0.00099
+736: 0.00107
+737: 0.000965
+738: 0.001005
+739: 0.001028
+740: 0.000978
+741: 0.000972
+742: 0.000912
+743: 0.001053
+744: 0.001039
+745: 0.001008
+746: 0.00098
+747: 0.001006
+748: 0.000972
+749: 0.000999
+750: 0.000989
+751: 0.000983
+752: 0.000955
+753: 0.001017
+754: 0.000937
+755: 0.001008
+756: 0.001002
+757: 0.000972
+758: 0.001012
+759: 0.00097
+760: 0.000978
+761: 0.001001
+762: 0.000985
+763: 0.000982
+764: 0.001085
+765: 0.001021
+766: 0.001036
+767: 0.001061
+768: 0.001029
+769: 0.001025
+770: 0.001005
+771: 0.000976
+772: 0.000994
+773: 0.000989
+774: 0.001049
+775: 0.001062
+776: 0.001004
+777: 0.001026
+778: 0.001001
+779: 0.000992
+780: 0.001075
+781: 0.000964
+782: 0.001079
+783: 0.00101
+784: 0.000986
+785: 0.000979
+786: 0.000965
+787: 0.001021
+788: 0.000975
+789: 0.00102
+790: 0.001008
+791: 0.000981
+792: 0.000995
+793: 0.001002
+794: 0.00097
+795: 0.001021
+796: 0.001041
+797: 0.00107
+798: 0.00102
+799: 0.001066
+800: 0.000998
+801: 0.000991
+802: 0.000981
+803: 0.001017
+804: 0.000943
+805: 0.001004
+806: 0.000998
+807: 0.000984
+808: 0.001001
+809: 0.000937
+810: 0.001018
+811: 0.001018
+812: 0.000981
+813: 0.000966
+814: 0.001009
+815: 0.001017
+816: 0.001045
+817: 0.000963
+818: 0.001014
+819: 0.00102
+820: 0.000982
+821: 0.000995
+822: 0.000977
+823: 0.001027
+824: 0.001036
+825: 0.001014
+826: 0.000998
+827: 0.001047
+828: 0.001025
+829: 0.001022
+830: 0.001034
+831: 0.001062
+832: 0.001056
+833: 0.000983
+834: 0.001038
+835: 0.000995
+836: 0.00099
+837: 0.001038
+838: 0.000998
+839: 0.000992
+840: 0.000919
+841: 0.000958
+842: 0.001031
+843: 0.00102
+844: 0.001041
+845: 0.000983
+846: 0.000966
+847: 0.001004
+848: 0.000988
+849: 0.000988
+850: 0.000935
+851: 0.001033
+852: 0.001044
+853: 0.001026
+854: 0.000977
+855: 0.001008
+856: 0.000977
+857: 0.001021
+858: 0.000976
+859: 0.000999
+860: 0.00101
+861: 0.000962
+862: 0.00101
+863: 0.000983
+864: 0.000942
+865: 0.000937
+866: 0.00101
+867: 0.001032
+868: 0.001033
+869: 0.000957
+870: 0.000975
+871: 0.000957
+872: 0.00098
+873: 0.000985
+874: 0.000955
+875: 0.000989
+876: 0.000989
+877: 0.000989
+878: 0.000974
+879: 0.000988
+880: 0.001014
+881: 0.001006
+882: 0.001028
+883: 0.000973
+884: 0.00097
+885: 0.00104
+886: 0.001019
+887: 0.001035
+888: 0.001053
+889: 0.001003
+890: 0.000983
+891: 0.001041
+892: 0.001078
+893: 0.000979
+894: 0.001021
+895: 0.000987
+896: 0.001039
+897: 0.000987
+898: 0.001046
+899: 0.000978
+900: 0.001036
+901: 0.001007
+902: 0.001019
+903: 0.000999
+904: 0.000982
+905: 0.001026
+906: 0.001012
+907: 0.001002
+908: 0.000981
+909: 0.001009
+910: 0.001006
+911: 0.000994
+912: 0.000999
+913: 0.000959
+914: 0.000964
+915: 0.000956
+916: 0.000997
+917: 0.000961
+918: 0.000961
+919: 0.000961
+920: 0.000924
+921: 0.00104
+922: 0.000971
+923: 0.001011
+924: 0.001008
+925: 0.001005
+926: 0.001024
+927: 0.000964
+928: 0.000999
+929: 0.000992
+930: 0.000978
+931: 0.00096
+932: 0.00102
+933: 0.001024
+934: 0.001007
+935: 0.000998
+936: 0.000994
+937: 0.000985
+938: 0.000995
+939: 0.000996
+940: 0.000978
+941: 0.000989
+942: 0.001002
+943: 0.001035
+944: 0.000961
+945: 0.001022
+946: 0.001009
+947: 0.001036
+948: 0.001017
+949: 0.001045
+950: 0.000966
+951: 0.001024
+952: 0.000974
+953: 0.00102
+954: 0.00099
+955: 0.001021
+956: 0.001042
+957: 0.001
+958: 0.000977
+959: 0.000984
+960: 0.001001
+961: 0.000959
+962: 0.001024
+963: 0.001004
+964: 0.001018
+965: 0.001012
+966: 0.000975
+967: 0.001021
+968: 0.000972
+969: 0.000991
+970: 0.000963
+971: 0.001031
+972: 0.001038
+973: 0.000962
+974: 0.001021
+975: 0.000992
+976: 0.001024
+977: 0.001065
+978: 0.001031
+979: 0.000958
+980: 0.001014
+981: 0.000962
+982: 0.001014
+983: 0.00102
+984: 0.001031
+985: 0.001095
+986: 0.000935
+987: 0.001049
+988: 0.000995
+989: 0.001026
+990: 0.001031
+991: 0.001007
+992: 0.001014
+993: 0.001063
+994: 0.001081
+995: 0.001034
+996: 0.000997
+997: 0.001002
+998: 0.001005
+999: 0.00099
+1000: 0.000997
+<!-- -->1: 0.100016403
+2: 0.099989755
+3: 0.09998314
+4: 0.100010962
+5: 0.100012731
+6: 0.09999722
+7: 0.099989108
+8: 0.100004252
+9: 0.099995059
+10: 0.10000137
+<!-- -->74:0.000986
+269:0.000944
+3:0.001017
+292:0.000989
+34:0.000959
+260:0.00102
+173:0.000983
+590:0.000972
+370:0.001009
+687:0.000998
+854:0.001039
+964:0.000981
+437:0.001059
+711:0.000993
+740:0.000962
+290:0.001017
+972:0.000995
+604:0.001072
+799:0.000951
+663:0.000997
+314:0.00104
+888:0.001003
+801:0.000997
+898:0.000979
+761:0.001003
+78:0.000967
+692:0.000993
+380:0.000978
+756:0.000987
+464:0.001007
+415:0.00095
+159:0.000978
+921:0.001056
+239:0.001034
+824:0.000998
+709:0.001026
+840:0.000976
+594:0.001026
+521:0.000991
+355:0.001014
+21:0.001032
+194:0.00096
+550:0.000989
+259:0.000999
+445:0.000983
+93:0.000994
+766:0.001007
+644:0.000961
+675:0.000999
+418:0.000999
+483:0.000973
+165:0.000968
+377:0.000983
+741:0.001054
+455:0.001036
+936:0.000977
+15:0.000962
+672:0.001027
+805:0.00099
+358:0.000995
+474:0.000994
+160:0.001002
+648:0.001024
+812:0.000989
+452:0.000954
+662:0.000939
+152:0.000968
+486:0.000998
+688:0.001053
+549:0.001028
+943:0.000983
+652:0.000957
+430:0.001011
+941:0.000952
+768:0.00099
+925:0.000992
+405:0.000954
+163:0.000983
+608:0.000958
+139:0.000949
+988:0.000999
+942:0.00103
+56:0.001013
+579:0.001006
+322:0.001005
+968:0.00103
+329:0.000985
+891:0.000979
+311:0.000991
+141:0.00097
+514:0.001
+368:0.001034
+674:0.001028
+653:0.000968
+100:0.000977
+143:0.000957
+684:0.000996
+420:0.000959
+949:0.000982
+987:0.001032
+825:0.001011
+793:0.001017
+37:0.001018
+646:0.001019
+397:0.001041
+565:0.001004
+867:0.00101
+480:0.00103
+744:0.000969
+846:0.001004
+227:0.00097
+573:0.00101
+32:0.000967
+922:0.001001
+166:0.00103
+20:0.00103
+477:0.00097
+580:0.000947
+490:0.000995
+994:0.000998
+266:0.000991
+388:0.001018
+892:0.000992
+236:0.001052
+339:0.001034
+658:0.001024
+112:0.000962
+72:0.001031
+657:0.00098
+700:0.001026
+917:0.000949
+25:0.000956
+555:0.001031
+392:0.000988
+668:0.001023
+237:0.000946
+639:0.000998
+660:0.000965
+822:0.001013
+777:0.000987
+363:0.001005
+931:0.001012
+396:0.001003
+787:0.001021
+357:0.001042
+279:0.001021
+428:0.001014
+827:0.001036
+447:0.000953
+416:0.00103
+201:0.00097
+156:0.001071
+45:0.001058
+345:0.00099
+69:0.000988
+491:0.000997
+703:0.000982
+439:0.001025
+331:0.001021
+820:0.000985
+871:0.000965
+656:0.001059
+776:0.001018
+796:0.001024
+466:0.000954
+946:0.000968
+424:0.000957
+929:0.000981
+906:0.000958
+75:0.001017
+895:0.001003
+562:0.001036
+347:0.001005
+257:0.001002
+992:0.001008
+356:0.000994
+599:0.001001
+361:0.001037
+300:0.001065
+193:0.001007
+912:0.000979
+627:0.001024
+262:0.001009
+205:0.001023
+636:0.000996
+316:0.001023
+773:0.001002
+789:0.000998
+169:0.000992
+251:0.001
+903:0.001009
+923:0.000982
+109:0.001039
+938:0.00103
+240:0.000992
+621:0.001023
+453:0.000955
+990:0.001026
+508:0.001001
+317:0.001021
+734:0.000976
+951:0.001023
+694:0.001009
+186:0.001011
+661:0.001
+134:0.000976
+695:0.001008
+13:0.001014
+450:0.000946
+685:0.001044
+385:0.000996
+44:0.001041
+436:0.001004
+506:0.001024
+928:0.001006
+196:0.000994
+839:0.000979
+979:0.000992
+502:0.001037
+412:0.001
+272:0.001
+567:0.001025
+471:0.000975
+748:0.001002
+29:0.001028
+65:0.000967
+710:0.00105
+364:0.000989
+188:0.001026
+574:0.00098
+138:0.000972
+47:0.000957
+440:0.001033
+828:0.000949
+369:0.001025
+819:0.001071
+973:0.000977
+747:0.00097
+460:0.000928
+586:0.00099
+469:0.001004
+767:0.00096
+376:0.000981
+119:0.001021
+858:0.000959
+837:0.001037
+117:0.001045
+905:0.001012
+953:0.001012
+213:0.001009
+823:0.001044
+690:0.001028
+360:0.001033
+268:0.001031
+934:0.001004
+780:0.001029
+495:0.001002
+128:0.000967
+589:0.001021
+786:0.000972
+638:0.001026
+301:0.000969
+689:0.000994
+704:0.001013
+461:0.001
+894:0.000998
+750:0.000994
+243:0.000972
+296:0.001001
+852:0.000972
+980:0.000934
+297:0.001024
+221:0.001025
+967:0.001037
+955:0.000998
+48:0.001044
+476:0.000983
+603:0.000964
+273:0.000973
+811:0.001022
+161:0.001071
+220:0.00099
+875:0.001049
+724:0.001008
+254:0.001007
+889:0.001002
+969:0.000932
+144:0.000984
+896:0.000998
+759:0.001083
+216:0.000983
+52:0.000997
+727:0.000994
+719:0.000986
+743:0.000979
+387:0.001035
+535:0.000987
+986:0.001013
+438:0.000999
+467:0.001079
+214:0.000987
+458:0.000979
+401:0.000985
+133:0.001056
+524:0.001002
+222:0.000976
+511:0.000972
+1000:0.000977
+349:0.000977
+114:0.000981
+76:0.000926
+804:0.000978
+971:0.001012
+736:0.00101
+844:0.001027
+323:0.000965
+35:0.001019
+226:0.001025
+328:0.001001
+960:0.000996
+206:0.000941
+129:0.001012
+913:0.001001
+80:0.001028
+708:0.000986
+635:0.001032
+569:0.001001
+620:0.000968
+691:0.001019
+335:0.000951
+261:0.001009
+51:0.001031
+995:0.001003
+605:0.001063
+954:0.001006
+181:0.001013
+248:0.000988
+588:0.001001
+765:0.001017
+584:0.000998
+717:0.00101
+8:0.001012
+126:0.001035
+333:0.000931
+932:0.001026
+492:0.000975
+232:0.001029
+577:0.001018
+298:0.000993
+832:0.000966
+634:0.000959
+860:0.000977
+667:0.000988
+291:0.00098
+235:0.000975
+59:0.000973
+619:0.000966
+151:0.00096
+132:0.001009
+792:0.001018
+137:0.000994
+544:0.000976
+334:0.000995
+571:0.00102
+728:0.00099
+393:0.000935
+518:0.000999
+88:0.000974
+881:0.001009
+753:0.000991
+456:0.000963
+164:0.000996
+829:0.000971
+849:0.001012
+908:0.00101
+686:0.000979
+516:0.000997
+320:0.000985
+609:0.001014
+255:0.000993
+102:0.00093
+613:0.001014
+853:0.00101
+596:0.001032
+348:0.000958
+497:0.00105
+649:0.001046
+19:0.000981
+308:0.001038
+598:0.001024
+501:0.001012
+902:0.00098
+833:0.000984
+238:0.001017
+650:0.001035
+910:0.000982
+593:0.000934
+682:0.001005
+177:0.001013
+195:0.000949
+557:0.001046
+977:0.000949
+332:0.001008
+915:0.001071
+749:0.000999
+89:0.001038
+77:0.000947
+481:0.001013
+536:0.000984
+28:0.001011
+611:0.000946
+53:0.001001
+874:0.001004
+158:0.001038
+182:0.000999
+446:0.001008
+699:0.001
+475:0.000983
+556:0.000962
+838:0.000999
+911:0.00104
+315:0.001008
+6:0.000982
+46:0.000984
+607:0.000966
+247:0.000959
+959:0.001023
+520:0.001053
+2:0.000981
+640:0.000998
+963:0.001002
+275:0.001029
+391:0.000989
+862:0.001028
+655:0.001035
+253:0.000985
+564:0.000993
+95:0.000966
+809:0.001007
+60:0.001025
+256:0.000973
+309:0.001021
+877:0.001031
+551:0.000997
+282:0.001018
+772:0.001064
+664:0.00106
+879:0.001086
+924:0.000989
+179:0.00101
+271:0.001029
+49:0.001032
+836:0.001017
+210:0.001047
+729:0.00104
+174:0.000995
+402:0.00099
+715:0.001027
+526:0.001005
+847:0.000992
+542:0.001034
+563:0.001014
+558:0.001024
+204:0.001033
+121:0.001019
+122:0.000987
+887:0.001044
+770:0.001031
+390:0.000938
+602:0.000987
+375:0.00096
+66:0.001039
+38:0.000974
+505:0.000984
+184:0.000988
+118:0.001016
+359:0.001048
+578:0.000998
+982:0.000981
+529:0.000955
+626:0.001008
+730:0.000954
+532:0.000996
+616:0.000955
+496:0.000992
+63:0.001007
+289:0.001016
+258:0.001059
+352:0.000997
+998:0.000972
+869:0.000994
+956:0.000998
+394:0.00098
+127:0.000988
+324:0.001015
+327:0.001019
+374:0.001014
+104:0.000935
+342:0.000991
+299:0.000971
+702:0.000995
+18:0.000946
+90:0.001034
+774:0.001
+409:0.000967
+962:0.000936
+185:0.001004
+615:0.000975
+97:0.000966
+882:0.001024
+26:0.000981
+200:0.001042
+845:0.001015
+707:0.001047
+27:0.000955
+287:0.001011
+624:0.001039
+340:0.001052
+136:0.00101
+350:0.000978
+865:0.001011
+976:0.001038
+84:0.001025
+533:0.000993
+612:0.000953
+737:0.001017
+81:0.000994
+952:0.001022
+930:0.000968
+628:0.00097
+373:0.000975
+442:0.001013
+113:0.001063
+651:0.000963
+422:0.001018
+783:0.000918
+798:0.000997
+856:0.001048
+199:0.000999
+99:0.001041
+105:0.001055
+344:0.001018
+190:0.000964
+591:0.000988
+948:0.000959
+857:0.00098
+552:0.00099
+713:0.000978
+678:0.00101
+975:0.000937
+637:0.000998
+918:0.000998
+403:0.000998
+940:0.001028
+534:0.001048
+754:0.00101
+883:0.000995
+807:0.001041
+920:0.001001
+575:0.000993
+326:0.001076
+916:0.000983
+217:0.000972
+285:0.001026
+961:0.000945
+270:0.000997
+341:0.001
+468:0.001034
+346:0.001003
+617:0.001026
+395:0.000994
+897:0.00099
+330:0.000996
+400:0.001009
+379:0.001064
+531:0.000967
+680:0.001002
+10:0.000989
+958:0.000995
+507:0.001025
+303:0.001039
+417:0.00105
+304:0.000975
+410:0.000952
+944:0.000968
+319:0.001052
+540:0.001008
+411:0.00105
+642:0.000975
+981:0.001022
+7:0.000974
+94:0.000983
+566:0.001051
+989:0.001063
+945:0.000989
+870:0.000947
+864:0.000993
+336:0.001002
+283:0.000969
+585:0.001026
+108:0.001071
+762:0.001065
+764:0.001032
+294:0.000962
+758:0.000994
+202:0.000981
+425:0.00104
+431:0.001025
+848:0.001035
+999:0.001011
+843:0.000948
+407:0.001005
+545:0.001011
+91:0.000993
+40:0.001056
+92:0.000994
+83:0.000989
+970:0.000977
+192:0.000944
+246:0.000996
+343:0.000975
+693:0.000992
+473:0.001001
+293:0.000946
+479:0.001003
+559:0.001047
+11:0.001016
+1:0.00094
+701:0.000996
+485:0.001022
+444:0.000949
+983:0.001039
+171:0.000962
+432:0.001001
+383:0.000938
+443:0.00096
+209:0.001009
+830:0.001031
+198:0.001042
+96:0.000967
+295:0.001055
+512:0.000966
+371:0.001014
+457:0.000995
+68:0.000988
+229:0.000957
+71:0.001035
+33:0.000975
+155:0.001022
+484:0.001036
+362:0.001054
+178:0.000963
+472:0.000972
+131:0.001042
+30:0.001004
+4:0.001064
+659:0.001013
+215:0.000958
+673:0.001031
+683:0.00095
+277:0.000997
+337:0.00102
+985:0.000982
+745:0.000991
+366:0.000982
+191:0.000993
+978:0.000993
+389:0.001026
+504:0.000996
+570:0.000968
+523:0.001005
+779:0.00098
+654:0.001028
+884:0.000943
+79:0.001038
+140:0.001016
+354:0.001006
+722:0.001029
+816:0.001016
+742:0.000992
+399:0.000972
+167:0.000995
+62:0.000975
+353:0.001029
+61:0.000937
+398:0.001007
+493:0.000959
+22:0.000987
+733:0.000995
+423:0.000969
+714:0.000979
+381:0.001014
+583:0.000998
+421:0.001002
+130:0.000936
+850:0.001022
+263:0.000986
+12:0.000991
+280:0.001007
+414:0.000969
+826:0.000987
+427:0.001002
+265:0.001019
+926:0.001037
+554:0.000963
+41:0.00102
+671:0.000977
+984:0.001005
+876:0.000993
+70:0.001013
+98:0.000968
+231:0.001015
+933:0.000982
+245:0.000984
+625:0.00096
+135:0.001036
+459:0.001006
+172:0.001056
+413:0.001019
+31:0.001051
+814:0.000999
+803:0.000965
+218:0.000995
+176:0.001007
+947:0.001007
+538:0.001016
+527:0.000951
+581:0.001039
+610:0.001051
+782:0.000989
+587:0.001037
+582:0.000973
+212:0.000965
+755:0.001028
+855:0.001019
+712:0.000997
+939:0.000988
+808:0.001035
+784:0.001044
+950:0.001008
+778:0.001006
+338:0.001028
+993:0.000987
+771:0.001002
+435:0.001053
+996:0.000986
+434:0.000978
+110:0.000997
+50:0.000965
+509:0.000966
+17:0.000994
+821:0.001016
+788:0.000992
+242:0.000948
+86:0.001002
+528:0.001015
+162:0.001024
+597:0.001017
+813:0.00103
+739:0.001015
+73:0.000942
+154:0.000978
+23:0.000994
+87:0.001032
+426:0.000966
+9:0.00095
+738:0.000992
+115:0.001058
+241:0.001001
+935:0.001006
+150:0.001062
+592:0.001004
+614:0.00096
+886:0.001003
+841:0.000972
+111:0.000969
+716:0.000986
+907:0.001043
+43:0.001003
+601:0.000969
+386:0.001003
+725:0.000956
+170:0.000974
+775:0.001054
+539:0.000988
+325:0.001
+123:0.000936
+834:0.001028
+859:0.001006
+794:0.001003
+482:0.001039
+568:0.000977
+720:0.000998
+103:0.001038
+145:0.001044
+284:0.000966
+101:0.00105
+244:0.001053
+731:0.000987
+230:0.00102
+488:0.000982
+530:0.001026
+42:0.001025
+384:0.000989
+861:0.000964
+937:0.001033
+974:0.000979
+705:0.00101
+228:0.000963
+14:0.001003
+696:0.001001
+769:0.001004
+142:0.001009
+757:0.000996
+525:0.001038
+927:0.00102
+723:0.001028
+622:0.001022
+546:0.000963
+802:0.001012
+55:0.00099
+85:0.001017
+623:0.000989
+406:0.000972
+537:0.001002
+726:0.000933
+168:0.000968
+629:0.001064
+899:0.00102
+835:0.001026
+39:0.000947
+547:0.001006
+183:0.001044
+382:0.001083
+901:0.000936
+146:0.000994
+16:0.001025
+872:0.000913
+810:0.000993
+449:0.000978
+606:0.000969
+499:0.000988
+666:0.001009
+817:0.001011
+572:0.000993
+631:0.00097
+679:0.000997
+997:0.000956
+669:0.000974
+866:0.000977
+278:0.001019
+595:0.001022
+795:0.000977
+249:0.001036
+203:0.001039
+991:0.001025
+58:0.001018
+561:0.001004
+647:0.00099
+517:0.001015
+463:0.001045
+433:0.001016
+630:0.000981
+548:0.000992
+153:0.001013
+815:0.001056
+560:0.001024
+224:0.001015
+478:0.001051
+500:0.000993
+276:0.000983
+149:0.001009
+408:0.000974
+842:0.001035
+718:0.001006
+67:0.000995
+576:0.001019
+321:0.000978
+207:0.000916
+487:0.001028
+36:0.001012
+900:0.001059
+760:0.00102
+107:0.000998
+175:0.000989
+863:0.000973
+233:0.001009
+454:0.001017
+54:0.001008
+305:0.001066
+310:0.001043
+451:0.001026
+116:0.000999
+831:0.001022
+180:0.000982
+312:0.001019
+318:0.001
+800:0.00103
+515:0.000976
+721:0.001016
+806:0.000957
+281:0.001027
+818:0.000979
+878:0.000995
+462:0.000968
+465:0.001038
+470:0.001001
+306:0.000969
+513:0.000985
+187:0.00095
+5:0.000981
+148:0.001019
+632:0.000999
+791:0.001016
+448:0.000994
+893:0.000994
+252:0.000973
+367:0.001057
+125:0.001032
+24:0.000964
+519:0.00104
+919:0.00101
+600:0.001026
+676:0.00104
+665:0.000911
+751:0.000977
+197:0.001041
+785:0.001034
+313:0.000958
+189:0.001023
+351:0.000982
+752:0.000942
+211:0.001049
+429:0.001006
+274:0.001011
+797:0.001008
+735:0.000986
+286:0.001
+763:0.001052
+250:0.000959
+543:0.000963
+698:0.001006
+885:0.001006
+441:0.001061
+365:0.000999
+677:0.000974
+706:0.000954
+965:0.000966
+219:0.001042
+957:0.000937
+372:0.000983
+868:0.001009
+503:0.000958
+890:0.000995
+223:0.001013
+553:0.000941
+57:0.001011
+618:0.000986
+267:0.001
+670:0.000981
+909:0.001021
+904:0.000952
+498:0.000946
+914:0.001006
+264:0.001042
+288:0.00096
+124:0.001
+494:0.001025
+302:0.00094
+645:0.000944
+157:0.000981
+851:0.001019
+633:0.000977
+120:0.000916
+522:0.001003
+790:0.001
+106:0.00103
+489:0.000969
+234:0.001011
+307:0.001035
+419:0.00099
+873:0.001068
+82:0.000998
+746:0.000954
+697:0.000963
+541:0.000987
+404:0.001018
+510:0.000975
+64:0.001016
+732:0.000975
+225:0.001002
+208:0.001009
+966:0.000978
+643:0.001
+378:0.000929
+147:0.001008
+641:0.00099
+681:0.000987
+880:0.001011
+781:0.001015
+<!-- -->1: 0.100518
+2: 0.099765
+3: 0.10009
+4: 0.09987
+5: 0.099746
+6: 0.100096
+7: 0.099797
+8: 0.100398
+9: 0.099515
+10: 0.100205
+<!-- -->1:0.100302
+6:0.099759
+3:0.099942
+8:0.099848
+7:0.099831
+5:0.099688
+2:0.100167
+10:0.100429
+9:0.100097
+4:0.099937
+<!-- -->1:0.001014
+2:0.001023
+3:0.001091
+4:0.000979
+5:0.001002
+6:0.001009
+7:0.000979
+8:0.001027
+9:0.000985
+10:0.000968
+11:0.001016
+12:0.001035
+13:0.000982
+14:0.00095
+15:0.001018
+16:0.001014
+17:0.001007
+18:0.001056
+19:0.001076
+20:0.000966
+21:0.001035
+22:0.000966
+23:0.000985
+24:0.000974
+25:0.001011
+26:0.001029
+27:0.001005
+28:0.001031
+29:0.001022
+30:0.00101
+31:0.001023
+32:0.000978
+33:0.000991
+34:0.001017
+35:0.000982
+36:0.000995
+37:0.000983
+38:0.000988
+39:0.000955
+40:0.001
+41:0.001032
+42:0.00096
+43:0.000989
+44:0.000971
+45:0.001024
+46:0.000996
+47:0.000967
+48:0.00105
+49:0.000988
+50:0.000964
+51:0.001003
+52:0.000965
+53:0.000966
+54:0.000921
+55:0.001017
+56:0.001037
+57:0.000992
+58:0.001012
+59:0.000974
+60:0.001013
+61:0.001048
+62:0.001039
+63:0.000952
+64:0.001007
+65:0.001034
+66:0.000926
+67:0.000979
+68:0.000996
+69:0.000954
+70:0.000955
+71:0.001061
+72:0.001012
+73:0.001011
+74:0.000982
+75:0.000997
+76:0.001026
+77:0.001026
+78:0.001001
+79:0.000903
+80:0.000986
+81:0.001027
+82:0.000972
+83:0.001051
+84:0.001019
+85:0.000976
+86:0.001001
+87:0.000972
+88:0.001017
+89:0.000997
+90:0.00104
+91:0.000995
+92:0.001032
+93:0.000964
+94:0.000929
+95:0.000995
+96:0.001027
+97:0.000985
+98:0.001001
+99:0.000973
+100:0.000993
+101:0.001022
+102:0.001
+103:0.00102
+104:0.001006
+105:0.000981
+106:0.00098
+107:0.001035
+108:0.001011
+109:0.001033
+110:0.000992
+111:0.001015
+112:0.000934
+113:0.001026
+114:0.000997
+115:0.000971
+116:0.001027
+117:0.000983
+118:0.001016
+119:0.001
+120:0.000957
+121:0.000982
+122:0.001031
+123:0.000991
+124:0.001006
+125:0.000991
+126:0.000992
+127:0.00103
+128:0.001018
+129:0.000979
+130:0.001033
+131:0.000986
+132:0.000962
+133:0.001002
+134:0.000995
+135:0.000989
+136:0.001034
+137:0.000965
+138:0.001028
+139:0.000949
+140:0.001026
+141:0.000994
+142:0.001023
+143:0.001023
+144:0.000966
+145:0.001007
+146:0.000994
+147:0.000947
+148:0.001009
+149:0.001019
+150:0.001028
+151:0.000987
+152:0.000988
+153:0.000946
+154:0.00105
+155:0.000974
+156:0.00092
+157:0.000965
+158:0.000975
+159:0.000987
+160:0.000964
+161:0.001008
+162:0.001037
+163:0.000994
+164:0.000938
+165:0.001017
+166:0.001032
+167:0.000935
+168:0.001007
+169:0.00098
+170:0.00099
+171:0.001013
+172:0.000975
+173:0.001001
+174:0.001035
+175:0.000969
+176:0.001052
+177:0.001008
+178:0.000984
+179:0.000976
+180:0.001006
+181:0.000945
+182:0.000989
+183:0.000987
+184:0.001059
+185:0.001039
+186:0.001036
+187:0.001004
+188:0.00101
+189:0.000977
+190:0.000935
+191:0.000949
+192:0.000952
+193:0.000985
+194:0.000999
+195:0.000995
+196:0.001005
+197:0.001006
+198:0.000944
+199:0.001023
+200:0.000981
+201:0.001002
+202:0.000972
+203:0.000995
+204:0.000962
+205:0.000982
+206:0.001039
+207:0.001026
+208:0.001052
+209:0.000961
+210:0.001045
+211:0.001014
+212:0.001033
+213:0.000964
+214:0.001012
+215:0.00098
+216:0.000942
+217:0.001053
+218:0.000961
+219:0.00097
+220:0.000997
+221:0.001013
+222:0.000981
+223:0.001037
+224:0.000998
+225:0.001047
+226:0.000955
+227:0.000983
+228:0.000952
+229:0.000989
+230:0.001024
+231:0.000964
+232:0.001004
+233:0.001025
+234:0.000978
+235:0.000975
+236:0.000976
+237:0.001014
+238:0.000999
+239:0.001017
+240:0.00101
+241:0.000986
+242:0.00103
+243:0.00103
+244:0.001036
+245:0.001009
+246:0.000954
+247:0.001042
+248:0.00102
+249:0.001062
+250:0.000959
+251:0.000987
+252:0.000997
+253:0.001083
+254:0.000977
+255:0.000976
+256:0.000947
+257:0.00104
+258:0.001017
+259:0.001046
+260:0.000948
+261:0.000955
+262:0.000997
+263:0.001002
+264:0.001052
+265:0.001076
+266:0.000979
+267:0.000973
+268:0.001
+269:0.000997
+270:0.001045
+271:0.000982
+272:0.001057
+273:0.001028
+274:0.001019
+275:0.000962
+276:0.000967
+277:0.000952
+278:0.000996
+279:0.000965
+280:0.000997
+281:0.001077
+282:0.000978
+283:0.00097
+284:0.00104
+285:0.001063
+286:0.001034
+287:0.000938
+288:0.00101
+289:0.00107
+290:0.000948
+291:0.001045
+292:0.000997
+293:0.001002
+294:0.000993
+295:0.000996
+296:0.001004
+297:0.001037
+298:0.000989
+299:0.001052
+300:0.001041
+301:0.000988
+302:0.001017
+303:0.000937
+304:0.001019
+305:0.001061
+306:0.001031
+307:0.001033
+308:0.000976
+309:0.001024
+310:0.000926
+311:0.000946
+312:0.000982
+313:0.00096
+314:0.000963
+315:0.000954
+316:0.000975
+317:0.001008
+318:0.001059
+319:0.001008
+320:0.000964
+321:0.000983
+322:0.000968
+323:0.000983
+324:0.000933
+325:0.00098
+326:0.000994
+327:0.000986
+328:0.000983
+329:0.000991
+330:0.001011
+331:0.000952
+332:0.000962
+333:0.000962
+334:0.000986
+335:0.001001
+336:0.001046
+337:0.000959
+338:0.001026
+339:0.001057
+340:0.000978
+341:0.001034
+342:0.00096
+343:0.000956
+344:0.001008
+345:0.000954
+346:0.000974
+347:0.001027
+348:0.000988
+349:0.001004
+350:0.001001
+351:0.000992
+352:0.000993
+353:0.000964
+354:0.001038
+355:0.000984
+356:0.001001
+357:0.000991
+358:0.001026
+359:0.000978
+360:0.001033
+361:0.001018
+362:0.000996
+363:0.000982
+364:0.000956
+365:0.001001
+366:0.000997
+367:0.000968
+368:0.001051
+369:0.000988
+370:0.001
+371:0.001041
+372:0.000973
+373:0.001008
+374:0.001
+375:0.000974
+376:0.001019
+377:0.001029
+378:0.000968
+379:0.000978
+380:0.000977
+381:0.001009
+382:0.00097
+383:0.000965
+384:0.00098
+385:0.00096
+386:0.000995
+387:0.001021
+388:0.000956
+389:0.000993
+390:0.000999
+391:0.001048
+392:0.001042
+393:0.000918
+394:0.001024
+395:0.000993
+396:0.000982
+397:0.001002
+398:0.000989
+399:0.000972
+400:0.000994
+401:0.000987
+402:0.001004
+403:0.000969
+404:0.000972
+405:0.000965
+406:0.001027
+407:0.001008
+408:0.000937
+409:0.00096
+410:0.001013
+411:0.001049
+412:0.000983
+413:0.001012
+414:0.00098
+415:0.00099
+416:0.001033
+417:0.001015
+418:0.001037
+419:0.000982
+420:0.00093
+421:0.001007
+422:0.000966
+423:0.001014
+424:0.00103
+425:0.001048
+426:0.000962
+427:0.001017
+428:0.001005
+429:0.00103
+430:0.001036
+431:0.000942
+432:0.001004
+433:0.000974
+434:0.001019
+435:0.000983
+436:0.001004
+437:0.001025
+438:0.000942
+439:0.001043
+440:0.00098
+441:0.000959
+442:0.001028
+443:0.001055
+444:0.000991
+445:0.001015
+446:0.000998
+447:0.001043
+448:0.000976
+449:0.001036
+450:0.001004
+451:0.001013
+452:0.001041
+453:0.000972
+454:0.000976
+455:0.00101
+456:0.000946
+457:0.000971
+458:0.001006
+459:0.000983
+460:0.001039
+461:0.000998
+462:0.001013
+463:0.000953
+464:0.001033
+465:0.001043
+466:0.00098
+467:0.00105
+468:0.00103
+469:0.000996
+470:0.000976
+471:0.001025
+472:0.000975
+473:0.000994
+474:0.001026
+475:0.000989
+476:0.001058
+477:0.000991
+478:0.000985
+479:0.000983
+480:0.000997
+481:0.001007
+482:0.001021
+483:0.000979
+484:0.000959
+485:0.001007
+486:0.000975
+487:0.000934
+488:0.001029
+489:0.000987
+490:0.00093
+491:0.001006
+492:0.000987
+493:0.000991
+494:0.00097
+495:0.000967
+496:0.000963
+497:0.001015
+498:0.001
+499:0.000992
+500:0.000965
+501:0.001015
+502:0.000954
+503:0.000986
+504:0.001
+505:0.001039
+506:0.00097
+507:0.000957
+508:0.001034
+509:0.000983
+510:0.00101
+511:0.000978
+512:0.001022
+513:0.001035
+514:0.000998
+515:0.001027
+516:0.00099
+517:0.001005
+518:0.000972
+519:0.001009
+520:0.00102
+521:0.001041
+522:0.001012
+523:0.000988
+524:0.000947
+525:0.000972
+526:0.000982
+527:0.001021
+528:0.000984
+529:0.001073
+530:0.000961
+531:0.001001
+532:0.000992
+533:0.001015
+534:0.000941
+535:0.001024
+536:0.000994
+537:0.000995
+538:0.001016
+539:0.000971
+540:0.001034
+541:0.000991
+542:0.001023
+543:0.001024
+544:0.000982
+545:0.000974
+546:0.001005
+547:0.001026
+548:0.000933
+549:0.001023
+550:0.00099
+551:0.000982
+552:0.001015
+553:0.001
+554:0.001002
+555:0.001038
+556:0.001039
+557:0.001036
+558:0.00097
+559:0.000953
+560:0.001035
+561:0.001009
+562:0.000987
+563:0.00104
+564:0.000946
+565:0.000979
+566:0.001032
+567:0.001027
+568:0.001029
+569:0.000972
+570:0.000955
+571:0.001035
+572:0.000993
+573:0.000997
+574:0.001011
+575:0.000978
+576:0.000967
+577:0.001037
+578:0.000937
+579:0.000984
+580:0.000981
+581:0.000981
+582:0.000942
+583:0.001
+584:0.001012
+585:0.001044
+586:0.000972
+587:0.001005
+588:0.001039
+589:0.001001
+590:0.001031
+591:0.001026
+592:0.00103
+593:0.001041
+594:0.000973
+595:0.000999
+596:0.000974
+597:0.00101
+598:0.001022
+599:0.000967
+600:0.001052
+601:0.000963
+602:0.001015
+603:0.001018
+604:0.001045
+605:0.000978
+606:0.000951
+607:0.001045
+608:0.000979
+609:0.000984
+610:0.000936
+611:0.000956
+612:0.001006
+613:0.001015
+614:0.000952
+615:0.001023
+616:0.000975
+617:0.001011
+618:0.001045
+619:0.00103
+620:0.000983
+621:0.001001
+622:0.000972
+623:0.000991
+624:0.001014
+625:0.001006
+626:0.00101
+627:0.000994
+628:0.000988
+629:0.000996
+630:0.00102
+631:0.000923
+632:0.001047
+633:0.000946
+634:0.001018
+635:0.001033
+636:0.001058
+637:0.001052
+638:0.000988
+639:0.00098
+640:0.001018
+641:0.001045
+642:0.000979
+643:0.001052
+644:0.001011
+645:0.001058
+646:0.000972
+647:0.000981
+648:0.000964
+649:0.001008
+650:0.00101
+651:0.000989
+652:0.000984
+653:0.001019
+654:0.001076
+655:0.001003
+656:0.000978
+657:0.000997
+658:0.00101
+659:0.000999
+660:0.00101
+661:0.000978
+662:0.00101
+663:0.001044
+664:0.000976
+665:0.000972
+666:0.001012
+667:0.001004
+668:0.000993
+669:0.000999
+670:0.000983
+671:0.001033
+672:0.001017
+673:0.001064
+674:0.00098
+675:0.000985
+676:0.000999
+677:0.00096
+678:0.000959
+679:0.001028
+680:0.000978
+681:0.000995
+682:0.001031
+683:0.000999
+684:0.001039
+685:0.000989
+686:0.001039
+687:0.001032
+688:0.000986
+689:0.000958
+690:0.001008
+691:0.000989
+692:0.000985
+693:0.001017
+694:0.000959
+695:0.000971
+696:0.001027
+697:0.000987
+698:0.001017
+699:0.001064
+700:0.001052
+701:0.000988
+702:0.001
+703:0.001045
+704:0.001004
+705:0.000996
+706:0.001055
+707:0.001028
+708:0.000927
+709:0.001051
+710:0.001019
+711:0.001002
+712:0.001056
+713:0.00098
+714:0.001001
+715:0.000997
+716:0.001044
+717:0.001026
+718:0.00102
+719:0.001011
+720:0.000936
+721:0.000988
+722:0.001015
+723:0.000998
+724:0.001026
+725:0.001044
+726:0.001037
+727:0.000985
+728:0.001003
+729:0.000992
+730:0.000979
+731:0.000984
+732:0.000995
+733:0.001015
+734:0.001028
+735:0.000965
+736:0.000988
+737:0.001063
+738:0.000969
+739:0.000974
+740:0.000986
+741:0.000993
+742:0.001009
+743:0.000982
+744:0.000998
+745:0.001014
+746:0.001029
+747:0.000997
+748:0.000965
+749:0.001072
+750:0.001013
+751:0.001046
+752:0.001028
+753:0.001012
+754:0.001032
+755:0.000949
+756:0.000998
+757:0.000961
+758:0.000971
+759:0.001033
+760:0.001053
+761:0.000992
+762:0.000966
+763:0.00096
+764:0.001044
+765:0.000985
+766:0.00101
+767:0.001082
+768:0.00107
+769:0.001017
+770:0.001013
+771:0.00102
+772:0.001026
+773:0.000986
+774:0.001027
+775:0.001036
+776:0.000996
+777:0.000993
+778:0.001012
+779:0.001069
+780:0.000997
+781:0.000972
+782:0.000963
+783:0.000994
+784:0.000976
+785:0.000966
+786:0.001029
+787:0.000982
+788:0.000963
+789:0.00103
+790:0.000965
+791:0.000975
+792:0.000959
+793:0.000994
+794:0.001001
+795:0.000991
+796:0.000993
+797:0.001008
+798:0.000984
+799:0.001001
+800:0.001055
+801:0.001016
+802:0.000986
+803:0.001016
+804:0.001026
+805:0.000972
+806:0.000986
+807:0.000991
+808:0.001044
+809:0.000986
+810:0.000978
+811:0.000977
+812:0.001013
+813:0.000979
+814:0.000979
+815:0.001004
+816:0.001018
+817:0.001012
+818:0.000969
+819:0.000968
+820:0.001034
+821:0.001002
+822:0.000982
+823:0.000984
+824:0.000986
+825:0.001011
+826:0.000988
+827:0.00104
+828:0.000933
+829:0.001011
+830:0.00102
+831:0.000933
+832:0.000998
+833:0.001006
+834:0.001036
+835:0.001022
+836:0.001
+837:0.001016
+838:0.001007
+839:0.001035
+840:0.000925
+841:0.001042
+842:0.000968
+843:0.001038
+844:0.00098
+845:0.001004
+846:0.000985
+847:0.000985
+848:0.000992
+849:0.000997
+850:0.001052
+851:0.000992
+852:0.000946
+853:0.000978
+854:0.001013
+855:0.001035
+856:0.001015
+857:0.000993
+858:0.001024
+859:0.00098
+860:0.000952
+861:0.000998
+862:0.001005
+863:0.000969
+864:0.000988
+865:0.000982
+866:0.001004
+867:0.00099
+868:0.001008
+869:0.001032
+870:0.000985
+871:0.001047
+872:0.001043
+873:0.000999
+874:0.001062
+875:0.00101
+876:0.001064
+877:0.001027
+878:0.001015
+879:0.000997
+880:0.001027
+881:0.001027
+882:0.000987
+883:0.000992
+884:0.000993
+885:0.001009
+886:0.001024
+887:0.000978
+888:0.001047
+889:0.001008
+890:0.000945
+891:0.000977
+892:0.000964
+893:0.000987
+894:0.000969
+895:0.000977
+896:0.000993
+897:0.001041
+898:0.001
+899:0.00101
+900:0.001003
+901:0.000994
+902:0.001034
+903:0.000987
+904:0.000962
+905:0.000995
+906:0.000957
+907:0.00096
+908:0.001057
+909:0.000987
+910:0.001051
+911:0.001006
+912:0.001007
+913:0.001022
+914:0.00096
+915:0.001074
+916:0.00098
+917:0.000991
+918:0.000994
+919:0.000993
+920:0.000995
+921:0.001005
+922:0.00097
+923:0.001018
+924:0.000965
+925:0.000951
+926:0.001045
+927:0.00102
+928:0.001041
+929:0.001028
+930:0.000996
+931:0.000972
+932:0.000987
+933:0.000971
+934:0.00095
+935:0.001009
+936:0.001024
+937:0.001019
+938:0.001082
+939:0.000939
+940:0.001012
+941:0.000996
+942:0.001006
+943:0.000972
+944:0.001044
+945:0.001033
+946:0.00102
+947:0.000969
+948:0.00098
+949:0.001018
+950:0.001008
+951:0.000991
+952:0.000942
+953:0.00101
+954:0.000989
+955:0.001028
+956:0.000973
+957:0.001061
+958:0.000973
+959:0.001005
+960:0.000959
+961:0.001065
+962:0.001
+963:0.001059
+964:0.000983
+965:0.001049
+966:0.000994
+967:0.00101
+968:0.001011
+969:0.001039
+970:0.000988
+971:0.001009
+972:0.001011
+973:0.001024
+974:0.001032
+975:0.00103
+976:0.00103
+977:0.000997
+978:0.000995
+979:0.000993
+980:0.001004
+981:0.00099
+982:0.001005
+983:0.001053
+984:0.000952
+985:0.001019
+986:0.001002
+987:0.000972
+988:0.001054
+989:0.000997
+990:0.001004
+991:0.000997
+992:0.001021
+993:0.001015
+994:0.001004
+995:0.001044
+996:0.00101
+997:0.001004
+998:0.000999
+999:0.00104
+1000:0.001044
+<!-- -->1:0.100072
+2:0.100008
+3:0.099732
+4:0.100064
+5:0.100137
+6:0.100402
+7:0.099797
+8:0.100438
+9:0.099775
+10:0.099575
+<!-- -->5:0.099996568
+7:0.10000732
+9:0.100001776
+2:0.099989668
+1:0.100015928
+3:0.099989378
+4:0.099986761
+8:0.100004244
+6:0.100001423
+10:0.100006934
+<!-- -->1:0.099990159
+2:0.100000995
+3:0.100001136
+4:0.099993311
+5:0.100014589
+6:0.099997858
+7:0.099999871
+8:0.099992634
+9:0.100010996
+10:0.099998451
+</code></pre><hr/><pre><code># Set the number of random numbers to generate and the upper bound for the numbers
+n &lt;- 1000000000
+x &lt;- 10
 
 # Generate N random numbers between 1 and X
 numbers &lt;- sample(1:x, n, replace = TRUE)
@@ -11,16 +3071,16 @@ total &lt;- length(numbers)
 probabilities &lt;- counts / total
 
 # Generate a file name based on the values of N and X
-fileName &lt;- paste0(&quot;r_&quot;, n, &quot;_&quot;, x, &quot;.csv&quot;)
+fileName &lt;- paste0(&quot;r_&quot;, x, &quot;_&quot;, n)
 
 # Create the &quot;outputs&quot; directory if it does not exist
-if (!dir.exists(&quot;outputs&quot;)) {
-    dir.create(&quot;outputs&quot;)
-}
+# if (!dir.exists(&quot;outputs&quot;)) {
+#     dir.create(&quot;outputs&quot;)
+# }
 
 # Write the probabilities to a file in the &quot;outputs&quot; directory
-file &lt;- file(&quot;outputs/&quot;, fileName, open = &quot;w&quot;)
-writeLines(paste(names(probabilities), probabilities, sep = &quot;,&quot;), file)
+file &lt;- file(fileName, open = &quot;w&quot;)
+writeLines(paste(names(probabilities), probabilities, sep = &quot;:&quot;), file)
 close(file)
 </code></pre><hr/></main></div></div><div id="gatsby-announcer" style="position:absolute;top:0;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border:0" aria-live="assertive" aria-atomic="true"></div></div><script async="" src="YOUR_SELF_HOSTED_ORIGIN/gtag/js?id=GA-TRACKING_ID"></script><script>
       window.excludeGtagPaths=[/^(?:\/preview\/(?:(?!(?:\/|^)\.).)*?)$/,/^(?:\/do\-not\-track\/me\/too\/)$/];
@@ -36,6 +3096,6 @@ close(file)
           <script
             id="gatsby-chunk-mapping"
           >
-            window.___chunkMapping="{\"app\":[\"/app-607dd48e99a00eb4af79.js\"],\"component---src-pages-404-js\":[\"/component---src-pages-404-js-ad8e299ff8d93bdf7191.js\"],\"component---src-pages-history-js\":[\"/component---src-pages-history-js-760921798ec749e93dd4.js\"],\"component---src-pages-index-js\":[\"/component---src-pages-index-js-db474a22ed56c745e53f.js\"],\"component---src-pages-languages-index-js\":[\"/component---src-pages-languages-index-js-fb22a6e780f82719d2fc.js\"],\"component---src-pages-languages-language-js\":[\"/component---src-pages-languages-language-js-1e125696056d339e5eb2.js\"],\"component---src-pages-methodology-js\":[\"/component---src-pages-methodology-js-176e79cde47b61da07e6.js\"],\"component---src-pages-results-index-js\":[\"/component---src-pages-results-index-js-18f354ff580aabb98161.js\"]}";
+            window.___chunkMapping="{\"app\":[\"/app-607dd48e99a00eb4af79.js\"],\"component---src-pages-404-js\":[\"/component---src-pages-404-js-ad8e299ff8d93bdf7191.js\"],\"component---src-pages-history-js\":[\"/component---src-pages-history-js-760921798ec749e93dd4.js\"],\"component---src-pages-index-js\":[\"/component---src-pages-index-js-545ca58f72c9044a1537.js\"],\"component---src-pages-languages-index-js\":[\"/component---src-pages-languages-index-js-fb22a6e780f82719d2fc.js\"],\"component---src-pages-languages-language-js\":[\"/component---src-pages-languages-language-js-b80832a9c1de14ce1946.js\"],\"component---src-pages-methodology-js\":[\"/component---src-pages-methodology-js-fc41caa6d60ed269a269.js\"],\"component---src-pages-results-index-js\":[\"/component---src-pages-results-index-js-e7e2ea38dffd898bd716.js\"]}";
           </script>
-        <script>window.___webpackCompilationHash="fc67c7cf72d1de3d1afc";</script><script src="/webpack-runtime-098c79dec237542435b9.js" async></script><script src="/framework-89c8996abff9725abc74.js" async></script><script src="/app-607dd48e99a00eb4af79.js" async></script><!-- slice-end id="_gatsby-scripts-1" --></body></html>
+        <script>window.___webpackCompilationHash="f8bf1ab8f17775d36e2d";</script><script src="/webpack-runtime-ea38a535676a2ed709c5.js" async></script><script src="/framework-89c8996abff9725abc74.js" async></script><script src="/app-607dd48e99a00eb4af79.js" async></script><!-- slice-end id="_gatsby-scripts-1" --></body></html>
