@@ -10,6 +10,7 @@
 4. sennajs.akrasia.dev
 5. prng.akrasia.dev
 6. talon.akrasia.dev
+7. generalized.akrasia.dev
 
 # config
 
@@ -42,3 +43,6 @@ Compiled websites from
 4. [prng](https://github.com/spencermwoo/randomness-in-programming-languages)
 5. [sennajs](https://github.com/liferay/sennajs.com)
 6. [talon](https://github.com/chaosparrot/talon_practice)
+
+Serve website from
+1. [generalized](https://github.com/spencermwoo/generalized)

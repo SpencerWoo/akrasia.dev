@@ -1,0 +1,26 @@
+{
+  "name": "generalized",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js",
+    "prd": "pm2 start index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spencermwoo/Generalized.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/spencermwoo/Generalized/issues"
+  },
+  "homepage": "https://github.com/spencermwoo/Generalized#readme",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "openai": "^3.2.1",
+    "pm2": "^5.3.0"
+  }
+}

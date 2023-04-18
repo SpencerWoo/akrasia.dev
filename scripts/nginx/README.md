@@ -9,6 +9,7 @@ sudo ln -s /etc/nginx/sites-available/metaljs.akrasia.dev /etc/nginx/sites-enabl
 sudo ln -s /etc/nginx/sites-available/prng.akrasia.dev /etc/nginx/sites-enabled/
 sudo ln -s /etc/nginx/sites-available/sennajs.akrasia.dev /etc/nginx/sites-enabled/
 sudo ln -s /etc/nginx/sites-available/talon.akrasia.dev /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/generalized.akrasia.dev /etc/nginx/sites-enabled/
 ```
 
 ```

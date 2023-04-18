@@ -20,7 +20,8 @@ def upload_compiled_sites(base_dir):
         'metaljs', 
         'prng',
         'sennajs', 
-        'talon'
+        'talon',
+        'generalized'
     ]
 
     upload_compiled_dirs(base_dir, base_ftp_dir, sites)
@@ -50,4 +51,3 @@ if __name__ == '__main__':
     base_dir = os.getcwd()
 
     upload_akrasiadev(base_dir);
-    # upload_puzzle();
