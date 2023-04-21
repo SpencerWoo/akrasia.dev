@@ -43,12 +43,15 @@ echo '
 
 # Create CF DNS entries for subdomains as well...
 (cd cf && ./run-add.sh $ipv4 cyberchef $type)
+(cd cf && ./run-add.sh $ipv4 generalized $type)
 (cd cf && ./run-add.sh $ipv4 k8s $type)
+(cd cf && ./run-add.sh $ipv4 mazechallenger $type)
 (cd cf && ./run-add.sh $ipv4 metaljs $type)
+(cd cf && ./run-add.sh $ipv4 puzzle $type)
 (cd cf && ./run-add.sh $ipv4 prng $type)
 (cd cf && ./run-add.sh $ipv4 sennajs $type)
 (cd cf && ./run-add.sh $ipv4 talon $type)
-(cd cf && ./run-add.sh $ipv4 generalized $type)
+
 
 echo '
 		Successfully added A records.

@@ -7,11 +7,12 @@
 1. cyberchef.akrasia.dev
 2. generalized.akrasia.dev
 3. k8s.akrasia.dev
-4. metaljs.akrasia.dev
-5. sennajs.akrasia.dev
-6. prng.akrasia.dev
-7. puzzle.akrasia.dev
-8. talon.akrasia.dev
+4. mazechallenger.akrasia.dev
+5. metaljs.akrasia.dev
+6. sennajs.akrasia.dev
+7. prng.akrasia.dev
+8. puzzle.akrasia.dev
+9. talon.akrasia.dev
 
 # config
 
@@ -39,8 +40,9 @@ cd scripts
 
 Serve website from
 1. [generalized](https://github.com/spencermwoo/generalized)
-2. [prng](https://github.com/spencermwoo/randomness-in-programming-languages)
-3. [puzzle](https://github.com/spencermwoo/puzzle)
+2. [mazechallenger](https://github.com/spencermwoo/mazechallenger)
+3. [prng](https://github.com/spencermwoo/randomness-in-programming-languages)
+4. [puzzle](https://github.com/spencermwoo/puzzle)
 
 Compiled websites from
 1. [cyberchef](https://github.com/gchq/CyberChef)

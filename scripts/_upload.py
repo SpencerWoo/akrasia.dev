@@ -15,10 +15,11 @@ def clear_ftp_dir(sftp_dir):
 def upload_compiled_sites(base_dir):
     base_ftp_dir = '/var/www'
     sites = [
-        'base'
+        'base',
         'cyberchef', 
         'generalized',
         'k8s', 
+        'mazechallenger',
         'metaljs', 
         'prng',
         'sennajs', 
