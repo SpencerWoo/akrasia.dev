@@ -113,3 +113,19 @@ def upload_compiled_dirs(base_dir, base_ftp_dir, dirs):
         # print(ftp_dir, compiled_dir)
 
         upload(ftp_dir, compiled_dir)
+
+@log
+def upload_puzzle_dirs(base_dir):
+    ftp_dir = '/var/www/'
+    compiled_dir = f'{base_dir}/puzzle/puzzle.akrasia.dev'
+    upload(ftp_dir, f'{compiled_dir}/')
+
+    ftp_dir = '/var/www/'
+    compiled_dir = f'{base_dir}/puzzle/api.akrasia.dev'
+    upload(ftp_dir, f'{compiled_dir}/')
+
+@log
+def upload_puzzle_nginx(base_dir):
+    ftp_dir = '/etc/nginx/sites-available/'
+    nginx_dir = f'{base_dir}/puzzle/nginx/puzzle'
+    upload(ftp_dir, f'{nginx_dir}/')

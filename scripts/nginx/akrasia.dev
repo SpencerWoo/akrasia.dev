@@ -5,7 +5,7 @@ server {
         listen 443;
         listen [::]:443;
 
-        root /var/www/talon;
+        root /var/www/base;
         server_name akrasia.dev www.akrasia.dev;
 
         index index.html;

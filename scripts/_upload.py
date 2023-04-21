@@ -15,13 +15,15 @@ def clear_ftp_dir(sftp_dir):
 def upload_compiled_sites(base_dir):
     base_ftp_dir = '/var/www'
     sites = [
+        'base',
         'cyberchef', 
+        'generalized',
         'k8s', 
+        'mazechallenger',
         'metaljs', 
         'prng',
         'sennajs', 
-        'talon',
-        'generalized'
+        'talon'
     ]
 
     upload_compiled_dirs(base_dir, base_ftp_dir, sites)
@@ -33,6 +35,13 @@ def upload_nginx(base_dir):
     nginx_dir = f'{base_dir}/scripts/nginx/'
     upload(ftp_dir, nginx_dir)
 
+# 3)
+@log
+def upload_puzzle(base_dir):
+    upload_puzzle_dirs(base_dir)
+
+    upload_puzzle_nginx(base_dir)
+
 def upload_akrasiadev(base_dir):
     # 0)
     # clear_ftp_dir(ftp_dir)
@@ -43,6 +52,9 @@ def upload_akrasiadev(base_dir):
 
     # 2)
     upload_nginx(base_dir)
+
+    # 3)
+    upload_puzzle(base_dir)
 
 if __name__ == '__main__':
     cwd = os.getcwd()
