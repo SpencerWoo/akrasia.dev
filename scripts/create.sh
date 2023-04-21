@@ -45,7 +45,7 @@ echo '
 (cd cf && ./run-add.sh $ipv4 cyberchef $type)
 (cd cf && ./run-add.sh $ipv4 generalized $type)
 (cd cf && ./run-add.sh $ipv4 k8s $type)
-(cd cf && ./run-add.sh $ipv4 mazechallenger $type)
+(cd cf && ./run-add.sh $ipv4 maze $type)
 (cd cf && ./run-add.sh $ipv4 metaljs $type)
 (cd cf && ./run-add.sh $ipv4 puzzle $type)
 (cd cf && ./run-add.sh $ipv4 prng $type)
