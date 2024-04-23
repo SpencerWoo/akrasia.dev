@@ -1,0 +1,202 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  min-height: 100%;
+  font-family: avenir, 'avenir next', helvetica, arial, sans-serif;
+
+  padding-top: 200px;
+  text-align: center;
+
+  font-size: 10px;
+}
+
+footer {
+  width: 30%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+button {
+  display: block;
+  border: 0;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 4em;
+  padding: 1em 1.5em;
+  margin: 1em auto;
+  letter-spacing: 0.2em;
+  box-shadow: 4px 4px rgba(0, 0, 0, 0.5);
+}
+
+button:focus {
+  outline: 0;
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding-top: 120px;
+  }
+
+  footer {
+    width: 80%;
+  }
+}
+
+
+/* CHOOSE GAME */
+
+body.choose-game {
+  padding: 0;
+}
+
+@media (max-width: 600px) {
+  body.choose-game {
+    padding: 0;
+  }
+}
+
+.choose-game .banner {
+  display: block;
+  vertical-align: middle;
+  height: 50%;
+  padding-top: 10%;
+}
+
+.choose-game .banner span {
+  display: block;
+}
+
+.choose-game .banner a {
+  font-size: 3rem;
+}
+
+.choose-game .guess-tempo-banner,
+.choose-game .guess-tempo-banner a {
+  background-color: hsla(331, 74%, 70%, 1.0);
+  color: #85144B;
+}
+
+.choose-game .keep-bpm-banner,
+.choose-game .keep-bpm-banner a {
+  background-color: #7FDBFF;
+  color: #001f3f;
+}
+
+@media (max-width: 600px) {
+  .choose-game .banner {
+    padding-top: 30%;
+  }
+
+  .choose-game .banner a {
+    font-size: 2.6rem;
+  }
+}
+
+
+
+/* GUESS TEMPO */
+
+body.guess-tempo {
+  background-color: hsla(331, 74%, 70%, 1.0);
+  color: #85144B;
+}
+
+.guess-tempo a,
+.guess-tempo a:link,
+.guess-tempo a:visited,
+.guess-tempo a:hover,
+.guess-tempo a:active {
+  color: #85144B;
+}
+
+.guess-tempo footer {
+  border-top: 1px solid rgba(133, 20, 75, 0.5);
+}
+
+.guess-tempo button {
+  background-color: #85144B;
+  color: hsla(331, 74%, 70%, 1.0);
+}
+
+.guess-tempo h2 {
+  font-size: 2rem;
+}
+
+.guess-tempo #form {
+  margin-bottom: 2rem;
+}
+
+.guess-tempo #guessed-tempo {
+  font-size: 2rem;
+  width: 15rem;
+  padding: 0.4rem;
+}
+
+.guess-tempo #score {
+  font-size: 2rem;
+}
+
+.guess-tempo .speaker {
+  font-size: 4rem;
+}
+
+
+/* KEEP BPM */
+
+body.keep-bpm {
+  padding-top: 140px;
+  background-color: #7FDBFF;
+  color: #001f3f;
+}
+
+@media (max-width: 600px) {
+  body.keep-bpm {
+    padding-top: 15px;
+  }
+}
+
+.keep-bpm a,
+.keep-bpm a:link,
+.keep-bpm a:visited,
+.keep-bpm a:hover,
+.keep-bpm a:active {
+  color: #001f3f;
+}
+
+.keep-bpm footer {
+  border-top: 1px solid rgba(0, 31, 63, 0.5);
+}
+
+.keep-bpm #target-bpm {
+  margin-bottom: 1rem;
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.keep-bpm #count-down {
+  font-size: 2rem;
+}
+
+.keep-bpm small {
+  font-size: 55%;
+}
+
+.keep-bpm button {
+  background-color: #001f3f;
+  color: hsla(210, 100%, 75%, 1.0);
+}
+
+.keep-bpm button.disabled {
+  color: grey;
+}
