@@ -7,6 +7,12 @@ current scripts to host on digitalocean
 `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash`
 `. ~/.nvm/nvm.sh`
 
+```
+py -m venv .venv
+source .venv/bin/activate
+py -m pip install -r requirements.txt
+```
+
 # deploy
 `./create.sh`
 
