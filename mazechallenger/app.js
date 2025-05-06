@@ -16,6 +16,8 @@ var score = 0;
 //Default 30x30
 //Default Map
 var mapSetup = [150, 155, 485, 504, 174, 164, 764, 779];
+const mazeScores = [10, 800, 1400, 1700, 2000, 2400, 3000, 3552];
+const mazeTitles = ['Beginner', 'Intermediate', 'Advanced', 'Elite', 'Master', 'Grand Master', 'Godlike', 'Legendary'];
 
 var start_index = mapSetup[0];
 var end_index = mapSetup[mapSetup.length - 1];
@@ -36,6 +38,11 @@ function setup() {
             var cell = new Cell(i, j);
             grid.push(cell);
         }
+    }
+
+    console.log("Maze Levels:");
+    for (var i = 0; i < mazeScores.length; i++) {
+        console.log(mazeScores[i] + " - " + mazeTitles[i]);
     }
 }
 
@@ -92,10 +99,6 @@ function executeAStar(start, end, mapPoint) {
 
     var result = astar.search(graph, s, e);
 
-    //   return animatePath(col, result);
-    // }
-
-    // function animatePath(col, result){
     if (result.length < 1) {
         alert("Invalid Maze.  There is no way through!");
         resetGame();
@@ -107,9 +110,7 @@ function executeAStar(start, end, mapPoint) {
         grid[v].path = true;
         animate_path.push(v);
 
-        if (i == result.length - 1) {
-            // start = v;
-        } else {
+        if (i != result.length - 1) {
             col[result[i].y][result[i].x] = 0;
         }
     }
@@ -241,36 +242,25 @@ function draw() {
     drawConsole();
 }
 
+
+const x1 = 630;
+const y1 = 100;
 function drawConsole() {
-    var x1 = 630;
-    var y1 = 100;
     noStroke();
 
     textSize(32);
-    // fill(255, 204, 100);
-    // colorMode(HSB, 100);
     fill(color('magenta'));
 
     text("Score : " + score, x1, y1 / 2);
 
     textSize(32);
-    if (score > 1900) {
-        text("Godlike", x1, y1);
-    } else if (score > 1500) {
-        text("Grand Master", x1, y1);
-    } else if (score > 1100) {
-        text("Master", x1, y1);
-    } else if (score > 700) {
-        text("Elite", x1, y1);
-    } else if (score > 400) {
-        text("Advanced", x1, y1);
-    } else if (score > 200) {
-        text("Intermediate", x1, y1);
-    } else if (score > 96) {
-        text("Beginner", x1, y1);
-    } else {
-
+    for (var i = mazeScores.length-1; i > -1; i--) {
+        if (score > mazeScores[i]) {
+            text(mazeTitles[i], x1, y1);
+            i = -1;
+        }
     }
+
     fill(255, 255, 255);
 
     textSize(15);
